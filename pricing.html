@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Everything Convert</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="header">
+        <a class="logo logo-link" href="index.html">
+            <i class="fa-solid fa-infinity"></i>
+            <span>Everything Convert</span>
+        </a>
+        <nav>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="index.html#tools" class="nav-link">Tools</a>
+            <a href="pricing.html" class="nav-link active">Pricing</a>
+            <a href="about.html" class="nav-link">About us</a>
+            <a href="admin.html" class="nav-link" data-admin-only style="display:none;">Admin</a>
+            <a href="auth.html" class="nav-link" data-auth-login>Login</a>
+            <a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
+        </nav>
+    </header>
+
+    <main class="pricing-main">
+        <section class="pricing-hero">
+            <p class="pricing-kicker">Convert more for less</p>
+            <h1>Simple pricing for every file workflow.</h1>
+            <p>Start with 10 free conversions. Upgrade when you need unlimited work, enhanced PDF table detection, and larger files.</p>
+        </section>
+
+        <section class="pricing-grid" aria-label="Everything Convert pricing plans">
+            <article class="pricing-card">
+                <div>
+                    <h2>Free</h2>
+                    <p class="price">$0</p>
+                    <p class="price-note">Try the tools first</p>
+                </div>
+                <a class="plan-button secondary-plan" href="index.html#tools">Start converting</a>
+                <ul>
+                    <li><i class="fa-regular fa-circle-check"></i>10 free conversions</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Standard extraction tools</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Browser-based processing</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Basic file workflows</li>
+                </ul>
+            </article>
+
+            <article class="pricing-card featured-plan">
+                <div class="popular-badge">Best value</div>
+                <div>
+                    <h2>Pro</h2>
+                    <p class="price">$6.99<span>/month</span></p>
+                    <p class="price-note">Cancel any time</p>
+                </div>
+                <a class="plan-button" href="auth.html">Log in for Pro</a>
+                <ul>
+                    <li><i class="fa-regular fa-circle-check"></i>Unlimited conversions</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Enhanced PDF table detection</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Larger file workflows</li>
+                    <li><i class="fa-regular fa-circle-check"></i>No ads</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Priority feature access</li>
+                </ul>
+            </article>
+
+            <article class="pricing-card">
+                <div>
+                    <h2>Yearly Pro</h2>
+                    <p class="price">$59<span>/year</span></p>
+                    <p class="price-note">About $4.92 per month</p>
+                </div>
+                <a class="plan-button secondary-plan" href="auth.html">Choose yearly</a>
+                <ul>
+                    <li><i class="fa-regular fa-circle-check"></i>Everything in Pro</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Lower monthly cost</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Best for regular users</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Future billing-ready plan</li>
+                </ul>
+            </article>
+
+            <article class="pricing-card">
+                <div>
+                    <h2>Business</h2>
+                    <p class="price">$14.99<span>/month</span></p>
+                    <p class="price-note">For heavier file work</p>
+                </div>
+                <a class="plan-button secondary-plan" href="mailto:support@everythingconvert.com">Contact us</a>
+                <ul>
+                    <li><i class="fa-regular fa-circle-check"></i>Everything in Pro</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Higher file-size target</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Team/API-ready plan</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Priority support option</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="pricing-note">
+            <h2>Billing is coming next.</h2>
+            <p>For now, Pro access is controlled through your Supabase profile plan. Stripe checkout can be connected later without changing the plan structure.</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-infinity"></i> Everything Convert</h2>
+                <a href="about.html">About us</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="index.html#tools">All tools</a>
+                <a href="auth.html">Account</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-lines"></i> PDF & Documents</h2>
+                <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-image"></i> Image</h2>
+                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="image converter/image-converter.html">Image Converter</a>
+                <a href="image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
+                <a href="media converter/media-converter.html">Video Converter</a>
+                <a href="media converter/media-converter.html?mode=audio">Audio Converter</a>
+                <a href="gif converter/gif-converter.html">GIF Converter</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <i class="fa-solid fa-infinity"></i>
+                <span>Everything Convert</span>
+            </div>
+            <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <div class="language-menu">
+                <button class="language-toggle" type="button" aria-expanded="false">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-language-current>English</span>
+                </button>
+                <div class="language-dropdown">
+                    <button type="button" data-language="en">English</button>
+                    <button type="button" data-language="ko">한국어</button>
+                    <button type="button" data-language="de">Deutsch</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="language-menu.js"></script>
+</body>
+</html>
