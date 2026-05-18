@@ -264,7 +264,7 @@
   async function signUp(email, password, username) {
     const client = initClient();
     if (!client) throw new Error('Supabase 설정이 필요합니다.');
-    const emailRedirectTo = new URL(getAuthPath(), window.location.href).href;
+    const emailRedirectTo = getAuthRedirectUrl();
     const { data, error } = await client.auth.signUp({
       email,
       password,
@@ -321,7 +321,7 @@
   async function signInWithGoogle() {
     const client = initClient();
     if (!client) throw new Error('Supabase 설정이 필요합니다.');
-    const redirectTo = new URL(getAuthPath(), window.location.href).href;
+    const redirectTo = getAuthRedirectUrl();
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -377,9 +377,42 @@
 
   function getAuthPath() {
     const path = decodeURIComponent(window.location.pathname);
-    return path.includes('/pdf to ') || path.includes('/everything convert/')
-      ? '../auth.html'
+    const fileName = path.split('/').pop();
+    const isRootPage = ['index.html', 'auth.html', 'admin.html', 'about.html', ''].includes(fileName);
+    return isRootPage ? 'auth.html' : '../auth.html';
+  }
+
+  function getAuthRedirectUrl() {
+    const authUrl = new URL(getAuthPath(), window.location.href);
+    if (authUrl.protocol !== 'file:') return authUrl.href;
+
+    const path = decodeURIComponent(window.location.pathname).replace(/\\/g, '/');
+    const rootMarker = '/Everything Convert Main/';
+    const markerIndex = path.indexOf(rootMarker);
+    const relativePath = markerIndex >= 0
+      ? path.slice(markerIndex + rootMarker.length)
       : 'auth.html';
+    const depth = relativePath.includes('/')
+      ? '../'.repeat(relativePath.split('/').length - 1)
+      : '';
+
+    return new URL(depth + 'auth.html', 'http://127.0.0.1:8016/' + relativePath).href;
+  }
+
+  function normalizeAuthRedirect() {
+    const params = new URLSearchParams(window.location.search);
+    const hasOAuthPayload =
+      params.has('code') ||
+      params.has('error') ||
+      window.location.hash.includes('access_token') ||
+      window.location.hash.includes('error=');
+
+    if (hasOAuthPayload && window.location.protocol === 'file:') {
+      window.location.replace(getAuthRedirectUrl() + window.location.search + window.location.hash);
+      return true;
+    }
+
+    return false;
   }
 
   document.addEventListener('click', async (event) => {
@@ -395,6 +428,7 @@
   });
 
   function startAuth() {
+    if (normalizeAuthRedirect()) return;
     renderCachedAuthWidgets();
     const client = initClient();
     if (client) {
