@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Everything Convert</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <a class="logo logo-link" href="index.html"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>Everything Convert</span></a>
+        <nav><a href="index.html" class="nav-link">Home</a><a href="index.html#tools" class="nav-link">Tools</a><a href="pricing.html" class="nav-link">Pricing</a><a href="auth.html" class="nav-link" data-auth-login>Login</a><a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a></nav>
+    </header>
+    <main class="pricing-main">
+        <section class="pricing-hero">
+            <p class="pricing-kicker">Contact</p>
+            <h1>Contact Everything Convert</h1>
+            <p>Questions, bug reports, payment issues, security concerns, and partnership messages can be sent by email.</p>
+        </section>
+
+        <section class="pricing-note">
+            <h2>Email</h2>
+            <p><strong id="contactEmail">contact@everythingconvert.com</strong></p>
+            <p>If your browser does not open an email app automatically, copy the address above and send the message from Gmail, Outlook, or your preferred email service.</p>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;">
+                <a class="pricing-cta primary" href="mailto:contact@everythingconvert.com?subject=Everything%20Convert%20Support">Open Email App</a>
+                <button class="pricing-cta" type="button" id="copyContactEmail">Copy Email Address</button>
+            </div>
+            <p id="copyContactStatus" style="margin-top:.85rem;color:var(--accent-green);font-weight:700;"></p>
+        </section>
+
+        <section class="pricing-note">
+            <h2>Helpful details to include</h2>
+            <p>For support requests, include the page URL, tool name, browser, operating system, error message, and what you expected to happen. For payment or account issues, include the account email address, but do not send card numbers or passwords.</p>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="footer-legal-row"><a href="about.html">About Us</a><a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security and Compliance</a><a href="contact.html">Contact</a></div><div class="footer-bottom"><div class="footer-logo"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>Everything Convert</span></div><p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p></div></footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="auth.js"></script>
+    <script>
+        const copyButton = document.getElementById('copyContactEmail');
+        const copyStatus = document.getElementById('copyContactStatus');
+        copyButton?.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText('contact@everythingconvert.com');
+                copyStatus.textContent = 'Email address copied.';
+            } catch (error) {
+                copyStatus.textContent = 'Copy failed. Please select and copy the address manually.';
+            }
+        });
+    </script>
+</body>
+</html>
