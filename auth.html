@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything Convert - 로그인</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-shell {
+            width: min(480px, 100%);
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-tab {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(15, 23, 42, 0.65);
+            color: var(--text-muted);
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+        }
+
+        .auth-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .auth-field label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .auth-field input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-main);
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            font: inherit;
+            outline: none;
+        }
+
+        .auth-field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+        }
+
+        .auth-field.hidden {
+            display: none;
+        }
+
+        .field-hint {
+            margin-top: 0.35rem;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            line-height: 1.4;
+        }
+
+        .auth-submit {
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.9rem 1rem;
+            border-radius: 6px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .oauth-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 1.25rem 0;
+        }
+
+        .oauth-divider::before,
+        .oauth-divider::after {
+            content: '';
+            height: 1px;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .google-btn {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(15, 23, 42, 0.75);
+            color: var(--text-main);
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+        }
+
+        .google-btn:hover {
+            border-color: var(--primary);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .auth-message {
+            min-height: 1.4rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .auth-message.error { color: #fca5a5; }
+        .auth-message.success { color: #86efac; }
+
+        .auth-status-card {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .auth-status-card strong { color: var(--text-main); }
+
+        .account-panel {
+            display: none;
+            gap: 1rem;
+        }
+
+        .account-panel.visible {
+            display: grid;
+        }
+
+        .account-card {
+            padding: 1rem;
+            border-radius: 6px;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .username-form {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .account-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .account-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            font-weight: 800;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .account-link.secondary {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-infinity"></i>
+            <span>Everything Convert</span>
+        </div>
+        <nav>
+            <a href="index.html" class="nav-link">Home</a>
+            <div class="tools-menu">
+                <button class="nav-link tools-toggle" type="button" aria-expanded="false">Tools</button>
+                <div class="tools-dropdown mega-tools">
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-lines"></i> PDF & Documents</div>
+                        <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                        <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                        <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                        <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                        <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                        <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
+                        </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
+                        <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
+                        <span class="tools-soon">WEBP to PNG</span>
+                        <span class="tools-soon">HEIC to JPG</span>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
+                        <span class="tools-soon">Video Converter</span>
+                        <span class="tools-soon">Audio Converter</span>
+                        <span class="tools-soon">MP4 to MP3</span>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-video"></i> GIF</div>
+                        <span class="tools-soon">Video to GIF</span>
+                        <span class="tools-soon">GIF to MP4</span>
+                        <span class="tools-soon">Image to GIF</span>
+                    </div>
+                </div>
+            </div>
+            <a href="admin.html" class="nav-link" data-admin-only style="display:none;">Admin</a>
+            <a href="auth.html" class="nav-link active" data-auth-login>Login</a>
+            <a href="auth.html" class="nav-link active" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <section class="hero">
+            <h1 class="hero-title">계정으로 기능을<br><span class="gradient-text">관리하세요</span></h1>
+            <p class="hero-subtitle">무료 회원은 일반 추출을, Pro 회원은 표 감지 강화형 변환을 사용할 수 있습니다.</p>
+        </section>
+
+        <section class="auth-shell">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab" type="button">로그인</button>
+                <button class="auth-tab" id="signupTab" type="button">회원가입</button>
+            </div>
+
+            <form class="auth-form" id="authForm">
+                <button class="google-btn" id="googleBtn" type="button">
+                    <i class="fa-brands fa-google"></i>
+                    Gmail로 계속하기
+                </button>
+                <div class="oauth-divider">또는 이메일로 계속</div>
+                <div class="auth-field hidden" id="signupUsernameField">
+                    <label for="username">유저 ID</label>
+                    <input id="username" type="text" autocomplete="nickname" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}">
+                    <div class="field-hint">영문, 숫자, 밑줄(_)만 사용할 수 있습니다. 예: hijacker05</div>
+                </div>
+                <div class="auth-field">
+                    <label for="email">이메일</label>
+                    <input id="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="auth-field">
+                    <label for="password">비밀번호</label>
+                    <input id="password" type="password" autocomplete="current-password" minlength="6" required>
+                </div>
+                <button class="auth-submit" id="submitBtn" type="submit">로그인</button>
+                <div class="auth-message" id="authMessage"></div>
+            </form>
+
+            <div class="account-panel" id="accountPanel">
+                <div class="account-card">
+                    <div>표시 이름: <strong id="accountName">-</strong></div>
+                    <div>회원 등급: <strong id="accountPlan">-</strong></div>
+                    <form class="username-form" id="usernameForm">
+                        <div class="auth-field">
+                            <label for="accountUsername">유저 ID 변경</label>
+                            <input id="accountUsername" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required>
+                            <div class="field-hint">상단 계정 표시와 관리자 화면에 이 이름이 보입니다.</div>
+                        </div>
+                        <button class="auth-submit" id="usernameSaveBtn" type="submit">유저 ID 저장</button>
+                        <div class="auth-message" id="usernameMessage"></div>
+                    </form>
+                    <div id="accountHint" style="margin-top:0.75rem;"></div>
+                </div>
+                <div class="account-actions">
+                    <a class="account-link" href="index.html#tools">도구로 이동</a>
+                    <a class="account-link secondary" href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">관리자 페이지</a>
+                </div>
+            </div>
+
+            <div class="auth-status-card">
+                <div>현재 상태: <strong data-auth-state>확인 중...</strong></div>
+                <div style="margin-top:0.75rem;">
+                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">로그아웃</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-infinity"></i> Everything Convert</h2>
+                <a href="about.html">About us</a>
+                <a href="index.html#tools">All tools</a>
+                <a href="auth.html">Account</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-lines"></i> PDF & Documents</h2>
+                <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-image"></i> Image</h2>
+                <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
+                <a href="image to pdf/image-to-pdf.html">PNG to PDF</a>
+                <span>Image Converter</span>
+                <span>WEBP to PNG</span>
+                <span>JFIF to PNG</span>
+                <span>HEIC to JPG</span>
+                <span>SVG Converter</span>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
+                <span>Video Converter</span>
+                <span>Audio Converter</span>
+                <span>MP3 Converter</span>
+                <span>MP4 to MP3</span>
+                <span>Video to MP3</span>
+                <span>MOV to MP4</span>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-video"></i> GIF</h2>
+                <span>Video to GIF</span>
+                <span>MP4 to GIF</span>
+                <span>WEBM to GIF</span>
+                <span>APNG to GIF</span>
+                <span>GIF to MP4</span>
+                <span>Image to GIF</span>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <i class="fa-solid fa-infinity"></i>
+                <span>Everything Convert</span>
+            </div>
+            <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <div class="language-menu">
+                <button class="language-toggle" type="button" aria-expanded="false">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-language-current>English</span>
+                </button>
+                <div class="language-dropdown">
+                    <button type="button" data-language="en">English</button>
+                    <button type="button" data-language="ko">한국어</button>
+                    <button type="button" data-language="de">Deutsch</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="tools-menu.js"></script>
+    <script src="language-menu.js"></script>
+    <script>
+        let mode = 'login';
+
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const authTabs = document.querySelector('.auth-tabs');
+        const submitBtn = document.getElementById('submitBtn');
+        const authForm = document.getElementById('authForm');
+        const authMessage = document.getElementById('authMessage');
+        const googleBtn = document.getElementById('googleBtn');
+        const accountPanel = document.getElementById('accountPanel');
+        const signupUsernameField = document.getElementById('signupUsernameField');
+        const usernameInput = document.getElementById('username');
+        const accountName = document.getElementById('accountName');
+        const accountPlan = document.getElementById('accountPlan');
+        const accountHint = document.getElementById('accountHint');
+        const accountUsername = document.getElementById('accountUsername');
+        const usernameForm = document.getElementById('usernameForm');
+        const usernameSaveBtn = document.getElementById('usernameSaveBtn');
+        const usernameMessage = document.getElementById('usernameMessage');
+        const adminLink = document.getElementById('adminLink');
+
+        function normalizeUsername(value) {
+            return String(value || '').trim();
+        }
+
+        function isValidUsername(value) {
+            return /^[A-Za-z0-9_]{3,24}$/.test(value);
+        }
+
+        function applyCurrentLanguage() {
+            if (window.EverythingConvertLanguage) {
+                window.EverythingConvertLanguage.apply();
+            }
+        }
+
+        function setI18nText(element, key, fallback) {
+            if (!element) return;
+            element.dataset.i18nKey = key;
+            element.textContent = fallback;
+        }
+
+        function initializeAuthLanguageText() {
+            const heroTitle = document.querySelector('.hero-title');
+            const heroSubtitle = document.querySelector('.hero-subtitle');
+            if (heroTitle) {
+                heroTitle.innerHTML = 'Manage features<br><span class="gradient-text">with your account</span>';
+            }
+            if (heroSubtitle) {
+                heroSubtitle.dataset.i18nKey = 'authSubtitle';
+                heroSubtitle.textContent = 'Free members can use standard extraction, and Pro members can use enhanced table detection.';
+            }
+
+            setI18nText(loginTab, 'navLogin', 'Login');
+            setI18nText(signupTab, 'signUp', 'Sign up');
+            if (googleBtn) {
+                googleBtn.innerHTML = '<i class="fa-brands fa-google"></i><span data-i18n-key="continueGmail">Continue with Gmail</span>';
+            }
+            setI18nText(document.querySelector('.oauth-divider'), 'continueEmail', 'Or continue with email');
+            setI18nText(document.querySelector('label[for="username"]'), 'userId', 'User ID');
+            setI18nText(document.querySelector('label[for="email"]'), 'email', 'Email');
+            setI18nText(document.querySelector('label[for="password"]'), 'password', 'Password');
+            setI18nText(document.querySelector('label[for="accountUsername"]'), 'changeUserId', 'Change User ID');
+            setI18nText(document.querySelector('#signupUsernameField .field-hint'), 'usernameRules', 'Use 3-24 letters, numbers, or underscores. Example: hijacker05');
+            setI18nText(document.querySelector('#accountUsername + .field-hint'), 'userIdHint', 'This name appears in the top account label and the admin screen.');
+            setI18nText(usernameSaveBtn, 'saveUserId', 'Save User ID');
+            setI18nText(document.querySelector('.account-link'), 'goTools', 'Go to tools');
+            setI18nText(adminLink, 'adminPage', 'Admin page');
+
+            const statusLabel = document.querySelector('.auth-status-card div');
+            if (statusLabel && statusLabel.firstChild) {
+                statusLabel.firstChild.nodeValue = 'Current status: ';
+                statusLabel.dataset.i18nKey = 'currentStatus';
+            }
+
+            document.querySelectorAll('.auth-status-card [data-auth-state]').forEach((element) => {
+                if (element.textContent.trim()) {
+                    element.dataset.i18nKey = 'checking';
+                    element.textContent = 'Checking...';
+                }
+            });
+
+            setMode(mode, { clearMessage: false });
+            applyCurrentLanguage();
+        }
+
+        function updateAccountView() {
+            const auth = window.EverythingConvertAuth;
+            if (!auth) return;
+
+            const state = auth.state;
+            const loggedIn = Boolean(state.user);
+            authForm.hidden = loggedIn;
+            authTabs.hidden = loggedIn;
+            accountPanel.classList.toggle('visible', loggedIn);
+
+            if (!loggedIn) return;
+
+            const name = auth.displayName();
+            accountName.textContent = name;
+            accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
+            accountPlan.textContent = auth.formatPlan();
+            adminLink.style.display = auth.isAdmin() ? '' : 'none';
+            accountHint.dataset.i18nKey = auth.isPro() ? 'proMemberHint' : 'freeMemberHint';
+            accountHint.textContent = auth.isPro()
+                ? 'You are a Pro member. Enhanced table detection is available.'
+                : 'You are a Free member. Standard text extraction is available, and enhanced table detection requires Pro.';
+            applyCurrentLanguage();
+        }
+
+        function setMode(nextMode, options = {}) {
+            mode = nextMode;
+            loginTab.classList.toggle('active', mode === 'login');
+            signupTab.classList.toggle('active', mode === 'signup');
+            submitBtn.dataset.i18nKey = mode === 'login' ? 'navLogin' : 'signUp';
+            submitBtn.textContent = mode === 'login' ? 'Login' : 'Sign up';
+            document.getElementById('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+            signupUsernameField.classList.toggle('hidden', mode !== 'signup');
+            usernameInput.required = mode === 'signup';
+            if (options.clearMessage !== false) setMessage('', '');
+            applyCurrentLanguage();
+        }
+
+        function setMessage(text, type) {
+            authMessage.textContent = text;
+            authMessage.className = 'auth-message' + (type ? ' ' + type : '');
+            applyCurrentLanguage();
+        }
+
+        function friendlyAuthError(error) {
+            const message = error && error.message ? error.message : String(error);
+            if (/Invalid login credentials/i.test(message)) {
+                return '이메일 또는 비밀번호가 맞지 않습니다. 회원가입 후 이메일 확인이 필요한 설정이면 받은 메일을 먼저 확인해 주세요.';
+            }
+            if (/Email not confirmed/i.test(message)) {
+                return '이메일 확인이 아직 완료되지 않았습니다. 받은 메일함에서 Supabase 확인 메일을 열어 인증해 주세요.';
+            }
+            if (/Database error saving new user/i.test(message)) {
+                return '회원 프로필 생성 중 오류가 났습니다. Supabase SQL Editor에서 supabase-setup.sql 전체를 다시 실행해 주세요.';
+            }
+            if (/User already registered/i.test(message)) {
+                return '이미 가입된 이메일입니다. 로그인 탭에서 로그인해 주세요.';
+            }
+            if (/username/i.test(message) || /유저 ID/i.test(message)) {
+                return '유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요. 이미 사용 중인 ID일 수도 있습니다.';
+            }
+            return message;
+        }
+
+        loginTab.addEventListener('click', () => setMode('login'));
+        signupTab.addEventListener('click', () => setMode('signup'));
+
+        googleBtn.addEventListener('click', async () => {
+            googleBtn.disabled = true;
+            setMessage('Google 로그인 페이지로 이동 중...', '');
+            try {
+                await EverythingConvertAuth.signInWithGoogle();
+            } catch (error) {
+                setMessage(error.message, 'error');
+                googleBtn.disabled = false;
+            }
+        });
+
+        authForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const username = normalizeUsername(usernameInput.value);
+
+            if (mode === 'signup' && !isValidUsername(username)) {
+                setMessage('유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요.', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            setMessage(mode === 'login' ? '로그인 중...' : '회원가입 중...', '');
+
+            try {
+                if (mode === 'login') {
+                    await EverythingConvertAuth.signIn(email, password);
+                    setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
+                    updateAccountView();
+                    setTimeout(() => {
+                        const state = EverythingConvertAuth.state;
+                        if (state.user) {
+                            setMessage(`${EverythingConvertAuth.displayName()} 계정으로 로그인되었습니다.`, 'success');
+                            updateAccountView();
+                        }
+                    }, 500);
+                } else {
+                    const result = await EverythingConvertAuth.signUp(email, password, username);
+                    if (result.session) {
+                        setMessage('회원가입과 로그인이 완료되었습니다.', 'success');
+                        updateAccountView();
+                    } else {
+                        setMode('login', { clearMessage: false });
+                        setMessage('회원가입 요청이 완료되었습니다. 받은 메일함에서 확인 링크를 누른 뒤 로그인해 주세요.', 'success');
+                    }
+                }
+            } catch (error) {
+                setMessage(friendlyAuthError(error), 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        usernameForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = normalizeUsername(accountUsername.value);
+            if (!isValidUsername(username)) {
+                usernameMessage.textContent = '유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요.';
+                usernameMessage.className = 'auth-message error';
+                return;
+            }
+
+            usernameSaveBtn.disabled = true;
+            usernameMessage.textContent = '저장 중...';
+            usernameMessage.className = 'auth-message';
+            try {
+                const currentUsername = EverythingConvertAuth.state.profile && EverythingConvertAuth.state.profile.username
+                    ? EverythingConvertAuth.state.profile.username
+                    : '';
+                if (currentUsername.toLowerCase() !== username.toLowerCase()) {
+                    await EverythingConvertAuth.updateUsername(username);
+                }
+                usernameMessage.textContent = '유저 ID가 저장되었습니다. 홈으로 이동합니다...';
+                usernameMessage.className = 'auth-message success';
+                updateAccountView();
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 700);
+            } catch (error) {
+                usernameMessage.textContent = friendlyAuthError(error);
+                usernameMessage.className = 'auth-message error';
+            } finally {
+                usernameSaveBtn.disabled = false;
+            }
+        });
+
+        window.addEventListener('everything-auth-change', updateAccountView);
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAuthLanguageText();
+            updateAccountView();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything Convert - 모든 파일 변환의 시작</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-infinity"></i>
+            <span>Everything Convert</span>
+        </div>
+        <nav>
+            <a href="index.html" class="nav-link active">Home</a>
+            <div class="tools-menu">
+                <button class="nav-link tools-toggle" type="button" aria-expanded="false">Tools</button>
+                <div class="tools-dropdown mega-tools">
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-lines"></i> PDF & Documents</div>
+                        <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                        <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                        <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                        <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                        <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                        <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
+                        <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
+                        <span class="tools-soon">WEBP to PNG</span>
+                        <span class="tools-soon">HEIC to JPG</span>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
+                        <span class="tools-soon">Video Converter</span>
+                        <span class="tools-soon">Audio Converter</span>
+                        </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-video"></i> GIF</div>
+                        <span class="tools-soon">Video to GIF</span>
+                        <span class="tools-soon">GIF to MP4</span>
+                        <span class="tools-soon">Image to GIF</span>
+                    </div>
+                </div>
+            </div>
+            <a href="about.html" class="nav-link">About us</a>
+            <a href="admin.html" class="nav-link" data-admin-only style="display:none;">Admin</a>
+            <a href="auth.html" class="nav-link" data-auth-login>Login</a>
+            <a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <section class="hero">
+            <h1 class="hero-title">모든 파일 변환을<br><span class="gradient-text">카테고리별로 빠르게</span></h1>
+            <p class="hero-subtitle">PDF, 이미지, 문서, 음성, GIF 변환 도구를 한곳에서 찾고 사용할 수 있습니다.</p>
+        </section>
+
+        <section class="tool-categories" id="tools">
+            <article class="tool-category">
+                <div class="category-head">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <h2>PDF & Documents</h2>
+                </div>
+                <div class="compact-tools">
+                    <a href="pdf to word/pdf-to-word.html" class="mini-tool ready-tool"><span>PDF to Word</span><strong>사용 가능</strong></a>
+                    <a href="pdf to jpg/pdf-to-jpg.html" class="mini-tool ready-tool"><span>PDF to JPG</span><strong>사용 가능</strong></a>
+                    <a href="pdf to excel/pdf-to-excel.html" class="mini-tool ready-tool"><span>PDF to Excel</span><strong>사용 가능</strong></a>
+                    <a href="image to pdf/image-to-pdf.html" class="mini-tool ready-tool"><span>Image to PDF</span><strong>사용 가능</strong></a>
+                    <a href="excel to pdf/excel-to-pdf.html" class="mini-tool ready-tool"><span>Excel to PDF</span><strong>사용 가능</strong></a>
+                    <a href="docx to pdf/docx-to-pdf.html" class="mini-tool ready-tool"><span>DOCX to PDF</span><strong>사용 가능</strong></a>
+                    <a href="pdf to epub/pdf-to-epub.html" class="mini-tool ready-tool"><span>PDF to EPUB</span><strong>사용 가능</strong></a>
+                    <a href="ebook converter/ebook-converter.html" class="mini-tool ready-tool"><span>Ebook Converter</span><strong>사용 가능</strong></a>
+                </div>
+            </article>
+
+            <article class="tool-category">
+                <div class="category-head">
+                    <i class="fa-regular fa-image"></i>
+                    <h2>Image</h2>
+                </div>
+                <div class="compact-tools">
+                    <a href="image to pdf/image-to-pdf.html" class="mini-tool ready-tool"><span>JPG to PDF</span><strong>사용 가능</strong></a>
+                    <a href="image to pdf/image-to-pdf.html" class="mini-tool ready-tool"><span>PNG to PDF</span><strong>사용 가능</strong></a>
+                    <div class="mini-tool soon-tool"><span>Image Converter</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>WEBP to PNG</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>JFIF to PNG</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>PNG to SVG</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>HEIC to JPG</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>SVG Converter</span><strong>준비 중</strong></div>
+                </div>
+            </article>
+
+            <article class="tool-category">
+                <div class="category-head">
+                    <i class="fa-regular fa-circle-play"></i>
+                    <h2>Video & Audio</h2>
+                </div>
+                <div class="compact-tools">
+                    <div class="mini-tool soon-tool"><span>Video Converter</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>Audio Converter</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>MP3 Converter</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>MP4 to MP3</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>Video to MP3</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>MOV to MP4</span><strong>준비 중</strong></div>
+                </div>
+            </article>
+
+            <article class="tool-category">
+                <div class="category-head">
+                    <i class="fa-regular fa-file-video"></i>
+                    <h2>GIF</h2>
+                </div>
+                <div class="compact-tools">
+                    <div class="mini-tool soon-tool"><span>Video to GIF</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>MP4 to GIF</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>WEBM to GIF</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>APNG to GIF</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>GIF to MP4</span><strong>준비 중</strong></div>
+                    <div class="mini-tool soon-tool"><span>Image to GIF</span><strong>준비 중</strong></div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-infinity"></i> Everything Convert</h2>
+                <a href="about.html">About us</a>
+                <a href="index.html#tools">All tools</a>
+                <a href="auth.html">Account</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-lines"></i> PDF & Documents</h2>
+                <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-image"></i> Image</h2>
+                <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
+                <a href="image to pdf/image-to-pdf.html">PNG to PDF</a>
+                <span>Image Converter</span>
+                <span>WEBP to PNG</span>
+                <span>JFIF to PNG</span>
+                <span>HEIC to JPG</span>
+                <span>SVG Converter</span>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
+                <span>Video Converter</span>
+                <span>Audio Converter</span>
+                <span>MP3 Converter</span>
+                <span>MP4 to MP3</span>
+                <span>Video to MP3</span>
+                <span>MOV to MP4</span>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-video"></i> GIF</h2>
+                <span>Video to GIF</span>
+                <span>MP4 to GIF</span>
+                <span>WEBM to GIF</span>
+                <span>APNG to GIF</span>
+                <span>GIF to MP4</span>
+                <span>Image to GIF</span>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <i class="fa-solid fa-infinity"></i>
+                <span>Everything Convert</span>
+            </div>
+            <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <div class="language-menu">
+                <button class="language-toggle" type="button" aria-expanded="false">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-language-current>English</span>
+                </button>
+                <div class="language-dropdown">
+                    <button type="button" data-language="en">English</button>
+                    <button type="button" data-language="ko">한국어</button>
+                    <button type="button" data-language="de">Deutsch</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="tools-menu.js"></script>
+    <script src="language-menu.js"></script>
+</body>
+</html>

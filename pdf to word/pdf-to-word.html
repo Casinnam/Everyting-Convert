@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF → Word 변환기</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a25;
+    --accent: #2563eb;
+    --accent2: #3b82f6;
+    --text: #f0ede8;
+    --muted: #666680;
+    --border: #2a2a3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.5;
+  }
+
+  header {
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .top-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .top-nav a,
+  .tools-toggle {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .top-nav a:hover,
+  .top-nav a.active,
+  .tools-toggle:hover {
+    color: var(--text);
+  }
+
+  .tools-menu {
+    position: relative;
+  }
+
+  .tools-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+  }
+
+  .tools-toggle::after {
+    content: '▾';
+    font-size: 0.75rem;
+  }
+
+  .tools-dropdown {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    min-width: 220px;
+    display: none;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.6rem;
+    background: rgba(10, 10, 15, 0.96);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+  }
+
+  .tools-menu.open .tools-dropdown {
+    display: flex;
+  }
+
+  .tools-dropdown a {
+    padding: 0.7rem 0.8rem;
+    border-radius: 4px;
+  }
+
+  .tools-dropdown a:hover {
+    background: rgba(37, 99, 235, 0.14);
+  }
+
+  .tools-dropdown.mega-tools {
+    width: min(860px, calc(100vw - 2rem));
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 0.75rem;
+    padding: 0.9rem;
+  }
+
+  .tools-menu.open .tools-dropdown.mega-tools { display: grid; }
+  .tools-group { display: grid; align-content: start; gap: 0.25rem; min-width: 0; }
+  .tools-group-title {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.2rem;
+  }
+  .tools-soon {
+    color: var(--muted);
+    padding: 0.7rem 0.8rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    opacity: 0.55;
+  }
+
+  @media (max-width: 720px) {
+    header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .top-nav {
+      gap: 1rem;
+    }
+
+    .tools-dropdown.mega-tools {
+      left: 0;
+      right: auto;
+      width: min(92vw, 520px);
+      grid-template-columns: 1fr;
+    }
+  }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 .line2 {
+    color: var(--accent);
+    display: block;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 4px;
+    padding: 4rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: var(--surface);
+    margin-bottom: 2rem;
+  }
+
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(37, 99, 235, 0.05);
+  }
+
+  .drop-zone.dragover { transform: scale(1.01); }
+
+  .drop-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+
+  .drop-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--accent);
+  }
+
+  .drop-zone h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .drop-zone p {
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .browse-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 0.75rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    transition: background 0.2s;
+  }
+
+  .browse-btn:hover { background: var(--accent2); }
+
+  #fileInput { display: none; }
+
+  .settings-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: none;
+  }
+
+  .settings-panel.visible { display: block; }
+
+  .settings-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  .setting-item label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .setting-item select, .setting-item input[type="checkbox"] {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  
+  .setting-item select { width: 100%; }
+
+  .file-info {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    margin-bottom: 2rem;
+  }
+
+  .file-info.visible { display: flex; }
+
+  .file-info-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(37, 99, 235, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .file-details { flex: 1; }
+  .file-name { font-weight: 500; font-size: 0.9rem; }
+  .file-meta { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+
+  .remove-file {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .remove-file:hover { color: var(--accent); }
+
+  .convert-btn {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: background 0.2s, transform 0.1s;
+    margin-bottom: 2rem;
+  }
+
+  .convert-btn.visible { display: flex; }
+  .convert-btn:hover { background: var(--accent2); }
+  .convert-btn:active { transform: scale(0.99); }
+
+  .progress-section {
+    display: none;
+    margin-bottom: 2rem;
+  }
+
+  .progress-section.visible { display: block; }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .progress-label { color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-size: 0.75rem; }
+  .progress-pct { color: var(--accent); font-weight: 500; }
+
+  .progress-bar-bg {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .results-section { display: none; text-align: center; }
+  .results-section.visible { display: block; }
+
+  .results-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .results-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+  }
+
+  .results-title span { color: var(--accent); }
+
+  .download-word-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 1rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 2rem;
+  }
+
+  .download-word-btn:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .reset-area {
+    text-align: center;
+    margin-top: 2rem;
+    display: none;
+  }
+
+  .reset-area.visible { display: block; }
+
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.6rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { border-color: var(--text); color: var(--text); }
+
+  footer.site-footer {
+    width: min(1200px, calc(100% - 4rem));
+    margin: 4rem auto 0;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    text-align: left;
+  }
+
+  .footer-group {
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+  }
+
+  .footer-group h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0;
+  }
+
+  .footer-group h2 i,
+  .footer-logo i {
+    color: var(--accent);
+  }
+
+  .footer-group a,
+  .footer-group span {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  .footer-group a:hover {
+    color: var(--text);
+  }
+
+  .footer-group span {
+    opacity: 0.58;
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text);
+    font-weight: 800;
+  }
+
+  .footer-bottom p {
+    font-size: 0.88rem;
+    letter-spacing: 0;
+  }
+
+  .language-menu {
+    position: relative;
+    margin-left: auto;
+  }
+
+  .language-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0.55rem 0.75rem;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .language-toggle::after {
+    content: '⌄';
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .language-dropdown {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.65rem);
+    min-width: 170px;
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+    padding: 0.45rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    z-index: 25;
+  }
+
+  .language-menu.open .language-dropdown {
+    display: grid;
+  }
+
+  .language-dropdown button {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    text-align: left;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .language-dropdown button:hover,
+  .language-dropdown button.active {
+    color: var(--text);
+    background: rgba(37, 99, 235, 0.16);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand-link" href="../index.html">
+    <div class="logo-mark">PDF</div>
+    <div class="logo-text">Everything <span>Convert</span></div>
+  </a>
+  <nav class="top-nav">
+    <a href="../index.html">Home</a>
+    <div class="tools-menu">
+      <button class="tools-toggle" type="button" aria-expanded="false">Tools</button>
+      <div class="tools-dropdown mega-tools">
+        <div class="tools-group">
+          <div class="tools-group-title">PDF & Documents</div>
+          <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
+                        <a href="../pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                        <a href="../pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                        <a href="../image to pdf/image-to-pdf.html">Image to PDF</a>
+                        <a href="../excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        <a href="../docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="../pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                        <a href="../ebook converter/ebook-converter.html">Ebook Converter</a>
+          </div>
+        <div class="tools-group">
+          <div class="tools-group-title">Image</div>
+          <a href="../image to pdf/image-to-pdf.html">JPG to PDF</a>
+          <span class="tools-soon">WEBP to PNG</span>
+          <span class="tools-soon">HEIC to JPG</span>
+        </div>
+        <div class="tools-group">
+          <div class="tools-group-title">Video & Audio</div>
+          <span class="tools-soon">Video Converter</span>
+          <span class="tools-soon">Audio Converter</span>
+          <span class="tools-soon">MP4 to MP3</span>
+        </div>
+        <div class="tools-group">
+          <div class="tools-group-title">GIF</div>
+          <span class="tools-soon">Video to GIF</span>
+          <span class="tools-soon">GIF to MP4</span>
+          <span class="tools-soon">Image to GIF</span>
+        </div>
+      </div>
+    </div>
+    <a href="../auth.html" data-auth-login>Login</a>
+    <a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+    <a href="../admin.html" data-admin-only style="display:none;">Admin</a>
+    <a href="#" data-auth-logout style="display:none;">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>PDF를 Word로<span class="line2">변환하세요</span></h1>
+    <p>브라우저에서 직접 텍스트를 추출하여 Word 문서(.docx)로 저장합니다</p>
+  </div>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="12" x2="12" y2="18"/>
+        <polyline points="9 15 12 18 15 15"/>
+      </svg>
+    </div>
+    <h2>PDF 파일을 드래그하세요</h2>
+    <p>또는 아래 버튼을 클릭하여 파일을 선택하세요</p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">파일 선택</button>
+    <input type="file" id="fileInput" accept=".pdf">
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-title">변환 설정</div>
+    <div class="settings-grid">
+      <div class="setting-item">
+        <label>페이지 번호 표시</label>
+        <div style="padding-top: 0.5rem;">
+            <input type="checkbox" id="includePageNum" checked> 각 페이지마다 번호 구분선 추가
+        </div>
+      </div>
+      <div class="setting-item">
+        <label>페이지 범위</label>
+        <select id="pageRange">
+          <option value="all">모든 페이지</option>
+          <option value="first">첫 번째 페이지만</option>
+          <option value="custom">직접 입력</option>
+        </select>
+      </div>
+    </div>
+    <div id="customPageInput" style="margin-top:1rem;display:none;">
+      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">페이지 번호 (예: 1,3,5-8)</label>
+      <input type="text" id="customPages" placeholder="1,3,5-8" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;border-radius:2px;outline:none;">
+    </div>
+  </div>
+
+  <div class="file-info" id="fileInfo">
+    <div class="file-info-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+    </div>
+    <div class="file-details">
+      <div class="file-name" id="fileName">—</div>
+      <div class="file-meta" id="fileMeta">—</div>
+    </div>
+    <button class="remove-file" onclick="resetAll()">✕</button>
+  </div>
+
+  <button class="convert-btn" id="convertBtn" onclick="startConversion()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+    </svg>
+    Word 문서로 변환
+  </button>
+
+  <div class="progress-section" id="progressSection">
+    <div class="progress-header">
+      <span class="progress-label" id="progressLabel">텍스트 추출 중...</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title">변환 완료 — <span id="pageCount">0</span>페이지에서 텍스트 추출 성공</div>
+    </div>
+    <button class="download-word-btn" id="downloadWordBtn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Word 문서 다운로드 (.docx)
+    </button>
+    <p style="margin-top: 1rem; color: var(--muted); font-size: 0.85rem;">
+        ※ 이 도구는 PDF에서 텍스트만 추출하여 문서로 구성합니다. 이미지나 복잡한 표 레이아웃은 유지되지 않을 수 있습니다.
+    </p>
+  </div>
+
+  <div class="reset-area" id="resetArea">
+    <button class="reset-btn" onclick="resetAll()">새 파일 변환하기</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-group">
+      <h2><i class="fa-solid fa-infinity"></i> Everything Convert</h2>
+      <a href="../about.html">About us</a>
+      <a href="../index.html#tools">All tools</a>
+      <a href="../auth.html">Account</a>
+    </div>
+    <div class="footer-group">
+                <h2><i class="fa-regular fa-file-lines"></i> PDF & Documents</h2>
+                <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="../pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="../pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="../image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="../excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                <a href="../docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="../pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                <a href="../ebook converter/ebook-converter.html">Ebook Converter</a>
+            </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-image"></i> Image</h2>
+      <a href="../image to pdf/image-to-pdf.html">JPG to PDF</a>
+      <a href="../image to pdf/image-to-pdf.html">PNG to PDF</a>
+      <span>Image Converter</span>
+      <span>WEBP to PNG</span>
+      <span>JFIF to PNG</span>
+      <span>HEIC to JPG</span>
+      <span>SVG Converter</span>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
+      <span>Video Converter</span>
+      <span>Audio Converter</span>
+      <span>MP3 Converter</span>
+      <span>MP4 to MP3</span>
+      <span>Video to MP3</span>
+      <span>MOV to MP4</span>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-file-video"></i> GIF</h2>
+      <span>Video to GIF</span>
+      <span>MP4 to GIF</span>
+      <span>WEBM to GIF</span>
+      <span>APNG to GIF</span>
+      <span>GIF to MP4</span>
+      <span>Image to GIF</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">
+      <i class="fa-solid fa-infinity"></i>
+      <span>Everything Convert</span>
+    </div>
+    <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <div class="language-menu">
+      <button class="language-toggle" type="button" aria-expanded="false">
+        <i class="fa-solid fa-globe"></i>
+        <span data-language-current>English</span>
+      </button>
+      <div class="language-dropdown">
+        <button type="button" data-language="en">English</button>
+        <button type="button" data-language="ko">한국어</button>
+        <button type="button" data-language="de">Deutsch</button>
+        <button type="button" data-language="es">Español</button>
+        <button type="button" data-language="fr">Français</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase-config.js"></script>
+<script src="../auth.js"></script>
+<script src="../tools-menu.js"></script>
+<script src="../language-menu.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  let pdfDoc = null;
+  let currentFile = null;
+
+  const pageRange = document.getElementById('pageRange');
+  pageRange.addEventListener('change', () => {
+    document.getElementById('customPageInput').style.display = pageRange.value === 'custom' ? 'block' : 'none';
+  });
+
+  const dropZone = document.getElementById('dropZone');
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') loadFile(file);
+    else alert('PDF 파일만 업로드 가능합니다.');
+  });
+
+  document.getElementById('fileInput').addEventListener('change', e => {
+    if (e.target.files[0]) loadFile(e.target.files[0]);
+  });
+
+  async function loadFile(file) {
+    if (!window.pdfjsLib) {
+      alert('PDF.js 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+      return;
+    }
+
+    currentFile = file;
+    const arrayBuffer = await file.arrayBuffer();
+    pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}페이지 · ${formatSize(file.size)}`;
+    document.getElementById('fileInfo').classList.add('visible');
+    document.getElementById('settingsPanel').classList.add('visible');
+    document.getElementById('convertBtn').classList.add('visible');
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  function getPageIndices() {
+    const mode = document.getElementById('pageRange').value;
+    const total = pdfDoc.numPages;
+    if (mode === 'first') return [1];
+    if (mode === 'all') return Array.from({ length: total }, (_, i) => i + 1);
+    const raw = document.getElementById('customPages').value;
+    const pages = new Set();
+    raw.split(',').forEach(part => {
+      part = part.trim();
+      if (part.includes('-')) {
+        const [s, e] = part.split('-').map(Number);
+        for (let i = s; i <= Math.min(e, total); i++) pages.add(i);
+      } else {
+        const n = parseInt(part);
+        if (n >= 1 && n <= total) pages.add(n);
+      }
+    });
+    return [...pages].sort((a, b) => a - b);
+  }
+
+  async function startConversion() {
+    if (!pdfDoc) return;
+
+    if (!window.docx) {
+      alert('Word 변환 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+      return;
+    }
+
+    const pages = getPageIndices();
+    const includePageNum = document.getElementById('includePageNum').checked;
+
+    document.getElementById('convertBtn').classList.remove('visible');
+    document.getElementById('progressSection').classList.add('visible');
+    document.getElementById('resultsSection').classList.remove('visible');
+    document.getElementById('resetArea').classList.remove('visible');
+
+    try {
+      const docxParagraphs = [];
+
+      for (let i = 0; i < pages.length; i++) {
+        const pageNum = pages[i];
+        const pct = Math.round((i / pages.length) * 100);
+        updateProgress(`페이지 ${pageNum} 텍스트 추출 중...`, pct);
+
+        const page = await pdfDoc.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        
+        if (includePageNum) {
+          docxParagraphs.push(new docx.Paragraph({
+              children: [
+                  new docx.TextRun({
+                      text: `--- 페이지 ${pageNum} ---`,
+                      bold: true,
+                      size: 28
+                  })
+              ],
+              spacing: { before: 200, after: 200 }
+          }));
+        }
+
+        let items = textContent.items.map(item => ({
+          str: item.str,
+          dir: item.dir,
+          width: item.width,
+          height: item.height,
+          transform: item.transform,
+          fontName: item.fontName,
+          hasEOL: item.hasEOL,
+        }));
+
+        // Sort text items top-to-bottom, then left-to-right
+        items.sort((a, b) => {
+          const yDiff = b.transform[5] - a.transform[5];
+          if (Math.abs(yDiff) > 5) return yDiff; 
+          return a.transform[4] - b.transform[4];
+        });
+
+        let currentLineY = null;
+        let lineText = '';
+
+        for (const item of items) {
+          if (currentLineY === null) {
+            currentLineY = item.transform[5];
+            lineText += item.str;
+          } else {
+            if (Math.abs(currentLineY - item.transform[5]) > 5) {
+              if (lineText.trim()) {
+                  docxParagraphs.push(new docx.Paragraph({
+                      children: [new docx.TextRun(lineText.trim())]
+                  }));
+              }
+              currentLineY = item.transform[5];
+              lineText = item.str;
+            } else {
+              lineText += ' ' + item.str;
+            }
+          }
+        }
+        if (lineText.trim()) {
+          docxParagraphs.push(new docx.Paragraph({
+              children: [new docx.TextRun(lineText.trim())]
+          }));
+        }
+        
+        docxParagraphs.push(new docx.Paragraph({ children: [new docx.TextRun("")] }));
+      }
+
+      updateProgress('Word 문서 생성 중...', 95);
+
+      const doc = new docx.Document({
+          sections: [{
+              properties: {},
+              children: docxParagraphs,
+          }]
+      });
+
+      const blob = await docx.Packer.toBlob(doc);
+      const url = URL.createObjectURL(blob);
+      document.getElementById('downloadWordBtn').onclick = () => {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = (currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted') + '.docx';
+          a.click();
+      };
+      
+      updateProgress('완료!', 100);
+      setTimeout(() => {
+        document.getElementById('progressSection').classList.remove('visible');
+        document.getElementById('resultsSection').classList.add('visible');
+        document.getElementById('pageCount').textContent = pages.length;
+        document.getElementById('resetArea').classList.add('visible');
+      }, 400);
+
+    } catch (e) {
+      console.error(e);
+      alert('변환 중 오류가 발생했습니다: ' + e.message);
+      resetAll();
+    }
+  }
+
+  function updateProgress(label, pct) {
+    document.getElementById('progressLabel').textContent = label;
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  function resetAll() {
+    pdfDoc = null;
+    currentFile = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('fileInfo').classList.remove('visible');
+    document.getElementById('settingsPanel').classList.remove('visible');
+    document.getElementById('convertBtn').classList.remove('visible');
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('resultsSection').classList.remove('visible');
+    document.getElementById('resetArea').classList.remove('visible');
+    document.getElementById('pageRange').value = 'all';
+    document.getElementById('customPageInput').style.display = 'none';
+    document.getElementById('includePageNum').checked = true;
+  }
+</script>
+</body>
+</html>

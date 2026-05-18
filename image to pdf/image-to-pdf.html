@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to PDF 변환기</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a25;
+    --accent: #e11d48;
+    --accent2: #06b6d4;
+    --text: #f0ede8;
+    --muted: #77778f;
+    --border: #2a2a3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.5;
+  }
+
+  header {
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .top-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .top-nav a,
+  .tools-toggle {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .top-nav a:hover,
+  .top-nav a.active,
+  .tools-toggle:hover {
+    color: var(--text);
+  }
+
+  .tools-menu { position: relative; }
+
+  .tools-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+  }
+
+  .tools-toggle::after {
+    content: '▾';
+    font-size: 0.75rem;
+  }
+
+  .tools-dropdown {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    min-width: 220px;
+    display: none;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.6rem;
+    background: rgba(10, 10, 15, 0.96);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+  }
+
+  .tools-menu.open .tools-dropdown { display: flex; }
+
+  .tools-dropdown a {
+    padding: 0.7rem 0.8rem;
+    border-radius: 4px;
+  }
+
+  .tools-dropdown a:hover { background: rgba(225, 29, 72, 0.12); }
+
+  .tools-dropdown.mega-tools {
+    width: min(860px, calc(100vw - 2rem));
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 0.75rem;
+    padding: 0.9rem;
+  }
+
+  .tools-menu.open .tools-dropdown.mega-tools { display: grid; }
+  .tools-group { display: grid; align-content: start; gap: 0.25rem; min-width: 0; }
+  .tools-group-title {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.2rem;
+  }
+  .tools-soon {
+    color: var(--muted);
+    padding: 0.7rem 0.8rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    opacity: 0.55;
+  }
+
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 .line2 {
+    color: var(--accent);
+    display: block;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 4px;
+    padding: 4rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: var(--surface);
+    margin-bottom: 2rem;
+  }
+
+  .drop-zone:hover,
+  .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(225, 29, 72, 0.06);
+  }
+
+  .drop-zone.dragover { transform: scale(1.01); }
+
+  .drop-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .drop-icon::before,
+  .drop-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+  }
+
+  .drop-icon::before {
+    width: 28px;
+    height: 2px;
+    top: 30px;
+    left: 16px;
+  }
+
+  .drop-icon::after {
+    width: 2px;
+    height: 28px;
+    top: 17px;
+    left: 29px;
+  }
+
+  .drop-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .drop-subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  #fileInput { display: none; }
+
+  .options {
+    display: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .options.visible { display: grid; }
+
+  .option-field {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem;
+  }
+
+  .option-field label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.55rem;
+  }
+
+  .option-field select,
+  .option-field input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 4px;
+    padding: 0.7rem;
+    font: inherit;
+  }
+
+  .file-list {
+    display: none;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .file-list.visible {
+    display: grid;
+  }
+
+  .image-item {
+    display: grid;
+    grid-template-columns: 76px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.75rem;
+  }
+
+  .thumb {
+    width: 76px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: var(--surface2);
+    border-radius: 4px;
+  }
+
+  .image-meta {
+    min-width: 0;
+  }
+
+  .image-name {
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 0.35rem;
+  }
+
+  .image-detail {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .image-actions {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .convert-btn {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+  }
+
+  .convert-btn.visible { display: flex; }
+  .convert-btn:disabled { opacity: 0.6; cursor: wait; }
+
+  .message {
+    min-height: 1.5rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .message.success { color: #86efac; }
+  .message.error { color: #fca5a5; }
+
+  .reset-area {
+    text-align: center;
+    margin-top: 1.5rem;
+    display: none;
+  }
+
+  .reset-area.visible { display: block; }
+
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .reset-btn:hover { border-color: var(--text); color: var(--text); }
+
+  footer.site-footer {
+    width: min(1200px, calc(100% - 4rem));
+    margin: 4rem auto 0;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    text-align: left;
+  }
+
+  .footer-group {
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+  }
+
+  .footer-group h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0;
+  }
+
+  .footer-group h2 i,
+  .footer-logo i {
+    color: var(--accent);
+  }
+
+  .footer-group a,
+  .footer-group span {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  .footer-group a:hover {
+    color: var(--text);
+  }
+
+  .footer-group span {
+    opacity: 0.58;
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text);
+    font-weight: 800;
+  }
+
+  .footer-bottom p {
+    font-size: 0.88rem;
+    letter-spacing: 0;
+  }
+
+  .language-menu {
+    position: relative;
+    margin-left: auto;
+  }
+
+  .language-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0.55rem 0.75rem;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .language-toggle::after {
+    content: '⌄';
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .language-dropdown {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.65rem);
+    min-width: 170px;
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+    padding: 0.45rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    z-index: 25;
+  }
+
+  .language-menu.open .language-dropdown {
+    display: grid;
+  }
+
+  .language-dropdown button {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    text-align: left;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .language-dropdown button:hover,
+  .language-dropdown button.active {
+    color: var(--text);
+    background: rgba(37, 99, 235, 0.16);
+  }
+
+  @media (max-width: 760px) {
+    header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .top-nav { gap: 1rem; }
+    .tools-dropdown.mega-tools {
+      left: 0;
+      right: auto;
+      width: min(92vw, 520px);
+      grid-template-columns: 1fr;
+    }
+    .options { grid-template-columns: 1fr; }
+    .image-item { grid-template-columns: 64px 1fr; }
+    .image-actions { grid-column: 1 / -1; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand-link" href="../index.html">
+    <div class="logo-mark">IMG</div>
+    <div class="logo-text">Everything <span>Convert</span></div>
+  </a>
+  <nav class="top-nav">
+    <a href="../index.html">Home</a>
+    <div class="tools-menu">
+      <button class="tools-toggle" type="button" aria-expanded="false">Tools</button>
+      <div class="tools-dropdown mega-tools">
+        <div class="tools-group">
+          <div class="tools-group-title">PDF & Documents</div>
+          <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
+                        <a href="../pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                        <a href="../pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                        <a href="../image to pdf/image-to-pdf.html">Image to PDF</a>
+                        <a href="../excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        <a href="../docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="../pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                        <a href="../ebook converter/ebook-converter.html">Ebook Converter</a>
+          </div>
+        <div class="tools-group">
+          <div class="tools-group-title">Image</div>
+          <a href="../image to pdf/image-to-pdf.html">JPG to PDF</a>
+          <span class="tools-soon">WEBP to PNG</span>
+          <span class="tools-soon">HEIC to JPG</span>
+        </div>
+        <div class="tools-group">
+          <div class="tools-group-title">Video & Audio</div>
+          <span class="tools-soon">Video Converter</span>
+          <span class="tools-soon">Audio Converter</span>
+          <span class="tools-soon">MP4 to MP3</span>
+        </div>
+        <div class="tools-group">
+          <div class="tools-group-title">GIF</div>
+          <span class="tools-soon">Video to GIF</span>
+          <span class="tools-soon">GIF to MP4</span>
+          <span class="tools-soon">Image to GIF</span>
+        </div>
+      </div>
+    </div>
+    <a href="../auth.html" data-auth-login>Login</a>
+    <a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+    <a href="../admin.html" data-admin-only style="display:none;">Admin</a>
+    <a href="#" data-auth-logout style="display:none;">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>이미지를 PDF로<span class="line2">변환하세요</span></h1>
+    <p>JPG, PNG, WebP 등 여러 이미지를 원하는 순서대로 하나의 PDF 문서로 병합합니다</p>
+  </div>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-icon"></div>
+    <div class="drop-title">이미지 파일 선택</div>
+    <div class="drop-subtitle">여러 장을 한 번에 선택하거나 이곳으로 드래그하세요</div>
+    <input id="fileInput" type="file" accept="image/*" multiple>
+  </div>
+
+  <div class="options" id="options">
+    <div class="option-field">
+      <label for="pageSize">페이지 크기</label>
+      <select id="pageSize">
+        <option value="a4">A4</option>
+        <option value="letter">Letter</option>
+        <option value="image">이미지 크기 그대로</option>
+      </select>
+    </div>
+    <div class="option-field">
+      <label for="fitMode">맞춤 방식</label>
+      <select id="fitMode">
+        <option value="contain">전체 보이기</option>
+        <option value="cover">페이지 채우기</option>
+        <option value="stretch">페이지에 맞게 늘리기</option>
+      </select>
+    </div>
+    <div class="option-field">
+      <label for="marginInput">여백 mm</label>
+      <input id="marginInput" type="number" min="0" max="40" value="8">
+    </div>
+  </div>
+
+  <div class="file-list" id="fileList"></div>
+
+  <button class="convert-btn" id="convertBtn" type="button">PDF 저장</button>
+  <div class="message" id="message"></div>
+
+  <div class="reset-area" id="resetArea">
+    <button class="reset-btn" id="resetBtn" type="button">처음부터 다시</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-group">
+      <h2><i class="fa-solid fa-infinity"></i> Everything Convert</h2>
+      <a href="../about.html">About us</a>
+      <a href="../index.html#tools">All tools</a>
+      <a href="../auth.html">Account</a>
+    </div>
+    <div class="footer-group">
+                <h2><i class="fa-regular fa-file-lines"></i> PDF & Documents</h2>
+                <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="../pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="../pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="../image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="../excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                <a href="../docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="../pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                <a href="../ebook converter/ebook-converter.html">Ebook Converter</a>
+            </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-image"></i> Image</h2>
+      <a href="../image to pdf/image-to-pdf.html">JPG to PDF</a>
+      <a href="../image to pdf/image-to-pdf.html">PNG to PDF</a>
+      <span>Image Converter</span>
+      <span>WEBP to PNG</span>
+      <span>JFIF to PNG</span>
+      <span>HEIC to JPG</span>
+      <span>SVG Converter</span>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
+      <span>Video Converter</span>
+      <span>Audio Converter</span>
+      <span>MP3 Converter</span>
+      <span>MP4 to MP3</span>
+      <span>Video to MP3</span>
+      <span>MOV to MP4</span>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-file-video"></i> GIF</h2>
+      <span>Video to GIF</span>
+      <span>MP4 to GIF</span>
+      <span>WEBM to GIF</span>
+      <span>APNG to GIF</span>
+      <span>GIF to MP4</span>
+      <span>Image to GIF</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">
+      <i class="fa-solid fa-infinity"></i>
+      <span>Everything Convert</span>
+    </div>
+    <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <div class="language-menu">
+      <button class="language-toggle" type="button" aria-expanded="false">
+        <i class="fa-solid fa-globe"></i>
+        <span data-language-current>English</span>
+      </button>
+      <div class="language-dropdown">
+        <button type="button" data-language="en">English</button>
+        <button type="button" data-language="ko">한국어</button>
+        <button type="button" data-language="de">Deutsch</button>
+        <button type="button" data-language="es">Español</button>
+        <button type="button" data-language="fr">Français</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase-config.js"></script>
+<script src="../auth.js"></script>
+<script src="../tools-menu.js"></script>
+<script src="../language-menu.js"></script>
+<script>
+  const { jsPDF } = window.jspdf || {};
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const options = document.getElementById('options');
+  const convertBtn = document.getElementById('convertBtn');
+  const message = document.getElementById('message');
+  const resetArea = document.getElementById('resetArea');
+  const resetBtn = document.getElementById('resetBtn');
+  const pageSize = document.getElementById('pageSize');
+  const fitMode = document.getElementById('fitMode');
+  const marginInput = document.getElementById('marginInput');
+
+  let images = [];
+
+  function formatBytes(bytes) {
+    if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  function setMessage(text, type) {
+    message.textContent = text;
+    message.className = 'message' + (type ? ' ' + type : '');
+  }
+
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function readImageFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error(`${file.name} 파일을 읽을 수 없습니다.`));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error(`${file.name} 이미지를 불러올 수 없습니다.`));
+        img.onload = () => resolve({
+          id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+          file,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+          previewUrl: reader.result,
+          image: img,
+        });
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function addFiles(fileListInput) {
+    const files = Array.from(fileListInput).filter(file => file.type.startsWith('image/'));
+    if (!files.length) {
+      setMessage('이미지 파일을 선택해 주세요.', 'error');
+      return;
+    }
+
+    setMessage('이미지를 불러오는 중...');
+    try {
+      const loaded = await Promise.all(files.map(readImageFile));
+      images = images.concat(loaded);
+      renderImages();
+      setMessage(`${loaded.length}개 이미지가 추가되었습니다.`, 'success');
+    } catch (error) {
+      setMessage(error.message, 'error');
+    } finally {
+      fileInput.value = '';
+    }
+  }
+
+  function renderImages() {
+    fileList.innerHTML = '';
+    images.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'image-item';
+      row.dataset.id = item.id;
+      row.innerHTML = `
+        <img class="thumb" src="${item.previewUrl}" alt="">
+        <div class="image-meta">
+          <div class="image-name">${escapeHtml(item.name)}</div>
+          <div class="image-detail">${item.width} x ${item.height}px · ${formatBytes(item.size)} · ${index + 1}페이지</div>
+        </div>
+        <div class="image-actions">
+          <button class="icon-btn" type="button" data-move="up" title="위로 이동" ${index === 0 ? 'disabled' : ''}>↑</button>
+          <button class="icon-btn" type="button" data-move="down" title="아래로 이동" ${index === images.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="icon-btn" type="button" data-remove title="삭제">×</button>
+        </div>
+      `;
+      fileList.appendChild(row);
+    });
+
+    const hasImages = images.length > 0;
+    fileList.classList.toggle('visible', hasImages);
+    options.classList.toggle('visible', hasImages);
+    convertBtn.classList.toggle('visible', hasImages);
+    resetArea.classList.toggle('visible', hasImages);
+  }
+
+  function swapImages(from, to) {
+    if (to < 0 || to >= images.length) return;
+    const next = [...images];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    images = next;
+    renderImages();
+  }
+
+  function imageToJpegData(item) {
+    const canvas = document.createElement('canvas');
+    canvas.width = item.width;
+    canvas.height = item.height;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(item.image, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.92);
+  }
+
+  function getPageDimensions(item) {
+    if (pageSize.value === 'image') {
+      const pxToMm = 0.264583;
+      return {
+        width: Math.max(20, item.width * pxToMm),
+        height: Math.max(20, item.height * pxToMm),
+      };
+    }
+
+    if (pageSize.value === 'letter') return { width: 215.9, height: 279.4 };
+    return { width: 210, height: 297 };
+  }
+
+  function getPlacement(item, pageWidth, pageHeight, margin) {
+    const usableWidth = Math.max(1, pageWidth - margin * 2);
+    const usableHeight = Math.max(1, pageHeight - margin * 2);
+    const imageRatio = item.width / item.height;
+    const pageRatio = usableWidth / usableHeight;
+
+    if (fitMode.value === 'stretch') {
+      return { x: margin, y: margin, width: usableWidth, height: usableHeight };
+    }
+
+    let width;
+    let height;
+    if (fitMode.value === 'cover') {
+      if (imageRatio > pageRatio) {
+        height = usableHeight;
+        width = height * imageRatio;
+      } else {
+        width = usableWidth;
+        height = width / imageRatio;
+      }
+    } else if (imageRatio > pageRatio) {
+      width = usableWidth;
+      height = width / imageRatio;
+    } else {
+      height = usableHeight;
+      width = height * imageRatio;
+    }
+
+    return {
+      x: (pageWidth - width) / 2,
+      y: (pageHeight - height) / 2,
+      width,
+      height,
+    };
+  }
+
+  function createPdfBlob(pdf) {
+    const arrayBuffer = pdf.output('arraybuffer');
+    const header = new TextDecoder('ascii').decode(new Uint8Array(arrayBuffer, 0, 4));
+    if (header !== '%PDF') {
+      throw new Error('PDF 파일 생성에 실패했습니다. 다시 시도해 주세요.');
+    }
+    return new Blob([arrayBuffer], { type: 'application/pdf' });
+  }
+
+  function downloadBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async function savePdfBlob(blob, fileName) {
+    if (window.showSaveFilePicker) {
+      let handle = null;
+      try {
+        handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [{
+            description: 'PDF 문서',
+            accept: { 'application/pdf': ['.pdf'] },
+          }],
+        });
+      } catch (error) {
+        if (error && error.name === 'SecurityError') {
+          downloadBlob(blob, fileName);
+          return { pickedLocation: false, securityFallback: true };
+        }
+        throw error;
+      }
+
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return { pickedLocation: true };
+    }
+
+    downloadBlob(blob, fileName);
+    return { pickedLocation: false };
+  }
+
+  async function createPdf() {
+    if (!images.length) {
+      setMessage('먼저 이미지를 추가해 주세요.', 'error');
+      return;
+    }
+
+    if (!jsPDF) {
+      setMessage('PDF 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.', 'error');
+      return;
+    }
+
+    convertBtn.disabled = true;
+    setMessage('PDF를 만드는 중...');
+
+    try {
+      const timestamp = new Date().toISOString().slice(0, 10);
+      const fileName = `images-to-pdf-${timestamp}.pdf`;
+      const margin = pageSize.value === 'image' ? 0 : Math.max(0, Math.min(40, Number(marginInput.value) || 0));
+      let pdf = null;
+
+      for (let index = 0; index < images.length; index += 1) {
+        const item = images[index];
+        const { width: pageWidth, height: pageHeight } = getPageDimensions(item);
+        const orientation = pageWidth > pageHeight ? 'landscape' : 'portrait';
+
+        if (!pdf) {
+          pdf = new jsPDF({ orientation, unit: 'mm', format: [pageWidth, pageHeight] });
+        } else {
+          pdf.addPage([pageWidth, pageHeight], orientation);
+        }
+
+        const placement = getPlacement(item, pageWidth, pageHeight, margin);
+        pdf.addImage(imageToJpegData(item), 'JPEG', placement.x, placement.y, placement.width, placement.height);
+        setMessage(`${index + 1}/${images.length} 페이지 처리 중...`);
+      }
+
+      const pdfBlob = createPdfBlob(pdf);
+      setMessage('PDF 파일을 저장하는 중...');
+      const result = await savePdfBlob(pdfBlob, fileName);
+      setMessage(
+        result.pickedLocation
+          ? `${fileName} 파일이 선택한 위치에 저장되었습니다.`
+          : result.securityFallback
+            ? `${fileName} 파일 다운로드를 시작했습니다. 브라우저가 저장 위치 선택을 제한해 다운로드 방식으로 저장했습니다.`
+          : `${fileName} 파일 다운로드를 시작했습니다. 브라우저의 다운로드 폴더를 확인해 주세요.`,
+        'success',
+      );
+    } catch (error) {
+      if (error && error.name === 'AbortError') {
+        setMessage('저장이 취소되었습니다. 다시 저장하려면 버튼을 눌러 주세요.');
+      } else {
+        setMessage(error.message || 'PDF 변환 중 오류가 발생했습니다.', 'error');
+      }
+    } finally {
+      convertBtn.disabled = false;
+    }
+  }
+
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  dropZone.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', (event) => {
+    event.preventDefault();
+    dropZone.classList.remove('dragover');
+    addFiles(event.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', () => addFiles(fileInput.files));
+
+  fileList.addEventListener('click', (event) => {
+    const row = event.target.closest('.image-item');
+    if (!row) return;
+    const index = images.findIndex(item => item.id === row.dataset.id);
+    if (index < 0) return;
+
+    if (event.target.closest('[data-remove]')) {
+      images.splice(index, 1);
+      renderImages();
+      setMessage(images.length ? `${images.length}개 이미지가 준비되었습니다.` : '');
+      return;
+    }
+
+    const moveButton = event.target.closest('[data-move]');
+    if (moveButton) {
+      swapImages(index, moveButton.dataset.move === 'up' ? index - 1 : index + 1);
+    }
+  });
+
+  convertBtn.addEventListener('click', createPdf);
+
+  resetBtn.addEventListener('click', () => {
+    images = [];
+    renderImages();
+    setMessage('');
+  });
+</script>
+</body>
+</html>

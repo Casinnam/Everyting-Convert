@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything Convert - 관리자</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-panel {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .admin-toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .quick-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-weight: 800;
+        }
+
+        .quick-link:hover {
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .admin-status {
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .admin-button {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(15, 23, 42, 0.72);
+            color: var(--text-main);
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .admin-button.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+            color: white;
+        }
+
+        .admin-table-wrap {
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+        }
+
+        .admin-table {
+            width: 100%;
+            min-width: 880px;
+            border-collapse: collapse;
+            color: var(--text-main);
+            font-size: 0.92rem;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .admin-table th {
+            color: var(--text-muted);
+            background: rgba(15, 23, 42, 0.72);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .admin-table tr:last-child td { border-bottom: none; }
+
+        .admin-table select {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-main);
+            border-radius: 6px;
+            padding: 0.5rem;
+            font: inherit;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 0.25rem 0.7rem;
+            font-weight: 800;
+            font-size: 0.78rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .badge.pro { color: #86efac; background: rgba(16, 185, 129, 0.12); }
+        .badge.free { color: #bfdbfe; background: rgba(59, 130, 246, 0.12); }
+        .badge.admin { color: #fef3c7; background: rgba(245, 158, 11, 0.14); }
+
+        .empty-state {
+            padding: 2rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 720px) {
+            .admin-toolbar { align-items: stretch; }
+            .admin-button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-infinity"></i>
+            <span>Everything Convert</span>
+        </div>
+        <nav>
+            <a href="index.html" class="nav-link">Home</a>
+            <div class="tools-menu">
+                <button class="nav-link tools-toggle" type="button" aria-expanded="false">Tools</button>
+                <div class="tools-dropdown mega-tools">
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-lines"></i> PDF & Documents</div>
+                        <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                        <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                        <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                        <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                        <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                        <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
+                        </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
+                        <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
+                        <span class="tools-soon">WEBP to PNG</span>
+                        <span class="tools-soon">HEIC to JPG</span>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
+                        <span class="tools-soon">Video Converter</span>
+                        <span class="tools-soon">Audio Converter</span>
+                        <span class="tools-soon">MP4 to MP3</span>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-video"></i> GIF</div>
+                        <span class="tools-soon">Video to GIF</span>
+                        <span class="tools-soon">GIF to MP4</span>
+                        <span class="tools-soon">Image to GIF</span>
+                    </div>
+                </div>
+            </div>
+            <a href="auth.html" class="nav-link" data-auth-login>Login</a>
+            <a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="admin.html" class="nav-link active">Admin</a>
+            <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <section class="hero">
+            <h1 class="hero-title">회원 등급을<br><span class="gradient-text">관리하세요</span></h1>
+            <p class="hero-subtitle">관리자는 회원 목록을 확인하고 Free/Pro 플랜과 관리자 역할을 변경할 수 있습니다.</p>
+        </section>
+
+        <section class="admin-panel">
+            <div class="quick-links">
+                <a class="quick-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                <a class="quick-link" href="index.html#tools"><i class="fa-solid fa-table-cells-large"></i> Tools</a>
+                <a class="quick-link" href="pdf to excel/pdf-to-excel.html"><i class="fa-solid fa-file-excel"></i> PDF to Excel</a>
+                <a class="quick-link" href="image to pdf/image-to-pdf.html"><i class="fa-regular fa-image"></i> Image to PDF</a>
+                <a class="quick-link" href="auth.html"><i class="fa-solid fa-user"></i> Account</a>
+            </div>
+            <div class="admin-toolbar">
+                <div class="admin-status" id="adminStatus">권한 확인 중...</div>
+                <button class="admin-button primary" id="refreshBtn" type="button">새로고침</button>
+            </div>
+            <div class="admin-table-wrap" id="tableWrap">
+                <div class="empty-state">회원 정보를 불러오는 중입니다.</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-infinity"></i> Everything Convert</h2>
+                <a href="about.html">About us</a>
+                <a href="index.html#tools">All tools</a>
+                <a href="auth.html">Account</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-lines"></i> PDF & Documents</h2>
+                <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-image"></i> Image</h2>
+                <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
+                <a href="image to pdf/image-to-pdf.html">PNG to PDF</a>
+                <span>Image Converter</span>
+                <span>WEBP to PNG</span>
+                <span>JFIF to PNG</span>
+                <span>HEIC to JPG</span>
+                <span>SVG Converter</span>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
+                <span>Video Converter</span>
+                <span>Audio Converter</span>
+                <span>MP3 Converter</span>
+                <span>MP4 to MP3</span>
+                <span>Video to MP3</span>
+                <span>MOV to MP4</span>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-file-video"></i> GIF</h2>
+                <span>Video to GIF</span>
+                <span>MP4 to GIF</span>
+                <span>WEBM to GIF</span>
+                <span>APNG to GIF</span>
+                <span>GIF to MP4</span>
+                <span>Image to GIF</span>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <i class="fa-solid fa-infinity"></i>
+                <span>Everything Convert</span>
+            </div>
+            <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <div class="language-menu">
+                <button class="language-toggle" type="button" aria-expanded="false">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-language-current>English</span>
+                </button>
+                <div class="language-dropdown">
+                    <button type="button" data-language="en">English</button>
+                    <button type="button" data-language="ko">한국어</button>
+                    <button type="button" data-language="de">Deutsch</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="tools-menu.js"></script>
+    <script src="language-menu.js"></script>
+    <script>
+        const adminStatus = document.getElementById('adminStatus');
+        const tableWrap = document.getElementById('tableWrap');
+        const refreshBtn = document.getElementById('refreshBtn');
+        let loadingProfiles = false;
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function formatDate(value) {
+            if (!value) return '-';
+            return new Date(value).toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+        }
+
+        function renderEmpty(message) {
+            tableWrap.innerHTML = `<div class="empty-state">${escapeHtml(message)}</div>`;
+        }
+
+        function renderProfiles(profiles) {
+            if (!profiles.length) {
+                renderEmpty('표시할 회원이 없습니다.');
+                return;
+            }
+
+            const rows = profiles.map(profile => `
+                <tr data-user-id="${escapeHtml(profile.id)}">
+                    <td><strong>${escapeHtml(profile.username || '-')}</strong></td>
+                    <td>${escapeHtml(profile.email || '-')}</td>
+                    <td><span class="badge ${profile.plan === 'pro' ? 'pro' : 'free'}">${escapeHtml(profile.plan)}</span></td>
+                    <td><span class="badge ${profile.role === 'admin' ? 'admin' : 'free'}">${escapeHtml(profile.role)}</span></td>
+                    <td>${formatDate(profile.created_at)}</td>
+                    <td>
+                        <select data-plan-select>
+                            <option value="free" ${profile.plan === 'free' ? 'selected' : ''}>free</option>
+                            <option value="pro" ${profile.plan === 'pro' ? 'selected' : ''}>pro</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select data-role-select>
+                            <option value="user" ${profile.role === 'user' ? 'selected' : ''}>user</option>
+                            <option value="admin" ${profile.role === 'admin' ? 'selected' : ''}>admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="admin-button" data-save-user type="button">저장</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            tableWrap.innerHTML = `
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>유저 ID</th>
+                            <th>이메일</th>
+                            <th>현재 플랜</th>
+                            <th>역할</th>
+                            <th>가입일</th>
+                            <th>플랜 변경</th>
+                            <th>역할 변경</th>
+                            <th>저장</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        function updateRowBadges(row, plan, role) {
+            const planBadge = row.children[2].querySelector('.badge');
+            const roleBadge = row.children[3].querySelector('.badge');
+
+            planBadge.textContent = plan;
+            planBadge.className = `badge ${plan === 'pro' ? 'pro' : 'free'}`;
+            roleBadge.textContent = role;
+            roleBadge.className = `badge ${role === 'admin' ? 'admin' : 'free'}`;
+        }
+
+        async function loadProfiles() {
+            if (loadingProfiles) return;
+            loadingProfiles = true;
+            refreshBtn.disabled = true;
+            adminStatus.textContent = '권한 확인 중...';
+
+            try {
+                await EverythingConvertAuth.refresh();
+                const authState = EverythingConvertAuth.state;
+
+                if (authState.missingConfig) {
+                    renderEmpty('Supabase 설정이 필요합니다.');
+                    adminStatus.textContent = 'Supabase 설정 필요';
+                    return;
+                }
+
+                if (!authState.user) {
+                    renderEmpty('관리자 페이지를 보려면 로그인해 주세요.');
+                    adminStatus.textContent = '로그인 필요';
+                    return;
+                }
+
+                if (!EverythingConvertAuth.isAdmin()) {
+                    renderEmpty('관리자 권한이 필요합니다. 첫 관리자는 Supabase SQL Editor에서 role을 admin으로 지정해 주세요.');
+                    adminStatus.textContent = `${authState.user.email} · 관리자 아님`;
+                    return;
+                }
+
+                const { data, error } = await authState.client
+                    .from('profiles')
+                    .select('id,email,username,plan,role,created_at,updated_at')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                adminStatus.textContent = `${EverythingConvertAuth.displayName()} · Admin · 회원 ${data.length}명`;
+                renderProfiles(data);
+            } catch (error) {
+                adminStatus.textContent = '불러오기 실패';
+                renderEmpty(error.message);
+            } finally {
+                refreshBtn.disabled = false;
+                loadingProfiles = false;
+            }
+        }
+
+        async function saveProfile(row) {
+            const authState = EverythingConvertAuth.state;
+            const userId = row.dataset.userId;
+            const plan = row.querySelector('[data-plan-select]').value;
+            const role = row.querySelector('[data-role-select]').value;
+            const button = row.querySelector('[data-save-user]');
+
+            button.disabled = true;
+            button.textContent = '저장 중';
+
+            try {
+                const savePromise = authState.client
+                    .from('profiles')
+                    .update({ plan, role, updated_at: new Date().toISOString() })
+                    .eq('id', userId)
+                    .select('id,plan,role')
+                    .single();
+
+                const { data, error } = await Promise.race([
+                    savePromise,
+                    new Promise((_, reject) => {
+                        setTimeout(() => reject(new Error('저장 요청 시간이 초과되었습니다. 잠시 후 새로고침해 확인해 주세요.')), 12000);
+                    }),
+                ]);
+
+                if (error) throw error;
+                updateRowBadges(row, data.plan, data.role);
+                adminStatus.textContent = '저장되었습니다.';
+                setTimeout(loadProfiles, 500);
+            } catch (error) {
+                alert('저장 실패: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = '저장';
+            }
+        }
+
+        refreshBtn.addEventListener('click', loadProfiles);
+        document.addEventListener('click', (event) => {
+            const link = event.target.closest('a[href^="/"]');
+            if (!link) return;
+            event.preventDefault();
+            window.location.href = link.getAttribute('href');
+        });
+        window.addEventListener('everything-auth-change', () => {
+            const state = EverythingConvertAuth.state;
+            if (state.ready && state.user) loadProfiles();
+        });
+        tableWrap.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-save-user]');
+            if (!button) return;
+            const row = button.closest('tr');
+            saveProfile(row);
+        });
+
+        document.addEventListener('DOMContentLoaded', loadProfiles);
+    </script>
+</body>
+</html>
