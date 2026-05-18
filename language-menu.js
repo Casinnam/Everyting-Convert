@@ -486,6 +486,14 @@
     document.title = selected === 'en'
       ? document.title.replace('모든 파일 변환의 시작', 'Start converting every file')
       : document.title;
+
+    window.dispatchEvent(new CustomEvent('everything-language-change', {
+      detail: { language: selected },
+    }));
+
+    if (window.EverythingConvertToolLanguage) {
+      window.EverythingConvertToolLanguage.apply(selected);
+    }
   }
 
   window.EverythingConvertLanguage = {
