@@ -983,44 +983,19 @@
           dir: item.dir,
           width: item.width,
           height: item.height,
+          x: item.transform[4],
+          y: item.transform[5],
           transform: item.transform,
           fontName: item.fontName,
           hasEOL: item.hasEOL,
-        }));
+        })).filter(item => item.str && item.str.trim());
 
-        // Sort text items top-to-bottom, then left-to-right
-        items.sort((a, b) => {
-          const yDiff = b.transform[5] - a.transform[5];
-          if (Math.abs(yDiff) > 5) return yDiff; 
-          return a.transform[4] - b.transform[4];
-        });
-
-        let currentLineY = null;
-        let lineText = '';
-
-        for (const item of items) {
-          if (currentLineY === null) {
-            currentLineY = item.transform[5];
-            lineText += item.str;
-          } else {
-            if (Math.abs(currentLineY - item.transform[5]) > 5) {
-              if (lineText.trim()) {
-                  docxParagraphs.push(new docx.Paragraph({
-                      children: [new docx.TextRun(lineText.trim())]
-                  }));
-              }
-              currentLineY = item.transform[5];
-              lineText = item.str;
-            } else {
-              lineText += ' ' + item.str;
-            }
-          }
-        }
-        if (lineText.trim()) {
+        const lines = buildReadingOrderLines(items);
+        lines.forEach((lineText) => {
           docxParagraphs.push(new docx.Paragraph({
-              children: [new docx.TextRun(lineText.trim())]
+              children: [new docx.TextRun(lineText)]
           }));
-        }
+        });
         
         docxParagraphs.push(new docx.Paragraph({ children: [new docx.TextRun("")] }));
       }
@@ -1062,6 +1037,58 @@
     document.getElementById('progressLabel').textContent = label;
     document.getElementById('progressPct').textContent = pct + '%';
     document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  function buildReadingOrderLines(items) {
+    const lineTolerance = 5;
+    const lines = [];
+
+    items
+      .sort((a, b) => b.y - a.y || a.x - b.x)
+      .forEach((item) => {
+        let line = lines.find(existing => Math.abs(existing.y - item.y) <= lineTolerance);
+        if (!line) {
+          line = { y: item.y, items: [] };
+          lines.push(line);
+        }
+        line.items.push(item);
+        line.y = (line.y + item.y) / 2;
+      });
+
+    const columnBreaks = detectColumnBreaks(items);
+
+    return lines
+      .sort((a, b) => b.y - a.y)
+      .flatMap((line) => splitLineByColumns(line.items, columnBreaks))
+      .map(lineItems => lineItems.sort((a, b) => a.x - b.x).map(item => item.str).join(' ').replace(/\s+/g, ' ').trim())
+      .filter(Boolean);
+  }
+
+  function detectColumnBreaks(items) {
+    if (items.length < 24) return [];
+    const xs = items.map(item => item.x).sort((a, b) => a - b);
+    const gaps = [];
+    for (let i = 1; i < xs.length; i++) {
+      const gap = xs[i] - xs[i - 1];
+      if (gap > 80) gaps.push({ gap, midpoint: (xs[i] + xs[i - 1]) / 2 });
+    }
+    return gaps
+      .sort((a, b) => b.gap - a.gap)
+      .slice(0, 2)
+      .map(item => item.midpoint)
+      .sort((a, b) => a - b);
+  }
+
+  function splitLineByColumns(lineItems, breaks) {
+    if (!breaks.length) return [lineItems];
+    const groups = [];
+    lineItems.forEach((item) => {
+      const index = breaks.findIndex(breakX => item.x < breakX);
+      const groupIndex = index === -1 ? breaks.length : index;
+      if (!groups[groupIndex]) groups[groupIndex] = [];
+      groups[groupIndex].push(item);
+    });
+    return groups.filter(group => group && group.length);
   }
 
   function resetAll() {

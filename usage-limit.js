@@ -64,11 +64,23 @@
     );
   }
 
+  function pathDepth() {
+    const path = decodeURIComponent(window.location.pathname || '/').replace(/\\/g, '/');
+    const withoutFile = path.endsWith('/')
+      ? path
+      : path.slice(0, path.lastIndexOf('/') + 1);
+    const segments = withoutFile.split('/').filter(Boolean);
+
+    if (window.location.protocol === 'file:') {
+      const rootIndex = segments.lastIndexOf('Everything Convert Main');
+      if (rootIndex >= 0) return Math.max(0, segments.length - rootIndex - 1);
+    }
+
+    return Math.max(0, segments.length);
+  }
+
   function rootPrefix() {
-    const path = decodeURIComponent(window.location.pathname || '');
-    const fileName = path.split('/').pop();
-    const rootFile = ['index.html', 'index.htm', 'auth.html', 'admin.html', 'about.html', 'pricing.html', ''].includes(fileName);
-    return rootFile ? '' : '../';
+    return '../'.repeat(pathDepth());
   }
 
   async function usageIdentity() {
@@ -309,6 +321,7 @@
 
   const api = {
     createUsageController,
+    rootPrefix,
     getController,
     guardConversion,
     renderUsage,

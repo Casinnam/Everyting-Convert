@@ -404,19 +404,32 @@
 
   function replaceButtonText(button, text) {
     if (!button || !text) return;
-    Array.from(button.childNodes).forEach((node) => {
-      if (node.nodeType === Node.TEXT_NODE) node.remove();
-    });
+    const textNode = Array.from(button.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
+    if (textNode) {
+      textNode.nodeValue = ` ${text}`;
+      return;
+    }
+    const label = button.querySelector('[data-button-label]');
+    if (label) {
+      label.textContent = text;
+      return;
+    }
     button.appendChild(document.createTextNode(` ${text}`));
   }
 
   function replaceLabelText(label, text) {
     if (!label || !text) return;
-    const firstElement = Array.from(label.childNodes).find((node) => node.nodeType === Node.ELEMENT_NODE);
-    Array.from(label.childNodes).forEach((node) => {
-      if (node.nodeType === Node.TEXT_NODE) node.remove();
-    });
-    label.insertBefore(document.createTextNode(text), firstElement || label.firstChild);
+    const textNode = Array.from(label.childNodes).find((node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
+    if (textNode) {
+      textNode.nodeValue = text;
+      return;
+    }
+    const labelText = label.querySelector('[data-label-text]');
+    if (labelText) {
+      labelText.textContent = text;
+      return;
+    }
+    label.insertBefore(document.createTextNode(text), label.firstChild);
   }
 
   function detectTool() {

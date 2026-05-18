@@ -376,27 +376,39 @@
   }
 
   function getAuthPath() {
-    const path = decodeURIComponent(window.location.pathname);
-    const fileName = path.split('/').pop();
-    const isRootPage = ['index.html', 'auth.html', 'admin.html', 'about.html', ''].includes(fileName);
-    return isRootPage ? 'auth.html' : '../auth.html';
+    return rootRelativePath('auth.html');
   }
 
   function getAuthRedirectUrl() {
-    const authUrl = new URL(getAuthPath(), window.location.href);
-    if (authUrl.protocol !== 'file:') return authUrl.href;
+    const targetPath = rootRelativePath('auth.html');
+    if (window.location.protocol !== 'file:') {
+      return new URL(targetPath, window.location.href).href;
+    }
 
-    const path = decodeURIComponent(window.location.pathname).replace(/\\/g, '/');
-    const rootMarker = '/Everything Convert Main/';
-    const markerIndex = path.indexOf(rootMarker);
-    const relativePath = markerIndex >= 0
-      ? path.slice(markerIndex + rootMarker.length)
-      : 'auth.html';
-    const depth = relativePath.includes('/')
-      ? '../'.repeat(relativePath.split('/').length - 1)
-      : '';
+    return new URL(targetPath, localDevBaseUrl()).href;
+  }
 
-    return new URL(depth + 'auth.html', 'http://127.0.0.1:8016/' + relativePath).href;
+  function pathDepth() {
+    const path = decodeURIComponent(window.location.pathname || '/').replace(/\\/g, '/');
+    const withoutFile = path.endsWith('/')
+      ? path
+      : path.slice(0, path.lastIndexOf('/') + 1);
+    const segments = withoutFile.split('/').filter(Boolean);
+
+    if (window.location.protocol === 'file:') {
+      const rootIndex = segments.lastIndexOf('Everything Convert Main');
+      if (rootIndex >= 0) return Math.max(0, segments.length - rootIndex - 1);
+    }
+
+    return Math.max(0, segments.length);
+  }
+
+  function rootRelativePath(fileName) {
+    return `${'../'.repeat(pathDepth())}${fileName}`;
+  }
+
+  function localDevBaseUrl() {
+    return window.EVERYTHING_CONVERT_LOCAL_ORIGIN || 'http://127.0.0.1:8016/';
   }
 
   function normalizeAuthRedirect() {
@@ -455,6 +467,8 @@
     requireLogin,
     requirePro,
     requireAdmin,
+    getAuthPath,
+    getAuthRedirectUrl,
     isPro,
     isAdmin,
     formatPlan,

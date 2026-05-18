@@ -5,9 +5,12 @@ const vm = require('vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'usage-limit.js'), 'utf8');
 
-function loadModule() {
+function loadModule(pathname = '/index.html', protocol = 'https:') {
   const sandbox = {
-    window: { addEventListener() {} },
+    window: {
+      addEventListener() {},
+      location: { pathname, protocol },
+    },
     document: {
       readyState: 'complete',
       addEventListener() {},
@@ -77,4 +80,19 @@ const api = loadModule();
   assert.strictEqual(controller.remaining(), Infinity);
 }
 
+{
+  const rootApi = loadModule('/index.html', 'https:');
+  assert.strictEqual(rootApi.rootPrefix(), '');
+
+  const oneLevelApi = loadModule('/pdf to word/pdf-to-word.html', 'https:');
+  assert.strictEqual(oneLevelApi.rootPrefix(), '../');
+
+  const twoLevelApi = loadModule('/tools/pdf/word.html', 'https:');
+  assert.strictEqual(twoLevelApi.rootPrefix(), '../../');
+
+  const fileApi = loadModule('/D:/아는척하기/웹사이트 제작/Everything Convert Main/pdf to word/pdf-to-word.html', 'file:');
+  assert.strictEqual(fileApi.rootPrefix(), '../');
+}
+
 console.log('usage-limit tests passed');
+console.log('usage path tests passed');
