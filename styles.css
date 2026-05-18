@@ -82,9 +82,13 @@ body {
     color: var(--text-main);
 }
 
-.logo i {
-    color: var(--primary);
-    font-size: 1.8rem;
+.brand-icon {
+    display: inline-block;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 8px;
+    flex: 0 0 auto;
+    object-fit: contain;
 }
 
 nav {
@@ -584,8 +588,11 @@ nav {
     font-weight: 800;
 }
 
-.footer-logo i {
-    color: var(--primary);
+.footer-logo .brand-icon,
+.footer-group h2 .brand-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 5px;
 }
 
 .footer-bottom p {
