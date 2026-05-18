@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy - Everything Convert</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <a class="logo logo-link" href="index.html"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>Everything Convert</span></a>
+        <nav><a href="index.html" class="nav-link">Home</a><a href="index.html#tools" class="nav-link">Tools</a><a href="pricing.html" class="nav-link">Pricing</a><a href="auth.html" class="nav-link" data-auth-login>Login</a><a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a></nav>
+    </header>
+    <main class="pricing-main">
+        <section class="pricing-hero"><p class="pricing-kicker">Privacy</p><h1>Privacy Policy</h1><p>Everything Convert is built to process files in your browser whenever possible. We do not intentionally collect file contents for browser-based conversions.</p></section>
+        <section class="pricing-note"><h2>What we store</h2><p>Accounts, login state, plan level, and limited usage data may be stored through Supabase or Vercel services. Payment data will be handled by Stripe when billing is connected.</p></section>
+    </main>
+    <footer class="site-footer"><div class="footer-legal-row"><a href="about.html">About Us</a><a href="donate.html">Donate</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security and Compliance</a><a href="mailto:contact@everythingconvert.com">Contact</a></div><div class="footer-bottom"><div class="footer-logo"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>Everything Convert</span></div><p>© EverythingConvert.com v.00 All rights reserved (2026)</p></div></footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="auth.js"></script>
+</body>
+</html>
