@@ -154,3 +154,16 @@ for each row execute procedure public.handle_new_user();
 
 -- 첫 관리자를 지정할 때 Supabase SQL Editor에서 실행:
 -- update public.profiles set role = 'admin', updated_at = now() where email = 'hijacker05@gmail.com';
+
+-- First admin bootstrap.
+-- Run this whole file in Supabase SQL Editor after signing up with hijacker05@gmail.com.
+-- If the auth user already exists, this creates/updates the matching profile as admin.
+insert into public.profiles (id, email, username, plan, role)
+select id, email, coalesce(nullif(raw_user_meta_data->>'username', ''), public.default_username(email, id)), 'free', 'admin'
+from auth.users
+where email = 'hijacker05@gmail.com'
+on conflict (id) do update
+set email = excluded.email,
+    username = coalesce(public.profiles.username, excluded.username),
+    role = 'admin',
+    updated_at = now();
