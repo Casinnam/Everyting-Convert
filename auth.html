@@ -679,7 +679,13 @@
             }
         });
 
-        window.addEventListener('everything-auth-change', updateAccountView);
+        window.addEventListener('everything-auth-change', () => {
+            updateAccountView();
+            const state = EverythingConvertAuth.state;
+            if (redirectTarget && state.ready && state.user) {
+                setTimeout(goToRedirectTarget, 100);
+            }
+        });
         document.addEventListener('DOMContentLoaded', () => {
             initializeAuthLanguageText();
             updateAccountView();

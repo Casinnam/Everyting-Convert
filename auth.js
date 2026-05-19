@@ -309,12 +309,12 @@
     setFallbackProfile();
     state.ready = true;
     renderAuthWidgets();
-    loadProfile()
-      .then(renderAuthWidgets)
-      .catch((profileError) => {
-        console.warn('Could not refresh profile after login:', profileError.message);
-        renderAuthWidgets();
-      });
+    try {
+      await loadProfile();
+    } catch (profileError) {
+      console.warn('Could not refresh profile after login:', profileError.message);
+    }
+    renderAuthWidgets();
     return data;
   }
 
