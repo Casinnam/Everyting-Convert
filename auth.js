@@ -157,7 +157,7 @@
       const result = await withTimeout(
         state.client
           .from('profiles')
-          .select('id,email,username,plan,role')
+          .select('id,email,plan,role')
           .eq('id', state.user.id)
           .maybeSingle(),
         '프로필 확인',
@@ -187,6 +187,26 @@
       console.warn('Could not load profile:', error.message);
     } else {
       data = profileWithRole;
+    }
+
+    if (!data && state.user.email) {
+      try {
+        const profileByEmail = await withTimeout(
+          state.client
+            .from('profiles')
+            .select('id,email,plan,role')
+            .eq('email', state.user.email)
+            .maybeSingle(),
+          'profile email check',
+        );
+        if (profileByEmail.error) {
+          console.warn('Could not load profile by email:', profileByEmail.error.message);
+        } else {
+          data = profileByEmail.data ? { ...profileByEmail.data, username: emailPrefix(state.user.email) } : null;
+        }
+      } catch (profileByEmailError) {
+        console.warn('Could not load profile by email:', profileByEmailError.message);
+      }
     }
 
     state.profile = data || { id: state.user.id, email: state.user.email, username: emailPrefix(state.user.email), plan: 'free', role: 'user' };

@@ -31,7 +31,7 @@ as $$
   select exists (
     select 1
     from public.profiles
-    where id = user_id
+    where (id = user_id or lower(email) = lower(auth.jwt()->>'email'))
       and role = 'admin'
   );
 $$;
@@ -41,7 +41,7 @@ create policy "Users can read own profile"
 on public.profiles
 for select
 to authenticated
-using (auth.uid() = id);
+using (auth.uid() = id or lower(email) = lower(auth.jwt()->>'email'));
 
 drop policy if exists "Admins can read all profiles" on public.profiles;
 create policy "Admins can read all profiles"
@@ -159,10 +159,11 @@ for each row execute procedure public.handle_new_user();
 -- Run this whole file in Supabase SQL Editor after signing up with hijacker05@gmail.com.
 -- If the auth user already exists, this creates/updates the matching profile as admin.
 insert into public.profiles (id, email, plan, role)
-select id, email, 'free', 'admin'
+select id, email, 'pro', 'admin'
 from auth.users
 where email = 'hijacker05@gmail.com'
 on conflict (id) do update
 set email = excluded.email,
+    plan = 'pro',
     role = 'admin',
     updated_at = now();
