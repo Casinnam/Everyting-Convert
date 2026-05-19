@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Everything Convert - 관리자</title>
+    <title>Admin - Everything Convert</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        .admin-layout {
+            width: 100%;
+            display: grid;
+            gap: 1.25rem;
+        }
+
         .admin-panel {
             width: 100%;
             background: var(--card-bg);
-            border: 1px solid rgba(47, 38, 18, 0.16);
+            border: 1px solid var(--line);
             border-radius: 8px;
             padding: 1.5rem;
             backdrop-filter: blur(16px);
@@ -28,41 +34,15 @@
             flex-wrap: wrap;
         }
 
-        .quick-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 0.75rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .quick-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            border-radius: 6px;
-            padding: 0.8rem 1rem;
-            color: var(--text-main);
-            background: rgba(255, 253, 246, 0.9);
-            border: 1px solid rgba(47, 38, 18, 0.18);
-            font-weight: 800;
-        }
-
-        .quick-link:hover {
-            border-color: var(--primary);
-            color: white;
-        }
-
         .admin-status {
             color: var(--text-muted);
             line-height: 1.5;
+            font-weight: 700;
         }
 
         .admin-button {
-            border: 1px solid rgba(47, 38, 18, 0.20);
-            background: rgba(255, 253, 246, 0.9);
+            border: 1px solid var(--line);
+            background: rgba(255, 253, 246, 0.92);
             color: var(--text-main);
             padding: 0.7rem 1rem;
             border-radius: 6px;
@@ -77,15 +57,82 @@
             color: white;
         }
 
+        .quick-links,
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .quick-link,
+        .stat-card {
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            color: var(--text-main);
+            background: rgba(255, 253, 246, 0.92);
+            border: 1px solid var(--line);
+            text-decoration: none;
+        }
+
+        .quick-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 800;
+        }
+
+        .quick-link:hover,
+        .admin-button:hover {
+            border-color: rgba(47, 38, 18, 0.36);
+        }
+
+        .stat-card span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 1.85rem;
+            line-height: 1;
+        }
+
+        .admin-filters {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) 160px 160px;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .admin-filters input,
+        .admin-filters select,
+        .admin-table select {
+            width: 100%;
+            background: rgba(255, 253, 246, 0.95);
+            border: 1px solid var(--line);
+            color: var(--text-main);
+            border-radius: 6px;
+            padding: 0.65rem 0.75rem;
+            font: inherit;
+            outline: none;
+        }
+
         .admin-table-wrap {
             overflow-x: auto;
-            border: 1px solid rgba(47, 38, 18, 0.12);
+            border: 1px solid var(--line);
             border-radius: 6px;
         }
 
         .admin-table {
             width: 100%;
-            min-width: 880px;
+            min-width: 980px;
             border-collapse: collapse;
             color: var(--text-main);
             font-size: 0.92rem;
@@ -94,29 +141,20 @@
         .admin-table th,
         .admin-table td {
             padding: 0.85rem;
-            border-bottom: 1px solid rgba(47, 38, 18, 0.12);
+            border-bottom: 1px solid var(--line);
             text-align: left;
             vertical-align: middle;
         }
 
         .admin-table th {
             color: var(--text-muted);
-            background: rgba(255, 253, 246, 0.9);
-            font-size: 0.78rem;
+            background: rgba(255, 253, 246, 0.95);
+            font-size: 0.76rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
         }
 
         .admin-table tr:last-child td { border-bottom: none; }
-
-        .admin-table select {
-            background: rgba(255, 253, 246, 0.95);
-            border: 1px solid rgba(47, 38, 18, 0.20);
-            color: var(--text-main);
-            border-radius: 6px;
-            padding: 0.5rem;
-            font: inherit;
-        }
 
         .badge {
             display: inline-flex;
@@ -125,12 +163,13 @@
             padding: 0.25rem 0.7rem;
             font-weight: 800;
             font-size: 0.78rem;
-            border: 1px solid rgba(47, 38, 18, 0.16);
+            border: 1px solid var(--line);
         }
 
         .badge.pro { color: #166534; background: rgba(16, 185, 129, 0.12); }
         .badge.free { color: #2f2612; background: rgba(47, 38, 18, 0.08); }
-        .badge.admin { color: #fef3c7; background: rgba(245, 158, 11, 0.14); }
+        .badge.admin { color: #7c2d12; background: rgba(245, 158, 11, 0.16); }
+        .badge.user { color: #3f3a2b; background: rgba(47, 38, 18, 0.06); }
 
         .empty-state {
             padding: 2rem;
@@ -139,18 +178,23 @@
             line-height: 1.6;
         }
 
-        @media (max-width: 720px) {
+        .db-note {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .db-note strong {
+            color: var(--text-main);
+        }
+
+        @media (max-width: 760px) {
             .admin-toolbar { align-items: stretch; }
             .admin-button { width: 100%; }
+            .admin-filters { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="background-elements">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-    </div>
-
     <header class="header">
         <div class="logo">
             <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
@@ -171,7 +215,7 @@
                         <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
                         <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
                         <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
-                        </div>
+                    </div>
                     <div class="tools-group">
                         <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
                         <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
@@ -205,32 +249,63 @@
             </div>
             <a href="auth.html" class="nav-link" data-auth-login>Login</a>
             <a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a>
-            <a href="admin.html" class="nav-link active">Admin</a>
+            <a href="admin.html" class="nav-link active" data-admin-only style="display:none;">Admin</a>
             <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
         </nav>
     </header>
 
     <main class="main-container">
         <section class="hero">
-            <h1 class="hero-title">회원 등급을<br><span class="gradient-text">관리하세요</span></h1>
-            <p class="hero-subtitle">관리자는 회원 목록을 확인하고 Free/Pro 플랜과 관리자 역할을 변경할 수 있습니다.</p>
+            <h1 class="hero-title">Admin Dashboard</h1>
+            <p class="hero-subtitle">View signed-up users, filter accounts, and manage Free, Pro, and Admin access from the Supabase profiles table.</p>
         </section>
 
-        <section class="admin-panel">
+        <section class="admin-layout">
             <div class="quick-links">
                 <a class="quick-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
                 <a class="quick-link" href="index.html#tools"><i class="fa-solid fa-table-cells-large"></i> Tools</a>
-                <a class="quick-link" href="pdf to excel/pdf-to-excel.html"><i class="fa-solid fa-file-excel"></i> PDF to Excel</a>
-                <a class="quick-link" href="image to pdf/image-to-pdf.html"><i class="fa-regular fa-image"></i> Image to PDF</a>
+                <a class="quick-link" href="pricing.html"><i class="fa-solid fa-credit-card"></i> Pricing</a>
                 <a class="quick-link" href="auth.html"><i class="fa-solid fa-user"></i> Account</a>
+                <a class="quick-link" href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
             </div>
-            <div class="admin-toolbar">
-                <div class="admin-status" id="adminStatus">권한 확인 중...</div>
-                <button class="admin-button primary" id="refreshBtn" type="button">새로고침</button>
-            </div>
-            <div class="admin-table-wrap" id="tableWrap">
-                <div class="empty-state">회원 정보를 불러오는 중입니다.</div>
-            </div>
+
+            <section class="admin-panel">
+                <div class="admin-toolbar">
+                    <div class="admin-status" id="adminStatus">Checking admin access...</div>
+                    <button class="admin-button primary" id="refreshBtn" type="button">Refresh</button>
+                </div>
+
+                <div class="admin-stats" id="adminStats">
+                    <div class="stat-card"><span>Total users</span><strong>-</strong></div>
+                    <div class="stat-card"><span>Pro users</span><strong>-</strong></div>
+                    <div class="stat-card"><span>Free users</span><strong>-</strong></div>
+                    <div class="stat-card"><span>Admins</span><strong>-</strong></div>
+                    <div class="stat-card"><span>New today</span><strong>-</strong></div>
+                    <div class="stat-card"><span>New 7 days</span><strong>-</strong></div>
+                </div>
+
+                <div class="admin-filters">
+                    <input id="searchInput" type="search" placeholder="Search by email, username, or user id">
+                    <select id="planFilter">
+                        <option value="all">All plans</option>
+                        <option value="free">Free only</option>
+                        <option value="pro">Pro only</option>
+                    </select>
+                    <select id="roleFilter">
+                        <option value="all">All roles</option>
+                        <option value="user">Users only</option>
+                        <option value="admin">Admins only</option>
+                    </select>
+                </div>
+
+                <div class="admin-table-wrap" id="tableWrap">
+                    <div class="empty-state">Loading members...</div>
+                </div>
+            </section>
+
+            <section class="admin-panel db-note">
+                <strong>Database note:</strong> Everything Convert is already using Supabase as the site database. Supabase is PostgreSQL-based, so it fills the same role MySQL would here: storing members, plans, roles, and future payment or conversion records. The setup SQL lives in <code>supabase-setup.sql</code>.
+            </section>
         </section>
     </main>
 
@@ -238,7 +313,7 @@
         <div class="footer-grid">
             <div class="footer-group">
                 <h2><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"> Everything Convert</h2>
-
+                <a href="pricing.html">Pricing</a>
                 <a href="index.html#tools">All tools</a>
                 <a href="auth.html">Account</a>
             </div>
@@ -256,13 +331,13 @@
             <div class="footer-group">
                 <h2><i class="fa-regular fa-image"></i> Image</h2>
                 <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
-                        <a href="image to pdf/image-to-pdf.html">PNG to PDF</a>
-                        <a href="image converter/image-converter.html">Image Converter</a>
-                        <a href="image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
-                        <a href="image converter/image-converter.html?mode=jfif-png">JFIF to PNG</a>
-                        <a href="image converter/image-converter.html?mode=png-svg">PNG to SVG</a>
-                        <a href="image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
-                        <a href="image converter/image-converter.html?mode=svg">SVG Converter</a>
+                <a href="image to pdf/image-to-pdf.html">PNG to PDF</a>
+                <a href="image converter/image-converter.html">Image Converter</a>
+                <a href="image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
+                <a href="image converter/image-converter.html?mode=jfif-png">JFIF to PNG</a>
+                <a href="image converter/image-converter.html?mode=png-svg">PNG to SVG</a>
+                <a href="image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
+                <a href="image converter/image-converter.html?mode=svg">SVG Converter</a>
             </div>
             <div class="footer-group">
                 <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
@@ -273,23 +348,15 @@
                 <a href="media converter/media-converter.html?mode=video-mp3">Video to MP3</a>
                 <a href="media converter/media-converter.html?mode=mov-mp4">MOV to MP4</a>
             </div>
-            <div class="footer-group">
-                <h2><i class="fa-regular fa-file-video"></i> GIF</h2>
-                <a href="gif converter/gif-converter.html">Video to GIF</a>
-                <a href="gif converter/gif-converter.html?mode=mp4-gif">MP4 to GIF</a>
-                <a href="gif converter/gif-converter.html?mode=webm-gif">WEBM to GIF</a>
-                <a href="gif converter/gif-converter.html?mode=apng-gif">APNG to GIF</a>
-                <a href="gif converter/gif-converter.html?mode=gif-mp4">GIF to MP4</a>
-                <a href="gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
-            </div>
         </div>
 
-        <div class="footer-legal-row" style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:1rem 0 1.25rem;border-top:1px solid rgba(47,38,18,.12);"><a style="color:inherit;text-decoration:none;font-weight:700;" href="about.html">About Us</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="privacy.html">Privacy</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="terms.html">Terms</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="security.html">Security and Compliance</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="contact.html">Contact</a></div><div class="footer-bottom">
+        <div class="footer-legal-row"><a href="about.html">About Us</a><a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security and Compliance</a><a href="contact.html">Contact</a></div>
+        <div class="footer-bottom">
             <div class="footer-logo">
                 <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
                 <span>Everything Convert</span>
             </div>
-            <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
             <div class="language-menu">
                 <button class="language-toggle" type="button" aria-expanded="false">
                     <i class="fa-solid fa-globe"></i>
@@ -315,7 +382,12 @@
         const adminStatus = document.getElementById('adminStatus');
         const tableWrap = document.getElementById('tableWrap');
         const refreshBtn = document.getElementById('refreshBtn');
+        const adminStats = document.getElementById('adminStats');
+        const searchInput = document.getElementById('searchInput');
+        const planFilter = document.getElementById('planFilter');
+        const roleFilter = document.getElementById('roleFilter');
         let loadingProfiles = false;
+        let allProfiles = [];
 
         function escapeHtml(value) {
             return String(value || '')
@@ -328,62 +400,115 @@
 
         function formatDate(value) {
             if (!value) return '-';
-            return new Date(value).toLocaleString('ko-KR', {
+            return new Date(value).toLocaleString(undefined, {
                 year: 'numeric',
-                month: '2-digit',
+                month: 'short',
                 day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit',
             });
         }
 
+        function daysAgo(days) {
+            const date = new Date();
+            date.setDate(date.getDate() - days);
+            return date;
+        }
+
+        function isSameLocalDay(value) {
+            if (!value) return false;
+            const date = new Date(value);
+            const now = new Date();
+            return date.getFullYear() === now.getFullYear() &&
+                date.getMonth() === now.getMonth() &&
+                date.getDate() === now.getDate();
+        }
+
         function renderEmpty(message) {
             tableWrap.innerHTML = `<div class="empty-state">${escapeHtml(message)}</div>`;
         }
 
+        function renderStats(profiles) {
+            const sevenDaysAgo = daysAgo(7);
+            const stats = [
+                ['Total users', profiles.length],
+                ['Pro users', profiles.filter(profile => profile.plan === 'pro').length],
+                ['Free users', profiles.filter(profile => profile.plan !== 'pro').length],
+                ['Admins', profiles.filter(profile => profile.role === 'admin').length],
+                ['New today', profiles.filter(profile => isSameLocalDay(profile.created_at)).length],
+                ['New 7 days', profiles.filter(profile => profile.created_at && new Date(profile.created_at) >= sevenDaysAgo).length],
+            ];
+
+            adminStats.innerHTML = stats.map(([label, value]) => `
+                <div class="stat-card"><span>${escapeHtml(label)}</span><strong>${value}</strong></div>
+            `).join('');
+        }
+
+        function filteredProfiles() {
+            const search = searchInput.value.trim().toLowerCase();
+            const plan = planFilter.value;
+            const role = roleFilter.value;
+
+            return allProfiles.filter((profile) => {
+                const haystack = `${profile.id || ''} ${profile.email || ''} ${profile.username || ''}`.toLowerCase();
+                const matchesSearch = !search || haystack.includes(search);
+                const matchesPlan = plan === 'all' || profile.plan === plan;
+                const matchesRole = role === 'all' || profile.role === role;
+                return matchesSearch && matchesPlan && matchesRole;
+            });
+        }
+
         function renderProfiles(profiles) {
+            renderStats(allProfiles);
+
             if (!profiles.length) {
-                renderEmpty('표시할 회원이 없습니다.');
+                renderEmpty(allProfiles.length ? 'No members match the current filters.' : 'No signed-up members found.');
                 return;
             }
 
-            const rows = profiles.map(profile => `
-                <tr data-user-id="${escapeHtml(profile.id)}">
-                    <td><strong>${escapeHtml(profile.username || '-')}</strong></td>
-                    <td>${escapeHtml(profile.email || '-')}</td>
-                    <td><span class="badge ${profile.plan === 'pro' ? 'pro' : 'free'}">${escapeHtml(profile.plan)}</span></td>
-                    <td><span class="badge ${profile.role === 'admin' ? 'admin' : 'free'}">${escapeHtml(profile.role)}</span></td>
-                    <td>${formatDate(profile.created_at)}</td>
-                    <td>
-                        <select data-plan-select>
-                            <option value="free" ${profile.plan === 'free' ? 'selected' : ''}>free</option>
-                            <option value="pro" ${profile.plan === 'pro' ? 'selected' : ''}>pro</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select data-role-select>
-                            <option value="user" ${profile.role === 'user' ? 'selected' : ''}>user</option>
-                            <option value="admin" ${profile.role === 'admin' ? 'selected' : ''}>admin</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button class="admin-button" data-save-user type="button">저장</button>
-                    </td>
-                </tr>
-            `).join('');
+            const rows = profiles.map(profile => {
+                const plan = profile.plan || 'free';
+                const role = profile.role || 'user';
+                return `
+                    <tr data-user-id="${escapeHtml(profile.id)}">
+                        <td><strong>${escapeHtml(profile.username || '-')}</strong><br><small>${escapeHtml(profile.id || '')}</small></td>
+                        <td>${escapeHtml(profile.email || '-')}</td>
+                        <td><span class="badge ${plan === 'pro' ? 'pro' : 'free'}">${escapeHtml(plan)}</span></td>
+                        <td><span class="badge ${role === 'admin' ? 'admin' : 'user'}">${escapeHtml(role)}</span></td>
+                        <td>${formatDate(profile.created_at)}</td>
+                        <td>${formatDate(profile.updated_at)}</td>
+                        <td>
+                            <select data-plan-select>
+                                <option value="free" ${plan === 'free' ? 'selected' : ''}>free</option>
+                                <option value="pro" ${plan === 'pro' ? 'selected' : ''}>pro</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select data-role-select>
+                                <option value="user" ${role === 'user' ? 'selected' : ''}>user</option>
+                                <option value="admin" ${role === 'admin' ? 'selected' : ''}>admin</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="admin-button" data-save-user type="button">Save</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
 
             tableWrap.innerHTML = `
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>유저 ID</th>
-                            <th>이메일</th>
-                            <th>현재 플랜</th>
-                            <th>역할</th>
-                            <th>가입일</th>
-                            <th>플랜 변경</th>
-                            <th>역할 변경</th>
-                            <th>저장</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Role</th>
+                            <th>Signed up</th>
+                            <th>Updated</th>
+                            <th>Change plan</th>
+                            <th>Change role</th>
+                            <th>Save</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
@@ -398,34 +523,40 @@
             planBadge.textContent = plan;
             planBadge.className = `badge ${plan === 'pro' ? 'pro' : 'free'}`;
             roleBadge.textContent = role;
-            roleBadge.className = `badge ${role === 'admin' ? 'admin' : 'free'}`;
+            roleBadge.className = `badge ${role === 'admin' ? 'admin' : 'user'}`;
         }
 
         async function loadProfiles() {
             if (loadingProfiles) return;
             loadingProfiles = true;
             refreshBtn.disabled = true;
-            adminStatus.textContent = '권한 확인 중...';
+            adminStatus.textContent = 'Checking admin access...';
 
             try {
                 await EverythingConvertAuth.refresh();
                 const authState = EverythingConvertAuth.state;
 
                 if (authState.missingConfig) {
-                    renderEmpty('Supabase 설정이 필요합니다.');
-                    adminStatus.textContent = 'Supabase 설정 필요';
+                    allProfiles = [];
+                    renderStats(allProfiles);
+                    renderEmpty('Supabase configuration is required.');
+                    adminStatus.textContent = 'Supabase configuration required';
                     return;
                 }
 
                 if (!authState.user) {
-                    renderEmpty('관리자 페이지를 보려면 로그인해 주세요.');
-                    adminStatus.textContent = '로그인 필요';
+                    allProfiles = [];
+                    renderStats(allProfiles);
+                    renderEmpty('Please log in as an admin to view members.');
+                    adminStatus.textContent = 'Login required';
                     return;
                 }
 
                 if (!EverythingConvertAuth.isAdmin()) {
-                    renderEmpty('관리자 권한이 필요합니다. 첫 관리자는 Supabase SQL Editor에서 role을 admin으로 지정해 주세요.');
-                    adminStatus.textContent = `${authState.user.email} · 관리자 아님`;
+                    allProfiles = [];
+                    renderStats(allProfiles);
+                    renderEmpty('Admin permission is required. Set your profile role to admin in Supabase SQL Editor for the first admin account.');
+                    adminStatus.textContent = `${authState.user.email} is not an admin`;
                     return;
                 }
 
@@ -436,10 +567,11 @@
 
                 if (error) throw error;
 
-                adminStatus.textContent = `${EverythingConvertAuth.displayName()} · Admin · 회원 ${data.length}명`;
-                renderProfiles(data);
+                allProfiles = data || [];
+                adminStatus.textContent = `${EverythingConvertAuth.displayName()} | Admin | ${allProfiles.length} members`;
+                renderProfiles(filteredProfiles());
             } catch (error) {
-                adminStatus.textContent = '불러오기 실패';
+                adminStatus.textContent = 'Failed to load members';
                 renderEmpty(error.message);
             } finally {
                 refreshBtn.disabled = false;
@@ -455,46 +587,54 @@
             const button = row.querySelector('[data-save-user]');
 
             button.disabled = true;
-            button.textContent = '저장 중';
+            button.textContent = 'Saving...';
 
             try {
                 const savePromise = authState.client
                     .from('profiles')
                     .update({ plan, role, updated_at: new Date().toISOString() })
                     .eq('id', userId)
-                    .select('id,plan,role')
+                    .select('id,plan,role,updated_at')
                     .single();
 
                 const { data, error } = await Promise.race([
                     savePromise,
                     new Promise((_, reject) => {
-                        setTimeout(() => reject(new Error('저장 요청 시간이 초과되었습니다. 잠시 후 새로고침해 확인해 주세요.')), 12000);
+                        setTimeout(() => reject(new Error('Save request timed out. Refresh and check again.')), 12000);
                     }),
                 ]);
 
                 if (error) throw error;
+
+                const profile = allProfiles.find(item => item.id === userId);
+                if (profile) {
+                    profile.plan = data.plan;
+                    profile.role = data.role;
+                    profile.updated_at = data.updated_at;
+                }
+
                 updateRowBadges(row, data.plan, data.role);
-                adminStatus.textContent = '저장되었습니다.';
-                setTimeout(loadProfiles, 500);
+                adminStatus.textContent = 'Saved.';
+                renderProfiles(filteredProfiles());
             } catch (error) {
-                alert('저장 실패: ' + error.message);
+                alert('Save failed: ' + error.message);
             } finally {
                 button.disabled = false;
-                button.textContent = '저장';
+                button.textContent = 'Save';
             }
         }
 
         refreshBtn.addEventListener('click', loadProfiles);
-        document.addEventListener('click', (event) => {
-            const link = event.target.closest('a[href^="/"]');
-            if (!link) return;
-            event.preventDefault();
-            window.location.href = link.getAttribute('href');
+        [searchInput, planFilter, roleFilter].forEach((control) => {
+            control.addEventListener('input', () => renderProfiles(filteredProfiles()));
+            control.addEventListener('change', () => renderProfiles(filteredProfiles()));
         });
+
         window.addEventListener('everything-auth-change', () => {
             const state = EverythingConvertAuth.state;
             if (state.ready && state.user) loadProfiles();
         });
+
         tableWrap.addEventListener('click', (event) => {
             const button = event.target.closest('[data-save-user]');
             if (!button) return;
