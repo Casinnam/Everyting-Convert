@@ -436,6 +436,29 @@
         const usernameSaveBtn = document.getElementById('usernameSaveBtn');
         const usernameMessage = document.getElementById('usernameMessage');
         const adminLink = document.getElementById('adminLink');
+        const redirectTarget = safeRedirectTarget();
+
+        function safeRedirectTarget() {
+            const params = new URLSearchParams(window.location.search);
+            const next = params.get('next');
+            if (!next) return '';
+
+            try {
+                const target = new URL(next, window.location.href);
+                if (target.origin !== window.location.origin) return '';
+                const normalizedPath = target.pathname.replace(/\\/g, '/');
+                if (!normalizedPath.endsWith('/admin.html') && !normalizedPath.endsWith('admin.html')) return '';
+                return target.href;
+            } catch (error) {
+                return '';
+            }
+        }
+
+        function goToRedirectTarget() {
+            if (!redirectTarget) return false;
+            window.location.href = redirectTarget;
+            return true;
+        }
 
         function normalizeUsername(value) {
             return String(value || '').trim();
@@ -597,11 +620,13 @@
                     await EverythingConvertAuth.signIn(email, password);
                     setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
                     updateAccountView();
+                    if (goToRedirectTarget()) return;
                     setTimeout(() => {
                         const state = EverythingConvertAuth.state;
                         if (state.user) {
                             setMessage(`${EverythingConvertAuth.displayName()} 계정으로 로그인되었습니다.`, 'success');
                             updateAccountView();
+                            goToRedirectTarget();
                         }
                     }, 500);
                 } else {
@@ -658,6 +683,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeAuthLanguageText();
             updateAccountView();
+            if (redirectTarget && EverythingConvertAuth.state.user) {
+                setTimeout(goToRedirectTarget, 250);
+            }
         });
     </script>
 </body>

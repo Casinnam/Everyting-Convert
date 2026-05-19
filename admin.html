@@ -15,6 +15,11 @@
             gap: 1.25rem;
         }
 
+        .admin-layout[hidden],
+        .admin-gate[hidden] {
+            display: none;
+        }
+
         .admin-panel {
             width: 100%;
             background: var(--card-bg);
@@ -187,6 +192,30 @@
             color: var(--text-main);
         }
 
+        .admin-gate {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .admin-gate h2 {
+            margin: 0 0 0.7rem;
+            font-size: 1.5rem;
+        }
+
+        .admin-gate p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin: 0 0 1rem;
+        }
+
+        .admin-gate-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
         @media (max-width: 760px) {
             .admin-toolbar { align-items: stretch; }
             .admin-button { width: 100%; }
@@ -260,7 +289,12 @@
             <p class="hero-subtitle">View signed-up users, filter accounts, and manage Free, Pro, and Admin access from the Supabase profiles table.</p>
         </section>
 
-        <section class="admin-layout">
+        <section class="admin-panel admin-gate" id="adminGate">
+            <h2>Checking admin access...</h2>
+            <p>Please wait while we verify your login and admin role.</p>
+        </section>
+
+        <section class="admin-layout" id="adminContent" hidden>
             <div class="quick-links">
                 <a class="quick-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
                 <a class="quick-link" href="index.html#tools"><i class="fa-solid fa-table-cells-large"></i> Tools</a>
@@ -386,6 +420,8 @@
         const searchInput = document.getElementById('searchInput');
         const planFilter = document.getElementById('planFilter');
         const roleFilter = document.getElementById('roleFilter');
+        const adminGate = document.getElementById('adminGate');
+        const adminContent = document.getElementById('adminContent');
         let loadingProfiles = false;
         let allProfiles = [];
 
@@ -426,6 +462,36 @@
 
         function renderEmpty(message) {
             tableWrap.innerHTML = `<div class="empty-state">${escapeHtml(message)}</div>`;
+        }
+
+        function authPageUrl() {
+            const target = new URL('auth.html', window.location.href);
+            target.searchParams.set('next', 'admin.html');
+            return target.href;
+        }
+
+        function showGate(title, message, actions = '') {
+            adminContent.hidden = true;
+            adminGate.hidden = false;
+            adminGate.innerHTML = `
+                <h2>${escapeHtml(title)}</h2>
+                <p>${escapeHtml(message)}</p>
+                ${actions ? `<div class="admin-gate-actions">${actions}</div>` : ''}
+            `;
+        }
+
+        function showAdminContent() {
+            adminGate.hidden = true;
+            adminContent.hidden = false;
+        }
+
+        function redirectToLogin() {
+            showGate(
+                'Login required',
+                'Admin access requires a signed-in admin account. Redirecting to the login page...',
+                `<a class="admin-button primary" href="${escapeHtml(authPageUrl())}">Go to login</a>`
+            );
+            window.location.replace(authPageUrl());
         }
 
         function renderStats(profiles) {
@@ -539,7 +605,7 @@
                 if (authState.missingConfig) {
                     allProfiles = [];
                     renderStats(allProfiles);
-                    renderEmpty('Supabase configuration is required.');
+                    showGate('Supabase configuration required', 'The admin page needs a valid Supabase URL and anon key in supabase-config.js.');
                     adminStatus.textContent = 'Supabase configuration required';
                     return;
                 }
@@ -547,18 +613,24 @@
                 if (!authState.user) {
                     allProfiles = [];
                     renderStats(allProfiles);
-                    renderEmpty('Please log in as an admin to view members.');
                     adminStatus.textContent = 'Login required';
+                    redirectToLogin();
                     return;
                 }
 
                 if (!EverythingConvertAuth.isAdmin()) {
                     allProfiles = [];
                     renderStats(allProfiles);
-                    renderEmpty('Admin permission is required. Set your profile role to admin in Supabase SQL Editor for the first admin account.');
+                    showGate(
+                        'Access denied',
+                        'This account is signed in, but it does not have the admin role. Ask an existing admin to change your role, or set the first admin in Supabase SQL Editor.',
+                        '<a class="admin-button primary" href="index.html">Go home</a><a class="admin-button" href="auth.html">Account</a>'
+                    );
                     adminStatus.textContent = `${authState.user.email} is not an admin`;
                     return;
                 }
+
+                showAdminContent();
 
                 const { data, error } = await authState.client
                     .from('profiles')

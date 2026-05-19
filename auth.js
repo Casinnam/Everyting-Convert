@@ -381,11 +381,18 @@
 
   function getAuthRedirectUrl() {
     const targetPath = rootRelativePath('auth.html');
+    const currentParams = new URLSearchParams(window.location.search);
+    const next = currentParams.get('next');
+    let redirectUrl;
+
     if (window.location.protocol !== 'file:') {
-      return new URL(targetPath, window.location.href).href;
+      redirectUrl = new URL(targetPath, window.location.href);
+    } else {
+      redirectUrl = new URL(targetPath, localDevBaseUrl());
     }
 
-    return new URL(targetPath, localDevBaseUrl()).href;
+    if (next) redirectUrl.searchParams.set('next', next);
+    return redirectUrl.href;
   }
 
   function pathDepth() {
