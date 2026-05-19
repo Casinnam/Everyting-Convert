@@ -173,7 +173,7 @@
       const fallback = await withTimeout(
         state.client
           .from('profiles')
-          .select('id,email,plan')
+          .select('id,email,plan,role')
           .eq('id', state.user.id)
           .maybeSingle(),
         '프로필 확인',
@@ -181,7 +181,7 @@
       if (fallback.error) {
         console.warn('Could not load profile:', fallback.error.message);
       } else {
-        data = fallback.data ? { ...fallback.data, username: emailPrefix(state.user.email), role: 'user' } : null;
+        data = fallback.data ? { ...fallback.data, username: emailPrefix(state.user.email), role: fallback.data.role || 'user' } : null;
       }
     } else if (error) {
       console.warn('Could not load profile:', error.message);

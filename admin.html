@@ -632,10 +632,22 @@
 
                 showAdminContent();
 
-                const { data, error } = await authState.client
+                let { data, error } = await authState.client
                     .from('profiles')
                     .select('id,email,username,plan,role,created_at,updated_at')
                     .order('created_at', { ascending: false });
+
+                if (error && error.code === '42703') {
+                    const fallback = await authState.client
+                        .from('profiles')
+                        .select('id,email,plan,role,created_at,updated_at')
+                        .order('created_at', { ascending: false });
+                    data = (fallback.data || []).map((profile) => ({
+                        ...profile,
+                        username: profile.email ? profile.email.split('@')[0] : '',
+                    }));
+                    error = fallback.error;
+                }
 
                 if (error) throw error;
 
