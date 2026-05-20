@@ -467,10 +467,10 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <script src="auth.js"></script>
-    <script src="tools-menu.js"></script>
-    <script src="language-menu.js"></script>
+    <script src="supabase-config.js?v=auth-20260519"></script>
+    <script src="auth.js?v=auth-20260519"></script>
+    <script src="tools-menu.js?v=auth-20260519"></script>
+    <script src="language-menu.js?v=auth-20260519"></script>
     <script>
         let mode = 'login';
 
@@ -710,6 +710,15 @@
             applyCurrentLanguage();
         }
 
+        function getAuthApi() {
+            const auth = window.EverythingConvertAuth;
+            if (!auth) {
+                setMessage('Login service is still loading. Please refresh the page and try again.', 'error');
+                return null;
+            }
+            return auth;
+        }
+
         function friendlyAuthError(error) {
             const message = error && error.message ? error.message : String(error);
             if (/Invalid login credentials/i.test(message)) {
@@ -764,10 +773,13 @@
         });
 
         googleBtn.addEventListener('click', async () => {
+            const auth = getAuthApi();
+            if (!auth) return;
+
             googleBtn.disabled = true;
             setMessage('Google 로그인 페이지로 이동 중...', '');
             try {
-                await EverythingConvertAuth.signInWithGoogle();
+                await auth.signInWithGoogle();
             } catch (error) {
                 setMessage(error.message, 'error');
                 googleBtn.disabled = false;
@@ -785,12 +797,15 @@
                 return;
             }
 
+            const auth = getAuthApi();
+            if (!auth) return;
+
             submitBtn.disabled = true;
             setMessage(mode === 'login' ? '로그인 중...' : '회원가입 중...', '');
 
             try {
                 if (mode === 'login') {
-                    await EverythingConvertAuth.signIn(email, password);
+                    await auth.signIn(email, password);
                     if (rememberEmail.checked) {
                         saveRememberedEmail(email);
                         hydrateRememberedEmails();
@@ -799,15 +814,15 @@
                     updateAccountView();
                     if (goToRedirectTarget()) return;
                     setTimeout(() => {
-                        const state = EverythingConvertAuth.state;
+                        const state = auth.state;
                         if (state.user) {
-                            setMessage(`${EverythingConvertAuth.displayName()} 계정으로 로그인되었습니다.`, 'success');
+                            setMessage(`${auth.displayName()} 계정으로 로그인되었습니다.`, 'success');
                             updateAccountView();
                             goToRedirectTarget();
                         }
                     }, 500);
                 } else {
-                    const result = await EverythingConvertAuth.signUp(email, password, username);
+                    const result = await auth.signUp(email, password, username);
                     if (result.session) {
                         setMessage('회원가입과 로그인이 완료되었습니다.', 'success');
                         updateAccountView();
@@ -836,11 +851,13 @@
             usernameMessage.textContent = '저장 중...';
             usernameMessage.className = 'auth-message';
             try {
-                const currentUsername = EverythingConvertAuth.state.profile && EverythingConvertAuth.state.profile.username
-                    ? EverythingConvertAuth.state.profile.username
+                const auth = getAuthApi();
+                if (!auth) return;
+                const currentUsername = auth.state.profile && auth.state.profile.username
+                    ? auth.state.profile.username
                     : '';
                 if (currentUsername.toLowerCase() !== username.toLowerCase()) {
-                    await EverythingConvertAuth.updateUsername(username);
+                    await auth.updateUsername(username);
                 }
                 usernameMessage.textContent = '유저 ID가 저장되었습니다. 홈으로 이동합니다...';
                 usernameMessage.className = 'auth-message success';
@@ -858,7 +875,8 @@
 
         window.addEventListener('everything-auth-change', () => {
             updateAccountView();
-            const state = EverythingConvertAuth.state;
+            const auth = window.EverythingConvertAuth;
+            const state = auth ? auth.state : { ready: false, user: null };
             if (redirectTarget && state.ready && state.user) {
                 setTimeout(goToRedirectTarget, 100);
             }
@@ -868,7 +886,8 @@
             hydrateRememberedEmails();
             showCachedAccountView();
             updateAccountView();
-            if (redirectTarget && EverythingConvertAuth.state.user) {
+            const auth = window.EverythingConvertAuth;
+            if (redirectTarget && auth && auth.state.user) {
                 setTimeout(goToRedirectTarget, 250);
             }
         });
