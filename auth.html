@@ -366,7 +366,7 @@
             <div class="account-panel" id="accountPanel">
                 <div class="account-card">
                     <div>표시 이름: <strong id="accountName">-</strong></div>
-                    <div>회원 등급: <strong id="accountPlan">-</strong></div>
+                    <div>회원 등급: <strong id="accountPlan" data-no-i18n>-</strong></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
                             <label for="accountUsername">유저 ID 변경</label>
@@ -386,7 +386,7 @@
             </div>
 
             <div class="auth-status-card">
-                <div>현재 상태: <strong data-auth-state>확인 중...</strong></div>
+                <div>현재 상태: <strong data-auth-state data-no-i18n>확인 중...</strong></div>
                 <div style="margin-top:0.75rem;">
                     <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">로그아웃</button>
                 </div>
@@ -499,6 +499,7 @@
         const adminLink = document.getElementById('adminLink');
         const redirectTarget = safeRedirectTarget();
         const rememberedEmailKey = 'everything_convert_remembered_emails';
+        let passwordTouched = false;
 
         function safeRedirectTarget() {
             const params = new URLSearchParams(window.location.search);
@@ -603,6 +604,8 @@
             authForm.hidden = true;
             authTabs.hidden = true;
             accountPanel.classList.add('visible');
+            delete accountName.dataset.i18nKey;
+            delete accountPlan.dataset.i18nKey;
             accountName.textContent = cached.username;
             accountUsername.value = cached.username;
             accountPlan.textContent = cachedPlanLabel(cached);
@@ -674,6 +677,8 @@
             if (!loggedIn) return;
 
             const name = auth.displayName();
+            delete accountName.dataset.i18nKey;
+            delete accountPlan.dataset.i18nKey;
             accountName.textContent = name;
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
             accountPlan.textContent = auth.formatPlan();
@@ -728,7 +733,22 @@
         loginTab.addEventListener('click', () => setMode('login'));
         signupTab.addEventListener('click', () => setMode('signup'));
 
+        passwordInput.addEventListener('input', () => {
+            passwordTouched = true;
+        });
+
         passwordToggle.addEventListener('click', () => {
+            if (!passwordTouched && passwordInput.value) {
+                passwordInput.value = '';
+                passwordInput.type = 'password';
+                passwordToggle.setAttribute('aria-pressed', 'false');
+                passwordToggle.setAttribute('aria-label', 'Show password');
+                passwordToggle.innerHTML = '<i class="fa-regular fa-eye"></i>';
+                setMessage('For security, please re-enter the password before showing it.', '');
+                passwordInput.focus();
+                return;
+            }
+
             const willShow = passwordInput.type === 'password';
             passwordInput.type = willShow ? 'text' : 'password';
             passwordToggle.setAttribute('aria-pressed', String(willShow));

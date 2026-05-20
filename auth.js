@@ -124,6 +124,7 @@
       : `${shortName(cached.username)} · ${plan}`;
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
+      delete element.dataset.i18nKey;
       element.textContent = label;
     });
 
@@ -246,6 +247,7 @@
         : translateAuth('authLoginRequired');
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
+      delete element.dataset.i18nKey;
       element.textContent = authLabel;
     });
 

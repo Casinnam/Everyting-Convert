@@ -497,6 +497,10 @@
           return NodeFilter.FILTER_REJECT;
         }
 
+        if (parent.closest('[data-no-i18n]')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
         return node.nodeValue.trim()
           ? NodeFilter.FILTER_ACCEPT
           : NodeFilter.FILTER_SKIP;
