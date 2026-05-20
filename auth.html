@@ -480,6 +480,30 @@
             element.textContent = fallback;
         }
 
+        function cachedPlanLabel(cached) {
+            if (!cached) return 'Checking...';
+            const plan = cached.plan === 'pro' ? 'Pro' : 'Free';
+            return cached.role === 'admin' ? `${plan} · Admin` : plan;
+        }
+
+        function showCachedAccountView() {
+            const auth = window.EverythingConvertAuth;
+            const cached = auth && auth.cachedAuthSnapshot ? auth.cachedAuthSnapshot() : null;
+            if (!cached || !cached.username) return false;
+
+            authForm.hidden = true;
+            authTabs.hidden = true;
+            accountPanel.classList.add('visible');
+            accountName.textContent = cached.username;
+            accountUsername.value = cached.username;
+            accountPlan.textContent = cachedPlanLabel(cached);
+            adminLink.style.display = cached.role === 'admin' ? '' : 'none';
+            accountHint.dataset.i18nKey = 'checking';
+            accountHint.textContent = 'Refreshing account status...';
+            applyCurrentLanguage();
+            return true;
+        }
+
         function initializeAuthLanguageText() {
             const heroTitle = document.querySelector('.hero-title');
             const heroSubtitle = document.querySelector('.hero-subtitle');
@@ -530,6 +554,9 @@
 
             const state = auth.state;
             const loggedIn = Boolean(state.user);
+
+            if (!loggedIn && !state.ready && showCachedAccountView()) return;
+
             authForm.hidden = loggedIn;
             authTabs.hidden = loggedIn;
             accountPanel.classList.toggle('visible', loggedIn);
@@ -688,6 +715,7 @@
         });
         document.addEventListener('DOMContentLoaded', () => {
             initializeAuthLanguageText();
+            showCachedAccountView();
             updateAccountView();
             if (redirectTarget && EverythingConvertAuth.state.user) {
                 setTimeout(goToRedirectTarget, 250);

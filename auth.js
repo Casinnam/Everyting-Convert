@@ -127,6 +127,10 @@
     return true;
   }
 
+  function cachedAuthSnapshot() {
+    return readAuthCache();
+  }
+
   function withTimeout(promise, label, ms = 8000) {
     return Promise.race([
       promise,
@@ -500,6 +504,7 @@
     isAdmin,
     formatPlan,
     displayName,
+    cachedAuthSnapshot,
     updateUsername,
   };
 })();
