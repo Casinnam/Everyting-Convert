@@ -281,6 +281,48 @@
       es: 'Comprobando...',
       fr: 'Vérification...',
     },
+    authGuest: {
+      en: 'Guest',
+      ko: '방문자',
+      de: 'Gast',
+      es: 'Invitado',
+      fr: 'Invite',
+    },
+    authLoginRequired: {
+      en: 'Login required',
+      ko: '로그인 필요',
+      de: 'Anmeldung erforderlich',
+      es: 'Inicio de sesion requerido',
+      fr: 'Connexion requise',
+    },
+    authSupabaseRequired: {
+      en: 'Supabase setup required',
+      ko: 'Supabase 설정 필요',
+      de: 'Supabase-Einrichtung erforderlich',
+      es: 'Configuracion de Supabase requerida',
+      fr: 'Configuration Supabase requise',
+    },
+    authFree: {
+      en: 'Free',
+      ko: '무료',
+      de: 'Kostenlos',
+      es: 'Gratis',
+      fr: 'Gratuit',
+    },
+    authPro: {
+      en: 'Pro',
+      ko: 'Pro',
+      de: 'Pro',
+      es: 'Pro',
+      fr: 'Pro',
+    },
+    authAdmin: {
+      en: 'Admin',
+      ko: '관리자',
+      de: 'Admin',
+      es: 'Admin',
+      fr: 'Admin',
+    },
     logoutKr: {
       en: 'Logout',
       ko: '로그아웃',
@@ -499,6 +541,12 @@
   window.EverythingConvertLanguage = {
     apply() {
       applyLanguage(activeLanguage);
+    },
+    translate(key, language) {
+      const selected = labels[language] ? language : activeLanguage;
+      return translations[key] && translations[key][selected]
+        ? translations[key][selected]
+        : key;
     },
     get() {
       return activeLanguage;

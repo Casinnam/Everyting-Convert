@@ -38,10 +38,29 @@
     return state.profile && state.profile.role === 'admin';
   }
 
+  function activeLanguage() {
+    return window.EverythingConvertLanguage && window.EverythingConvertLanguage.get
+      ? window.EverythingConvertLanguage.get()
+      : 'en';
+  }
+
+  function translateAuth(key) {
+    return window.EverythingConvertLanguage && window.EverythingConvertLanguage.translate
+      ? window.EverythingConvertLanguage.translate(key, activeLanguage())
+      : {
+          authGuest: 'Guest',
+          authLoginRequired: 'Login required',
+          authSupabaseRequired: 'Supabase setup required',
+          authFree: 'Free',
+          authPro: 'Pro',
+          authAdmin: 'Admin',
+        }[key] || key;
+  }
+
   function formatPlan() {
-    if (!state.user) return 'Guest';
-    const plan = isPro() ? 'Pro' : 'Free';
-    return isAdmin() ? `${plan} · Admin` : plan;
+    if (!state.user) return translateAuth('authGuest');
+    const plan = isPro() ? translateAuth('authPro') : translateAuth('authFree');
+    return isAdmin() ? `${plan} · ${translateAuth('authAdmin')}` : plan;
   }
 
   function emailPrefix(email) {
@@ -221,10 +240,10 @@
 
   function renderAuthWidgets() {
     const authLabel = state.missingConfig
-      ? 'Supabase 설정 필요'
+      ? translateAuth('authSupabaseRequired')
       : state.user
         ? `${shortName(displayName())} · ${formatPlan()}`
-        : '로그인 필요';
+        : translateAuth('authLoginRequired');
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
       element.textContent = authLabel;
@@ -469,6 +488,8 @@
       alert('로그아웃 실패: ' + error.message);
     }
   });
+
+  window.addEventListener('everything-language-change', renderAuthWidgets);
 
   function startAuth() {
     if (normalizeAuthRedirect()) return;
