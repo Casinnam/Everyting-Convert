@@ -76,6 +76,52 @@
             box-shadow: 0 0 0 3px rgba(47, 38, 18, 0.12);
         }
 
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 3rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 0.55rem;
+            transform: translateY(-50%);
+            width: 2.25rem;
+            height: 2.25rem;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-main);
+            background: rgba(47, 38, 18, 0.08);
+        }
+
+        .remember-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .remember-row input {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--primary);
+        }
+
         .auth-field.hidden {
             display: none;
         }
@@ -297,12 +343,22 @@
                 </div>
                 <div class="auth-field">
                     <label for="email">이메일</label>
-                    <input id="email" type="email" autocomplete="email" required>
+                    <input id="email" type="email" autocomplete="email" list="rememberedEmails" required>
+                    <datalist id="rememberedEmails"></datalist>
                 </div>
                 <div class="auth-field">
                     <label for="password">비밀번호</label>
-                    <input id="password" type="password" autocomplete="current-password" minlength="6" required>
+                    <div class="password-wrap">
+                        <input id="password" type="password" autocomplete="current-password" minlength="6" required>
+                        <button class="password-toggle" id="passwordToggle" type="button" aria-label="Show password" aria-pressed="false">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
+                <label class="remember-row" for="rememberEmail">
+                    <input id="rememberEmail" type="checkbox">
+                    <span>내 아이디 기억하기</span>
+                </label>
                 <button class="auth-submit" id="submitBtn" type="submit">로그인</button>
                 <div class="auth-message" id="authMessage"></div>
             </form>
@@ -428,6 +484,11 @@
         const accountPanel = document.getElementById('accountPanel');
         const signupUsernameField = document.getElementById('signupUsernameField');
         const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const rememberEmail = document.getElementById('rememberEmail');
+        const rememberedEmails = document.getElementById('rememberedEmails');
         const accountName = document.getElementById('accountName');
         const accountPlan = document.getElementById('accountPlan');
         const accountHint = document.getElementById('accountHint');
@@ -437,6 +498,7 @@
         const usernameMessage = document.getElementById('usernameMessage');
         const adminLink = document.getElementById('adminLink');
         const redirectTarget = safeRedirectTarget();
+        const rememberedEmailKey = 'everything_convert_remembered_emails';
 
         function safeRedirectTarget() {
             const params = new URLSearchParams(window.location.search);
@@ -466,6 +528,53 @@
 
         function isValidUsername(value) {
             return /^[A-Za-z0-9_]{3,24}$/.test(value);
+        }
+
+        function readRememberedEmails() {
+            try {
+                const raw = localStorage.getItem(rememberedEmailKey);
+                const emails = raw ? JSON.parse(raw) : [];
+                return Array.isArray(emails) ? emails.filter(Boolean) : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveRememberedEmail(email) {
+            const normalized = String(email || '').trim().toLowerCase();
+            if (!normalized) return;
+            const emails = readRememberedEmails().filter((item) => item.toLowerCase() !== normalized);
+            emails.unshift(normalized);
+            try {
+                localStorage.setItem(rememberedEmailKey, JSON.stringify(emails.slice(0, 5)));
+            } catch (error) {
+                // Remembering an email is a convenience; login still works without storage.
+            }
+        }
+
+        function clearRememberedEmails() {
+            try {
+                localStorage.removeItem(rememberedEmailKey);
+            } catch (error) {
+                // Ignore storage failures.
+            }
+        }
+
+        function escapeAttribute(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function hydrateRememberedEmails() {
+            const emails = readRememberedEmails();
+            rememberedEmails.innerHTML = emails.map((email) => `<option value="${escapeAttribute(email)}"></option>`).join('');
+            if (emails.length) {
+                emailInput.value = emailInput.value || emails[0];
+                rememberEmail.checked = true;
+            }
         }
 
         function applyCurrentLanguage() {
@@ -524,6 +633,7 @@
             setI18nText(document.querySelector('label[for="username"]'), 'userId', 'User ID');
             setI18nText(document.querySelector('label[for="email"]'), 'email', 'Email');
             setI18nText(document.querySelector('label[for="password"]'), 'password', 'Password');
+            setI18nText(document.querySelector('label[for="rememberEmail"] span'), 'rememberEmail', 'Remember my email');
             setI18nText(document.querySelector('label[for="accountUsername"]'), 'changeUserId', 'Change User ID');
             setI18nText(document.querySelector('#signupUsernameField .field-hint'), 'usernameRules', 'Use 3-24 letters, numbers, or underscores. Example: hijacker05');
             setI18nText(document.querySelector('#accountUsername + .field-hint'), 'userIdHint', 'This name appears in the top account label and the admin screen.');
@@ -581,9 +691,10 @@
             signupTab.classList.toggle('active', mode === 'signup');
             submitBtn.dataset.i18nKey = mode === 'login' ? 'navLogin' : 'signUp';
             submitBtn.textContent = mode === 'login' ? 'Login' : 'Sign up';
-            document.getElementById('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+            passwordInput.autocomplete = mode === 'login' ? 'current-password' : 'new-password';
             signupUsernameField.classList.toggle('hidden', mode !== 'signup');
             usernameInput.required = mode === 'signup';
+            rememberEmail.closest('.remember-row').style.display = mode === 'login' ? 'inline-flex' : 'none';
             if (options.clearMessage !== false) setMessage('', '');
             applyCurrentLanguage();
         }
@@ -617,6 +728,21 @@
         loginTab.addEventListener('click', () => setMode('login'));
         signupTab.addEventListener('click', () => setMode('signup'));
 
+        passwordToggle.addEventListener('click', () => {
+            const willShow = passwordInput.type === 'password';
+            passwordInput.type = willShow ? 'text' : 'password';
+            passwordToggle.setAttribute('aria-pressed', String(willShow));
+            passwordToggle.setAttribute('aria-label', willShow ? 'Hide password' : 'Show password');
+            passwordToggle.innerHTML = willShow
+                ? '<i class="fa-regular fa-eye-slash"></i>'
+                : '<i class="fa-regular fa-eye"></i>';
+        });
+
+        rememberEmail.addEventListener('change', () => {
+            if (!rememberEmail.checked) clearRememberedEmails();
+            hydrateRememberedEmails();
+        });
+
         googleBtn.addEventListener('click', async () => {
             googleBtn.disabled = true;
             setMessage('Google 로그인 페이지로 이동 중...', '');
@@ -630,8 +756,8 @@
 
         authForm.addEventListener('submit', async (event) => {
             event.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
             const username = normalizeUsername(usernameInput.value);
 
             if (mode === 'signup' && !isValidUsername(username)) {
@@ -645,6 +771,10 @@
             try {
                 if (mode === 'login') {
                     await EverythingConvertAuth.signIn(email, password);
+                    if (rememberEmail.checked) {
+                        saveRememberedEmail(email);
+                        hydrateRememberedEmails();
+                    }
                     setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
                     updateAccountView();
                     if (goToRedirectTarget()) return;
@@ -715,6 +845,7 @@
         });
         document.addEventListener('DOMContentLoaded', () => {
             initializeAuthLanguageText();
+            hydrateRememberedEmails();
             showCachedAccountView();
             updateAccountView();
             if (redirectTarget && EverythingConvertAuth.state.user) {

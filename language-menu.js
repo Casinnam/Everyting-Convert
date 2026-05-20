@@ -176,6 +176,13 @@
       es: 'O continuar con correo electrónico',
       fr: 'Ou continuer avec l’e-mail',
     },
+    rememberEmail: {
+      en: 'Remember my email',
+      ko: '내 아이디 기억하기',
+      de: 'E-Mail merken',
+      es: 'Recordar mi correo',
+      fr: 'Memoriser mon e-mail',
+    },
     userId: {
       en: 'User ID',
       ko: '유저 ID',
