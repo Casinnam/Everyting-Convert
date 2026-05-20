@@ -435,7 +435,7 @@
   }
 
   function localDevBaseUrl() {
-    return window.EVERYTHING_CONVERT_LOCAL_ORIGIN || 'http://127.0.0.1:8016/';
+    return config.publicOrigin || window.EVERYTHING_CONVERT_LOCAL_ORIGIN || 'http://127.0.0.1:8016/';
   }
 
   function normalizeAuthRedirect() {
