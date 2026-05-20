@@ -201,20 +201,120 @@
   }
   function rowsFromSheet() {
     const ws = workbook.Sheets[sheetSelect.value];
-    return XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, blankrows: false }).filter(row => row.some(cell => String(cell || '').trim()));
+    if (!ws || !ws['!ref']) return [];
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    const rows = XLSX.utils.sheet_to_json(ws, {
+      header: 1,
+      raw: false,
+      blankrows: true,
+      defval: '',
+      range,
+    });
+
+    const rowHasValue = row => row.some(cell => String(cell || '').trim());
+    const usedRows = rows
+      .map(row => Array.from({ length: range.e.c - range.s.c + 1 }, (_, index) => row[index] || ''))
+      .filter(rowHasValue);
+
+    let lastColumn = 0;
+    usedRows.forEach(row => {
+      row.forEach((cell, index) => {
+        if (String(cell || '').trim()) lastColumn = Math.max(lastColumn, index);
+      });
+    });
+
+    return usedRows.map(row => row.slice(0, lastColumn + 1));
+  }
+
+  function countFilled(row) {
+    return row.filter(cell => String(cell || '').trim()).length;
+  }
+
+  function splitSheetRows(rows) {
+    let headerIndex = rows.findIndex(row => countFilled(row) >= 2);
+    if (headerIndex < 0) headerIndex = 0;
+
+    const titleRows = rows.slice(0, headerIndex)
+      .map(row => row.filter(cell => String(cell || '').trim()).join(' '))
+      .filter(Boolean);
+    const headers = rows[headerIndex].map(cell => String(cell || '').trim());
+    const body = rows.slice(headerIndex + 1).map(row => row.map(cell => String(cell || '').trim()));
+
+    if (!headers.some(Boolean) && body.length) {
+      return {
+        titleRows,
+        headers: body[0].map((_, index) => `Column ${index + 1}`),
+        body,
+      };
+    }
+
+    if (!headers[0]) headers[0] = 'Item';
+    if (!headers[headers.length - 1] && body.some(row => String(row[headers.length - 1] || '').trim())) {
+      headers[headers.length - 1] = 'Total';
+    }
+
+    return { titleRows, headers, body };
+  }
+
+  function looksNumeric(value) {
+    const text = String(value || '').replace(/,/g, '').trim();
+    return text !== '' && !Number.isNaN(Number(text));
   }
   function convertToPdf() {
     if (!workbook) return;
     const rows = rowsFromSheet();
     if (!rows.length) { setStatus('The selected sheet is empty.'); return; }
+    const table = splitSheetRows(rows);
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 24;
+
     doc.setFontSize(16);
-    doc.text(sheetSelect.value, 40, 36);
-    const head = [rows[0].map(cell => String(cell || ''))];
-    const body = rows.slice(1).map(row => row.map(cell => String(cell || '')));
+    doc.text(sheetSelect.value, margin, 34);
+    doc.setFontSize(10);
+    const titleText = table.titleRows.join('  ');
+    if (titleText) doc.text(titleText, margin, 50, { maxWidth: pageWidth - margin * 2 });
+
+    const head = [table.headers];
+    const body = table.body;
+    const columnStyles = {};
+    table.headers.forEach((_, columnIndex) => {
+      const values = body.map(row => row[columnIndex]);
+      const numericCount = values.filter(looksNumeric).length;
+      if (numericCount && numericCount >= Math.max(1, values.filter(Boolean).length * 0.6)) {
+        columnStyles[columnIndex] = { halign: 'right' };
+      }
+    });
+
     if (doc.autoTable) {
-      doc.autoTable({ head, body, startY: 56, styles: { fontSize: 8, cellPadding: 4, overflow: 'linebreak' }, headStyles: { fillColor: [16, 185, 129] } });
+      doc.autoTable({
+        head,
+        body,
+        startY: titleText ? 68 : 56,
+        margin: { left: margin, right: margin },
+        tableWidth: 'auto',
+        styles: {
+          fontSize: table.headers.length > 10 ? 6 : 8,
+          cellPadding: 2,
+          overflow: 'linebreak',
+          lineWidth: 0.2,
+          lineColor: [210, 200, 180],
+        },
+        headStyles: {
+          fillColor: [118, 85, 10],
+          textColor: [255, 255, 255],
+          halign: 'center',
+        },
+        alternateRowStyles: { fillColor: [255, 251, 238] },
+        columnStyles,
+        horizontalPageBreak: true,
+        horizontalPageBreakRepeat: 0,
+        didDrawPage: data => {
+          doc.setFontSize(8);
+          doc.text(String(doc.internal.getNumberOfPages()), pageWidth - margin, doc.internal.pageSize.getHeight() - 12, { align: 'right' });
+        },
+      });
     } else {
       doc.setFontSize(9);
       rows.slice(0, 36).forEach((row, index) => doc.text(row.join('   '), 40, 60 + index * 14));
