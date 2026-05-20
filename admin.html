@@ -485,13 +485,21 @@
             adminContent.hidden = false;
         }
 
+        function authStateDetails(authState) {
+            const profile = authState.profile || {};
+            return [
+                `Email: ${authState.user ? authState.user.email : 'not signed in'}`,
+                `Detected plan: ${profile.plan || '-'}`,
+                `Detected role: ${profile.role || '-'}`,
+            ].join(' | ');
+        }
+
         function redirectToLogin() {
             showGate(
                 'Login required',
-                'Admin access requires a signed-in admin account. Redirecting to the login page...',
+                'Admin access requires a signed-in admin account. Use the button below to sign in, then return here.',
                 `<a class="admin-button primary" href="${escapeHtml(authPageUrl())}">Go to login</a>`
             );
-            window.location.replace(authPageUrl());
         }
 
         function renderStats(profiles) {
@@ -623,8 +631,8 @@
                     renderStats(allProfiles);
                     showGate(
                         'Access denied',
-                        'This account is signed in, but it does not have the admin role. Ask an existing admin to change your role, or set the first admin in Supabase SQL Editor.',
-                        '<a class="admin-button primary" href="index.html">Go home</a><a class="admin-button" href="auth.html">Account</a>'
+                        `This account is signed in, but the site did not detect the admin role. ${authStateDetails(authState)}`,
+                        '<a class="admin-button primary" href="auth.html">Account</a><button class="admin-button" id="retryAdminCheck" type="button">Check again</button>'
                     );
                     adminStatus.textContent = `${authState.user.email} is not an admin`;
                     return;
@@ -724,6 +732,12 @@
             if (!button) return;
             const row = button.closest('tr');
             saveProfile(row);
+        });
+
+        document.addEventListener('click', (event) => {
+            const retryButton = event.target.closest('#retryAdminCheck');
+            if (!retryButton) return;
+            loadProfiles();
         });
 
         document.addEventListener('DOMContentLoaded', loadProfiles);
