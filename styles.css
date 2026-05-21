@@ -275,7 +275,7 @@ nav {
     order: 2;
 }
 
-.showcase-panel.reverse img {
+.showcase-panel.reverse .showcase-visual {
     order: 1;
 }
 
@@ -337,13 +337,104 @@ nav {
     background: linear-gradient(135deg, #2f2612, #8b5e05);
 }
 
-.showcase-panel img {
+.showcase-visual {
+    position: relative;
     width: 100%;
     max-width: 560px;
     justify-self: center;
+    isolation: isolate;
+}
+
+.showcase-visual::before {
+    content: '';
+    position: absolute;
+    inset: 12% 8%;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(47, 38, 18, 0.08), rgba(154, 106, 5, 0.18));
+    filter: blur(26px);
+    transform: translateY(18px);
+    z-index: -1;
+    animation: visualGlow 4.8s ease-in-out infinite alternate;
+}
+
+.showcase-visual img {
+    width: 100%;
     aspect-ratio: 36 / 23;
     object-fit: contain;
     border-radius: 18px;
+    transform-origin: center;
+    animation: visualFloat 5.8s ease-in-out infinite;
+}
+
+.motion-chip {
+    position: absolute;
+    min-width: 4.4rem;
+    padding: 0.48rem 0.72rem;
+    border-radius: 999px;
+    border: 1px solid rgba(47, 38, 18, 0.16);
+    background: rgba(255, 253, 246, 0.92);
+    color: var(--text-main);
+    box-shadow: 0 12px 28px rgba(82, 57, 8, 0.16);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 0.03em;
+    z-index: 2;
+    animation: slideChip 6.6s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+
+.chip-one {
+    top: 18%;
+    left: 6%;
+}
+
+.chip-two {
+    top: 48%;
+    right: 2%;
+    animation-delay: -2.2s;
+}
+
+.chip-three {
+    bottom: 13%;
+    left: 38%;
+    color: #fff;
+    background: linear-gradient(135deg, #2f2612, #8b5e05);
+    animation-delay: -4.4s;
+}
+
+@keyframes visualFloat {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-10px) scale(1.012);
+    }
+}
+
+@keyframes visualGlow {
+    from {
+        opacity: 0.58;
+        transform: translateY(18px) scale(0.98);
+    }
+    to {
+        opacity: 0.9;
+        transform: translateY(22px) scale(1.04);
+    }
+}
+
+@keyframes slideChip {
+    0% {
+        opacity: 0;
+        transform: translateX(-34px) translateY(10px) scale(0.92);
+    }
+    16%, 70% {
+        opacity: 1;
+        transform: translateX(0) translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(42px) translateY(-10px) scale(0.94);
+    }
 }
 
 .logo-link {
@@ -821,12 +912,18 @@ nav {
     }
 
     .showcase-panel.reverse .showcase-copy,
-    .showcase-panel.reverse img {
+    .showcase-panel.reverse .showcase-visual {
         order: initial;
     }
 
-    .showcase-panel img {
+    .showcase-visual {
         max-width: 100%;
+    }
+
+    .motion-chip {
+        min-width: 3.7rem;
+        padding: 0.38rem 0.56rem;
+        font-size: 0.68rem;
     }
 
     .compact-tools {
@@ -865,5 +962,13 @@ nav {
 @media (max-width: 1080px) and (min-width: 769px) {
     .pricing-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .showcase-visual::before,
+    .showcase-visual img,
+    .motion-chip {
+        animation: none;
     }
 }
