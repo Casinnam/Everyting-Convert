@@ -248,6 +248,104 @@ nav {
     line-height: 1.6;
 }
 
+.feature-showcase {
+    width: 100%;
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.showcase-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255, 253, 246, 0.78);
+    box-shadow: 0 18px 44px var(--shadow);
+}
+
+.showcase-panel.reverse {
+    grid-template-columns: minmax(320px, 1.08fr) minmax(0, 0.92fr);
+}
+
+.showcase-panel.reverse .showcase-copy {
+    order: 2;
+}
+
+.showcase-panel.reverse img {
+    order: 1;
+}
+
+.showcase-copy {
+    display: grid;
+    gap: 0.95rem;
+}
+
+.showcase-kicker {
+    width: max-content;
+    padding: 0.35rem 0.62rem;
+    border-radius: 999px;
+    background: rgba(47, 38, 18, 0.08);
+    color: var(--primary);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.showcase-copy h2 {
+    max-width: 520px;
+    font-size: clamp(1.6rem, 3vw, 2.45rem);
+    line-height: 1.08;
+    letter-spacing: 0;
+}
+
+.showcase-copy p {
+    max-width: 560px;
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    line-height: 1.72;
+}
+
+.showcase-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 0.3rem;
+}
+
+.showcase-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.72rem 0.95rem;
+    border-radius: 8px;
+    border: 1px solid rgba(47, 38, 18, 0.24);
+    color: var(--text-main);
+    background: rgba(255, 253, 246, 0.88);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.showcase-actions a:first-child {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, #2f2612, #8b5e05);
+}
+
+.showcase-panel img {
+    width: 100%;
+    max-width: 560px;
+    justify-self: center;
+    aspect-ratio: 36 / 23;
+    object-fit: contain;
+    border-radius: 18px;
+}
+
 .logo-link {
     text-decoration: none;
 }
@@ -710,6 +808,25 @@ nav {
 
     .tool-categories {
         grid-template-columns: 1fr;
+    }
+
+    .feature-showcase {
+        margin-bottom: 2.5rem;
+    }
+
+    .showcase-panel,
+    .showcase-panel.reverse {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .showcase-panel.reverse .showcase-copy,
+    .showcase-panel.reverse img {
+        order: initial;
+    }
+
+    .showcase-panel img {
+        max-width: 100%;
     }
 
     .compact-tools {

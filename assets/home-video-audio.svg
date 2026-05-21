@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" role="img" aria-labelledby="title desc">
+  <title id="title">Video and audio conversion</title>
+  <desc id="desc">A video timeline and audio waveform exported into different media formats.</desc>
+  <rect width="720" height="460" rx="34" fill="#fbf6e7"/>
+  <rect x="46" y="52" width="628" height="356" rx="28" fill="#fffdf6" stroke="#e3d3a3" stroke-width="3"/>
+  <rect x="88" y="92" width="328" height="206" rx="22" fill="#2f2612"/>
+  <rect x="112" y="116" width="280" height="138" rx="14" fill="#fff6d8"/>
+  <path d="M220 150l82 36-82 38z" fill="#9a6a05"/>
+  <rect x="112" y="270" width="280" height="8" rx="4" fill="#d9c180"/>
+  <rect x="112" y="270" width="146" height="8" rx="4" fill="#9a6a05"/>
+  <g transform="translate(470 100)" fill="none" stroke="#2f2612" stroke-width="8" stroke-linecap="round">
+    <path d="M0 92c18-70 36 70 54 0s36 70 54 0 36 70 54 0"/>
+    <path d="M0 142c18-46 36 46 54 0s36 46 54 0 36 46 54 0" opacity=".45"/>
+  </g>
+  <g transform="translate(104 336)">
+    <rect width="132" height="42" rx="21" fill="#fff6d8" stroke="#d3bd80" stroke-width="3"/>
+    <text x="37" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#2f2612">MP4</text>
+  </g>
+  <g transform="translate(294 336)">
+    <rect width="132" height="42" rx="21" fill="#2f2612"/>
+    <text x="37" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#fffdf6">MP3</text>
+  </g>
+  <g transform="translate(484 336)">
+    <rect width="132" height="42" rx="21" fill="#9a6a05"/>
+    <text x="38" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#fffdf6">MOV</text>
+  </g>
+  <path d="M246 356h38M436 356h38" stroke="#9a6a05" stroke-width="8" stroke-linecap="round"/>
+  <path d="M276 344l16 12-16 12M466 344l16 12-16 12" fill="none" stroke="#9a6a05" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

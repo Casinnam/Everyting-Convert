@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" role="img" aria-labelledby="title desc">
+  <title id="title">PDF and document conversion workspace</title>
+  <desc id="desc">Documents, spreadsheet pages, and PDF files moving into a finished document stack.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset="1" stop-color="#f3e3b6"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop offset="0" stop-color="#2f2612"/>
+      <stop offset="1" stop-color="#9a6a05"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="460" rx="34" fill="#fbf6e7"/>
+  <rect x="42" y="46" width="636" height="368" rx="26" fill="#fffdf6" stroke="#e3d3a3" stroke-width="3"/>
+  <g transform="translate(80 82)">
+    <rect x="0" y="42" width="150" height="190" rx="12" fill="url(#paper)" stroke="#d3bd80" stroke-width="3"/>
+    <rect x="18" y="72" width="74" height="12" rx="6" fill="#2f2612"/>
+    <rect x="18" y="104" width="112" height="9" rx="4.5" fill="#c9ad63"/>
+    <rect x="18" y="126" width="96" height="9" rx="4.5" fill="#dac68e"/>
+    <rect x="18" y="148" width="108" height="9" rx="4.5" fill="#dac68e"/>
+    <rect x="18" y="180" width="52" height="34" rx="8" fill="#9a6a05"/>
+  </g>
+  <g transform="translate(272 75)">
+    <rect x="0" y="0" width="176" height="248" rx="14" fill="#ffffff" stroke="#d3bd80" stroke-width="3"/>
+    <rect x="0" y="0" width="176" height="46" rx="14" fill="#2f2612"/>
+    <text x="24" y="31" fill="#fffdf6" font-family="Arial, sans-serif" font-size="20" font-weight="700">XLS</text>
+    <g stroke="#e0ca8a" stroke-width="2">
+      <path d="M22 72h132M22 104h132M22 136h132M22 168h132M22 200h132"/>
+      <path d="M58 58v164M98 58v164M136 58v164"/>
+    </g>
+    <rect x="23" y="73" width="31" height="28" fill="#f8edcc"/>
+    <rect x="59" y="105" width="35" height="28" fill="#f8edcc"/>
+    <rect x="99" y="137" width="33" height="28" fill="#f8edcc"/>
+  </g>
+  <g transform="translate(502 96)">
+    <rect x="0" y="0" width="118" height="164" rx="13" fill="url(#accent)"/>
+    <path d="M84 0v40h34" fill="#c89b2d"/>
+    <text x="23" y="95" fill="#fffdf6" font-family="Arial, sans-serif" font-size="26" font-weight="800">PDF</text>
+    <rect x="21" y="116" width="76" height="10" rx="5" fill="#fff0c2" opacity=".75"/>
+  </g>
+  <path d="M238 190h42" stroke="#9a6a05" stroke-width="10" stroke-linecap="round"/>
+  <path d="M458 190h42" stroke="#9a6a05" stroke-width="10" stroke-linecap="round"/>
+  <path d="M272 174l20 16-20 16" fill="none" stroke="#9a6a05" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M492 174l20 16-20 16" fill="none" stroke="#9a6a05" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(128 340)">
+    <rect width="464" height="16" rx="8" fill="#d9c180"/>
+    <rect x="88" y="36" width="288" height="12" rx="6" fill="#ead9a8"/>
+  </g>
+</svg>

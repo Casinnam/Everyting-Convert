@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" role="img" aria-labelledby="title desc">
+  <title id="title">Image conversion gallery</title>
+  <desc id="desc">Image thumbnails changing formats and becoming a clean export.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset="1" stop-color="#f6e6b8"/>
+    </linearGradient>
+    <linearGradient id="photo" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#2f2612"/>
+      <stop offset="1" stop-color="#9a6a05"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="460" rx="34" fill="#fbf6e7"/>
+  <rect x="48" y="48" width="624" height="364" rx="28" fill="#fffdf6" stroke="#e3d3a3" stroke-width="3"/>
+  <g transform="translate(80 88)">
+    <rect width="178" height="138" rx="16" fill="url(#sky)" stroke="#d3bd80" stroke-width="3"/>
+    <circle cx="130" cy="44" r="22" fill="#d9a21b"/>
+    <path d="M22 110l48-50 38 36 26-22 30 36z" fill="url(#photo)"/>
+    <text x="22" y="164" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#2f2612">JPG</text>
+  </g>
+  <g transform="translate(270 72)">
+    <rect width="178" height="170" rx="16" fill="#ffffff" stroke="#d3bd80" stroke-width="3"/>
+    <rect x="20" y="22" width="138" height="96" rx="12" fill="#f8edcc"/>
+    <circle cx="118" cy="50" r="18" fill="#c89b2d"/>
+    <path d="M36 101l34-36 32 30 22-20 28 26z" fill="#2f2612"/>
+    <text x="20" y="148" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#2f2612">PNG</text>
+  </g>
+  <g transform="translate(462 96)">
+    <rect width="178" height="138" rx="16" fill="#2f2612"/>
+    <rect x="20" y="24" width="138" height="74" rx="10" fill="#fff6d8"/>
+    <path d="M36 82l30-30 32 25 22-18 30 23z" fill="#9a6a05"/>
+    <text x="22" y="164" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#2f2612">WEBP</text>
+  </g>
+  <path d="M166 292h388" stroke="#d9c180" stroke-width="18" stroke-linecap="round"/>
+  <path d="M344 256l44 44-44 44" fill="none" stroke="#9a6a05" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="254" y="342" width="212" height="34" rx="17" fill="#2f2612"/>
+  <text x="292" y="365" font-family="Arial, sans-serif" font-size="16" font-weight="800" fill="#fffdf6">Resize, convert, export</text>
+</svg>
