@@ -467,10 +467,10 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js?v=auth-20260522c"></script>
-    <script src="auth.js?v=auth-20260522c"></script>
-    <script src="tools-menu.js?v=auth-20260522c"></script>
-    <script src="language-menu.js?v=auth-20260522c"></script>
+    <script src="supabase-config.js?v=auth-20260522d"></script>
+    <script src="auth.js?v=auth-20260522d"></script>
+    <script src="tools-menu.js?v=auth-20260522d"></script>
+    <script src="language-menu.js?v=auth-20260522d"></script>
     <script>
         let mode = 'login';
 
@@ -881,6 +881,14 @@
                 setTimeout(goToRedirectTarget, 100);
             }
         });
+
+        window.addEventListener('everything-auth-error', (event) => {
+            const message = event.detail && event.detail.message
+                ? event.detail.message
+                : 'Google login could not be completed.';
+            setMessage(`Google login could not be completed: ${message}`, 'error');
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             initializeAuthLanguageText();
             hydrateRememberedEmails();

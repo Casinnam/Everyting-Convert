@@ -23,7 +23,7 @@
         auth: {
           persistSession: true,
           autoRefreshToken: true,
-          detectSessionInUrl: false,
+          detectSessionInUrl: true,
         },
       });
     }
@@ -489,6 +489,9 @@
     const errorDescription = params.get('error_description') || params.get('error');
     if (errorDescription) {
       console.warn('OAuth callback error:', errorDescription);
+      window.dispatchEvent(new CustomEvent('everything-auth-error', {
+        detail: { message: errorDescription },
+      }));
       return false;
     }
     if (!code || !client || !client.auth.exchangeCodeForSession) return false;
@@ -536,6 +539,9 @@
         await completeOAuthCallback(client);
       } catch (error) {
         console.warn('Could not complete OAuth callback:', error.message);
+        window.dispatchEvent(new CustomEvent('everything-auth-error', {
+          detail: { message: error.message },
+        }));
       }
     }
     refresh();
