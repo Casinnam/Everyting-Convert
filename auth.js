@@ -428,12 +428,16 @@
     const targetPath = rootRelativePath('auth.html');
     const currentParams = new URLSearchParams(window.location.search);
     const next = currentParams.get('next');
+    const host = window.location.hostname;
+    const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '::1';
     let redirectUrl;
 
-    if (window.location.protocol !== 'file:') {
-      redirectUrl = new URL(targetPath, window.location.href);
-    } else {
+    if (window.location.protocol === 'file:') {
       redirectUrl = new URL(targetPath, localDevBaseUrl());
+    } else if (config.publicOrigin && !isLocalHost) {
+      redirectUrl = new URL('auth.html', config.publicOrigin);
+    } else {
+      redirectUrl = new URL(targetPath, window.location.href);
     }
 
     if (next) redirectUrl.searchParams.set('next', next);
