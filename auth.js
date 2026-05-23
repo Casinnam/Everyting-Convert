@@ -23,7 +23,7 @@
         auth: {
           persistSession: true,
           autoRefreshToken: true,
-          detectSessionInUrl: true,
+          detectSessionInUrl: false,
         },
       });
     }
@@ -483,6 +483,33 @@
     return false;
   }
 
+  async function completeOAuthCallback(client) {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const errorDescription = params.get('error_description') || params.get('error');
+    if (errorDescription) {
+      console.warn('OAuth callback error:', errorDescription);
+      return false;
+    }
+    if (!code || !client || !client.auth.exchangeCodeForSession) return false;
+
+    const { data, error } = await withTimeout(
+      client.auth.exchangeCodeForSession(code),
+      'Google login completion',
+      15000,
+    );
+    if (error) throw error;
+
+    state.session = data && data.session ? data.session : null;
+    state.user = state.session ? state.session.user : null;
+
+    params.delete('code');
+    params.delete('state');
+    const cleanUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash}`;
+    window.history.replaceState({}, document.title, cleanUrl);
+    return true;
+  }
+
   document.addEventListener('click', async (event) => {
     const logoutButton = event.target.closest('[data-auth-logout]');
     if (!logoutButton) return;
@@ -497,7 +524,7 @@
 
   window.addEventListener('everything-language-change', renderAuthWidgets);
 
-  function startAuth() {
+  async function startAuth() {
     if (normalizeAuthRedirect()) return;
     renderCachedAuthWidgets();
     const client = initClient();
@@ -505,6 +532,11 @@
       client.auth.onAuthStateChange(async () => {
         await refresh();
       });
+      try {
+        await completeOAuthCallback(client);
+      } catch (error) {
+        console.warn('Could not complete OAuth callback:', error.message);
+      }
     }
     refresh();
   }
