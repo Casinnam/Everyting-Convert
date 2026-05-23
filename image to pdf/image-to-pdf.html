@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7281685131923147"
-     crossorigin="anonymous"></script>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image to PDF 蹂?섍린</title>
+<title>Image to PDF 변환기</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -117,7 +115,7 @@
   }
 
   .tools-toggle::after {
-    content: '??;
+    content: '▾';
     font-size: 0.75rem;
   }
 
@@ -519,7 +517,7 @@
   }
 
   .language-toggle::after {
-    content: '??;
+    content: '⌄';
     color: var(--muted);
     font-size: 0.75rem;
   }
@@ -644,47 +642,47 @@
 
 <main>
   <div class="hero">
-    <h1>?대?吏瑜?PDF濡?span class="line2">蹂?섑븯?몄슂</span></h1>
-    <p>JPG, PNG, WebP ???щ윭 ?대?吏瑜??먰븯???쒖꽌?濡??섎굹??PDF 臾몄꽌濡?蹂묓빀?⑸땲??/p>
+    <h1>이미지를 PDF로<span class="line2">변환하세요</span></h1>
+    <p>JPG, PNG, WebP 등 여러 이미지를 원하는 순서대로 하나의 PDF 문서로 병합합니다</p>
   </div>
 
   <div class="drop-zone" id="dropZone">
     <div class="drop-icon"></div>
-    <div class="drop-title">?대?吏 ?뚯씪 ?좏깮</div>
-    <div class="drop-subtitle">?щ윭 ?μ쓣 ??踰덉뿉 ?좏깮?섍굅???닿납?쇰줈 ?쒕옒洹명븯?몄슂</div>
+    <div class="drop-title">이미지 파일 선택</div>
+    <div class="drop-subtitle">여러 장을 한 번에 선택하거나 이곳으로 드래그하세요</div>
     <input id="fileInput" type="file" accept="image/*" multiple>
   </div>
 
   <div class="options" id="options">
     <div class="option-field">
-      <label for="pageSize">?섏씠吏 ?ш린</label>
+      <label for="pageSize">페이지 크기</label>
       <select id="pageSize">
         <option value="a4">A4</option>
         <option value="letter">Letter</option>
-        <option value="image">?대?吏 ?ш린 洹몃?濡?/option>
+        <option value="image">이미지 크기 그대로</option>
       </select>
     </div>
     <div class="option-field">
-      <label for="fitMode">留욎땄 諛⑹떇</label>
+      <label for="fitMode">맞춤 방식</label>
       <select id="fitMode">
-        <option value="contain">?꾩껜 蹂댁씠湲?/option>
-        <option value="cover">?섏씠吏 梨꾩슦湲?/option>
-        <option value="stretch">?섏씠吏??留욊쾶 ?섎━湲?/option>
+        <option value="contain">전체 보이기</option>
+        <option value="cover">페이지 채우기</option>
+        <option value="stretch">페이지에 맞게 늘리기</option>
       </select>
     </div>
     <div class="option-field">
-      <label for="marginInput">?щ갚 mm</label>
+      <label for="marginInput">여백 mm</label>
       <input id="marginInput" type="number" min="0" max="40" value="8">
     </div>
   </div>
 
   <div class="file-list" id="fileList"></div>
 
-  <button class="convert-btn" id="convertBtn" type="button">PDF ???/button>
+  <button class="convert-btn" id="convertBtn" type="button">PDF 저장</button>
   <div class="message" id="message"></div>
 
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" id="resetBtn" type="button">泥섏쓬遺???ㅼ떆</button>
+    <button class="reset-btn" id="resetBtn" type="button">처음부터 다시</button>
   </div>
 </main>
 
@@ -742,7 +740,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>짤 EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -750,10 +748,10 @@
       </button>
       <div class="language-dropdown">
         <button type="button" data-language="en">English</button>
-        <button type="button" data-language="ko">?쒓뎅??/button>
+        <button type="button" data-language="ko">한국어</button>
         <button type="button" data-language="de">Deutsch</button>
-        <button type="button" data-language="es">Espa챰ol</button>
-        <button type="button" data-language="fr">Fran챌ais</button>
+        <button type="button" data-language="es">Español</button>
+        <button type="button" data-language="fr">Français</button>
       </div>
     </div>
   </div>
@@ -804,10 +802,10 @@
   function readImageFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onerror = () => reject(new Error(`${file.name} ?뚯씪???쎌쓣 ???놁뒿?덈떎.`));
+      reader.onerror = () => reject(new Error(`${file.name} 파일을 읽을 수 없습니다.`));
       reader.onload = () => {
         const img = new Image();
-        img.onerror = () => reject(new Error(`${file.name} ?대?吏瑜?遺덈윭?????놁뒿?덈떎.`));
+        img.onerror = () => reject(new Error(`${file.name} 이미지를 불러올 수 없습니다.`));
         img.onload = () => resolve({
           id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
           file,
@@ -828,16 +826,16 @@
   async function addFiles(fileListInput) {
     const files = Array.from(fileListInput).filter(file => file.type.startsWith('image/'));
     if (!files.length) {
-      setMessage('?대?吏 ?뚯씪???좏깮??二쇱꽭??', 'error');
+      setMessage('이미지 파일을 선택해 주세요.', 'error');
       return;
     }
 
-    setMessage('?대?吏瑜?遺덈윭?ㅻ뒗 以?..');
+    setMessage('이미지를 불러오는 중...');
     try {
       const loaded = await Promise.all(files.map(readImageFile));
       images = images.concat(loaded);
       renderImages();
-      setMessage(`${loaded.length}媛??대?吏媛 異붽??섏뿀?듬땲??`, 'success');
+      setMessage(`${loaded.length}개 이미지가 추가되었습니다.`, 'success');
     } catch (error) {
       setMessage(error.message, 'error');
     } finally {
@@ -855,12 +853,12 @@
         <img class="thumb" src="${item.previewUrl}" alt="">
         <div class="image-meta">
           <div class="image-name">${escapeHtml(item.name)}</div>
-          <div class="image-detail">${item.width} x ${item.height}px 쨌 ${formatBytes(item.size)} 쨌 ${index + 1}?섏씠吏</div>
+          <div class="image-detail">${item.width} x ${item.height}px · ${formatBytes(item.size)} · ${index + 1}페이지</div>
         </div>
         <div class="image-actions">
-          <button class="icon-btn" type="button" data-move="up" title="?꾨줈 ?대룞" ${index === 0 ? 'disabled' : ''}>??/button>
-          <button class="icon-btn" type="button" data-move="down" title="?꾨옒濡??대룞" ${index === images.length - 1 ? 'disabled' : ''}>??/button>
-          <button class="icon-btn" type="button" data-remove title="??젣">횞</button>
+          <button class="icon-btn" type="button" data-move="up" title="위로 이동" ${index === 0 ? 'disabled' : ''}>↑</button>
+          <button class="icon-btn" type="button" data-move="down" title="아래로 이동" ${index === images.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="icon-btn" type="button" data-remove title="삭제">×</button>
         </div>
       `;
       fileList.appendChild(row);
@@ -946,7 +944,7 @@
     const arrayBuffer = pdf.output('arraybuffer');
     const header = new TextDecoder('ascii').decode(new Uint8Array(arrayBuffer, 0, 4));
     if (header !== '%PDF') {
-      throw new Error('PDF ?뚯씪 ?앹꽦???ㅽ뙣?덉뒿?덈떎. ?ㅼ떆 ?쒕룄??二쇱꽭??');
+      throw new Error('PDF 파일 생성에 실패했습니다. 다시 시도해 주세요.');
     }
     return new Blob([arrayBuffer], { type: 'application/pdf' });
   }
@@ -969,7 +967,7 @@
         handle = await window.showSaveFilePicker({
           suggestedName: fileName,
           types: [{
-            description: 'PDF 臾몄꽌',
+            description: 'PDF 문서',
             accept: { 'application/pdf': ['.pdf'] },
           }],
         });
@@ -993,17 +991,17 @@
 
   async function createPdf() {
     if (!images.length) {
-      setMessage('癒쇱? ?대?吏瑜?異붽???二쇱꽭??', 'error');
+      setMessage('먼저 이미지를 추가해 주세요.', 'error');
       return;
     }
 
     if (!jsPDF) {
-      setMessage('PDF ?쇱씠釉뚮윭由щ? 遺덈윭?ㅼ? 紐삵뻽?듬땲?? ?명꽣???곌껐???뺤씤?????덈줈怨좎묠??二쇱꽭??', 'error');
+      setMessage('PDF 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.', 'error');
       return;
     }
 
     convertBtn.disabled = true;
-    setMessage('PDF瑜?留뚮뱶??以?..');
+    setMessage('PDF를 만드는 중...');
 
     try {
       const timestamp = new Date().toISOString().slice(0, 10);
@@ -1024,25 +1022,25 @@
 
         const placement = getPlacement(item, pageWidth, pageHeight, margin);
         pdf.addImage(imageToJpegData(item), 'JPEG', placement.x, placement.y, placement.width, placement.height);
-        setMessage(`${index + 1}/${images.length} ?섏씠吏 泥섎━ 以?..`);
+        setMessage(`${index + 1}/${images.length} 페이지 처리 중...`);
       }
 
       const pdfBlob = createPdfBlob(pdf);
-      setMessage('PDF ?뚯씪????ν븯??以?..');
+      setMessage('PDF 파일을 저장하는 중...');
       const result = await savePdfBlob(pdfBlob, fileName);
       setMessage(
         result.pickedLocation
-          ? `${fileName} ?뚯씪???좏깮???꾩튂????λ릺?덉뒿?덈떎.`
+          ? `${fileName} 파일이 선택한 위치에 저장되었습니다.`
           : result.securityFallback
-            ? `${fileName} ?뚯씪 ?ㅼ슫濡쒕뱶瑜??쒖옉?덉뒿?덈떎. 釉뚮씪?곗?媛 ????꾩튂 ?좏깮???쒗븳???ㅼ슫濡쒕뱶 諛⑹떇?쇰줈 ??ν뻽?듬땲??`
-          : `${fileName} ?뚯씪 ?ㅼ슫濡쒕뱶瑜??쒖옉?덉뒿?덈떎. 釉뚮씪?곗????ㅼ슫濡쒕뱶 ?대뜑瑜??뺤씤??二쇱꽭??`,
+            ? `${fileName} 파일 다운로드를 시작했습니다. 브라우저가 저장 위치 선택을 제한해 다운로드 방식으로 저장했습니다.`
+          : `${fileName} 파일 다운로드를 시작했습니다. 브라우저의 다운로드 폴더를 확인해 주세요.`,
         'success',
       );
     } catch (error) {
       if (error && error.name === 'AbortError') {
-        setMessage('??μ씠 痍⑥냼?섏뿀?듬땲?? ?ㅼ떆 ??ν븯?ㅻ㈃ 踰꾪듉???뚮윭 二쇱꽭??');
+        setMessage('저장이 취소되었습니다. 다시 저장하려면 버튼을 눌러 주세요.');
       } else {
-        setMessage(error.message || 'PDF 蹂??以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.', 'error');
+        setMessage(error.message || 'PDF 변환 중 오류가 발생했습니다.', 'error');
       }
     } finally {
       convertBtn.disabled = false;
@@ -1077,7 +1075,7 @@
     if (event.target.closest('[data-remove]')) {
       images.splice(index, 1);
       renderImages();
-      setMessage(images.length ? `${images.length}媛??대?吏媛 以鍮꾨릺?덉뒿?덈떎.` : '');
+      setMessage(images.length ? `${images.length}개 이미지가 준비되었습니다.` : '');
       return;
     }
 

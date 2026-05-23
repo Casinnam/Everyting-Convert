@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7281685131923147"
-     crossorigin="anonymous"></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Everything Convert - 濡쒓렇??/title>
+    <title>Everything Convert - 로그인</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -322,34 +320,34 @@
 
     <main class="main-container">
         <section class="hero">
-            <h1 class="hero-title">怨꾩젙?쇰줈 湲곕뒫??br><span class="gradient-text">愿由ы븯?몄슂</span></h1>
-            <p class="hero-subtitle">臾대즺 ?뚯썝? ?쇰컲 異붿텧?? Pro ?뚯썝? ??媛먯? 媛뺥솕??蹂?섏쓣 ?ъ슜?????덉뒿?덈떎.</p>
+            <h1 class="hero-title">계정으로 기능을<br><span class="gradient-text">관리하세요</span></h1>
+            <p class="hero-subtitle">무료 회원은 일반 추출을, Pro 회원은 표 감지 강화형 변환을 사용할 수 있습니다.</p>
         </section>
 
         <section class="auth-shell">
             <div class="auth-tabs">
-                <button class="auth-tab active" id="loginTab" type="button">濡쒓렇??/button>
-                <button class="auth-tab" id="signupTab" type="button">?뚯썝媛??/button>
+                <button class="auth-tab active" id="loginTab" type="button">로그인</button>
+                <button class="auth-tab" id="signupTab" type="button">회원가입</button>
             </div>
 
             <form class="auth-form" id="authForm">
                 <button class="google-btn" id="googleBtn" type="button">
                     <i class="fa-brands fa-google"></i>
-                    Gmail濡?怨꾩냽?섍린
+                    Gmail로 계속하기
                 </button>
-                <div class="oauth-divider">?먮뒗 ?대찓?쇰줈 怨꾩냽</div>
+                <div class="oauth-divider">또는 이메일로 계속</div>
                 <div class="auth-field hidden" id="signupUsernameField">
-                    <label for="username">?좎? ID</label>
+                    <label for="username">유저 ID</label>
                     <input id="username" type="text" autocomplete="nickname" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}">
-                    <div class="field-hint">?곷Ц, ?レ옄, 諛묒쨪(_)留??ъ슜?????덉뒿?덈떎. ?? hijacker05</div>
+                    <div class="field-hint">영문, 숫자, 밑줄(_)만 사용할 수 있습니다. 예: hijacker05</div>
                 </div>
                 <div class="auth-field">
-                    <label for="email">?대찓??/label>
+                    <label for="email">이메일</label>
                     <input id="email" type="email" autocomplete="email" list="rememberedEmails" required>
                     <datalist id="rememberedEmails"></datalist>
                 </div>
                 <div class="auth-field">
-                    <label for="password">鍮꾨?踰덊샇</label>
+                    <label for="password">비밀번호</label>
                     <div class="password-wrap">
                         <input id="password" type="password" autocomplete="current-password" minlength="6" required>
                         <button class="password-toggle" id="passwordToggle" type="button" aria-label="Show password" aria-pressed="false">
@@ -359,38 +357,38 @@
                 </div>
                 <label class="remember-row" for="rememberEmail">
                     <input id="rememberEmail" type="checkbox">
-                    <span>???꾩씠??湲곗뼲?섍린</span>
+                    <span>내 아이디 기억하기</span>
                 </label>
-                <button class="auth-submit" id="submitBtn" type="submit">濡쒓렇??/button>
+                <button class="auth-submit" id="submitBtn" type="submit">로그인</button>
                 <div class="auth-message" id="authMessage"></div>
             </form>
 
             <div class="account-panel" id="accountPanel">
                 <div class="account-card">
-                    <div>?쒖떆 ?대쫫: <strong id="accountName">-</strong></div>
-                    <div>?뚯썝 ?깃툒: <strong id="accountPlan" data-no-i18n>-</strong></div>
+                    <div>표시 이름: <strong id="accountName">-</strong></div>
+                    <div>회원 등급: <strong id="accountPlan" data-no-i18n>-</strong></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
-                            <label for="accountUsername">?좎? ID 蹂寃?/label>
+                            <label for="accountUsername">유저 ID 변경</label>
                             <input id="accountUsername" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required>
-                            <div class="field-hint">?곷떒 怨꾩젙 ?쒖떆? 愿由ъ옄 ?붾㈃?????대쫫??蹂댁엯?덈떎.</div>
+                            <div class="field-hint">상단 계정 표시와 관리자 화면에 이 이름이 보입니다.</div>
                         </div>
-                        <button class="auth-submit" id="usernameSaveBtn" type="submit">?좎? ID ???/button>
+                        <button class="auth-submit" id="usernameSaveBtn" type="submit">유저 ID 저장</button>
                         <div class="auth-message" id="usernameMessage"></div>
                     </form>
                     <div id="accountHint" style="margin-top:0.75rem;"></div>
                 </div>
                 <div class="account-actions">
-                    <a class="account-link" href="index.html#tools">?꾧뎄濡??대룞</a>
+                    <a class="account-link" href="index.html#tools">도구로 이동</a>
                     <a class="account-link secondary" href="pricing.html">Pricing</a>
-                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">愿由ъ옄 ?섏씠吏</a>
+                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">관리자 페이지</a>
                 </div>
             </div>
 
             <div class="auth-status-card">
-                <div>?꾩옱 ?곹깭: <strong data-auth-state data-no-i18n>?뺤씤 以?..</strong></div>
+                <div>현재 상태: <strong data-auth-state data-no-i18n>확인 중...</strong></div>
                 <div style="margin-top:0.75rem;">
-                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">濡쒓렇?꾩썐</button>
+                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">로그아웃</button>
                 </div>
             </div>
         </section>
@@ -451,7 +449,7 @@
                 <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
                 <span>Everything Convert</span>
             </div>
-            <p>짤 EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
             <div class="language-menu">
                 <button class="language-toggle" type="button" aria-expanded="false">
                     <i class="fa-solid fa-globe"></i>
@@ -459,10 +457,10 @@
                 </button>
                 <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">?쒓뎅??/button>
+                    <button type="button" data-language="ko">한국어</button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">Espa챰ol</button>
-                    <button type="button" data-language="fr">Fran챌ais</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
                 </div>
             </div>
         </div>
@@ -595,7 +593,7 @@
         function cachedPlanLabel(cached) {
             if (!cached) return 'Checking...';
             const plan = cached.plan === 'pro' ? 'Pro' : 'Free';
-            return cached.role === 'admin' ? `${plan} 쨌 Admin` : plan;
+            return cached.role === 'admin' ? `${plan} · Admin` : plan;
         }
 
         function showCachedAccountView() {
@@ -724,19 +722,19 @@
         function friendlyAuthError(error) {
             const message = error && error.message ? error.message : String(error);
             if (/Invalid login credentials/i.test(message)) {
-                return '?대찓???먮뒗 鍮꾨?踰덊샇媛 留욎? ?딆뒿?덈떎. ?뚯썝媛?????대찓???뺤씤???꾩슂???ㅼ젙?대㈃ 諛쏆? 硫붿씪??癒쇱? ?뺤씤??二쇱꽭??';
+                return '이메일 또는 비밀번호가 맞지 않습니다. 회원가입 후 이메일 확인이 필요한 설정이면 받은 메일을 먼저 확인해 주세요.';
             }
             if (/Email not confirmed/i.test(message)) {
-                return '?대찓???뺤씤???꾩쭅 ?꾨즺?섏? ?딆븯?듬땲?? 諛쏆? 硫붿씪?⑥뿉??Supabase ?뺤씤 硫붿씪???댁뼱 ?몄쬆??二쇱꽭??';
+                return '이메일 확인이 아직 완료되지 않았습니다. 받은 메일함에서 Supabase 확인 메일을 열어 인증해 주세요.';
             }
             if (/Database error saving new user/i.test(message)) {
-                return '?뚯썝 ?꾨줈???앹꽦 以??ㅻ쪟媛 ?ъ뒿?덈떎. Supabase SQL Editor?먯꽌 supabase-setup.sql ?꾩껜瑜??ㅼ떆 ?ㅽ뻾??二쇱꽭??';
+                return '회원 프로필 생성 중 오류가 났습니다. Supabase SQL Editor에서 supabase-setup.sql 전체를 다시 실행해 주세요.';
             }
             if (/User already registered/i.test(message)) {
-                return '?대? 媛?낅맂 ?대찓?쇱엯?덈떎. 濡쒓렇????뿉??濡쒓렇?명빐 二쇱꽭??';
+                return '이미 가입된 이메일입니다. 로그인 탭에서 로그인해 주세요.';
             }
-            if (/username/i.test(message) || /?좎? ID/i.test(message)) {
-                return '?좎? ID???곷Ц, ?レ옄, 諛묒쨪(_)留??ъ슜?댁꽌 3~24?먮줈 ?낅젰??二쇱꽭?? ?대? ?ъ슜 以묒씤 ID???섎룄 ?덉뒿?덈떎.';
+            if (/username/i.test(message) || /유저 ID/i.test(message)) {
+                return '유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요. 이미 사용 중인 ID일 수도 있습니다.';
             }
             return message;
         }
@@ -779,7 +777,7 @@
             if (!auth) return;
 
             googleBtn.disabled = true;
-            setMessage('Google 濡쒓렇???섏씠吏濡??대룞 以?..', '');
+            setMessage('Google 로그인 페이지로 이동 중...', '');
             try {
                 await auth.signInWithGoogle();
             } catch (error) {
@@ -795,7 +793,7 @@
             const username = normalizeUsername(usernameInput.value);
 
             if (mode === 'signup' && !isValidUsername(username)) {
-                setMessage('?좎? ID???곷Ц, ?レ옄, 諛묒쨪(_)留??ъ슜?댁꽌 3~24?먮줈 ?낅젰??二쇱꽭??', 'error');
+                setMessage('유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요.', 'error');
                 return;
             }
 
@@ -803,7 +801,7 @@
             if (!auth) return;
 
             submitBtn.disabled = true;
-            setMessage(mode === 'login' ? '濡쒓렇??以?..' : '?뚯썝媛??以?..', '');
+            setMessage(mode === 'login' ? '로그인 중...' : '회원가입 중...', '');
 
             try {
                 if (mode === 'login') {
@@ -812,13 +810,13 @@
                         saveRememberedEmail(email);
                         hydrateRememberedEmails();
                     }
-                    setMessage('濡쒓렇?몃릺?덉뒿?덈떎. 怨꾩젙 ?곹깭媛 媛깆떊?섎㈃ ?꾧뎄 ?섏씠吏濡??대룞?????덉뒿?덈떎.', 'success');
+                    setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
                     updateAccountView();
                     if (goToRedirectTarget()) return;
                     setTimeout(() => {
                         const state = auth.state;
                         if (state.user) {
-                            setMessage(`${auth.displayName()} 怨꾩젙?쇰줈 濡쒓렇?몃릺?덉뒿?덈떎.`, 'success');
+                            setMessage(`${auth.displayName()} 계정으로 로그인되었습니다.`, 'success');
                             updateAccountView();
                             goToRedirectTarget();
                         }
@@ -826,11 +824,11 @@
                 } else {
                     const result = await auth.signUp(email, password, username);
                     if (result.session) {
-                        setMessage('?뚯썝媛?낃낵 濡쒓렇?몄씠 ?꾨즺?섏뿀?듬땲??', 'success');
+                        setMessage('회원가입과 로그인이 완료되었습니다.', 'success');
                         updateAccountView();
                     } else {
                         setMode('login', { clearMessage: false });
-                        setMessage('?뚯썝媛???붿껌???꾨즺?섏뿀?듬땲?? 諛쏆? 硫붿씪?⑥뿉???뺤씤 留곹겕瑜??꾨Ⅸ ??濡쒓렇?명빐 二쇱꽭??', 'success');
+                        setMessage('회원가입 요청이 완료되었습니다. 받은 메일함에서 확인 링크를 누른 뒤 로그인해 주세요.', 'success');
                     }
                 }
             } catch (error) {
@@ -844,13 +842,13 @@
             event.preventDefault();
             const username = normalizeUsername(accountUsername.value);
             if (!isValidUsername(username)) {
-                usernameMessage.textContent = '?좎? ID???곷Ц, ?レ옄, 諛묒쨪(_)留??ъ슜?댁꽌 3~24?먮줈 ?낅젰??二쇱꽭??';
+                usernameMessage.textContent = '유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요.';
                 usernameMessage.className = 'auth-message error';
                 return;
             }
 
             usernameSaveBtn.disabled = true;
-            usernameMessage.textContent = '???以?..';
+            usernameMessage.textContent = '저장 중...';
             usernameMessage.className = 'auth-message';
             try {
                 const auth = getAuthApi();
@@ -861,7 +859,7 @@
                 if (currentUsername.toLowerCase() !== username.toLowerCase()) {
                     await auth.updateUsername(username);
                 }
-                usernameMessage.textContent = '?좎? ID媛 ??λ릺?덉뒿?덈떎. ?덉쑝濡??대룞?⑸땲??..';
+                usernameMessage.textContent = '유저 ID가 저장되었습니다. 홈으로 이동합니다...';
                 usernameMessage.className = 'auth-message success';
                 updateAccountView();
                 setTimeout(() => {

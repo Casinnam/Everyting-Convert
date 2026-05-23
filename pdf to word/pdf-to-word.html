@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7281685131923147"
-     crossorigin="anonymous"></script>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF ??Word 蹂?섍린</title>
+<title>PDF → Word 변환기</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -120,7 +118,7 @@
   }
 
   .tools-toggle::after {
-    content: '??;
+    content: '▾';
     font-size: 0.75rem;
   }
 
@@ -594,7 +592,7 @@
   }
 
   .language-toggle::after {
-    content: '??;
+    content: '⌄';
     color: var(--muted);
     font-size: 0.75rem;
   }
@@ -701,8 +699,8 @@
 
 <main>
   <div class="hero">
-    <h1>PDF瑜?Word濡?span class="line2">蹂?섑븯?몄슂</span></h1>
-    <p>釉뚮씪?곗??먯꽌 吏곸젒 ?띿뒪?몃? 異붿텧?섏뿬 Word 臾몄꽌(.docx)濡???ν빀?덈떎</p>
+    <h1>PDF를 Word로<span class="line2">변환하세요</span></h1>
+    <p>브라우저에서 직접 텍스트를 추출하여 Word 문서(.docx)로 저장합니다</p>
   </div>
 
   <div class="drop-zone" id="dropZone">
@@ -714,32 +712,32 @@
         <polyline points="9 15 12 18 15 15"/>
       </svg>
     </div>
-    <h2>PDF ?뚯씪???쒕옒洹명븯?몄슂</h2>
-    <p>?먮뒗 ?꾨옒 踰꾪듉???대┃?섏뿬 ?뚯씪???좏깮?섏꽭??/p>
-    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">?뚯씪 ?좏깮</button>
+    <h2>PDF 파일을 드래그하세요</h2>
+    <p>또는 아래 버튼을 클릭하여 파일을 선택하세요</p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">파일 선택</button>
     <input type="file" id="fileInput" accept=".pdf">
   </div>
 
   <div class="settings-panel" id="settingsPanel">
-    <div class="settings-title">蹂???ㅼ젙</div>
+    <div class="settings-title">변환 설정</div>
     <div class="settings-grid">
       <div class="setting-item">
-        <label>?섏씠吏 踰덊샇 ?쒖떆</label>
+        <label>페이지 번호 표시</label>
         <div style="padding-top: 0.5rem;">
-            <input type="checkbox" id="includePageNum" checked> 媛??섏씠吏留덈떎 踰덊샇 援щ텇??異붽?
+            <input type="checkbox" id="includePageNum" checked> 각 페이지마다 번호 구분선 추가
         </div>
       </div>
       <div class="setting-item">
-        <label>?섏씠吏 踰붿쐞</label>
+        <label>페이지 범위</label>
         <select id="pageRange">
-          <option value="all">紐⑤뱺 ?섏씠吏</option>
-          <option value="first">泥?踰덉㎏ ?섏씠吏留?/option>
-          <option value="custom">吏곸젒 ?낅젰</option>
+          <option value="all">모든 페이지</option>
+          <option value="first">첫 번째 페이지만</option>
+          <option value="custom">직접 입력</option>
         </select>
       </div>
     </div>
     <div id="customPageInput" style="margin-top:1rem;display:none;">
-      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">?섏씠吏 踰덊샇 (?? 1,3,5-8)</label>
+      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">페이지 번호 (예: 1,3,5-8)</label>
       <input type="text" id="customPages" placeholder="1,3,5-8" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;border-radius:2px;outline:none;">
     </div>
   </div>
@@ -752,10 +750,10 @@
       </svg>
     </div>
     <div class="file-details">
-      <div class="file-name" id="fileName">??/div>
-      <div class="file-meta" id="fileMeta">??/div>
+      <div class="file-name" id="fileName">—</div>
+      <div class="file-meta" id="fileMeta">—</div>
     </div>
-    <button class="remove-file" onclick="resetAll()">??/button>
+    <button class="remove-file" onclick="resetAll()">✕</button>
   </div>
 
   <button class="convert-btn" id="convertBtn" onclick="startConversion()">
@@ -763,12 +761,12 @@
       <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
     </svg>
-    Word 臾몄꽌濡?蹂??
+    Word 문서로 변환
   </button>
 
   <div class="progress-section" id="progressSection">
     <div class="progress-header">
-      <span class="progress-label" id="progressLabel">?띿뒪??異붿텧 以?..</span>
+      <span class="progress-label" id="progressLabel">텍스트 추출 중...</span>
       <span class="progress-pct" id="progressPct">0%</span>
     </div>
     <div class="progress-bar-bg">
@@ -778,19 +776,19 @@
 
   <div class="results-section" id="resultsSection">
     <div class="results-header">
-      <div class="results-title">蹂???꾨즺 ??<span id="pageCount">0</span>?섏씠吏?먯꽌 ?띿뒪??異붿텧 ?깃났</div>
+      <div class="results-title">변환 완료 — <span id="pageCount">0</span>페이지에서 텍스트 추출 성공</div>
     </div>
     <button class="download-word-btn" id="downloadWordBtn">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Word 臾몄꽌 ?ㅼ슫濡쒕뱶 (.docx)
+      Word 문서 다운로드 (.docx)
     </button>
     <p style="margin-top: 1rem; color: var(--muted); font-size: 0.85rem;">
-        ?????꾧뎄??PDF?먯꽌 ?띿뒪?몃쭔 異붿텧?섏뿬 臾몄꽌濡?援ъ꽦?⑸땲?? ?대?吏??蹂듭옟?????덉씠?꾩썐? ?좎??섏? ?딆쓣 ???덉뒿?덈떎.
+        ※ 이 도구는 PDF에서 텍스트만 추출하여 문서로 구성합니다. 이미지나 복잡한 표 레이아웃은 유지되지 않을 수 있습니다.
     </p>
   </div>
 
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" onclick="resetAll()">???뚯씪 蹂?섑븯湲?/button>
+    <button class="reset-btn" onclick="resetAll()">새 파일 변환하기</button>
   </div>
 </main>
 
@@ -848,7 +846,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>짤 EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>© EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -856,10 +854,10 @@
       </button>
       <div class="language-dropdown">
         <button type="button" data-language="en">English</button>
-        <button type="button" data-language="ko">?쒓뎅??/button>
+        <button type="button" data-language="ko">한국어</button>
         <button type="button" data-language="de">Deutsch</button>
-        <button type="button" data-language="es">Espa챰ol</button>
-        <button type="button" data-language="fr">Fran챌ais</button>
+        <button type="button" data-language="es">Español</button>
+        <button type="button" data-language="fr">Français</button>
       </div>
     </div>
   </div>
@@ -891,7 +889,7 @@
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type === 'application/pdf') loadFile(file);
-    else alert('PDF ?뚯씪留??낅줈??媛?ν빀?덈떎.');
+    else alert('PDF 파일만 업로드 가능합니다.');
   });
 
   document.getElementById('fileInput').addEventListener('change', e => {
@@ -900,7 +898,7 @@
 
   async function loadFile(file) {
     if (!window.pdfjsLib) {
-      alert('PDF.js ?쇱씠釉뚮윭由щ? 遺덈윭?ㅼ? 紐삵뻽?듬땲?? ?명꽣???곌껐???뺤씤?????ㅼ떆 ?쒕룄??二쇱꽭??');
+      alert('PDF.js 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
       return;
     }
 
@@ -909,7 +907,7 @@
     pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
     document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}?섏씠吏 쨌 ${formatSize(file.size)}`;
+    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}페이지 · ${formatSize(file.size)}`;
     document.getElementById('fileInfo').classList.add('visible');
     document.getElementById('settingsPanel').classList.add('visible');
     document.getElementById('convertBtn').classList.add('visible');
@@ -945,7 +943,7 @@
     if (!pdfDoc) return;
 
     if (!window.docx) {
-      alert('Word 蹂???쇱씠釉뚮윭由щ? 遺덈윭?ㅼ? 紐삵뻽?듬땲?? ?명꽣???곌껐???뺤씤?????ㅼ떆 ?쒕룄??二쇱꽭??');
+      alert('Word 변환 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
       return;
     }
 
@@ -963,7 +961,7 @@
       for (let i = 0; i < pages.length; i++) {
         const pageNum = pages[i];
         const pct = Math.round((i / pages.length) * 100);
-        updateProgress(`?섏씠吏 ${pageNum} ?띿뒪??異붿텧 以?..`, pct);
+        updateProgress(`페이지 ${pageNum} 텍스트 추출 중...`, pct);
 
         const page = await pdfDoc.getPage(pageNum);
         const textContent = await page.getTextContent();
@@ -972,7 +970,7 @@
           docxParagraphs.push(new docx.Paragraph({
               children: [
                   new docx.TextRun({
-                      text: `--- ?섏씠吏 ${pageNum} ---`,
+                      text: `--- 페이지 ${pageNum} ---`,
                       bold: true,
                       size: 28
                   })
@@ -1003,7 +1001,7 @@
         docxParagraphs.push(new docx.Paragraph({ children: [new docx.TextRun("")] }));
       }
 
-      updateProgress('Word 臾몄꽌 ?앹꽦 以?..', 95);
+      updateProgress('Word 문서 생성 중...', 95);
 
       const doc = new docx.Document({
           sections: [{
@@ -1021,7 +1019,7 @@
           a.click();
       };
 
-      updateProgress('?꾨즺!', 100);
+      updateProgress('완료!', 100);
       setTimeout(() => {
         document.getElementById('progressSection').classList.remove('visible');
         document.getElementById('resultsSection').classList.add('visible');
@@ -1031,7 +1029,7 @@
 
     } catch (e) {
       console.error(e);
-      alert('蹂??以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎: ' + e.message);
+      alert('변환 중 오류가 발생했습니다: ' + e.message);
       resetAll();
     }
   }
