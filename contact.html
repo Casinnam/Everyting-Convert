@@ -130,7 +130,7 @@
                     <button class="pricing-cta primary" type="submit">Prepare Email</button>
                     <button class="pricing-cta" type="button" data-copy-contact-email>Copy Email Address</button>
                 </div>
-                <p class="contact-status" id="contactFormStatus">Your email app will open with the message filled in.</p>
+                <p class="contact-status" id="contactFormStatus">Your message will be sent directly to Everything Convert support.</p>
             </form>
         </section>
 
@@ -161,20 +161,36 @@
         contactForm?.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = new FormData(contactForm);
-            const subject = String(formData.get('subject') || 'Everything Convert Support').trim();
-            const body = [
-                `Name: ${String(formData.get('name') || '').trim()}`,
-                `Reply email: ${String(formData.get('email') || '').trim()}`,
-                `Topic: ${String(formData.get('topic') || '').trim()}`,
-                '',
-                String(formData.get('message') || '').trim(),
-                '',
-                `Page: ${window.location.href}`,
-            ].join('\n');
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const payload = {
+                name: String(formData.get('name') || '').trim(),
+                email: String(formData.get('email') || '').trim(),
+                topic: String(formData.get('topic') || '').trim(),
+                subject: String(formData.get('subject') || '').trim(),
+                message: String(formData.get('message') || '').trim(),
+                page: window.location.href,
+            };
 
-            const mailto = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailto;
-            formStatus.textContent = 'Opening your email app. If it does not open, copy the email address and send the message manually.';
+            submitButton.disabled = true;
+            formStatus.textContent = 'Sending your message...';
+
+            fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            })
+                .then(async (response) => {
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(result.error || 'Message could not be sent.');
+                    contactForm.reset();
+                    formStatus.textContent = 'Message sent. Thank you for contacting Everything Convert.';
+                })
+                .catch((error) => {
+                    formStatus.textContent = `${error.message} You can also email us directly at ${supportEmail}.`;
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                });
         });
 
         document.querySelectorAll('[data-copy-contact-email]').forEach((copyButton) => {
