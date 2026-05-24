@@ -10,6 +10,7 @@
     <title>Contact - Everything Convert</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .contact-form {
             display: grid;
@@ -127,7 +128,10 @@
                     </div>
                 </div>
                 <div class="contact-actions">
-                    <button class="pricing-cta primary" type="submit">Prepare Email</button>
+                    <button class="pricing-cta primary" type="submit" id="contactSubmitButton">
+                        <i class="fa-regular fa-paper-plane" aria-hidden="true"></i>
+                        <span>Send Message</span>
+                    </button>
                     <button class="pricing-cta" type="button" data-copy-contact-email>Copy Email Address</button>
                 </div>
                 <p class="contact-status" id="contactFormStatus">Your message will be sent directly to Everything Convert support.</p>
@@ -161,7 +165,8 @@
         contactForm?.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = new FormData(contactForm);
-            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const submitButton = document.getElementById('contactSubmitButton');
+            const submitLabel = submitButton?.querySelector('span');
             const payload = {
                 name: String(formData.get('name') || '').trim(),
                 email: String(formData.get('email') || '').trim(),
@@ -172,6 +177,7 @@
             };
 
             submitButton.disabled = true;
+            if (submitLabel) submitLabel.textContent = 'Sending...';
             formStatus.textContent = 'Sending your message...';
 
             fetch('/api/contact', {
@@ -184,12 +190,14 @@
                     if (!response.ok) throw new Error(result.error || 'Message could not be sent.');
                     contactForm.reset();
                     formStatus.textContent = 'Message sent. Thank you for contacting Everything Convert.';
+                    if (submitLabel) submitLabel.textContent = 'Send Message';
                 })
                 .catch((error) => {
-                    formStatus.textContent = `${error.message} You can also email us directly at ${supportEmail}.`;
+                    formStatus.textContent = `Message could not be sent: ${error.message} You can also email us directly at ${supportEmail}.`;
                 })
                 .finally(() => {
                     submitButton.disabled = false;
+                    if (submitLabel && submitLabel.textContent === 'Sending...') submitLabel.textContent = 'Send Message';
                 });
         });
 
