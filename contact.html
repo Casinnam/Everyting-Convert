@@ -74,6 +74,19 @@
             color: var(--muted);
             font-weight: 700;
             line-height: 1.5;
+            border-radius: 8px;
+            padding: .75rem .9rem;
+            background: rgba(255, 253, 246, .58);
+        }
+
+        .contact-status.success {
+            color: #166534;
+            background: rgba(22, 101, 52, .1);
+        }
+
+        .contact-status.error {
+            color: #991b1b;
+            background: rgba(153, 27, 27, .1);
         }
 
         @media (max-width: 720px) {
@@ -176,6 +189,7 @@
                 page: window.location.href,
             };
 
+            formStatus.className = 'contact-status';
             submitButton.disabled = true;
             if (submitLabel) submitLabel.textContent = 'Sending...';
             formStatus.textContent = 'Sending your message...';
@@ -189,10 +203,12 @@
                     const result = await response.json().catch(() => ({}));
                     if (!response.ok) throw new Error(result.error || 'Message could not be sent.');
                     contactForm.reset();
+                    formStatus.className = 'contact-status success';
                     formStatus.textContent = 'Message sent. Thank you for contacting Everything Convert.';
                     if (submitLabel) submitLabel.textContent = 'Send Message';
                 })
                 .catch((error) => {
+                    formStatus.className = 'contact-status error';
                     formStatus.textContent = `Message could not be sent: ${error.message} You can also email us directly at ${supportEmail}.`;
                 })
                 .finally(() => {
