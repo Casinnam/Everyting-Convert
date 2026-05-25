@@ -540,6 +540,50 @@
             return true;
         }
 
+        function isProCheckoutRedirect() {
+            if (!redirectTarget) return false;
+            try {
+                const target = new URL(redirectTarget);
+                return target.pathname.endsWith('/pricing.html') && target.searchParams.get('checkout') === 'pro';
+            } catch (error) {
+                return false;
+            }
+        }
+
+        let checkoutStartedFromAuth = false;
+
+        async function startCheckoutFromAuth(auth) {
+            if (checkoutStartedFromAuth || !isProCheckoutRedirect()) return false;
+            const session = auth && auth.state ? auth.state.session : null;
+            if (!session || !session.access_token) return false;
+
+            checkoutStartedFromAuth = true;
+            setMessage('Opening secure Stripe checkout...', '');
+
+            try {
+                const response = await fetch('/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${session.access_token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ plan: 'pro_monthly' }),
+                });
+                const payload = await response.json();
+
+                if (!response.ok || !payload.url) {
+                    throw new Error(payload.error || 'Stripe checkout could not be opened.');
+                }
+
+                window.location.href = payload.url;
+                return true;
+            } catch (error) {
+                checkoutStartedFromAuth = false;
+                setMessage(error.message || 'Stripe checkout could not be opened.', 'error');
+                return false;
+            }
+        }
+
         function normalizeUsername(value) {
             return String(value || '').trim();
         }
@@ -829,6 +873,7 @@
                     }
                     setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
                     updateAccountView();
+                    if (await startCheckoutFromAuth(auth)) return;
                     if (goToRedirectTarget()) return;
                     setTimeout(() => {
                         const state = auth.state;
@@ -895,7 +940,10 @@
             const auth = window.EverythingConvertAuth;
             const state = auth ? auth.state : { ready: false, user: null };
             if (redirectTarget && state.ready && state.user) {
-                setTimeout(goToRedirectTarget, 100);
+                setTimeout(async () => {
+                    if (await startCheckoutFromAuth(auth)) return;
+                    goToRedirectTarget();
+                }, 100);
             }
         });
 
@@ -920,7 +968,10 @@
             }
             const auth = window.EverythingConvertAuth;
             if (redirectTarget && auth && auth.state.user) {
-                setTimeout(goToRedirectTarget, 250);
+                setTimeout(async () => {
+                    if (await startCheckoutFromAuth(auth)) return;
+                    goToRedirectTarget();
+                }, 250);
             }
         });
     </script>
