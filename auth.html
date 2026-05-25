@@ -521,7 +521,13 @@
                 const target = new URL(next, window.location.href);
                 if (target.origin !== window.location.origin) return '';
                 const normalizedPath = target.pathname.replace(/\\/g, '/');
-                if (!normalizedPath.endsWith('/admin.html') && !normalizedPath.endsWith('admin.html')) return '';
+                const allowedPaths = [
+                    '/admin.html',
+                    '/pricing.html',
+                    '/index.html',
+                ];
+                const isAllowed = allowedPaths.some((path) => normalizedPath.endsWith(path));
+                if (!isAllowed) return '';
                 return target.href;
             } catch (error) {
                 return '';

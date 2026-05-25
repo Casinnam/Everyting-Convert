@@ -217,12 +217,12 @@
                 setStatus('Checkout was cancelled. You can restart Pro checkout any time.');
             }
 
-            button.addEventListener('click', async () => {
+            async function startCheckout() {
                 const auth = await waitForAuth();
                 const session = auth && auth.state ? auth.state.session : null;
 
                 if (!session || !session.access_token) {
-                    window.location.href = 'auth.html?next=pricing.html';
+                    window.location.href = `auth.html?next=${encodeURIComponent('pricing.html?checkout=pro')}`;
                     return;
                 }
 
@@ -248,7 +248,13 @@
                     setButtonLoading(false);
                     setStatus(error.message || 'Stripe checkout could not be opened.');
                 }
-            });
+            }
+
+            button.addEventListener('click', startCheckout);
+
+            if (params.get('checkout') === 'pro') {
+                startCheckout();
+            }
         })();
     </script>
 </body>
