@@ -540,12 +540,22 @@ nav {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.55rem;
     min-height: 3rem;
+    border: 0;
     border-radius: 8px;
     background: linear-gradient(135deg, #2f2612, #7b5205);
     color: #fff;
     text-decoration: none;
     font-weight: 800;
+    cursor: pointer;
+    font: inherit;
+    text-align: center;
+}
+
+.plan-button:disabled {
+    cursor: wait;
+    opacity: 0.72;
 }
 
 .secondary-plan {

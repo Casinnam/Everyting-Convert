@@ -73,7 +73,10 @@
                     <p class="price">$6.99<span>/month</span></p>
                     <p class="price-note">Cancel any time</p>
                 </div>
-                <a class="plan-button" href="auth.html">Log in for Pro</a>
+                <button class="plan-button" type="button" id="proCheckoutButton" data-stripe-checkout>
+                    <i class="fa-solid fa-lock-open"></i>
+                    <span>Upgrade to Pro</span>
+                </button>
                 <ul>
                     <li><i class="fa-regular fa-circle-check"></i>Unlimited conversions</li>
                     <li><i class="fa-regular fa-circle-check"></i>Enhanced PDF table detection</li>
@@ -89,7 +92,7 @@
                     <p class="price">$59<span>/year</span></p>
                     <p class="price-note">About $4.92 per month</p>
                 </div>
-                <a class="plan-button secondary-plan" href="auth.html">Choose yearly</a>
+                <a class="plan-button secondary-plan" href="contact.html">Ask about yearly</a>
                 <ul>
                     <li><i class="fa-regular fa-circle-check"></i>Everything in Pro</li>
                     <li><i class="fa-regular fa-circle-check"></i>Lower monthly cost</li>
@@ -115,8 +118,8 @@
         </section>
 
         <section class="pricing-note">
-            <h2>Billing is coming next.</h2>
-            <p>For now, Pro access is controlled through your Supabase profile plan. Stripe checkout can be connected later without changing the plan structure.</p>
+            <h2>Secure billing with Stripe.</h2>
+            <p id="billingStatus">Log in, choose Pro, and Stripe will handle your subscription checkout securely.</p>
         </section>
     </main>
 
@@ -176,5 +179,77 @@
     <script src="supabase-config.js"></script>
     <script src="auth.js"></script>
     <script src="language-menu.js"></script>
+    <script>
+        (function () {
+            const button = document.getElementById('proCheckoutButton');
+            const status = document.getElementById('billingStatus');
+            if (!button || !status) return;
+
+            function setButtonLoading(isLoading) {
+                button.disabled = isLoading;
+                const label = button.querySelector('span');
+                if (label) label.textContent = isLoading ? 'Opening Stripe...' : 'Upgrade to Pro';
+            }
+
+            function setStatus(message) {
+                status.textContent = message;
+            }
+
+            function waitForAuth() {
+                return new Promise((resolve) => {
+                    const startedAt = Date.now();
+                    const timer = window.setInterval(() => {
+                        if (window.EverythingConvertAuth && window.EverythingConvertAuth.state.ready) {
+                            window.clearInterval(timer);
+                            resolve(window.EverythingConvertAuth);
+                            return;
+                        }
+                        if (Date.now() - startedAt > 6000) {
+                            window.clearInterval(timer);
+                            resolve(window.EverythingConvertAuth || null);
+                        }
+                    }, 100);
+                });
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('stripe') === 'cancel') {
+                setStatus('Checkout was cancelled. You can restart Pro checkout any time.');
+            }
+
+            button.addEventListener('click', async () => {
+                const auth = await waitForAuth();
+                const session = auth && auth.state ? auth.state.session : null;
+
+                if (!session || !session.access_token) {
+                    window.location.href = 'auth.html?next=pricing.html';
+                    return;
+                }
+
+                try {
+                    setButtonLoading(true);
+                    setStatus('Creating a secure Stripe checkout...');
+                    const response = await fetch('/api/create-checkout-session', {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${session.access_token}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ plan: 'pro_monthly' }),
+                    });
+                    const payload = await response.json();
+
+                    if (!response.ok || !payload.url) {
+                        throw new Error(payload.error || 'Stripe checkout could not be opened.');
+                    }
+
+                    window.location.href = payload.url;
+                } catch (error) {
+                    setButtonLoading(false);
+                    setStatus(error.message || 'Stripe checkout could not be opened.');
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

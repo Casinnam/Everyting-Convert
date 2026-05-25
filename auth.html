@@ -905,6 +905,13 @@
             hydrateRememberedEmails();
             showCachedAccountView();
             updateAccountView();
+            if (new URLSearchParams(window.location.search).get('stripe') === 'success') {
+                setMessage('Payment complete. Your Pro access may take a moment to refresh.', 'success');
+                const auth = window.EverythingConvertAuth;
+                if (auth && typeof auth.refresh === 'function') {
+                    setTimeout(() => auth.refresh(), 1200);
+                }
+            }
             const auth = window.EverythingConvertAuth;
             if (redirectTarget && auth && auth.state.user) {
                 setTimeout(goToRedirectTarget, 250);
