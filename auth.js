@@ -114,6 +114,15 @@
     }
   }
 
+  function applySignedOutState() {
+    state.session = null;
+    state.user = null;
+    state.profile = null;
+    state.ready = true;
+    clearAuthCache();
+    renderAuthWidgets();
+  }
+
   function renderCachedAuthWidgets() {
     const cached = readAuthCache();
     if (!cached || !cached.username) return false;
@@ -379,14 +388,20 @@
 
   async function signOut() {
     const client = initClient();
+    applySignedOutState();
     if (!client) return;
-    const { error } = await client.auth.signOut();
-    if (error) throw error;
-    state.session = null;
-    state.user = null;
-    state.profile = null;
-    clearAuthCache();
-    renderAuthWidgets();
+    try {
+      const { error } = await withTimeout(
+        client.auth.signOut(),
+        'Logout',
+        8000,
+      );
+      if (error) {
+        console.warn('Could not complete remote logout:', error.message);
+      }
+    } catch (error) {
+      console.warn('Could not complete remote logout:', error.message);
+    }
   }
 
   function requireLogin(message) {
@@ -518,6 +533,11 @@
     if (!logoutButton) return;
     event.preventDefault();
     try {
+      document.querySelectorAll('[data-auth-logout]').forEach((element) => {
+        element.textContent = 'Logging out...';
+        element.disabled = true;
+        element.setAttribute('aria-busy', 'true');
+      });
       await signOut();
       window.location.href = getAuthPath();
     } catch (error) {
