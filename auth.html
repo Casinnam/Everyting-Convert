@@ -553,7 +553,8 @@
         let checkoutStartedFromAuth = false;
 
         async function startCheckoutFromAuth(auth) {
-            if (checkoutStartedFromAuth || !isProCheckoutRedirect()) return false;
+            if (checkoutStartedFromAuth) return true;
+            if (!isProCheckoutRedirect()) return false;
             const session = auth && auth.state ? auth.state.session : null;
             if (!session || !session.access_token) return false;
 
@@ -582,6 +583,18 @@
                 setMessage(error.message || 'Stripe checkout could not be opened.', 'error');
                 return false;
             }
+        }
+
+        async function handleRedirectAfterAuth(auth) {
+            if (!redirectTarget) return false;
+
+            if (isProCheckoutRedirect()) {
+                if (await startCheckoutFromAuth(auth)) return true;
+                setMessage('Login complete. Preparing secure Stripe checkout...', '');
+                return true;
+            }
+
+            return goToRedirectTarget();
         }
 
         function normalizeUsername(value) {
@@ -873,14 +886,13 @@
                     }
                     setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
                     updateAccountView();
-                    if (await startCheckoutFromAuth(auth)) return;
-                    if (goToRedirectTarget()) return;
+                    if (await handleRedirectAfterAuth(auth)) return;
                     setTimeout(() => {
                         const state = auth.state;
                         if (state.user) {
                             setMessage(`${auth.displayName()} 계정으로 로그인되었습니다.`, 'success');
                             updateAccountView();
-                            goToRedirectTarget();
+                            handleRedirectAfterAuth(auth);
                         }
                     }, 500);
                 } else {
@@ -941,8 +953,7 @@
             const state = auth ? auth.state : { ready: false, user: null };
             if (redirectTarget && state.ready && state.user) {
                 setTimeout(async () => {
-                    if (await startCheckoutFromAuth(auth)) return;
-                    goToRedirectTarget();
+                    await handleRedirectAfterAuth(auth);
                 }, 100);
             }
         });
@@ -969,8 +980,7 @@
             const auth = window.EverythingConvertAuth;
             if (redirectTarget && auth && auth.state.user) {
                 setTimeout(async () => {
-                    if (await startCheckoutFromAuth(auth)) return;
-                    goToRedirectTarget();
+                    await handleRedirectAfterAuth(auth);
                 }, 250);
             }
         });
