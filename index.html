@@ -99,9 +99,19 @@
                     <span class="showcase-kicker" data-i18n-key="pdfDocuments">PDF & Documents</span>
                     <h2 data-i18n-key="showcasePdfTitle">Turn documents into the format your work needs.</h2>
                     <p data-i18n-key="showcasePdfText">Move between PDF, Word, Excel, JPG, EPUB, and document formats without hunting through separate tools.</p>
-                    <div class="showcase-actions">
-                        <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
-                        <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                    <div class="showcase-converter">
+                        <button class="converter-launch" type="button" aria-label="Show PDF converter tools">
+                            <i class="fa-regular fa-file-pdf"></i>
+                            <span>PDF Converter</span>
+                        </button>
+                        <div class="converter-links" aria-label="PDF converter tools">
+                            <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                            <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                            <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                            <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                            <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                            <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        </div>
                     </div>
                 </div>
                 <div class="showcase-visual" data-motion-label="PDF">
@@ -117,9 +127,19 @@
                     <span class="showcase-kicker" data-i18n-key="imageCategory">Image</span>
                     <h2 data-i18n-key="showcaseImageTitle">Prepare images for sharing, printing, or archiving.</h2>
                     <p data-i18n-key="showcaseImageText">Convert JPG, PNG, WEBP, HEIC, SVG, and PDF-friendly image sets with a cleaner workflow.</p>
-                    <div class="showcase-actions">
-                        <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
-                        <a href="image converter/image-converter.html">Image Converter</a>
+                    <div class="showcase-converter">
+                        <button class="converter-launch" type="button" aria-label="Show image converter tools">
+                            <i class="fa-regular fa-image"></i>
+                            <span>Image Converter</span>
+                        </button>
+                        <div class="converter-links" aria-label="Image converter tools">
+                            <a href="image converter/image-converter.html">Image Converter</a>
+                            <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                            <a href="image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
+                            <a href="image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
+                            <a href="image converter/image-converter.html?mode=webp-jpg">WEBP to JPG</a>
+                            <a href="image converter/image-converter.html?mode=png-svg">PNG to SVG</a>
+                        </div>
                     </div>
                 </div>
                 <div class="showcase-visual" data-motion-label="Image">
@@ -135,9 +155,18 @@
                     <span class="showcase-kicker" data-i18n-key="videoAudio">Video & Audio</span>
                     <h2 data-i18n-key="showcaseVideoTitle">Extract, convert, and reshape media files.</h2>
                     <p data-i18n-key="showcaseVideoText">Switch between video and audio formats, pull MP3 from clips, and keep media work in one place.</p>
-                    <div class="showcase-actions">
-                        <a href="media converter/media-converter.html">Video Converter</a>
-                        <a href="media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
+                    <div class="showcase-converter">
+                        <button class="converter-launch" type="button" aria-label="Show video converter tools">
+                            <i class="fa-solid fa-video"></i>
+                            <span>Video Converter</span>
+                        </button>
+                        <div class="converter-links" aria-label="Video converter tools">
+                            <a href="media converter/media-converter.html">Video Converter</a>
+                            <a href="media converter/media-converter.html?mode=mp4">MP4 Converter</a>
+                            <a href="media converter/media-converter.html?mode=mov-mp4">MOV to MP4</a>
+                            <a href="media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
+                            <a href="gif converter/gif-converter.html">Video to GIF</a>
+                        </div>
                     </div>
                 </div>
                 <div class="showcase-visual" data-motion-label="Media">
@@ -150,19 +179,28 @@
 
             <article class="showcase-panel reverse">
                 <div class="showcase-copy">
-                    <span class="showcase-kicker" data-i18n-key="gifCategory">GIF</span>
-                    <h2 data-i18n-key="showcaseGifTitle">Create quick loops from video and image sequences.</h2>
-                    <p data-i18n-key="showcaseGifText">Build GIFs from short clips, convert animated formats, and send lightweight motion where it fits best.</p>
-                    <div class="showcase-actions">
-                        <a href="gif converter/gif-converter.html">Video to GIF</a>
-                        <a href="gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
+                    <span class="showcase-kicker">Audio</span>
+                    <h2>Convert audio for listening, sharing, and editing.</h2>
+                    <p>Extract sound from videos, convert MP3 and other audio formats, and prepare smaller files for everyday use.</p>
+                    <div class="showcase-converter">
+                        <button class="converter-launch" type="button" aria-label="Show audio converter tools">
+                            <i class="fa-solid fa-music"></i>
+                            <span>Audio Converter</span>
+                        </button>
+                        <div class="converter-links" aria-label="Audio converter tools">
+                            <a href="media converter/media-converter.html?mode=audio">Audio Converter</a>
+                            <a href="media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
+                            <a href="media converter/media-converter.html?mode=video-mp3">Video to MP3</a>
+                            <a href="media converter/media-converter.html?mode=mp3">MP3 Converter</a>
+                            <a href="media converter/media-converter.html?mode=mp3-ogg">MP3 to OGG</a>
+                        </div>
                     </div>
                 </div>
-                <div class="showcase-visual" data-motion-label="GIF">
-                    <img src="assets/home-gif-tools.svg" alt="GIF conversion illustration">
-                    <span class="motion-chip chip-one">MP4</span>
-                    <span class="motion-chip chip-two">APNG</span>
-                    <span class="motion-chip chip-three">GIF</span>
+                <div class="showcase-visual" data-motion-label="Audio">
+                    <img src="assets/home-video-audio.svg" alt="Audio conversion illustration">
+                    <span class="motion-chip chip-one">MP3</span>
+                    <span class="motion-chip chip-two">WAV</span>
+                    <span class="motion-chip chip-three">OGG</span>
                 </div>
             </article>
         </section>
