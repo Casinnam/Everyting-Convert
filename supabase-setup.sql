@@ -167,3 +167,64 @@ set email = excluded.email,
     plan = 'pro',
     role = 'admin',
     updated_at = now();
+
+create table if not exists public.usage_counters (
+  identity text primary key,
+  count integer not null default 0 check (count >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.usage_counters enable row level security;
+
+create or replace function public.record_usage_conversion(
+  usage_identity text,
+  usage_limit integer default 10
+)
+returns table (
+  identity text,
+  count integer,
+  remaining integer,
+  allowed boolean
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  current_count integer;
+begin
+  insert into public.usage_counters (identity, count)
+  values (usage_identity, 0)
+  on conflict (identity) do nothing;
+
+  select usage_counters.count
+  into current_count
+  from public.usage_counters
+  where usage_counters.identity = usage_identity
+  for update;
+
+  if current_count >= usage_limit then
+    return query
+    select
+      usage_identity,
+      current_count,
+      0,
+      false;
+    return;
+  end if;
+
+  update public.usage_counters
+  set count = count + 1,
+      updated_at = now()
+  where usage_counters.identity = usage_identity
+  returning usage_counters.count into current_count;
+
+  return query
+  select
+    usage_identity,
+    current_count,
+    greatest(usage_limit - current_count, 0),
+    true;
+end;
+$$;

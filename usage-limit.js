@@ -55,6 +55,7 @@
   const storage = safeStorage();
   let identityPromise = null;
   let controller = null;
+  let serverUsage = null;
 
   function isProUser() {
     return Boolean(
@@ -121,6 +122,46 @@
       isPro: isProUser,
     });
     return controller;
+  }
+
+  async function fetchServerUsage(method = 'GET') {
+    const response = await fetch(`${rootPrefix()}api/usage-limit`, {
+      method,
+      cache: 'no-store',
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data && data.error ? data.error : 'Usage limit could not be checked.';
+      const error = new Error(message);
+      error.status = response.status;
+      error.usage = data;
+      throw error;
+    }
+    return data;
+  }
+
+  async function getUsageStatus() {
+    if (isProUser()) {
+      return {
+        limit: DEFAULT_LIMIT,
+        count: 0,
+        remaining: Infinity,
+        canConvert: true,
+      };
+    }
+
+    try {
+      serverUsage = await fetchServerUsage('GET');
+      return serverUsage;
+    } catch (error) {
+      const fallback = await getController();
+      return {
+        limit: fallback.limit,
+        count: fallback.count(),
+        remaining: fallback.remaining(),
+        canConvert: fallback.canConvert(),
+      };
+    }
   }
 
   function panelText(remaining) {
@@ -236,7 +277,7 @@
   }
 
   async function renderUsage() {
-    const usage = await getController();
+    const usage = await getUsageStatus();
     document.querySelectorAll('[data-usage-badge]').forEach((element) => {
       element.textContent = panelText(usage.remaining());
     });
@@ -281,16 +322,35 @@
       }
     }
 
-    const usage = await getController();
-    if (!usage.canConvert()) {
-      showUpgradeModal();
+    if (isProUser()) {
       renderUsage();
-      return false;
+      return true;
     }
 
-    usage.recordConversion();
-    renderUsage();
-    return true;
+    try {
+      const usage = await fetchServerUsage('POST');
+      serverUsage = usage;
+      renderUsage();
+      return true;
+    } catch (error) {
+      if (error.status === 429 || (error.usage && error.usage.canConvert === false)) {
+        serverUsage = error.usage;
+        showUpgradeModal();
+        renderUsage();
+        return false;
+      }
+
+      const fallback = await getController();
+      if (!fallback.canConvert()) {
+        showUpgradeModal();
+        renderUsage();
+        return false;
+      }
+
+      fallback.recordConversion();
+      renderUsage();
+      return true;
+    }
   }
 
   function installConversionGuard() {
@@ -323,6 +383,7 @@
     createUsageController,
     rootPrefix,
     getController,
+    getUsageStatus,
     guardConversion,
     renderUsage,
     showUpgradeModal,
