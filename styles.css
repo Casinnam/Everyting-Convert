@@ -65,6 +65,8 @@ body {
 }
 
 .header {
+    position: relative;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -153,7 +155,7 @@ nav {
     border: 1px solid var(--line);
     border-radius: 8px;
     box-shadow: 0 18px 40px var(--shadow);
-    z-index: 20;
+    z-index: 1100;
 }
 
 .tools-menu.open .tools-dropdown {
