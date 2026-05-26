@@ -521,13 +521,8 @@
                 const target = new URL(next, window.location.href);
                 if (target.origin !== window.location.origin) return '';
                 const normalizedPath = target.pathname.replace(/\\/g, '/');
-                const allowedPaths = [
-                    '/admin.html',
-                    '/pricing.html',
-                    '/index.html',
-                ];
-                const isAllowed = allowedPaths.some((path) => normalizedPath.endsWith(path));
-                if (!isAllowed) return '';
+                // Allow any internal path that points to a valid page or directory
+                if (!normalizedPath.endsWith('.html') && !normalizedPath.endsWith('/')) return '';
                 return target.href;
             } catch (error) {
                 return '';

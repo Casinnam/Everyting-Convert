@@ -197,7 +197,7 @@
       const fallback = await withTimeout(
         state.client
           .from('profiles')
-          .select('id,email,plan,role')
+          .select('id,email,plan')
           .eq('id', state.user.id)
           .maybeSingle(),
         '프로필 확인',
@@ -494,18 +494,11 @@
       }));
       return false;
     }
-    if (!code || !client || !client.auth.exchangeCodeForSession) return false;
+    if (!code) return false;
 
-    const { data, error } = await withTimeout(
-      client.auth.exchangeCodeForSession(code),
-      'Google login completion',
-      15000,
-    );
-    if (error) throw error;
-
-    state.session = data && data.session ? data.session : null;
-    state.user = state.session ? state.session.user : null;
-
+    // Supabase JS v2 automatically handles the code exchange when detectSessionInUrl is true.
+    // Doing it manually causes a Race Condition (Invalid Grant).
+    
     params.delete('code');
     params.delete('state');
     const cleanUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash}`;
