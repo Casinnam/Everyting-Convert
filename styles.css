@@ -1121,7 +1121,7 @@ nav {
 .home-page .home-header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 6000;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: clamp(0.75rem, 2vw, 1.5rem);
@@ -1233,11 +1233,27 @@ nav {
     background: rgba(255, 255, 255, 0.98);
     border-color: var(--home-border);
     box-shadow: 0 22px 60px rgba(15, 23, 42, 0.14);
+    z-index: 7000;
+}
+
+.home-page .pdf-nav-menu {
+    left: 0;
+    right: auto;
+    width: min(520px, calc(100vw - 2rem));
+    grid-template-columns: repeat(2, minmax(170px, 1fr));
+    background: rgba(255, 255, 255, 0.98);
+    border-color: var(--home-border);
+    box-shadow: 0 22px 60px rgba(15, 23, 42, 0.14);
+    z-index: 7000;
+}
+
+.home-page .tools-menu.open .pdf-nav-menu {
+    display: grid;
 }
 
 .home-main {
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .home-hero {
@@ -1606,6 +1622,143 @@ nav {
     background: rgba(124, 58, 237, 0.1);
 }
 
+.pdf-tools-layout {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+    gap: 1rem;
+    width: min(980px, 100%);
+    margin: 0 auto 2.5rem;
+}
+
+.pdf-tools-panel {
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.76);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.pdf-tools-panel button {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.78rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: #334155;
+    font: inherit;
+    font-weight: 850;
+    text-align: left;
+    cursor: pointer;
+}
+
+.pdf-tools-panel button:hover,
+.pdf-tools-panel button.active {
+    border-color: rgba(37, 99, 235, 0.18);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+    color: #1e3a8a;
+}
+
+.pdf-tools-panel i {
+    width: 1.1rem;
+    text-align: center;
+}
+
+.pdf-tools-card {
+    width: 100%;
+    margin: 0;
+}
+
+.ec-upload-zone.dragging {
+    border-color: #2563eb;
+    background: rgba(219, 234, 254, 0.54);
+}
+
+.pdf-tools-files {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    color: #64748b;
+    font-weight: 750;
+}
+
+.pdf-tools-files div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.55rem;
+    align-items: center;
+    min-height: 2.4rem;
+    padding: 0.62rem 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 10px;
+    background: rgba(248, 250, 252, 0.82);
+    color: #0f172a;
+}
+
+.pdf-tools-files span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pdf-tools-files small {
+    color: #64748b;
+}
+
+.pdf-tools-options {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1rem 0 1.1rem;
+}
+
+.pdf-tools-options p {
+    color: #64748b;
+    font-weight: 750;
+}
+
+.pdf-tools-options label {
+    display: grid;
+    gap: 0.45rem;
+    color: #0f172a;
+    font-weight: 850;
+}
+
+.pdf-tools-options input,
+.pdf-tools-options select {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0 0.9rem;
+    border: 1px solid rgba(148, 163, 184, 0.32);
+    border-radius: 10px;
+    background: white;
+    color: #0f172a;
+    font: inherit;
+    font-weight: 700;
+}
+
+.pdf-tools-status {
+    min-height: 1.5rem;
+    margin-top: 0.85rem;
+    color: #475569;
+    font-weight: 800;
+    text-align: center;
+}
+
+.pdf-tools-status[data-type="success"] {
+    color: #166534;
+}
+
+.pdf-tools-status[data-type="error"] {
+    color: #991b1b;
+}
+
 .tool-empty {
     padding: 2rem;
     color: var(--home-muted);
@@ -1914,8 +2067,18 @@ nav {
     .ai-preview,
     .ai-card-row,
     .use-case-grid,
-    .home-page .footer-grid {
+    .home-page .footer-grid,
+    .pdf-tools-layout {
         grid-template-columns: 1fr;
+    }
+
+    .home-page .pdf-nav-menu {
+        width: min(92vw, 360px);
+        grid-template-columns: 1fr;
+    }
+
+    .pdf-tools-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .home-tool-card {

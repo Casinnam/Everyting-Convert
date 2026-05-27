@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MWPYMT3Q6H"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MWPYMT3Q6H');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7281685131923147"
+        crossorigin="anonymous"></script>
+
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Merge, split, rotate, remove, extract, and organize PDF pages directly in your browser.">
+    <title>PDF Tools - EverythingConvert</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../tool-page-redesign.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="premium-subpage ec-tool-page pdf-tools-page">
+    <header class="header">
+        <a class="logo" href="../index.html" aria-label="EverythingConvert home">
+            <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
+            <span>EverythingConvert</span>
+        </a>
+        <nav class="top-nav" aria-label="Primary navigation">
+            <a href="../index.html">Home</a>
+            <a href="../index.html#tool-browser">All Tools</a>
+            <a href="../pricing.html">Pricing</a>
+            <a href="../auth.html" data-auth-login>Login</a>
+            <a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="#" data-auth-logout style="display:none;">Logout</a>
+            <a href="../admin.html" data-admin-only style="display:none;">Admin</a>
+        </nav>
+    </header>
+
+    <main class="ec-tool-shell">
+        <nav class="ec-breadcrumb" aria-label="Breadcrumb">
+            <a href="../index.html">Home</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="../index.html#tool-browser">PDF</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span data-mode-label>PDF Tools</span>
+        </nav>
+
+        <section class="ec-tool-hero" aria-labelledby="pdfToolTitle">
+            <div class="ec-tool-icons" aria-hidden="true">
+                <span><i class="fa-regular fa-file-pdf"></i></span>
+                <i class="fa-solid fa-arrow-right"></i>
+                <span><i data-mode-icon class="fa-solid fa-layer-group"></i></span>
+            </div>
+            <h1 id="pdfToolTitle"><span class="ec-title-accent">PDF</span> Tools</h1>
+            <p data-mode-description>Merge, split, rotate, remove, extract, and organize PDF pages directly in your browser.</p>
+            <div class="ec-pill-row" aria-label="Tool highlights">
+                <span><i class="fa-solid fa-lock"></i> Browser-based</span>
+                <span><i class="fa-regular fa-user"></i> No signup required</span>
+                <span><i class="fa-solid fa-shield-halved"></i> Private workflow</span>
+                <span><i class="fa-solid fa-bolt"></i> Fast output</span>
+            </div>
+        </section>
+
+        <section class="pdf-tools-layout" aria-label="PDF tools workspace">
+            <aside class="pdf-tools-panel" aria-label="PDF tool modes">
+                <button type="button" data-mode-button="merge"><i class="fa-solid fa-layer-group"></i><span>Merge PDF</span></button>
+                <button type="button" data-mode-button="split"><i class="fa-solid fa-scissors"></i><span>Split PDF</span></button>
+                <button type="button" data-mode-button="rotate"><i class="fa-solid fa-rotate-right"></i><span>Rotate PDF</span></button>
+                <button type="button" data-mode-button="remove"><i class="fa-regular fa-trash-can"></i><span>Remove Pages</span></button>
+                <button type="button" data-mode-button="extract"><i class="fa-regular fa-copy"></i><span>Extract Pages</span></button>
+                <button type="button" data-mode-button="organize"><i class="fa-solid fa-arrow-up-short-wide"></i><span>Organize PDF</span></button>
+            </aside>
+
+            <section class="ec-converter-card pdf-tools-card">
+                <div class="ec-upload-zone" id="dropZone" tabindex="0" role="button" aria-label="Choose PDF files">
+                    <div class="ec-upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <h2 data-drop-title>Drag & drop your PDF file here</h2>
+                    <p>or</p>
+                    <label class="ec-choose-file">
+                        <input id="fileInput" type="file" accept="application/pdf,.pdf" hidden>
+                        <span>Choose File</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </label>
+                    <small data-file-help>Max file size depends on your browser memory.</small>
+                </div>
+
+                <div class="pdf-tools-files" id="fileList" aria-live="polite">No PDF selected.</div>
+
+                <div class="pdf-tools-options" id="optionsPanel"></div>
+
+                <button class="ec-convert-button" id="convertBtn" type="button">
+                    <span data-convert-label>Process PDF</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <p class="pdf-tools-status" id="statusText" role="status" aria-live="polite"></p>
+            </section>
+        </section>
+
+        <section class="ec-tool-info-grid">
+            <article>
+                <h2>How to use PDF Tools</h2>
+                <ol class="ec-step-list">
+                    <li><span>1</span><div><strong>Choose a PDF action</strong><p>Select merge, split, rotate, remove, extract, or organize.</p></div></li>
+                    <li><span>2</span><div><strong>Upload your PDF file</strong><p>Use the upload box and enter page ranges when needed.</p></div></li>
+                    <li><span>3</span><div><strong>Download the result</strong><p>Your edited PDF or ZIP file is generated in the browser.</p></div></li>
+                </ol>
+            </article>
+            <article class="ec-why-card">
+                <h2>Page range examples</h2>
+                <ul>
+                    <li><i class="fa-solid fa-check"></i> Use <strong>1,3,5</strong> for separate pages.</li>
+                    <li><i class="fa-solid fa-check"></i> Use <strong>2-6</strong> for a range.</li>
+                    <li><i class="fa-solid fa-check"></i> Use <strong>3,1,2</strong> in Organize PDF to reorder pages.</li>
+                    <li><i class="fa-solid fa-check"></i> Encrypted PDFs may need to be unlocked first.</li>
+                </ul>
+            </article>
+        </section>
+    </main>
+
+    <footer class="site-footer home-footer">
+        <div class="footer-legal-row">
+            <a href="../about.html">About Us</a>
+            <a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a>
+            <a href="../privacy.html">Privacy</a>
+            <a href="../terms.html">Terms</a>
+            <a href="../security.html">Security and Compliance</a>
+            <a href="../contact.html">Contact</a>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <img class="brand-icon" src="../favicon.svg" alt="" width="24" height="24">
+                <span>EverythingConvert.com v.00</span>
+            </div>
+            <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="../supabase-config.js"></script>
+    <script src="../auth.js?v=auth-20260525a"></script>
+    <script src="../usage-limit.js"></script>
+    <script src="pdf-tools.js"></script>
+</body>
+</html>

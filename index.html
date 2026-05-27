@@ -50,6 +50,9 @@
                         <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
                         <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
                         <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                        <a href="pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
+                        <a href="pdf tools/pdf-tools.html?mode=split">Split PDF</a>
+                        <a href="pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
                     </div>
                     <div class="tools-group">
                         <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
@@ -79,7 +82,29 @@
                     </div>
                 </div>
             </div>
-            <a href="#tool-browser" class="nav-link" data-tab-jump="pdf">PDF</a>
+            <div class="tools-menu">
+                <button class="nav-link tools-toggle" type="button" aria-expanded="false">PDF</button>
+                <div class="tools-dropdown pdf-nav-menu">
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-regular fa-file-pdf"></i> Convert</div>
+                        <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                        <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                        <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                        <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+                        <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+                    </div>
+                    <div class="tools-group">
+                        <div class="tools-group-title"><i class="fa-solid fa-screwdriver-wrench"></i> Tools</div>
+                        <a href="pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
+                        <a href="pdf tools/pdf-tools.html?mode=split">Split PDF</a>
+                        <a href="pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
+                        <a href="pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
+                        <a href="pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
+                        <a href="pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
+                    </div>
+                </div>
+            </div>
             <a href="#tool-browser" class="nav-link" data-tab-jump="image">Image</a>
             <a href="#tool-browser" class="nav-link" data-tab-jump="video">Video & Audio</a>
             <a href="#tool-browser" class="nav-link" data-tab-jump="office">Office</a>
@@ -236,6 +261,42 @@
                     <strong>PDF Compress</strong>
                     <small>Reduce PDF file size while keeping quality.</small>
                     <em>PDF</em>
+                </a>
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=merge" data-categories="popular pdf" data-tool-name="Merge PDF">
+                    <span class="tool-icon red"><i class="fa-solid fa-layer-group"></i></span>
+                    <strong>Merge PDF</strong>
+                    <small>Combine multiple PDFs into one file.</small>
+                    <em>PDF Tools</em>
+                </a>
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=split" data-categories="popular pdf" data-tool-name="Split PDF">
+                    <span class="tool-icon orange"><i class="fa-solid fa-scissors"></i></span>
+                    <strong>Split PDF</strong>
+                    <small>Create separate PDF files for each page.</small>
+                    <em>PDF Tools</em>
+                </a>
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=rotate" data-categories="pdf" data-tool-name="Rotate PDF">
+                    <span class="tool-icon blue"><i class="fa-solid fa-rotate-right"></i></span>
+                    <strong>Rotate PDF</strong>
+                    <small>Rotate every PDF page by 90, 180, or 270 degrees.</small>
+                    <em>PDF Tools</em>
+                </a>
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=remove" data-categories="pdf" data-tool-name="Remove PDF Pages">
+                    <span class="tool-icon pink"><i class="fa-regular fa-trash-can"></i></span>
+                    <strong>Remove PDF Pages</strong>
+                    <small>Delete selected pages from a PDF file.</small>
+                    <em>PDF Tools</em>
+                </a>
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=extract" data-categories="pdf" data-tool-name="Extract PDF Pages">
+                    <span class="tool-icon purple"><i class="fa-regular fa-copy"></i></span>
+                    <strong>Extract PDF Pages</strong>
+                    <small>Save selected PDF pages as a new file.</small>
+                    <em>PDF Tools</em>
+                </a>
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=organize" data-categories="pdf" data-tool-name="Organize PDF">
+                    <span class="tool-icon green"><i class="fa-solid fa-arrow-up-short-wide"></i></span>
+                    <strong>Organize PDF</strong>
+                    <small>Reorder PDF pages with a simple page list.</small>
+                    <em>PDF Tools</em>
                 </a>
                 <a class="home-tool-card" href="pdf to excel/pdf-to-excel.html" data-categories="pdf office" data-tool-name="PDF to Excel">
                     <span class="tool-icon green"><i class="fa-regular fa-file-excel"></i></span>

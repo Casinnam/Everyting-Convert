@@ -12,7 +12,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Max file size: 100MB',
       steps: ['Upload your PDF file', 'Convert to Word', 'Download your Word file'],
-      related: ['PDF to JPG', 'PDF to Excel', 'Image to PDF', 'DOCX to PDF', 'PDF to EPUB']
+      related: ['PDF to JPG', 'PDF to Excel', 'Merge PDF', 'Split PDF', 'Rotate PDF']
     },
     'pdf-to-jpg.html': {
       category: 'PDF',
@@ -26,7 +26,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Max file size: 100MB',
       steps: ['Upload your PDF file', 'Choose image quality', 'Download JPG images'],
-      related: ['PDF to Word', 'PDF to Excel', 'Image to PDF', 'Image Converter', 'PDF to EPUB']
+      related: ['PDF to Word', 'PDF to Excel', 'Merge PDF', 'Extract PDF Pages', 'Image Converter']
     },
     'pdf-to-excel.html': {
       category: 'PDF',
@@ -40,7 +40,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Enhanced table detection is available for Pro members.',
       steps: ['Upload your PDF file', 'Select extraction mode', 'Download your Excel file'],
-      related: ['PDF to Word', 'Excel to PDF', 'PDF to JPG', 'DOCX to PDF', 'Ebook Converter']
+      related: ['PDF to Word', 'Excel to PDF', 'PDF to JPG', 'Merge PDF', 'Remove PDF Pages']
     },
     'excel-to-pdf.html': {
       category: 'Office',
@@ -164,6 +164,12 @@
     'Image to PDF': ['image to pdf/image-to-pdf.html', 'fa-file-pdf', 'Combine images into PDF'],
     'DOCX to PDF': ['docx to pdf/docx-to-pdf.html', 'fa-file-pdf', 'Convert Word files to PDF'],
     'PDF to EPUB': ['pdf to epub/pdf-to-epub.html', 'fa-book', 'Create EPUB ebooks'],
+    'Merge PDF': ['pdf tools/pdf-tools.html?mode=merge', 'fa-layer-group', 'Combine multiple PDFs'],
+    'Split PDF': ['pdf tools/pdf-tools.html?mode=split', 'fa-scissors', 'Split pages into files'],
+    'Rotate PDF': ['pdf tools/pdf-tools.html?mode=rotate', 'fa-rotate-right', 'Rotate PDF pages'],
+    'Remove PDF Pages': ['pdf tools/pdf-tools.html?mode=remove', 'fa-trash-can', 'Delete selected pages'],
+    'Extract PDF Pages': ['pdf tools/pdf-tools.html?mode=extract', 'fa-copy', 'Save selected pages'],
+    'Organize PDF': ['pdf tools/pdf-tools.html?mode=organize', 'fa-arrow-up-short-wide', 'Reorder PDF pages'],
     'Ebook Converter': ['ebook converter/ebook-converter.html', 'fa-book-open', 'Convert ebook files'],
     'Image Converter': ['image converter/image-converter.html', 'fa-image', 'Convert image formats'],
     'JPG to PDF': ['image to pdf/image-to-pdf.html', 'fa-file-pdf', 'Turn JPGs into PDF'],
@@ -247,7 +253,6 @@
     const labels = Array.from(nav.querySelectorAll('a,button')).map((node) => node.textContent.trim());
     const categoryLinks = [
       ['All Tools', `${prefix}index.html#tools`],
-      ['PDF', `${prefix}index.html#tool-browser`],
       ['Image', `${prefix}index.html#tool-browser`],
       ['Video & Audio', `${prefix}index.html#tool-browser`],
       ['Office', `${prefix}index.html#tool-browser`],
@@ -262,6 +267,35 @@
       link.textContent = label;
       nav.insertBefore(link, loginLink || null);
     });
+    if (!labels.includes('PDF') && !nav.querySelector('.ec-pdf-menu')) {
+      const pdfMenu = document.createElement('div');
+      pdfMenu.className = 'tools-menu ec-pdf-menu';
+      pdfMenu.innerHTML = `
+        <button class="tools-toggle" type="button" aria-expanded="false">PDF</button>
+        <div class="tools-dropdown mega-tools">
+          <div class="tools-group">
+            <div class="tools-group-title">Convert</div>
+            <a href="${prefix}pdf to word/pdf-to-word.html">PDF to Word</a>
+            <a href="${prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+            <a href="${prefix}pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+            <a href="${prefix}excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+            <a href="${prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+            <a href="${prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
+          </div>
+          <div class="tools-group">
+            <div class="tools-group-title">Tools</div>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=split">Split PDF</a>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
+          </div>
+        </div>
+      `;
+      const allToolsLink = Array.from(nav.querySelectorAll('a')).find((link) => link.textContent.trim() === 'All Tools');
+      nav.insertBefore(pdfMenu, allToolsLink ? allToolsLink.nextSibling : (loginLink || null));
+    }
     if (!nav.querySelector('.ec-tool-search')) {
       const search = document.createElement('label');
       search.className = 'ec-tool-search';
