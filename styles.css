@@ -1310,8 +1310,8 @@ nav {
 
 .home-hero h1 {
     max-width: 680px;
-    font-size: clamp(3.1rem, 6vw, 5.9rem);
-    line-height: 0.96;
+    font-size: clamp(2.45rem, 4.8vw, 4.55rem);
+    line-height: 1.03;
     letter-spacing: 0;
 }
 
@@ -2071,7 +2071,7 @@ nav {
     }
 
     .home-hero h1 {
-        font-size: clamp(2.7rem, 13vw, 4.2rem);
+        font-size: clamp(2.2rem, 10vw, 3.35rem);
     }
 
     .upload-console {

@@ -7,182 +7,65 @@
     fr: 'Français',
   };
 
-  const translations = {
-    navHome: {
-      en: 'Home',
-      ko: '홈',
-      de: 'Startseite',
-      es: 'Inicio',
-      fr: 'Accueil',
+  const t = {
+    navHome: { en: 'Home', ko: '홈', de: 'Startseite', es: 'Inicio', fr: 'Accueil' },
+    navTools: { en: 'All Tools', ko: '모든 도구', de: 'Alle Tools', es: 'Todas las herramientas', fr: 'Tous les outils' },
+    navPricing: { en: 'Pricing', ko: '요금제', de: 'Preise', es: 'Precios', fr: 'Tarifs' },
+    navLogin: { en: 'Login', ko: '로그인', de: 'Anmelden', es: 'Iniciar sesión', fr: 'Connexion' },
+    navAccount: { en: 'Account', ko: '계정', de: 'Konto', es: 'Cuenta', fr: 'Compte' },
+    navLogout: { en: 'Logout', ko: '로그아웃', de: 'Abmelden', es: 'Cerrar sesión', fr: 'Déconnexion' },
+    navAdmin: { en: 'Admin', ko: '관리자', de: 'Admin', es: 'Admin', fr: 'Admin' },
+    homeEyebrow: {
+      en: 'All-in-one file conversion workspace',
+      ko: '올인원 파일 변환 작업 공간',
+      de: 'Arbeitsbereich für alle Dateikonvertierungen',
+      es: 'Espacio todo en uno para convertir archivos',
+      fr: 'Espace tout-en-un pour convertir les fichiers',
     },
-    navTools: {
-      en: 'Tools',
-      ko: '도구',
-      de: 'Tools',
-      es: 'Herramientas',
-      fr: 'Outils',
+    homeHeroA: { en: 'Convert anything.', ko: '무엇이든 변환하세요.', de: 'Konvertiere alles.', es: 'Convierte cualquier cosa.', fr: 'Convertissez tout.' },
+    homeHeroB: {
+      en: 'Work faster with',
+      ko: '더 빠르게 작업하는',
+      de: 'Arbeite schneller mit',
+      es: 'Trabaja más rápido con',
+      fr: 'Travaillez plus vite avec',
     },
-    navAbout: {
-      en: 'About us',
-      ko: '회사 소개',
-      de: 'Über uns',
-      es: 'Sobre nosotros',
-      fr: 'À propos',
+    homeHeroAccent: {
+      en: 'smarter file tools.',
+      ko: '스마트 파일 도구.',
+      de: 'smarteren Datei-Tools.',
+      es: 'herramientas inteligentes.',
+      fr: 'des outils plus intelligents.',
     },
-    navAdmin: {
-      en: 'Admin',
-      ko: '관리자',
-      de: 'Admin',
-      es: 'Admin',
-      fr: 'Admin',
+    homeSubtitle: {
+      en: 'Convert PDFs, images, videos, audio, documents, and office files in seconds. Fast, secure, and built for everyday work.',
+      ko: 'PDF, 이미지, 비디오, 오디오, 문서, 오피스 파일을 몇 초 안에 변환하세요. 빠르고 안전하며 매일 쓰기 좋게 만들었습니다.',
+      de: 'Konvertiere PDFs, Bilder, Videos, Audio, Dokumente und Office-Dateien in Sekunden. Schnell, sicher und für den Alltag gemacht.',
+      es: 'Convierte PDF, imágenes, videos, audio, documentos y archivos Office en segundos. Rápido, seguro y listo para el trabajo diario.',
+      fr: 'Convertissez PDF, images, vidéos, audio, documents et fichiers Office en quelques secondes. Rapide, sûr et conçu pour le quotidien.',
     },
-    navLogin: {
-      en: 'Login',
-      ko: '로그인',
-      de: 'Anmelden',
-      es: 'Iniciar sesión',
-      fr: 'Connexion',
+    startConverting: { en: 'Start Converting', ko: '변환 시작', de: 'Konvertieren starten', es: 'Empezar a convertir', fr: 'Commencer' },
+    exploreTools: { en: 'Explore All Tools', ko: '모든 도구 보기', de: 'Alle Tools ansehen', es: 'Explorar herramientas', fr: 'Explorer les outils' },
+    searchTools: { en: 'Search tools...', ko: '도구 검색...', de: 'Tools suchen...', es: 'Buscar herramientas...', fr: 'Rechercher des outils...' },
+    dragDrop: { en: 'Drag & drop your file here', ko: '파일을 여기에 끌어다 놓으세요', de: 'Datei hierher ziehen', es: 'Arrastra tu archivo aquí', fr: 'Déposez votre fichier ici' },
+    chooseFile: { en: 'Choose File', ko: '파일 선택', de: 'Datei wählen', es: 'Elegir archivo', fr: 'Choisir un fichier' },
+    noFile: { en: 'No file selected', ko: '선택된 파일 없음', de: 'Keine Datei ausgewählt', es: 'No hay archivo seleccionado', fr: 'Aucun fichier sélectionné' },
+    convertFrom: { en: 'Convert from:', ko: '변환 전:', de: 'Konvertieren von:', es: 'Convertir desde:', fr: 'Convertir depuis :' },
+    convertTo: { en: 'Convert to:', ko: '변환 후:', de: 'Konvertieren zu:', es: 'Convertir a:', fr: 'Convertir vers :' },
+    popularTools: { en: 'Popular file tools', ko: '인기 파일 도구', de: 'Beliebte Datei-Tools', es: 'Herramientas populares', fr: 'Outils populaires' },
+    popularToolsLead: {
+      en: 'Start with the tools people use every day.',
+      ko: '사람들이 매일 쓰는 도구부터 시작하세요.',
+      de: 'Beginne mit Tools, die täglich genutzt werden.',
+      es: 'Empieza con las herramientas más usadas.',
+      fr: 'Commencez avec les outils les plus utilisés.',
     },
-    navAccount: {
-      en: 'Account',
-      ko: '계정',
-      de: 'Konto',
-      es: 'Cuenta',
-      fr: 'Compte',
-    },
-    navLogout: {
-      en: 'Logout',
-      ko: '로그아웃',
-      de: 'Abmelden',
-      es: 'Cerrar sesión',
-      fr: 'Déconnexion',
-    },
-    heroLine1: {
-      en: 'Convert every file',
-      ko: '모든 파일 변환을',
-      de: 'Alle Dateien konvertieren',
-      es: 'Convierte cualquier archivo',
-      fr: 'Convertir tous les fichiers',
-    },
-    heroLine2: {
-      en: 'faster by category',
-      ko: '카테고리별로 빠르게',
-      de: 'schneller nach Kategorie',
-      es: 'más rápido por categoría',
-      fr: 'plus vite par catégorie',
-    },
-    heroSubtitle: {
-      en: 'Find and use PDF, image, document, audio, and GIF conversion tools in one place.',
-      ko: 'PDF, 이미지, 문서, 음성, GIF 변환 도구를 한곳에서 찾고 사용할 수 있습니다.',
-      de: 'Finden und nutzen Sie PDF-, Bild-, Dokument-, Audio- und GIF-Konverter an einem Ort.',
-      es: 'Encuentra y usa herramientas para convertir PDF, imágenes, documentos, audio y GIF en un solo lugar.',
-      fr: 'Trouvez et utilisez des outils de conversion PDF, image, document, audio et GIF au même endroit.',
-    },
-    showcasePdfTitle: {
-      en: 'Turn documents into the format your work needs.',
-      ko: '문서를 업무에 필요한 형식으로 바꾸세요.',
-      de: 'Wandeln Sie Dokumente in das Format um, das Ihre Arbeit braucht.',
-      es: 'Convierte documentos al formato que tu trabajo necesita.',
-      fr: 'Convertissez vos documents dans le format dont vous avez besoin.',
-    },
-    showcasePdfText: {
-      en: 'Move between PDF, Word, Excel, JPG, EPUB, and document formats without hunting through separate tools.',
-      ko: 'PDF, Word, Excel, JPG, EPUB 같은 문서 형식을 한곳에서 빠르게 오가세요.',
-      de: 'Wechseln Sie zwischen PDF, Word, Excel, JPG, EPUB und Dokumentformaten an einem Ort.',
-      es: 'Cambia entre PDF, Word, Excel, JPG, EPUB y otros formatos de documento en un solo lugar.',
-      fr: 'Passez de PDF à Word, Excel, JPG, EPUB et autres formats de document au même endroit.',
-    },
-    showcaseImageTitle: {
-      en: 'Prepare images for sharing, printing, or archiving.',
-      ko: '공유, 인쇄, 보관에 맞게 이미지를 준비하세요.',
-      de: 'Bereiten Sie Bilder zum Teilen, Drucken oder Archivieren vor.',
-      es: 'Prepara imágenes para compartir, imprimir o archivar.',
-      fr: 'Préparez vos images pour le partage, l’impression ou l’archivage.',
-    },
-    showcaseImageText: {
-      en: 'Convert JPG, PNG, WEBP, HEIC, SVG, and PDF-friendly image sets with a cleaner workflow.',
-      ko: 'JPG, PNG, WEBP, HEIC, SVG와 PDF용 이미지 묶음을 더 깔끔하게 변환하세요.',
-      de: 'Konvertieren Sie JPG, PNG, WEBP, HEIC, SVG und PDF-freundliche Bildsets einfacher.',
-      es: 'Convierte JPG, PNG, WEBP, HEIC, SVG y conjuntos de imágenes para PDF con un flujo más limpio.',
-      fr: 'Convertissez JPG, PNG, WEBP, HEIC, SVG et lots d’images pour PDF plus simplement.',
-    },
-    showcaseVideoTitle: {
-      en: 'Extract, convert, and reshape media files.',
-      ko: '비디오와 오디오 파일을 추출하고 변환하세요.',
-      de: 'Extrahieren, konvertieren und formen Sie Mediendateien um.',
-      es: 'Extrae, convierte y adapta archivos multimedia.',
-      fr: 'Extrayez, convertissez et adaptez vos fichiers multimédias.',
-    },
-    showcaseVideoText: {
-      en: 'Switch between video and audio formats, pull MP3 from clips, and keep media work in one place.',
-      ko: '영상과 오디오 형식을 바꾸고, 클립에서 MP3를 추출하고, 미디어 작업을 한곳에서 관리하세요.',
-      de: 'Wechseln Sie zwischen Video- und Audioformaten, extrahieren Sie MP3 und bündeln Sie Medienarbeit.',
-      es: 'Cambia entre formatos de video y audio, extrae MP3 de clips y trabaja en un solo lugar.',
-      fr: 'Passez d’un format vidéo ou audio à l’autre, extrayez du MP3 et gardez tout au même endroit.',
-    },
-    showcaseGifTitle: {
-      en: 'Create quick loops from video and image sequences.',
-      ko: '비디오와 이미지 시퀀스로 짧은 반복 GIF를 만드세요.',
-      de: 'Erstellen Sie kurze Loops aus Videos und Bildsequenzen.',
-      es: 'Crea bucles rápidos desde videos y secuencias de imágenes.',
-      fr: 'Créez des boucles rapides à partir de vidéos et de suites d’images.',
-    },
-    showcaseGifText: {
-      en: 'Build GIFs from short clips, convert animated formats, and send lightweight motion where it fits best.',
-      ko: '짧은 클립으로 GIF를 만들고, 애니메이션 형식을 변환하고, 가벼운 움직임을 쉽게 공유하세요.',
-      de: 'Erstellen Sie GIFs aus kurzen Clips, konvertieren Sie Animationen und teilen Sie leichte Bewegung.',
-      es: 'Crea GIF desde clips cortos, convierte formatos animados y comparte movimiento ligero.',
-      fr: 'Créez des GIF à partir de courts clips, convertissez des formats animés et partagez des animations légères.',
-    },
-    pdfDocuments: {
-      en: 'PDF & Documents',
-      ko: 'PDF & 문서',
-      de: 'PDF & Dokumente',
-      es: 'PDF y documentos',
-      fr: 'PDF et documents',
-    },
-    imageCategory: {
-      en: 'Image',
-      ko: '이미지',
-      de: 'Bild',
-      es: 'Imagen',
-      fr: 'Image',
-    },
-    videoAudio: {
-      en: 'Video & Audio',
-      ko: '비디오 & 오디오',
-      de: 'Video & Audio',
-      es: 'Video y audio',
-      fr: 'Vidéo et audio',
-    },
-    gifCategory: {
-      en: 'GIF',
-      ko: 'GIF',
-      de: 'GIF',
-      es: 'GIF',
-      fr: 'GIF',
-    },
-    ready: {
-      en: 'Available',
-      ko: '사용 가능',
-      de: 'Verfügbar',
-      es: 'Disponible',
-      fr: 'Disponible',
-    },
-    soon: {
-      en: 'Coming soon',
-      ko: '준비 중',
-      de: 'Demnächst',
-      es: 'Próximamente',
-      fr: 'Bientôt',
-    },
-    allTools: {
-      en: 'All tools',
-      ko: '모든 도구',
-      de: 'Alle Tools',
-      es: 'Todas las herramientas',
-      fr: 'Tous les outils',
-    },
+    whyTitle: { en: 'Why EverythingConvert', ko: 'EverythingConvert를 선택하는 이유', de: 'Warum EverythingConvert', es: 'Por qué EverythingConvert', fr: 'Pourquoi EverythingConvert' },
+    footerTools: { en: 'Tools', ko: '도구', de: 'Tools', es: 'Herramientas', fr: 'Outils' },
+    footerResources: { en: 'Resources', ko: '리소스', de: 'Ressourcen', es: 'Recursos', fr: 'Ressources' },
+    footerCompany: { en: 'Company', ko: '회사', de: 'Unternehmen', es: 'Empresa', fr: 'Entreprise' },
+    footerStay: { en: 'Stay updated', ko: '소식 받기', de: 'Auf dem Laufenden bleiben', es: 'Mantente al día', fr: 'Restez informé' },
+    footerEmail: { en: 'Enter your email', ko: '이메일 입력', de: 'E-Mail eingeben', es: 'Introduce tu email', fr: 'Entrez votre e-mail' },
     copyright: {
       en: '© EverythingConvert.com v.00 All rights reserved (2026)',
       ko: '© EverythingConvert.com v.00 모든 권리 보유 (2026)',
@@ -190,311 +73,65 @@
       es: '© EverythingConvert.com v.00 Todos los derechos reservados (2026)',
       fr: '© EverythingConvert.com v.00 Tous droits réservés (2026)',
     },
-    authHero1: {
-      en: 'Manage features',
-      ko: '계정으로 기능을',
-      de: 'Funktionen verwalten',
-      es: 'Administra funciones',
-      fr: 'Gérer les fonctions',
-    },
-    authHero2: {
-      en: 'with your account',
-      ko: '관리하세요',
-      de: 'mit deinem Konto',
-      es: 'con tu cuenta',
-      fr: 'avec votre compte',
-    },
+    aboutUs: { en: 'About Us', ko: '회사 소개', de: 'Über uns', es: 'Sobre nosotros', fr: 'À propos' },
+    donate: { en: 'Donate', ko: '후원', de: 'Spenden', es: 'Donar', fr: 'Faire un don' },
+    privacy: { en: 'Privacy', ko: '개인정보', de: 'Datenschutz', es: 'Privacidad', fr: 'Confidentialité' },
+    terms: { en: 'Terms', ko: '이용약관', de: 'Bedingungen', es: 'Términos', fr: 'Conditions' },
+    security: { en: 'Security and Compliance', ko: '보안 및 규정 준수', de: 'Sicherheit und Compliance', es: 'Seguridad y cumplimiento', fr: 'Sécurité et conformité' },
+    contact: { en: 'Contact', ko: '문의', de: 'Kontakt', es: 'Contacto', fr: 'Contact' },
+    authTitle: { en: 'Manage features with your account', ko: '계정으로 기능 관리하기', de: 'Funktionen mit deinem Konto verwalten', es: 'Gestiona funciones con tu cuenta', fr: 'Gérez les fonctions avec votre compte' },
     authSubtitle: {
       en: 'Free members can use standard extraction, and Pro members can use enhanced table detection.',
-      ko: '무료 회원은 일반 추출을, Pro 회원은 표 감지 강화형 변환을 사용할 수 있습니다.',
-      de: 'Kostenlose Mitglieder können die Standardextraktion nutzen, Pro-Mitglieder die erweiterte Tabellenerkennung.',
-      es: 'Los miembros gratuitos pueden usar la extracción estándar y los miembros Pro pueden usar la detección avanzada de tablas.',
-      fr: 'Les membres gratuits peuvent utiliser l’extraction standard, et les membres Pro la détection avancée des tableaux.',
-    },
-    signUp: {
-      en: 'Sign up',
-      ko: '회원가입',
-      de: 'Registrieren',
-      es: 'Registrarse',
-      fr: 'S’inscrire',
-    },
-    continueGmail: {
-      en: 'Continue with Gmail',
-      ko: 'Gmail로 계속하기',
-      de: 'Mit Gmail fortfahren',
-      es: 'Continuar con Gmail',
-      fr: 'Continuer avec Gmail',
-    },
-    continueEmail: {
-      en: 'Or continue with email',
-      ko: '또는 이메일로 계속',
-      de: 'Oder mit E-Mail fortfahren',
-      es: 'O continuar con correo electrónico',
-      fr: 'Ou continuer avec l’e-mail',
-    },
-    rememberEmail: {
-      en: 'Remember my email',
-      ko: '내 아이디 기억하기',
-      de: 'E-Mail merken',
-      es: 'Recordar mi correo',
-      fr: 'Memoriser mon e-mail',
-    },
-    userId: {
-      en: 'User ID',
-      ko: '유저 ID',
-      de: 'Benutzer-ID',
-      es: 'ID de usuario',
-      fr: 'ID utilisateur',
-    },
-    email: {
-      en: 'Email',
-      ko: '이메일',
-      de: 'E-Mail',
-      es: 'Correo electrónico',
-      fr: 'E-mail',
-    },
-    password: {
-      en: 'Password',
-      ko: '비밀번호',
-      de: 'Passwort',
-      es: 'Contraseña',
-      fr: 'Mot de passe',
-    },
-    displayName: {
-      en: 'Display name:',
-      ko: '표시 이름:',
-      de: 'Anzeigename:',
-      es: 'Nombre visible:',
-      fr: 'Nom affiché :',
-    },
-    membershipLevel: {
-      en: 'Membership level:',
-      ko: '회원 등급:',
-      de: 'Mitgliedsstufe:',
-      es: 'Nivel de membresía:',
-      fr: 'Niveau d’adhésion :',
-    },
-    changeUserId: {
-      en: 'Change User ID',
-      ko: '유저 ID 변경',
-      de: 'Benutzer-ID ändern',
-      es: 'Cambiar ID de usuario',
-      fr: 'Modifier l’ID utilisateur',
-    },
-    userIdHint: {
-      en: 'This name appears in the top account label and the admin screen.',
-      ko: '상단 계정 표시와 관리자 화면에 이 이름이 보입니다.',
-      de: 'Dieser Name erscheint oben im Konto und im Admin-Bereich.',
-      es: 'Este nombre aparece en la cuenta superior y en la pantalla de administración.',
-      fr: 'Ce nom apparaît dans le compte en haut et dans l’écran d’administration.',
-    },
-    usernameRules: {
-      en: 'Use 3-24 letters, numbers, or underscores. Example: hijacker05',
-      ko: '영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요. 예: hijacker05',
-      de: 'Verwende 3-24 Buchstaben, Zahlen oder Unterstriche. Beispiel: hijacker05',
-      es: 'Usa de 3 a 24 letras, números o guiones bajos. Ejemplo: hijacker05',
-      fr: 'Utilisez 3 à 24 lettres, chiffres ou traits de soulignement. Exemple : hijacker05',
-    },
-    proMemberHint: {
-      en: 'You are a Pro member. Enhanced table detection is available.',
-      ko: 'Pro 회원입니다. 표 감지 강화형 변환을 사용할 수 있습니다.',
-      de: 'Du bist Pro-Mitglied. Die erweiterte Tabellenerkennung ist verfügbar.',
-      es: 'Eres miembro Pro. La detección avanzada de tablas está disponible.',
-      fr: 'Vous êtes membre Pro. La détection avancée des tableaux est disponible.',
-    },
-    freeMemberHint: {
-      en: 'You are a Free member. Standard text extraction is available, and enhanced table detection requires Pro.',
-      ko: 'Free 회원입니다. 일반 텍스트 추출을 사용할 수 있고, 표 감지 강화형은 Pro 전용입니다.',
-      de: 'Du bist Free-Mitglied. Standard-Textextraktion ist verfügbar; die erweiterte Tabellenerkennung erfordert Pro.',
-      es: 'Eres miembro Free. La extracción de texto estándar está disponible; la detección avanzada de tablas requiere Pro.',
-      fr: 'Vous êtes membre Free. L’extraction de texte standard est disponible ; la détection avancée des tableaux nécessite Pro.',
-    },
-    saveUserId: {
-      en: 'Save User ID',
-      ko: '유저 ID 저장',
-      de: 'Benutzer-ID speichern',
-      es: 'Guardar ID de usuario',
-      fr: 'Enregistrer l’ID utilisateur',
-    },
-    goTools: {
-      en: 'Go to tools',
-      ko: '도구로 이동',
-      de: 'Zu den Tools',
-      es: 'Ir a herramientas',
-      fr: 'Aller aux outils',
-    },
-    adminPage: {
-      en: 'Admin page',
-      ko: '관리자 페이지',
-      de: 'Admin-Seite',
-      es: 'Página de administración',
-      fr: 'Page admin',
-    },
-    currentStatus: {
-      en: 'Current status:',
-      ko: '현재 상태:',
-      de: 'Aktueller Status:',
-      es: 'Estado actual:',
-      fr: 'État actuel :',
-    },
-    checking: {
-      en: 'Checking...',
-      ko: '확인 중...',
-      de: 'Prüfen...',
-      es: 'Comprobando...',
-      fr: 'Vérification...',
-    },
-    authGuest: {
-      en: 'Guest',
-      ko: '방문자',
-      de: 'Gast',
-      es: 'Invitado',
-      fr: 'Invite',
-    },
-    authLoginRequired: {
-      en: 'Login required',
-      ko: '로그인 필요',
-      de: 'Anmeldung erforderlich',
-      es: 'Inicio de sesion requerido',
-      fr: 'Connexion requise',
-    },
-    authSupabaseRequired: {
-      en: 'Supabase setup required',
-      ko: 'Supabase 설정 필요',
-      de: 'Supabase-Einrichtung erforderlich',
-      es: 'Configuracion de Supabase requerida',
-      fr: 'Configuration Supabase requise',
-    },
-    authFree: {
-      en: 'Free',
-      ko: '무료',
-      de: 'Kostenlos',
-      es: 'Gratis',
-      fr: 'Gratuit',
-    },
-    authPro: {
-      en: 'Pro',
-      ko: 'Pro',
-      de: 'Pro',
-      es: 'Pro',
-      fr: 'Pro',
-    },
-    authAdmin: {
-      en: 'Admin',
-      ko: '관리자',
-      de: 'Admin',
-      es: 'Admin',
-      fr: 'Admin',
-    },
-    logoutKr: {
-      en: 'Logout',
-      ko: '로그아웃',
-      de: 'Abmelden',
-      es: 'Cerrar sesión',
-      fr: 'Déconnexion',
-    },
-    aboutTitle1: {
-      en: 'About',
-      ko: '소개',
-      de: 'Über',
-      es: 'Acerca de',
-      fr: 'À propos',
-    },
-    aboutTitle2: {
-      en: 'Everything Convert',
-      ko: 'Everything Convert',
-      de: 'Everything Convert',
-      es: 'Everything Convert',
-      fr: 'Everything Convert',
-    },
-    aboutSubtitle: {
-      en: 'A set of tools built to make file conversion faster, simpler, and safer.',
-      ko: '파일 변환을 더 빠르고, 더 단순하고, 더 안전하게 만들기 위해 시작한 도구 모음입니다.',
-      de: 'Eine Sammlung von Tools, die Dateikonvertierung schneller, einfacher und sicherer machen.',
-      es: 'Un conjunto de herramientas creado para que la conversión de archivos sea más rápida, simple y segura.',
-      fr: 'Un ensemble d’outils conçu pour rendre la conversion de fichiers plus rapide, plus simple et plus sûre.',
-    },
-    aboutPanel1Title: {
-      en: 'What we build',
-      ko: '우리가 만드는 것',
-      de: 'Was wir entwickeln',
-      es: 'Lo que creamos',
-      fr: 'Ce que nous créons',
-    },
-    aboutPanel1Text: {
-      en: 'Everything Convert is a web platform that brings PDF, image, document, audio, and GIF conversion tools into one place. Users can convert files directly in the browser without complicated installation.',
-      ko: 'Everything Convert는 PDF, 이미지, 문서, 오디오, GIF 변환 도구를 한곳에 모으는 웹 플랫폼입니다. 사용자는 복잡한 설치 없이 브라우저에서 바로 파일을 변환하고 필요한 결과물을 받을 수 있습니다.',
-      de: 'Everything Convert ist eine Webplattform, die PDF-, Bild-, Dokument-, Audio- und GIF-Konverter an einem Ort bündelt. Nutzer können Dateien direkt im Browser ohne komplizierte Installation konvertieren.',
-      es: 'Everything Convert es una plataforma web que reúne herramientas de conversión de PDF, imágenes, documentos, audio y GIF en un solo lugar. Los usuarios pueden convertir archivos directamente en el navegador sin instalaciones complejas.',
-      fr: 'Everything Convert est une plateforme web qui réunit des outils de conversion PDF, image, document, audio et GIF au même endroit. Les utilisateurs peuvent convertir des fichiers directement dans le navigateur sans installation compliquée.',
-    },
-    aboutPanel2Title: {
-      en: 'Our direction',
-      ko: '우리의 방향',
-      de: 'Unsere Richtung',
-      es: 'Nuestra dirección',
-      fr: 'Notre direction',
-    },
-    aboutPanel2Text: {
-      en: 'Even a small tool should feel useful in real work. Each feature is designed around quick access, clear status, easy downloads, and room for future Pro-level options.',
-      ko: '작은 도구 하나도 실제 업무 흐름에서 편해야 한다고 생각합니다. 그래서 각 기능은 빠른 접근, 명확한 상태 표시, 쉬운 다운로드, 그리고 필요한 경우 Pro 기능 확장까지 고려해 설계합니다.',
-      de: 'Auch ein kleines Tool sollte im echten Arbeitsalltag nützlich sein. Jede Funktion wird für schnellen Zugriff, klare Statusanzeigen, einfache Downloads und zukünftige Pro-Optionen gestaltet.',
-      es: 'Incluso una herramienta pequeña debe ser útil en el trabajo real. Cada función se diseña con acceso rápido, estados claros, descargas sencillas y espacio para futuras opciones Pro.',
-      fr: 'Même un petit outil doit être utile dans le travail réel. Chaque fonctionnalité est pensée pour un accès rapide, des statuts clairs, des téléchargements simples et de futures options Pro.',
-    },
-    aboutPanel3Title: {
-      en: 'Privacy and files',
-      ko: '개인정보와 파일',
-      de: 'Datenschutz und Dateien',
-      es: 'Privacidad y archivos',
-      fr: 'Confidentialité et fichiers',
-    },
-    aboutPanel3Text: {
-      en: 'Core conversion tools are designed to run in the browser whenever possible. We prioritize processing files on the user’s device instead of uploading them to a server.',
-      ko: '현재 주요 변환 기능은 브라우저 안에서 실행되도록 구성하고 있습니다. 가능한 한 파일을 서버로 업로드하지 않고, 사용자의 장치에서 직접 처리하는 방향을 우선합니다.',
-      de: 'Die wichtigsten Konvertierungsfunktionen sollen nach Möglichkeit im Browser laufen. Wir priorisieren die Verarbeitung auf dem Gerät des Nutzers statt eines Server-Uploads.',
-      es: 'Las herramientas principales están pensadas para ejecutarse en el navegador siempre que sea posible. Priorizamos procesar los archivos en el dispositivo del usuario en lugar de subirlos a un servidor.',
-      fr: 'Les principaux outils de conversion sont conçus pour fonctionner dans le navigateur lorsque c’est possible. Nous privilégions le traitement sur l’appareil de l’utilisateur plutôt que l’envoi vers un serveur.',
+      ko: '무료 회원은 일반 추출을 사용할 수 있고, Pro 회원은 표 감지 강화 변환을 사용할 수 있습니다.',
+      de: 'Kostenlose Mitglieder nutzen Standardextraktion, Pro-Mitglieder erweiterte Tabellenerkennung.',
+      es: 'Los miembros gratuitos usan extracción estándar y los Pro detección avanzada de tablas.',
+      fr: 'Les membres gratuits utilisent l’extraction standard, les membres Pro la détection avancée des tableaux.',
     },
   };
 
   const phraseToKey = {};
-  Object.entries(translations).forEach(([key, values]) => {
-    Object.values(values).forEach((phrase) => {
-      phraseToKey[phrase] = key;
+  Object.entries(t).forEach(([key, values]) => {
+    Object.values(values).forEach((value) => {
+      phraseToKey[value] = key;
     });
   });
 
-  function isSupportedLanguage(language) {
-    return Boolean(labels[language]);
+  let activeLanguage = 'en';
+  let applying = false;
+
+  function supported(language) {
+    return Object.prototype.hasOwnProperty.call(labels, language);
   }
 
-  let activeLanguage = 'en';
+  function text(key, language = activeLanguage) {
+    return (t[key] && (t[key][language] || t[key].en)) || key;
+  }
 
-  function getLanguageFromUrl() {
+  function saveLanguage(language) {
     try {
-      const params = new URLSearchParams(window.location.search);
-      const language = params.get('lang');
-      return isSupportedLanguage(language) ? language : null;
+      localStorage.setItem('everything_convert_language', language);
+      localStorage.setItem('everything_convert_language_initialized', '1');
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
+  function getUrlLanguage() {
+    try {
+      const language = new URLSearchParams(window.location.search).get('lang');
+      return supported(language) ? language : null;
     } catch (error) {
       return null;
     }
   }
 
   function getSavedLanguage() {
-    const urlLanguage = getLanguageFromUrl();
+    const urlLanguage = getUrlLanguage();
     if (urlLanguage) {
       saveLanguage(urlLanguage);
       return urlLanguage;
     }
-
     try {
-      if (!localStorage.getItem('everything_convert_language_initialized')) {
-        localStorage.setItem('everything_convert_language_initialized', '1');
-        localStorage.setItem('everything_convert_language', 'en');
-        return 'en';
-      }
-
       return localStorage.getItem('everything_convert_language') || 'en';
     } catch (error) {
       return 'en';
@@ -502,125 +139,152 @@
   }
 
   function withLanguageParam(href, language) {
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) {
-      return href;
-    }
-
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return href;
     try {
       const url = new URL(href, window.location.href);
       if (!['http:', 'https:', 'file:'].includes(url.protocol)) return href;
-
       url.searchParams.set('lang', language);
-      if (url.protocol === 'file:') {
-        return url.href;
-      }
-
-      if (url.origin === window.location.origin) {
-        return url.pathname + url.search + url.hash;
-      }
-
+      if (url.protocol === 'file:') return url.href;
+      if (url.origin === window.location.origin) return url.pathname + url.search + url.hash;
       return url.href;
     } catch (error) {
       return href;
     }
   }
 
-  function updateLanguageLinks(language) {
+  function updateLinks(language) {
     document.querySelectorAll('a[href]').forEach((link) => {
       if (link.hasAttribute('data-auth-logout')) return;
-
-      if (!link.dataset.baseHref) {
-        link.dataset.baseHref = link.getAttribute('href');
-      }
-
+      if (!link.dataset.baseHref) link.dataset.baseHref = link.getAttribute('href');
       link.setAttribute('href', withLanguageParam(link.dataset.baseHref, language));
     });
   }
 
-  function saveLanguage(language) {
-    try {
-      localStorage.setItem('everything_convert_language', language);
-    } catch (error) {
-      // Language choice is a convenience; ignore storage failures.
-    }
+  function setText(selector, value) {
+    const element = document.querySelector(selector);
+    if (element && value) element.textContent = value;
+  }
+
+  function setAllText(selector, value) {
+    document.querySelectorAll(selector).forEach((element) => {
+      element.textContent = value;
+    });
   }
 
   function translateTextNodes(root, language) {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const parent = node.parentElement;
-        if (!parent || ['SCRIPT', 'STYLE'].includes(parent.tagName)) {
-          return NodeFilter.FILTER_REJECT;
-        }
-
-        if (parent.closest('[data-no-i18n]')) {
-          return NodeFilter.FILTER_REJECT;
-        }
-
-        return node.nodeValue.trim()
-          ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_SKIP;
+        if (!parent || ['SCRIPT', 'STYLE'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('[data-no-i18n]')) return NodeFilter.FILTER_REJECT;
+        return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
       },
     });
 
     const nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
-
     nodes.forEach((node) => {
-      const original = node.nodeValue;
-      const trimmed = original.trim();
+      const trimmed = node.nodeValue.trim();
       const key = node.parentElement.dataset.i18nKey || phraseToKey[trimmed];
-      if (!key || !translations[key] || !translations[key][language]) return;
-
+      if (!key || !t[key]) return;
       node.parentElement.dataset.i18nKey = key;
-      node.nodeValue = original.replace(trimmed, translations[key][language]);
+      node.nodeValue = node.nodeValue.replace(trimmed, text(key, language));
+    });
+  }
+
+  function applyHome(language) {
+    const hero = document.getElementById('homeHeroTitle');
+    if (!hero) return;
+    setText('.hero-eyebrow', text('homeEyebrow', language));
+    hero.innerHTML = `${text('homeHeroA', language)}<br>${text('homeHeroB', language)} <span>${text('homeHeroAccent', language)}</span>`;
+    setText('.home-hero-copy > p:not(.hero-eyebrow)', text('homeSubtitle', language));
+    const primary = document.querySelector('.primary-cta');
+    if (primary) primary.innerHTML = `${text('startConverting', language)} <i class="fa-solid fa-arrow-right"></i>`;
+    setText('.secondary-cta', text('exploreTools', language));
+    const search = document.getElementById('homeToolSearch');
+    if (search) search.placeholder = text('searchTools', language);
+    setText('#homeDropzone h2', text('dragDrop', language));
+    const choose = document.querySelector('#homeChooseFile');
+    if (choose) choose.innerHTML = `<i class="fa-regular fa-folder-open"></i> ${text('chooseFile', language)}`;
+    setText('#selectedFileName', text('noFile', language));
+    const labelsInHero = document.querySelectorAll('.quick-convert-row label span');
+    if (labelsInHero[0]) labelsInHero[0].textContent = text('convertFrom', language);
+    if (labelsInHero[1]) labelsInHero[1].textContent = text('convertTo', language);
+    setText('#toolBrowserTitle', text('popularTools', language));
+    setText('.tool-browser .section-heading p', text('popularToolsLead', language));
+    setText('#whyTitle', text('whyTitle', language));
+    setAllText('.tool-tab[data-tool-tab="popular"]', language === 'en' ? 'Popular' : text('popularTools', language).split(' ')[0]);
+  }
+
+  function applyFooter(language) {
+    const footer = document.querySelector('.site-footer');
+    if (!footer) return;
+    const headings = Array.from(footer.querySelectorAll('.footer-group h2'));
+    headings.forEach((heading) => {
+      const current = heading.dataset.footerHeading || heading.textContent.trim();
+      heading.dataset.footerHeading = current;
+      if (/Tools|도구|Outils|Herramientas/i.test(current)) heading.textContent = text('footerTools', language);
+      if (/Resources|리소스|Ressources|Recursos/i.test(current)) heading.textContent = text('footerResources', language);
+      if (/Company|회사|Entreprise|Empresa/i.test(current)) heading.textContent = text('footerCompany', language);
+      if (/Stay updated|소식|inform/i.test(current)) heading.textContent = text('footerStay', language);
+    });
+    const newsletter = footer.querySelector('.newsletter-form input');
+    if (newsletter) newsletter.placeholder = text('footerEmail', language);
+    const copyright = footer.querySelector('.footer-bottom p');
+    if (copyright) copyright.textContent = text('copyright', language);
+  }
+
+  function applyAuth(language) {
+    if (!document.body.classList.contains('auth-page')) return;
+    setText('.hero-title', text('authTitle', language));
+    setText('.hero-subtitle', text('authSubtitle', language));
+  }
+
+  function updateLanguageMenu(language) {
+    document.querySelectorAll('[data-language-current]').forEach((element) => {
+      element.textContent = labels[language];
+    });
+    document.querySelectorAll('[data-language]').forEach((button) => {
+      const code = button.dataset.language;
+      button.textContent = labels[code] || code;
+      button.classList.toggle('active', code === language);
     });
   }
 
   function applyLanguage(language) {
-    const selected = labels[language] ? language : 'en';
+    const selected = supported(language) ? language : 'en';
+    if (applying) return;
+    applying = true;
     activeLanguage = selected;
     document.documentElement.lang = selected;
     translateTextNodes(document.body, selected);
-    updateLanguageLinks(selected);
-
-    document.querySelectorAll('[data-language-current]').forEach((element) => {
-      element.textContent = labels[selected];
-    });
-
-    document.querySelectorAll('[data-language]').forEach((button) => {
-      button.classList.toggle('active', button.dataset.language === selected);
-    });
-
-    document.title = selected === 'en'
-      ? document.title.replace('모든 파일 변환의 시작', 'Start converting every file')
-      : document.title;
-
-    window.dispatchEvent(new CustomEvent('everything-language-change', {
-      detail: { language: selected },
-    }));
-
+    applyHome(selected);
+    applyFooter(selected);
+    applyAuth(selected);
+    updateLanguageMenu(selected);
+    updateLinks(selected);
     if (window.EverythingConvertToolLanguage) {
       window.EverythingConvertToolLanguage.apply(selected);
     }
+    window.dispatchEvent(new CustomEvent('everything-language-change', { detail: { language: selected } }));
+    applying = false;
+  }
+
+  function scheduleApply(language = activeLanguage) {
+    [0, 100, 500].forEach((delay) => {
+      window.setTimeout(() => applyLanguage(language), delay);
+    });
   }
 
   window.EverythingConvertLanguage = {
-    apply() {
-      applyLanguage(activeLanguage);
-    },
-    translate(key, language) {
-      const selected = labels[language] ? language : activeLanguage;
-      return translations[key] && translations[key][selected]
-        ? translations[key][selected]
-        : key;
-    },
+    apply: scheduleApply,
+    translate: text,
     get() {
       return activeLanguage;
     },
     set(language) {
       saveLanguage(language);
-      applyLanguage(language);
+      scheduleApply(language);
     },
   };
 
@@ -649,7 +313,7 @@
     if (option) {
       const language = option.dataset.language;
       saveLanguage(language);
-      applyLanguage(language);
+      scheduleApply(language);
       closeLanguageMenus();
       return;
     }
@@ -661,5 +325,8 @@
     if (event.key === 'Escape') closeLanguageMenus();
   });
 
-  applyLanguage(getSavedLanguage());
+  const initialLanguage = getSavedLanguage();
+  activeLanguage = supported(initialLanguage) ? initialLanguage : 'en';
+  scheduleApply(activeLanguage);
+  window.addEventListener('load', () => scheduleApply(activeLanguage));
 })();

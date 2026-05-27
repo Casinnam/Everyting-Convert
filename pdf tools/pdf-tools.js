@@ -62,6 +62,41 @@
     },
   };
 
+  const modeTranslations = {
+    ko: {
+      merge: ['PDF 병합', '여러 PDF 파일을 하나의 PDF로 합치세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '두 개 이상의 PDF 파일을 선택하세요.', 'PDF 병합'],
+      split: ['PDF 분할', 'PDF의 각 페이지를 별도 PDF로 나누고 ZIP으로 저장하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '하나의 PDF가 페이지별 파일로 분할됩니다.', 'PDF 분할'],
+      rotate: ['PDF 회전', 'PDF 전체 페이지를 90, 180, 270도로 회전하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '변환 전 회전 각도를 선택하세요.', 'PDF 회전'],
+      remove: ['PDF 페이지 삭제', '페이지 번호나 범위를 입력해 원하지 않는 페이지를 삭제하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '예: 1,3,5-7 페이지를 삭제합니다.', '페이지 삭제'],
+      extract: ['PDF 페이지 추출', '선택한 페이지를 새 PDF 파일로 저장하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '예: 2-4,8 페이지를 추출합니다.', '페이지 추출'],
+      organize: ['PDF 정리', '원하는 순서대로 페이지 번호를 입력해 PDF를 재정렬하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '예: 3,1,2,4-6 순서로 새 PDF를 만듭니다.', 'PDF 정리'],
+    },
+    de: {
+      merge: ['PDF zusammenführen', 'Kombinieren Sie mehrere PDFs zu einer Datei.', 'PDF-Dateien hierher ziehen', 'Wählen Sie mindestens zwei PDF-Dateien.', 'PDF zusammenführen'],
+      split: ['PDF teilen', 'Teilen Sie jede PDF-Seite in separate Dateien als ZIP.', 'PDF-Datei hierher ziehen', 'Ein PDF wird in einzelne Seiten geteilt.', 'PDF teilen'],
+      rotate: ['PDF drehen', 'Drehen Sie alle PDF-Seiten um 90, 180 oder 270 Grad.', 'PDF-Datei hierher ziehen', 'Wählen Sie vor dem Konvertieren den Winkel.', 'PDF drehen'],
+      remove: ['PDF-Seiten entfernen', 'Entfernen Sie unerwünschte Seiten per Seitenbereich.', 'PDF-Datei hierher ziehen', 'Beispiel: 1,3,5-7 entfernt diese Seiten.', 'Seiten entfernen'],
+      extract: ['PDF-Seiten extrahieren', 'Speichern Sie ausgewählte Seiten als neue PDF.', 'PDF-Datei hierher ziehen', 'Beispiel: 2-4,8 extrahiert diese Seiten.', 'Seiten extrahieren'],
+      organize: ['PDF organisieren', 'Ordnen Sie PDF-Seiten mit einer Seitenliste neu.', 'PDF-Datei hierher ziehen', 'Beispiel: 3,1,2,4-6 erstellt eine neue Reihenfolge.', 'PDF organisieren'],
+    },
+    es: {
+      merge: ['Unir PDF', 'Combina varios PDF en un solo archivo.', 'Arrastra tus PDF aquí', 'Selecciona dos o más archivos PDF.', 'Unir PDF'],
+      split: ['Dividir PDF', 'Divide cada página del PDF en archivos separados dentro de un ZIP.', 'Arrastra tu PDF aquí', 'Un PDF se dividirá en páginas individuales.', 'Dividir PDF'],
+      rotate: ['Rotar PDF', 'Rota todas las páginas 90, 180 o 270 grados.', 'Arrastra tu PDF aquí', 'Elige un ángulo antes de convertir.', 'Rotar PDF'],
+      remove: ['Eliminar páginas', 'Elimina páginas no deseadas con números o rangos.', 'Arrastra tu PDF aquí', 'Ejemplo: 1,3,5-7 elimina esas páginas.', 'Eliminar páginas'],
+      extract: ['Extraer páginas', 'Guarda páginas seleccionadas en un nuevo PDF.', 'Arrastra tu PDF aquí', 'Ejemplo: 2-4,8 extrae esas páginas.', 'Extraer páginas'],
+      organize: ['Organizar PDF', 'Reordena páginas escribiendo el orden deseado.', 'Arrastra tu PDF aquí', 'Ejemplo: 3,1,2,4-6 crea un nuevo orden.', 'Organizar PDF'],
+    },
+    fr: {
+      merge: ['Fusionner PDF', 'Combinez plusieurs PDF en un seul fichier.', 'Déposez vos PDF ici', 'Sélectionnez au moins deux fichiers PDF.', 'Fusionner PDF'],
+      split: ['Diviser PDF', 'Divisez chaque page du PDF en fichiers séparés dans un ZIP.', 'Déposez votre PDF ici', 'Un PDF sera divisé en pages individuelles.', 'Diviser PDF'],
+      rotate: ['Faire pivoter PDF', 'Faites pivoter toutes les pages de 90, 180 ou 270 degrés.', 'Déposez votre PDF ici', 'Choisissez un angle avant de convertir.', 'Faire pivoter PDF'],
+      remove: ['Supprimer des pages', 'Supprimez les pages inutiles avec des numéros ou plages.', 'Déposez votre PDF ici', 'Exemple : 1,3,5-7 supprime ces pages.', 'Supprimer'],
+      extract: ['Extraire des pages', 'Enregistrez les pages choisies dans un nouveau PDF.', 'Déposez votre PDF ici', 'Exemple : 2-4,8 extrait ces pages.', 'Extraire'],
+      organize: ['Organiser PDF', 'Réorganisez les pages avec une liste de numéros.', 'Déposez votre PDF ici', 'Exemple : 3,1,2,4-6 crée un nouvel ordre.', 'Organiser PDF'],
+    },
+  };
+
   const state = {
     mode: 'merge',
     files: [],
@@ -71,6 +106,28 @@
 
   function qs(selector) {
     return document.querySelector(selector);
+  }
+
+  function currentLanguage() {
+    if (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get) {
+      return window.EverythingConvertLanguage.get();
+    }
+    return new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('everything_convert_language') || 'en';
+  }
+
+  function localizedMode(modeKey) {
+    const base = modes[modeKey];
+    const values = modeTranslations[currentLanguage()] && modeTranslations[currentLanguage()][modeKey];
+    if (!values) return base;
+    return {
+      ...base,
+      title: values[0],
+      label: values[0],
+      description: values[1],
+      drop: values[2],
+      help: values[3],
+      button: values[4],
+    };
   }
 
   function setStatus(message, type = '') {
@@ -159,7 +216,7 @@
   }
 
   function renderOptions() {
-    const mode = modes[state.mode];
+    const mode = localizedMode(state.mode);
     let html = `<p>${mode.help}</p>`;
 
     if (state.mode === 'rotate') {
@@ -217,6 +274,9 @@
 
     document.querySelectorAll('[data-mode-button]').forEach((button) => {
       button.classList.toggle('active', button.dataset.modeButton === state.mode);
+      const buttonMode = localizedMode(button.dataset.modeButton);
+      const label = button.querySelector('span');
+      if (label && buttonMode) label.textContent = buttonMode.label;
     });
 
     const url = new URL(window.location.href);
@@ -373,6 +433,7 @@
 
     const params = new URLSearchParams(window.location.search);
     setMode(params.get('mode') || 'merge');
+    window.addEventListener('everything-language-change', () => setMode(state.mode));
   }
 
   if (document.readyState === 'loading') {

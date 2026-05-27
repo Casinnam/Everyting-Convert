@@ -11,82 +11,26 @@
       dropExcel: 'Click or drop an Excel/CSV file here',
       dropDocx: 'Click or drop a DOCX file here',
       browse: 'Choose file',
-      browseImages: 'Choose images',
       convert: 'Convert',
       convertToPdf: 'Convert to PDF',
-      savePdf: 'Save PDF',
-      noFile: 'No file selected.',
-      settings: 'Conversion settings',
-      outputFormat: 'Output format',
-      pageNumbers: 'Page numbers',
-      pageRange: 'Page range',
-      allPages: 'All pages',
-      firstPage: 'First page only',
-      customPages: 'Custom pages',
-      pageNumberInput: 'Page numbers (ex: 1,3,5-8)',
-      resolution: 'Resolution (DPI)',
-      jpgQuality: 'JPG quality',
-      conversionMode: 'Conversion mode',
-      simpleExtraction: 'Standard text extraction',
-      enhancedExtraction: 'Enhanced table detection (Pro)',
-      sheetStructure: 'Sheet structure',
-      sheetPerPage: 'Create one sheet per page',
-      tableSensitivity: 'Table detection sensitivity',
-      normal: 'Normal',
-      loose: 'Loose',
-      strict: 'Strict',
-      pageSize: 'Page size',
-      originalImageSize: 'Original image size',
-      fitMode: 'Fit mode',
-      contain: 'Fit entire image',
-      cover: 'Fill page',
-      stretch: 'Stretch to page',
-      margin: 'Margin mm',
       reset: 'Start over',
+      noFile: 'No file selected.',
     },
     ko: {
       pdfDocuments: 'PDF & 문서',
       image: '이미지',
       media: '비디오 & 오디오',
       gif: 'GIF',
-      dropFile: '파일을 클릭하거나 여기에 끌어오세요',
-      dropPdf: 'PDF 파일을 클릭하거나 여기에 끌어오세요',
-      dropImage: '이미지 파일을 클릭하거나 여기에 끌어오세요',
-      dropExcel: 'Excel/CSV 파일을 클릭하거나 여기에 끌어오세요',
-      dropDocx: 'DOCX 파일을 클릭하거나 여기에 끌어오세요',
+      dropFile: '파일을 클릭하거나 여기에 놓으세요',
+      dropPdf: 'PDF 파일을 클릭하거나 여기에 놓으세요',
+      dropImage: '이미지 파일을 클릭하거나 여기에 놓으세요',
+      dropExcel: 'Excel/CSV 파일을 클릭하거나 여기에 놓으세요',
+      dropDocx: 'DOCX 파일을 클릭하거나 여기에 놓으세요',
       browse: '파일 선택',
-      browseImages: '이미지 선택',
       convert: '변환',
       convertToPdf: 'PDF로 변환',
-      savePdf: 'PDF 저장',
-      noFile: '선택된 파일이 없습니다.',
-      settings: '변환 설정',
-      outputFormat: '출력 형식',
-      pageNumbers: '페이지 번호',
-      pageRange: '페이지 범위',
-      allPages: '모든 페이지',
-      firstPage: '첫 페이지만',
-      customPages: '직접 입력',
-      pageNumberInput: '페이지 번호 (예: 1,3,5-8)',
-      resolution: '해상도 (DPI)',
-      jpgQuality: 'JPG 품질',
-      conversionMode: '변환 모드',
-      simpleExtraction: '일반 텍스트 추출',
-      enhancedExtraction: '표 감지 강화형 (Pro)',
-      sheetStructure: '시트 구성',
-      sheetPerPage: '페이지별 시트 생성',
-      tableSensitivity: '표 감지 민감도',
-      normal: '기본',
-      loose: '느슨하게',
-      strict: '정확하게',
-      pageSize: '페이지 크기',
-      originalImageSize: '이미지 원본 크기',
-      fitMode: '맞춤 방식',
-      contain: '전체 보이기',
-      cover: '페이지 채우기',
-      stretch: '페이지에 맞게 늘리기',
-      margin: '여백 mm',
       reset: '처음부터 다시',
+      noFile: '선택된 파일이 없습니다.',
     },
     de: {
       pdfDocuments: 'PDF & Dokumente',
@@ -99,38 +43,10 @@
       dropExcel: 'Excel-/CSV-Datei anklicken oder hier ablegen',
       dropDocx: 'DOCX-Datei anklicken oder hier ablegen',
       browse: 'Datei wählen',
-      browseImages: 'Bilder wählen',
       convert: 'Konvertieren',
       convertToPdf: 'In PDF konvertieren',
-      savePdf: 'PDF speichern',
-      noFile: 'Keine Datei ausgewählt.',
-      settings: 'Konvertierungseinstellungen',
-      outputFormat: 'Ausgabeformat',
-      pageNumbers: 'Seitennummern',
-      pageRange: 'Seitenbereich',
-      allPages: 'Alle Seiten',
-      firstPage: 'Nur erste Seite',
-      customPages: 'Eigene Eingabe',
-      pageNumberInput: 'Seitennummern (z. B. 1,3,5-8)',
-      resolution: 'Auflösung (DPI)',
-      jpgQuality: 'JPG-Qualität',
-      conversionMode: 'Konvertierungsmodus',
-      simpleExtraction: 'Standard-Textextraktion',
-      enhancedExtraction: 'Erweiterte Tabellenerkennung (Pro)',
-      sheetStructure: 'Blattstruktur',
-      sheetPerPage: 'Ein Blatt pro Seite erstellen',
-      tableSensitivity: 'Tabellenerkennungs-Empfindlichkeit',
-      normal: 'Normal',
-      loose: 'Locker',
-      strict: 'Streng',
-      pageSize: 'Seitengröße',
-      originalImageSize: 'Originalbildgröße',
-      fitMode: 'Anpassung',
-      contain: 'Ganzes Bild anzeigen',
-      cover: 'Seite füllen',
-      stretch: 'Auf Seite strecken',
-      margin: 'Rand mm',
       reset: 'Neu starten',
+      noFile: 'Keine Datei ausgewählt.',
     },
     es: {
       pdfDocuments: 'PDF y documentos',
@@ -143,38 +59,10 @@
       dropExcel: 'Haz clic o suelta un archivo Excel/CSV aquí',
       dropDocx: 'Haz clic o suelta un DOCX aquí',
       browse: 'Elegir archivo',
-      browseImages: 'Elegir imágenes',
       convert: 'Convertir',
       convertToPdf: 'Convertir a PDF',
-      savePdf: 'Guardar PDF',
-      noFile: 'No hay archivo seleccionado.',
-      settings: 'Ajustes de conversión',
-      outputFormat: 'Formato de salida',
-      pageNumbers: 'Números de página',
-      pageRange: 'Rango de páginas',
-      allPages: 'Todas las páginas',
-      firstPage: 'Solo la primera página',
-      customPages: 'Entrada personalizada',
-      pageNumberInput: 'Números de página (ej: 1,3,5-8)',
-      resolution: 'Resolución (DPI)',
-      jpgQuality: 'Calidad JPG',
-      conversionMode: 'Modo de conversión',
-      simpleExtraction: 'Extracción de texto estándar',
-      enhancedExtraction: 'Detección avanzada de tablas (Pro)',
-      sheetStructure: 'Estructura de hojas',
-      sheetPerPage: 'Crear una hoja por página',
-      tableSensitivity: 'Sensibilidad de detección de tablas',
-      normal: 'Normal',
-      loose: 'Flexible',
-      strict: 'Estricto',
-      pageSize: 'Tamaño de página',
-      originalImageSize: 'Tamaño original de imagen',
-      fitMode: 'Modo de ajuste',
-      contain: 'Mostrar imagen completa',
-      cover: 'Llenar página',
-      stretch: 'Estirar a la página',
-      margin: 'Margen mm',
       reset: 'Empezar de nuevo',
+      noFile: 'No hay archivo seleccionado.',
     },
     fr: {
       pdfDocuments: 'PDF et documents',
@@ -187,182 +75,153 @@
       dropExcel: 'Cliquez ou déposez un fichier Excel/CSV ici',
       dropDocx: 'Cliquez ou déposez un DOCX ici',
       browse: 'Choisir un fichier',
-      browseImages: 'Choisir des images',
       convert: 'Convertir',
       convertToPdf: 'Convertir en PDF',
-      savePdf: 'Enregistrer le PDF',
-      noFile: 'Aucun fichier sélectionné.',
-      settings: 'Paramètres de conversion',
-      outputFormat: 'Format de sortie',
-      pageNumbers: 'Numéros de page',
-      pageRange: 'Plage de pages',
-      allPages: 'Toutes les pages',
-      firstPage: 'Première page uniquement',
-      customPages: 'Saisie personnalisée',
-      pageNumberInput: 'Numéros de page (ex. : 1,3,5-8)',
-      resolution: 'Résolution (DPI)',
-      jpgQuality: 'Qualité JPG',
-      conversionMode: 'Mode de conversion',
-      simpleExtraction: 'Extraction de texte standard',
-      enhancedExtraction: 'Détection avancée des tableaux (Pro)',
-      sheetStructure: 'Structure des feuilles',
-      sheetPerPage: 'Créer une feuille par page',
-      tableSensitivity: 'Sensibilité de détection des tableaux',
-      normal: 'Normal',
-      loose: 'Souple',
-      strict: 'Strict',
-      pageSize: 'Taille de page',
-      originalImageSize: 'Taille d’image originale',
-      fitMode: 'Mode d’ajustement',
-      contain: 'Afficher l’image entière',
-      cover: 'Remplir la page',
-      stretch: 'Étirer à la page',
-      margin: 'Marge mm',
       reset: 'Recommencer',
+      noFile: 'Aucun fichier sélectionné.',
     },
   };
 
-  const descriptions = {
+  const tools = {
     pdfWord: {
       category: 'pdfDocuments',
+      drop: 'dropPdf',
       title: { en: 'PDF to Word', ko: 'PDF를 Word로 변환', de: 'PDF zu Word', es: 'PDF a Word', fr: 'PDF vers Word' },
       description: {
-        en: 'Extract text from your PDF and save it as a Word document (.docx) directly in your browser.',
-        ko: '브라우저에서 PDF 텍스트를 추출해 Word 문서(.docx)로 저장합니다.',
-        de: 'Extrahieren Sie PDF-Text und speichern Sie ihn direkt im Browser als Word-Dokument (.docx).',
-        es: 'Extrae texto de tu PDF y guárdalo como documento Word (.docx) directamente en el navegador.',
-        fr: 'Extrayez le texte du PDF et enregistrez-le en document Word (.docx) dans le navigateur.',
+        en: 'Convert PDF files to editable Word documents (DOCX) in seconds.',
+        ko: 'PDF 파일을 편집 가능한 Word 문서(DOCX)로 변환하세요.',
+        de: 'Konvertieren Sie PDF-Dateien in bearbeitbare Word-Dokumente.',
+        es: 'Convierte PDF en documentos Word editables.',
+        fr: 'Convertissez des PDF en documents Word modifiables.',
       },
-      drop: 'dropPdf',
       convert: { en: 'Convert to Word', ko: 'Word로 변환', de: 'In Word konvertieren', es: 'Convertir a Word', fr: 'Convertir en Word' },
     },
     pdfJpg: {
       category: 'pdfDocuments',
+      drop: 'dropPdf',
       title: { en: 'PDF to JPG', ko: 'PDF를 JPG로 변환', de: 'PDF zu JPG', es: 'PDF a JPG', fr: 'PDF vers JPG' },
       description: {
-        en: 'Convert PDF pages into JPG images in your browser. No server upload is required.',
-        ko: 'PDF 페이지를 브라우저에서 JPG 이미지로 변환합니다. 서버 업로드가 필요 없습니다.',
-        de: 'Konvertieren Sie PDF-Seiten im Browser in JPG-Bilder. Kein Server-Upload nötig.',
-        es: 'Convierte páginas PDF en imágenes JPG en tu navegador. No se suben archivos al servidor.',
-        fr: 'Convertissez les pages PDF en images JPG dans le navigateur. Aucun envoi au serveur.',
+        en: 'Turn PDF pages into high-quality JPG images.',
+        ko: 'PDF 페이지를 고품질 JPG 이미지로 변환하세요.',
+        de: 'Wandeln Sie PDF-Seiten in hochwertige JPG-Bilder um.',
+        es: 'Convierte páginas PDF en imágenes JPG.',
+        fr: 'Transformez les pages PDF en images JPG.',
       },
-      drop: 'dropPdf',
       convert: { en: 'Convert to JPG', ko: 'JPG로 변환', de: 'In JPG konvertieren', es: 'Convertir a JPG', fr: 'Convertir en JPG' },
     },
     pdfExcel: {
       category: 'pdfDocuments',
+      drop: 'dropPdf',
       title: { en: 'PDF to Excel', ko: 'PDF를 Excel로 변환', de: 'PDF zu Excel', es: 'PDF a Excel', fr: 'PDF vers Excel' },
       description: {
-        en: 'Extract text and table-like rows from PDFs, then export them as an Excel workbook (.xlsx).',
-        ko: 'PDF의 텍스트와 표 형태의 행을 추출해 Excel 문서(.xlsx)로 저장합니다.',
-        de: 'Extrahieren Sie Text und tabellenartige Zeilen aus PDFs und exportieren Sie sie als Excel-Arbeitsmappe.',
-        es: 'Extrae texto y filas con estructura de tabla de PDF y expórtalas como Excel (.xlsx).',
-        fr: 'Extrayez le texte et les lignes de type tableau des PDF, puis exportez-les en Excel (.xlsx).',
+        en: 'Extract text and table-like data from PDFs into an Excel workbook.',
+        ko: 'PDF의 텍스트와 표 형태 데이터를 Excel 문서로 추출하세요.',
+        de: 'Extrahieren Sie Text und Tabellendaten aus PDF in Excel.',
+        es: 'Extrae texto y tablas de PDF a Excel.',
+        fr: 'Extrayez le texte et les tableaux d’un PDF vers Excel.',
       },
-      drop: 'dropPdf',
       convert: { en: 'Convert to Excel', ko: 'Excel로 변환', de: 'In Excel konvertieren', es: 'Convertir a Excel', fr: 'Convertir en Excel' },
     },
     imagePdf: {
       category: 'image',
+      drop: 'dropImage',
       title: { en: 'Image to PDF', ko: '이미지를 PDF로 변환', de: 'Bild zu PDF', es: 'Imagen a PDF', fr: 'Image vers PDF' },
       description: {
-        en: 'Combine JPG, PNG, WebP, and other images into one PDF in the order you choose.',
-        ko: 'JPG, PNG, WebP 등 여러 이미지를 원하는 순서대로 하나의 PDF로 병합합니다.',
-        de: 'Kombinieren Sie JPG, PNG, WebP und andere Bilder in der gewünschten Reihenfolge zu einer PDF.',
-        es: 'Combina JPG, PNG, WebP y otras imágenes en un PDF en el orden que elijas.',
-        fr: 'Fusionnez JPG, PNG, WebP et autres images en un PDF dans l’ordre choisi.',
+        en: 'Combine JPG, PNG, WEBP, and other images into a clean PDF.',
+        ko: 'JPG, PNG, WEBP 등 여러 이미지를 깔끔한 PDF로 합치세요.',
+        de: 'Kombinieren Sie Bilder zu einer sauberen PDF.',
+        es: 'Combina imágenes en un PDF limpio.',
+        fr: 'Combinez des images dans un PDF propre.',
       },
-      drop: 'dropImage',
-      browse: 'browseImages',
-      convertKey: 'savePdf',
+      convertKey: 'convertToPdf',
     },
     excelPdf: {
       category: 'pdfDocuments',
+      drop: 'dropExcel',
       title: { en: 'Excel to PDF', ko: 'Excel을 PDF로 변환', de: 'Excel zu PDF', es: 'Excel a PDF', fr: 'Excel vers PDF' },
       description: {
-        en: 'Upload an XLSX, XLS, or CSV file, choose a sheet, and export the table to a clean PDF.',
-        ko: 'XLSX, XLS, CSV 파일을 업로드하고 시트를 선택해 깔끔한 PDF로 저장합니다.',
-        de: 'Laden Sie XLSX, XLS oder CSV hoch, wählen Sie ein Blatt und exportieren Sie es als PDF.',
-        es: 'Sube un XLSX, XLS o CSV, elige una hoja y expórtala como PDF.',
-        fr: 'Importez un fichier XLSX, XLS ou CSV, choisissez une feuille et exportez-la en PDF.',
+        en: 'Convert Excel and CSV sheets into PDF documents directly in your browser.',
+        ko: 'Excel과 CSV 시트를 브라우저에서 PDF 문서로 변환하세요.',
+        de: 'Konvertieren Sie Excel- und CSV-Tabellen im Browser in PDF.',
+        es: 'Convierte hojas Excel y CSV en PDF.',
+        fr: 'Convertissez Excel et CSV en PDF.',
       },
-      drop: 'dropExcel',
       convertKey: 'convertToPdf',
     },
     docxPdf: {
       category: 'pdfDocuments',
+      drop: 'dropDocx',
       title: { en: 'DOCX to PDF', ko: 'DOCX를 PDF로 변환', de: 'DOCX zu PDF', es: 'DOCX a PDF', fr: 'DOCX vers PDF' },
       description: {
-        en: 'Convert Word documents to a simple text-based PDF directly in your browser.',
-        ko: 'Word 문서를 브라우저에서 간단한 텍스트 기반 PDF로 변환합니다.',
-        de: 'Konvertieren Sie Word-Dokumente direkt im Browser in eine einfache PDF.',
-        es: 'Convierte documentos Word en un PDF de texto directamente en el navegador.',
-        fr: 'Convertissez des documents Word en PDF texte directement dans le navigateur.',
+        en: 'Convert Word documents into PDF files with a simple workflow.',
+        ko: 'Word 문서를 간단한 과정으로 PDF 파일로 변환하세요.',
+        de: 'Konvertieren Sie Word-Dokumente einfach in PDF.',
+        es: 'Convierte documentos Word en PDF.',
+        fr: 'Convertissez des documents Word en PDF.',
       },
-      drop: 'dropDocx',
       convertKey: 'convertToPdf',
     },
     pdfEpub: {
       category: 'pdfDocuments',
+      drop: 'dropPdf',
       title: { en: 'PDF to EPUB', ko: 'PDF를 EPUB로 변환', de: 'PDF zu EPUB', es: 'PDF a EPUB', fr: 'PDF vers EPUB' },
       description: {
-        en: 'Extract readable text from a PDF and package it as a lightweight EPUB ebook.',
-        ko: 'PDF에서 읽을 수 있는 텍스트를 추출해 가벼운 EPUB 전자책으로 저장합니다.',
-        de: 'Extrahieren Sie lesbaren Text aus PDF und packen Sie ihn als leichtes EPUB.',
-        es: 'Extrae texto legible de un PDF y guárdalo como ebook EPUB ligero.',
-        fr: 'Extrayez le texte lisible d’un PDF et créez un ebook EPUB léger.',
+        en: 'Extract readable PDF text and package it as a lightweight EPUB ebook.',
+        ko: 'PDF의 읽을 수 있는 텍스트를 추출해 가벼운 EPUB 전자책으로 만드세요.',
+        de: 'Erstellen Sie aus PDF-Text ein leichtes EPUB.',
+        es: 'Crea un EPUB ligero desde texto PDF.',
+        fr: 'Créez un EPUB léger à partir du texte PDF.',
       },
-      drop: 'dropPdf',
       convert: { en: 'Convert to EPUB', ko: 'EPUB로 변환', de: 'In EPUB konvertieren', es: 'Convertir a EPUB', fr: 'Convertir en EPUB' },
     },
     ebook: {
       category: 'pdfDocuments',
+      drop: 'dropFile',
       title: { en: 'Ebook Converter', ko: '전자책 변환기', de: 'Ebook-Konverter', es: 'Convertidor de ebooks', fr: 'Convertisseur ebook' },
       description: {
-        en: 'Convert EPUB ebooks to a readable PDF by extracting chapter text into a clean document.',
-        ko: 'EPUB 전자책의 본문을 추출해 읽기 쉬운 PDF로 변환합니다.',
-        de: 'Konvertieren Sie EPUB-Ebooks in eine lesbare PDF mit extrahiertem Kapiteltext.',
-        es: 'Convierte ebooks EPUB en PDF legibles extrayendo el texto de los capítulos.',
-        fr: 'Convertissez les ebooks EPUB en PDF lisibles en extrayant le texte des chapitres.',
+        en: 'Convert supported ebook and document files into readable formats.',
+        ko: '지원되는 전자책과 문서 파일을 읽기 좋은 형식으로 변환하세요.',
+        de: 'Konvertieren Sie unterstützte E-Book- und Dokumentdateien.',
+        es: 'Convierte ebooks y documentos compatibles.',
+        fr: 'Convertissez les ebooks et documents pris en charge.',
       },
-      drop: 'dropFile',
-      convert: { en: 'Convert EPUB to PDF', ko: 'EPUB를 PDF로 변환', de: 'EPUB in PDF konvertieren', es: 'Convertir EPUB a PDF', fr: 'Convertir EPUB en PDF' },
+      convert: { en: 'Convert ebook', ko: '전자책 변환', de: 'Ebook konvertieren', es: 'Convertir ebook', fr: 'Convertir ebook' },
     },
     imageConverter: {
       category: 'image',
+      drop: 'dropImage',
       title: { en: 'Image Converter', ko: '이미지 변환기', de: 'Bildkonverter', es: 'Convertidor de imágenes', fr: 'Convertisseur d’images' },
       description: {
-        en: 'Convert images between common browser-supported formats directly on your device.',
-        ko: '브라우저가 지원하는 일반 이미지 형식으로 기기에서 바로 변환합니다.',
-        de: 'Konvertieren Sie Bilder direkt auf Ihrem Gerät zwischen gängigen Browserformaten.',
-        es: 'Convierte imágenes entre formatos comunes compatibles con el navegador.',
-        fr: 'Convertissez des images entre formats courants pris en charge par le navigateur.',
+        en: 'Convert images between JPG, PNG, WEBP, HEIC, and SVG formats.',
+        ko: 'JPG, PNG, WEBP, HEIC, SVG 등 이미지 형식을 변환하세요.',
+        de: 'Konvertieren Sie Bilder zwischen JPG, PNG, WEBP, HEIC und SVG.',
+        es: 'Convierte imágenes entre JPG, PNG, WEBP, HEIC y SVG.',
+        fr: 'Convertissez les images entre JPG, PNG, WEBP, HEIC et SVG.',
       },
-      drop: 'dropImage',
     },
     mediaConverter: {
       category: 'media',
-      title: { en: 'Media Converter', ko: '미디어 변환기', de: 'Medienkonverter', es: 'Convertidor multimedia', fr: 'Convertisseur média' },
-      description: {
-        en: 'Convert video and audio files in your browser with FFmpeg. Large files can take a little time.',
-        ko: 'FFmpeg로 브라우저에서 비디오와 오디오 파일을 변환합니다. 큰 파일은 시간이 걸릴 수 있습니다.',
-        de: 'Konvertieren Sie Video- und Audiodateien im Browser mit FFmpeg. Große Dateien brauchen etwas Zeit.',
-        es: 'Convierte video y audio en el navegador con FFmpeg. Los archivos grandes pueden tardar.',
-        fr: 'Convertissez vidéos et audios dans le navigateur avec FFmpeg. Les gros fichiers peuvent prendre du temps.',
-      },
       drop: 'dropFile',
+      title: { en: 'Video & Audio Converter', ko: '비디오 & 오디오 변환기', de: 'Video- & Audiokonverter', es: 'Convertidor de video y audio', fr: 'Convertisseur vidéo et audio' },
+      description: {
+        en: 'Convert video and audio files in your browser with simple controls.',
+        ko: '간단한 설정으로 비디오와 오디오 파일을 브라우저에서 변환하세요.',
+        de: 'Konvertieren Sie Video- und Audiodateien im Browser.',
+        es: 'Convierte video y audio en el navegador.',
+        fr: 'Convertissez vidéo et audio dans le navigateur.',
+      },
     },
     gifConverter: {
       category: 'gif',
+      drop: 'dropFile',
       title: { en: 'GIF Converter', ko: 'GIF 변환기', de: 'GIF-Konverter', es: 'Convertidor GIF', fr: 'Convertisseur GIF' },
       description: {
-        en: 'Create GIFs from videos or turn GIF/APNG files into other formats with FFmpeg.',
-        ko: '비디오로 GIF를 만들거나 GIF/APNG 파일을 다른 형식으로 변환합니다.',
-        de: 'Erstellen Sie GIFs aus Videos oder wandeln Sie GIF/APNG-Dateien mit FFmpeg um.',
-        es: 'Crea GIF desde videos o convierte GIF/APNG a otros formatos con FFmpeg.',
-        fr: 'Créez des GIF depuis des vidéos ou convertissez GIF/APNG avec FFmpeg.',
+        en: 'Create GIFs from videos or convert animated formats.',
+        ko: '비디오로 GIF를 만들거나 애니메이션 형식을 변환하세요.',
+        de: 'Erstellen Sie GIFs aus Videos oder konvertieren Sie Animationen.',
+        es: 'Crea GIF desde videos o convierte formatos animados.',
+        fr: 'Créez des GIF à partir de vidéos ou convertissez des animations.',
       },
-      drop: 'dropFile',
     },
   };
 
@@ -385,51 +244,12 @@
   };
 
   function currentLanguage() {
-    if (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get) {
-      return window.EverythingConvertLanguage.get();
-    }
-    const params = new URLSearchParams(window.location.search);
-    return params.get('lang') || localStorage.getItem('everything_convert_language') || 'en';
+    if (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get) return window.EverythingConvertLanguage.get();
+    return new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('everything_convert_language') || 'en';
   }
 
-  function localText(value, language) {
-    if (typeof value === 'string') return value;
+  function local(value, language) {
     return (value && (value[language] || value.en)) || '';
-  }
-
-  function replaceText(element, text) {
-    if (!element || !text) return;
-    element.textContent = text;
-  }
-
-  function replaceButtonText(button, text) {
-    if (!button || !text) return;
-    const textNode = Array.from(button.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
-    if (textNode) {
-      textNode.nodeValue = ` ${text}`;
-      return;
-    }
-    const label = button.querySelector('[data-button-label]');
-    if (label) {
-      label.textContent = text;
-      return;
-    }
-    button.appendChild(document.createTextNode(` ${text}`));
-  }
-
-  function replaceLabelText(label, text) {
-    if (!label || !text) return;
-    const textNode = Array.from(label.childNodes).find((node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
-    if (textNode) {
-      textNode.nodeValue = text;
-      return;
-    }
-    const labelText = label.querySelector('[data-label-text]');
-    if (labelText) {
-      labelText.textContent = text;
-      return;
-    }
-    label.insertBefore(document.createTextNode(text), label.firstChild);
   }
 
   function detectTool() {
@@ -448,100 +268,38 @@
     return null;
   }
 
+  function setText(selector, value) {
+    const element = document.querySelector(selector);
+    if (element && value) element.textContent = value;
+  }
+
+  function setButtonText(button, value) {
+    if (!button || !value) return;
+    const icon = button.querySelector('i');
+    button.textContent = value;
+    if (icon) button.appendChild(icon);
+  }
+
   function applyToolLanguage(language = currentLanguage()) {
     const lang = common[language] ? language : 'en';
-    const toolKey = detectTool();
-    const tool = descriptions[toolKey];
+    const labels = common[lang];
+    const tool = tools[detectTool()];
     if (!tool) return;
 
-    const labels = common[lang];
     const params = new URLSearchParams(window.location.search);
-    const modeTitle = modeTitles[params.get('mode')];
-    const title = modeTitle || localText(tool.title, lang);
-    const convertText = localText(tool.convert, lang) || labels[tool.convertKey] || labels.convert;
+    const title = modeTitles[params.get('mode')] || local(tool.title, lang);
+    const convertText = local(tool.convert, lang) || labels[tool.convertKey] || labels.convert;
 
     document.documentElement.lang = lang;
     document.title = `${title} - Everything Convert`;
-
-    replaceText(document.querySelector('.eyebrow'), labels[tool.category]);
-    replaceText(document.querySelector('.hero h1, #pageTitle, .hero-title'), title);
-    replaceText(document.querySelector('.hero p, #pageDescription, .hero-subtitle'), localText(tool.description, lang));
-
-    replaceText(document.querySelector('#dropTitle, .drop-zone h2, .drop-title, .drop-zone strong'), labels[tool.drop] || labels.dropFile);
-    replaceText(document.querySelector('#dropHint, .drop-zone span:not(.line2), .drop-subtitle'), toolKey === 'imagePdf'
-      ? localText({
-        en: 'You can select multiple images and reorder them before saving.',
-        ko: '여러 이미지를 선택하고 저장 전에 순서를 바꿀 수 있습니다.',
-        de: 'Sie können mehrere Bilder auswählen und vor dem Speichern sortieren.',
-        es: 'Puedes seleccionar varias imágenes y ordenarlas antes de guardar.',
-        fr: 'Vous pouvez choisir plusieurs images et les réordonner avant l’enregistrement.',
-      }, lang)
-      : '');
-    replaceText(document.querySelector('.drop-zone p'), labels[tool.drop] || labels.dropFile);
-
-    document.querySelectorAll('.browse-btn').forEach((button) => replaceButtonText(button, labels[tool.browse] || labels.browse));
-    document.querySelectorAll('#convertBtn, .convert-btn, .primary-btn').forEach((button) => replaceButtonText(button, convertText));
-    replaceText(document.querySelector('.settings-title'), labels.settings);
-
-    document.querySelectorAll('label').forEach((label) => {
-      if (/Output format|출력|Ausgabeformat|Formato|Format de sortie/i.test(label.textContent)) {
-        const select = label.querySelector('select');
-        label.childNodes[0].nodeValue = labels.outputFormat;
-        if (select && !label.contains(select)) label.appendChild(select);
-      }
-    });
-
-    const fieldLabels = {
-      includePageNum: 'pageNumbers',
-      pageRange: 'pageRange',
-      dpiSelect: 'resolution',
-      qualityRange: 'jpgQuality',
-      conversionMode: 'conversionMode',
-      sheetPerPage: 'sheetStructure',
-      sensitivity: 'tableSensitivity',
-      pageSize: 'pageSize',
-      fitMode: 'fitMode',
-      marginInput: 'margin',
-    };
-
-    Object.entries(fieldLabels).forEach(([id, key]) => {
-      const control = document.getElementById(id);
-      const label = control && document.querySelector(`label[for="${id}"]`);
-      const fallback = control && control.closest('.setting-item, .option-field')?.querySelector('label');
-      replaceLabelText(label || fallback, labels[key]);
-    });
-
-    const optionLabels = {
-      pageRange: { all: 'allPages', first: 'firstPage', custom: 'customPages' },
-      conversionMode: { simple: 'simpleExtraction', enhanced: 'enhancedExtraction' },
-      sensitivity: { normal: 'normal', loose: 'loose', strict: 'strict' },
-      pageSize: { image: 'originalImageSize' },
-      fitMode: { contain: 'contain', cover: 'cover', stretch: 'stretch' },
-    };
-
-    Object.entries(optionLabels).forEach(([selectId, options]) => {
-      const select = document.getElementById(selectId);
-      if (!select) return;
-      Object.entries(options).forEach(([value, key]) => {
-        const option = select.querySelector(`option[value="${value}"]`);
-        replaceText(option, labels[key]);
-      });
-    });
-
-    const customPageLabel = document.querySelector('#customPageInput label');
-    replaceText(customPageLabel, labels.pageNumberInput);
-
-    const sheetPerPage = document.getElementById('sheetPerPage');
-    if (sheetPerPage && sheetPerPage.parentElement) {
-      Array.from(sheetPerPage.parentElement.childNodes).forEach((node) => {
-        if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
-          node.nodeValue = ` ${labels.sheetPerPage}`;
-        }
-      });
-    }
-
-    replaceButtonText(document.querySelector('#resetBtn'), labels.reset);
-
+    setText('.eyebrow', labels[tool.category]);
+    setText('.hero h1, #pageTitle, .hero-title', title);
+    setText('.hero p, #pageDescription, .hero-subtitle', local(tool.description, lang));
+    setText('#dropTitle, .drop-zone h2, .drop-title, .drop-zone strong', labels[tool.drop] || labels.dropFile);
+    setText('#dropHint, .drop-subtitle', '');
+    document.querySelectorAll('.browse-btn').forEach((button) => setButtonText(button, labels.browse));
+    document.querySelectorAll('#convertBtn, .convert-btn').forEach((button) => setButtonText(button, convertText));
+    setButtonText(document.querySelector('#resetBtn'), labels.reset);
     const status = document.querySelector('#status');
     if (status && /No file selected|선택된 파일|Keine Datei|No hay archivo|Aucun fichier/i.test(status.textContent)) {
       status.textContent = labels.noFile;
@@ -550,10 +308,11 @@
 
   window.EverythingConvertToolLanguage = { apply: applyToolLanguage };
   window.addEventListener('everything-language-change', (event) => applyToolLanguage(event.detail.language));
+  window.addEventListener('load', () => window.setTimeout(() => applyToolLanguage(), 100));
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(() => applyToolLanguage(), 0));
+    document.addEventListener('DOMContentLoaded', () => window.setTimeout(() => applyToolLanguage(), 0));
   } else {
-    setTimeout(() => applyToolLanguage(), 0);
+    window.setTimeout(() => applyToolLanguage(), 0);
   }
 })();
