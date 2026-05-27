@@ -10,6 +10,16 @@
       button: 'Merge PDF',
       multiple: true,
     },
+    compress: {
+      title: 'PDF Compress',
+      label: 'Compress PDF',
+      icon: 'fa-compress',
+      description: 'Reduce PDF file size by rebuilding the PDF with compact object streams.',
+      drop: 'Drag & drop your PDF file here',
+      help: 'Best for PDFs that can be optimized structurally. Image-heavy PDFs may shrink only a little.',
+      button: 'Compress PDF',
+      multiple: false,
+    },
     split: {
       title: 'PDF Split',
       label: 'Split PDF',
@@ -65,6 +75,7 @@
   const modeTranslations = {
     ko: {
       merge: ['PDF 병합', '여러 PDF 파일을 하나의 PDF로 합치세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '두 개 이상의 PDF 파일을 선택하세요.', 'PDF 병합'],
+      compress: ['PDF 압축', 'PDF를 압축 저장 방식으로 다시 만들어 파일 크기를 줄이세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '이미지가 많은 PDF는 줄어드는 폭이 작을 수 있습니다.', 'PDF 압축'],
       split: ['PDF 분할', 'PDF의 각 페이지를 별도 PDF로 나누고 ZIP으로 저장하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '하나의 PDF가 페이지별 파일로 분할됩니다.', 'PDF 분할'],
       rotate: ['PDF 회전', 'PDF 전체 페이지를 90, 180, 270도로 회전하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '변환 전 회전 각도를 선택하세요.', 'PDF 회전'],
       remove: ['PDF 페이지 삭제', '페이지 번호나 범위를 입력해 원하지 않는 페이지를 삭제하세요.', 'PDF 파일을 여기에 끌어다 놓으세요', '예: 1,3,5-7 페이지를 삭제합니다.', '페이지 삭제'],
@@ -73,6 +84,7 @@
     },
     de: {
       merge: ['PDF zusammenführen', 'Kombinieren Sie mehrere PDFs zu einer Datei.', 'PDF-Dateien hierher ziehen', 'Wählen Sie mindestens zwei PDF-Dateien.', 'PDF zusammenführen'],
+      compress: ['PDF komprimieren', 'Reduzieren Sie die Dateigröße durch kompaktes erneutes Speichern.', 'PDF-Datei hierher ziehen', 'Bei bildlastigen PDFs kann die Einsparung gering sein.', 'PDF komprimieren'],
       split: ['PDF teilen', 'Teilen Sie jede PDF-Seite in separate Dateien als ZIP.', 'PDF-Datei hierher ziehen', 'Ein PDF wird in einzelne Seiten geteilt.', 'PDF teilen'],
       rotate: ['PDF drehen', 'Drehen Sie alle PDF-Seiten um 90, 180 oder 270 Grad.', 'PDF-Datei hierher ziehen', 'Wählen Sie vor dem Konvertieren den Winkel.', 'PDF drehen'],
       remove: ['PDF-Seiten entfernen', 'Entfernen Sie unerwünschte Seiten per Seitenbereich.', 'PDF-Datei hierher ziehen', 'Beispiel: 1,3,5-7 entfernt diese Seiten.', 'Seiten entfernen'],
@@ -81,6 +93,7 @@
     },
     es: {
       merge: ['Unir PDF', 'Combina varios PDF en un solo archivo.', 'Arrastra tus PDF aquí', 'Selecciona dos o más archivos PDF.', 'Unir PDF'],
+      compress: ['Comprimir PDF', 'Reduce el tamaño reconstruyendo el PDF con guardado compacto.', 'Arrastra tu PDF aquí', 'Los PDF con muchas imágenes pueden reducirse poco.', 'Comprimir PDF'],
       split: ['Dividir PDF', 'Divide cada página del PDF en archivos separados dentro de un ZIP.', 'Arrastra tu PDF aquí', 'Un PDF se dividirá en páginas individuales.', 'Dividir PDF'],
       rotate: ['Rotar PDF', 'Rota todas las páginas 90, 180 o 270 grados.', 'Arrastra tu PDF aquí', 'Elige un ángulo antes de convertir.', 'Rotar PDF'],
       remove: ['Eliminar páginas', 'Elimina páginas no deseadas con números o rangos.', 'Arrastra tu PDF aquí', 'Ejemplo: 1,3,5-7 elimina esas páginas.', 'Eliminar páginas'],
@@ -89,6 +102,7 @@
     },
     fr: {
       merge: ['Fusionner PDF', 'Combinez plusieurs PDF en un seul fichier.', 'Déposez vos PDF ici', 'Sélectionnez au moins deux fichiers PDF.', 'Fusionner PDF'],
+      compress: ['Compresser PDF', 'Réduisez la taille en reconstruisant le PDF avec un enregistrement compact.', 'Déposez votre PDF ici', 'Les PDF riches en images peuvent peu diminuer.', 'Compresser PDF'],
       split: ['Diviser PDF', 'Divisez chaque page du PDF en fichiers séparés dans un ZIP.', 'Déposez votre PDF ici', 'Un PDF sera divisé en pages individuelles.', 'Diviser PDF'],
       rotate: ['Faire pivoter PDF', 'Faites pivoter toutes les pages de 90, 180 ou 270 degrés.', 'Déposez votre PDF ici', 'Choisissez un angle avant de convertir.', 'Faire pivoter PDF'],
       remove: ['Supprimer des pages', 'Supprimez les pages inutiles avec des numéros ou plages.', 'Déposez votre PDF ici', 'Exemple : 1,3,5-7 supprime ces pages.', 'Supprimer'],
@@ -219,6 +233,17 @@
     const mode = localizedMode(state.mode);
     let html = `<p>${mode.help}</p>`;
 
+    if (state.mode === 'compress') {
+      html += `
+        <label>
+          <span>Compression method</span>
+          <select id="compressMethod">
+            <option value="safe">Safe browser compression</option>
+          </select>
+        </label>
+      `;
+    }
+
     if (state.mode === 'rotate') {
       html += `
         <label>
@@ -255,7 +280,7 @@
 
   function setMode(nextMode) {
     state.mode = modes[nextMode] ? nextMode : 'merge';
-    const mode = modes[state.mode];
+    const mode = localizedMode(state.mode);
 
     document.title = `${mode.title} - EverythingConvert`;
     qs('[data-mode-label]').textContent = mode.title;
@@ -332,6 +357,36 @@
     downloadBlob(zipBlob, `${base}-split-pages.zip`);
   }
 
+  async function compressPdf() {
+    const file = state.files[0];
+    if (!file) throw new Error('Choose one PDF file to compress.');
+    const originalBytes = await file.arrayBuffer();
+    const doc = await window.PDFLib.PDFDocument.load(originalBytes, {
+      ignoreEncryption: true,
+      updateMetadata: false,
+    });
+
+    doc.setProducer('EverythingConvert');
+    doc.setCreator('EverythingConvert');
+    doc.setModificationDate(new Date());
+
+    const bytes = await doc.save({
+      useObjectStreams: true,
+      addDefaultPage: false,
+      objectsPerTick: 80,
+    });
+    const originalSize = originalBytes.byteLength;
+    const newSize = bytes.byteLength;
+    const reduction = originalSize > 0 ? Math.round((1 - newSize / originalSize) * 100) : 0;
+    downloadBlob(new Blob([bytes], { type: 'application/pdf' }), `${sanitizeBaseName(file.name)}-compressed.pdf`);
+
+    if (reduction > 0) {
+      return `Done. Compressed by about ${reduction}%. Your download should start automatically.`;
+    }
+
+    return 'Done. This PDF was already compact, so the new file may be similar in size.';
+  }
+
   async function rotatePdf() {
     const file = state.files[0];
     if (!file) throw new Error('Choose one PDF file to rotate.');
@@ -380,6 +435,7 @@
   async function processPdf() {
     const actions = {
       merge: mergePdfs,
+      compress: compressPdf,
       split: splitPdf,
       rotate: rotatePdf,
       remove: removePages,
@@ -390,8 +446,8 @@
     try {
       els.convert.disabled = true;
       setStatus('Processing your PDF...', '');
-      await actions[state.mode]();
-      setStatus('Done. Your download should start automatically.', 'success');
+      const message = await actions[state.mode]();
+      setStatus(message || 'Done. Your download should start automatically.', 'success');
     } catch (error) {
       setStatus(error.message || 'Could not process this PDF.', 'error');
     } finally {

@@ -12,7 +12,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Max file size: 100MB',
       steps: ['Upload your PDF file', 'Convert to Word', 'Download your Word file'],
-      related: ['PDF to JPG', 'PDF to Excel', 'Merge PDF', 'Split PDF', 'Rotate PDF']
+      related: ['PDF to JPG', 'PDF to Excel', 'Merge PDF', 'Compress PDF', 'Rotate PDF']
     },
     'pdf-to-jpg.html': {
       category: 'PDF',
@@ -26,7 +26,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Max file size: 100MB',
       steps: ['Upload your PDF file', 'Choose image quality', 'Download JPG images'],
-      related: ['PDF to Word', 'PDF to Excel', 'Merge PDF', 'Extract PDF Pages', 'Image Converter']
+      related: ['PDF to Word', 'PDF to Excel', 'Merge PDF', 'Compress PDF', 'Extract PDF Pages']
     },
     'pdf-to-excel.html': {
       category: 'PDF',
@@ -40,7 +40,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Enhanced table detection is available for Pro members.',
       steps: ['Upload your PDF file', 'Select extraction mode', 'Download your Excel file'],
-      related: ['PDF to Word', 'Excel to PDF', 'PDF to JPG', 'Merge PDF', 'Remove PDF Pages']
+      related: ['PDF to Word', 'Excel to PDF', 'PDF to JPG', 'Merge PDF', 'Compress PDF']
     },
     'excel-to-pdf.html': {
       category: 'Office',
@@ -165,6 +165,7 @@
     'DOCX to PDF': ['docx to pdf/docx-to-pdf.html', 'fa-file-pdf', 'Convert Word files to PDF'],
     'PDF to EPUB': ['pdf to epub/pdf-to-epub.html', 'fa-book', 'Create EPUB ebooks'],
     'Merge PDF': ['pdf tools/pdf-tools.html?mode=merge', 'fa-layer-group', 'Combine multiple PDFs'],
+    'Compress PDF': ['pdf tools/pdf-tools.html?mode=compress', 'fa-compress', 'Reduce PDF file size'],
     'Split PDF': ['pdf tools/pdf-tools.html?mode=split', 'fa-scissors', 'Split pages into files'],
     'Rotate PDF': ['pdf tools/pdf-tools.html?mode=rotate', 'fa-rotate-right', 'Rotate PDF pages'],
     'Remove PDF Pages': ['pdf tools/pdf-tools.html?mode=remove', 'fa-trash-can', 'Delete selected pages'],
@@ -285,6 +286,7 @@
           <div class="tools-group">
             <div class="tools-group-title">Tools</div>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
+            <a href="${prefix}pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=split">Split PDF</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
