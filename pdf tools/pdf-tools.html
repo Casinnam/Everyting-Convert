@@ -19,6 +19,7 @@
     <title>PDF Tools - EverythingConvert</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../tool-page-redesign.css">
+    <link rel="stylesheet" href="pdf-tools.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -48,15 +49,15 @@
             <span data-mode-label>PDF Tools</span>
         </nav>
 
-        <section class="ec-tool-hero" aria-labelledby="pdfToolTitle">
-            <div class="ec-tool-icons" aria-hidden="true">
-                <span><i class="fa-regular fa-file-pdf"></i></span>
+        <section class="hero" aria-labelledby="pdfToolTitle">
+            <div class="ec-tool-flow-icon" aria-hidden="true">
+                <span class="ec-file-badge"><i class="fa-regular fa-file-pdf"></i></span>
                 <i class="fa-solid fa-arrow-right"></i>
-                <span><i data-mode-icon class="fa-solid fa-layer-group"></i></span>
+                <span class="ec-file-badge ec-output"><i data-mode-icon class="fa-solid fa-layer-group"></i></span>
             </div>
             <h1 id="pdfToolTitle"><span class="ec-title-accent">PDF</span> Tools</h1>
             <p data-mode-description>Merge, split, rotate, remove, extract, and organize PDF pages directly in your browser.</p>
-            <div class="ec-pill-row" aria-label="Tool highlights">
+            <div class="ec-tool-chips" aria-label="Tool highlights">
                 <span><i class="fa-solid fa-lock"></i> Browser-based</span>
                 <span><i class="fa-regular fa-user"></i> No signup required</span>
                 <span><i class="fa-solid fa-shield-halved"></i> Private workflow</span>
@@ -74,24 +75,24 @@
                 <button type="button" data-mode-button="organize"><i class="fa-solid fa-arrow-up-short-wide"></i><span>Organize PDF</span></button>
             </aside>
 
-            <section class="ec-converter-card pdf-tools-card">
-                <div class="ec-upload-zone" id="dropZone" tabindex="0" role="button" aria-label="Choose PDF files">
-                    <div class="ec-upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <section class="converter-card pdf-tools-card">
+                <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Choose PDF files">
+                    <div class="ec-drop-cloud"><i class="fa-solid fa-cloud-arrow-up"></i></div>
                     <h2 data-drop-title>Drag & drop your PDF file here</h2>
                     <p>or</p>
-                    <label class="ec-choose-file">
+                    <label class="primary-btn ec-choose-file">
                         <input id="fileInput" type="file" accept="application/pdf,.pdf" hidden>
                         <span>Choose File</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </label>
-                    <small data-file-help>Max file size depends on your browser memory.</small>
+                    <small class="ec-file-note" data-file-help>Max file size depends on your browser memory.</small>
                 </div>
 
                 <div class="pdf-tools-files" id="fileList" aria-live="polite">No PDF selected.</div>
 
                 <div class="pdf-tools-options" id="optionsPanel"></div>
 
-                <button class="ec-convert-button" id="convertBtn" type="button">
+                <button class="primary-btn" id="convertBtn" type="button">
                     <span data-convert-label>Process PDF</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -100,22 +101,22 @@
             </section>
         </section>
 
-        <section class="ec-tool-info-grid">
-            <article>
+        <section class="ec-info-grid">
+            <article class="ec-info-panel">
                 <h2>How to use PDF Tools</h2>
                 <ol class="ec-step-list">
-                    <li><span>1</span><div><strong>Choose a PDF action</strong><p>Select merge, split, rotate, remove, extract, or organize.</p></div></li>
-                    <li><span>2</span><div><strong>Upload your PDF file</strong><p>Use the upload box and enter page ranges when needed.</p></div></li>
-                    <li><span>3</span><div><strong>Download the result</strong><p>Your edited PDF or ZIP file is generated in the browser.</p></div></li>
+                    <li><b>1</b><div><strong>Choose a PDF action</strong><span>Select merge, split, rotate, remove, extract, or organize.</span></div></li>
+                    <li><b>2</b><div><strong>Upload your PDF file</strong><span>Use the upload box and enter page ranges when needed.</span></div></li>
+                    <li><b>3</b><div><strong>Download the result</strong><span>Your edited PDF or ZIP file is generated in the browser.</span></div></li>
                 </ol>
             </article>
-            <article class="ec-why-card">
+            <article class="ec-info-panel">
                 <h2>Page range examples</h2>
-                <ul>
-                    <li><i class="fa-solid fa-check"></i> Use <strong>1,3,5</strong> for separate pages.</li>
-                    <li><i class="fa-solid fa-check"></i> Use <strong>2-6</strong> for a range.</li>
-                    <li><i class="fa-solid fa-check"></i> Use <strong>3,1,2</strong> in Organize PDF to reorder pages.</li>
-                    <li><i class="fa-solid fa-check"></i> Encrypted PDFs may need to be unlocked first.</li>
+                <ul class="ec-check-list">
+                    <li><i class="fa-solid fa-check"></i><span>Use <strong>1,3,5</strong> for separate pages.</span></li>
+                    <li><i class="fa-solid fa-check"></i><span>Use <strong>2-6</strong> for a range.</span></li>
+                    <li><i class="fa-solid fa-check"></i><span>Use <strong>3,1,2</strong> in Organize PDF to reorder pages.</span></li>
+                    <li><i class="fa-solid fa-check"></i><span>Encrypted PDFs may need to be unlocked first.</span></li>
                 </ul>
             </article>
         </section>
