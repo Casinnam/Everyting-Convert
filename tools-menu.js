@@ -27,6 +27,8 @@
         -webkit-backdrop-filter: blur(18px) !important;
       }
       .ec-unified-header .logo {
+        flex: 1 1 0% !important;
+        justify-content: flex-start !important;
         color: #0f172a !important;
         text-decoration: none !important;
         font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important;
@@ -38,6 +40,7 @@
         gap: 0.5rem !important;
       }
       .ec-unified-header .top-nav {
+        flex: 0 0 auto !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -46,6 +49,7 @@
         min-width: 0 !important;
       }
       .ec-unified-header .top-actions {
+        flex: 1 1 0% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: flex-end !important;
@@ -86,15 +90,11 @@
         background: rgba(255, 255, 255, .98) !important;
         box-shadow: 0 24px 70px rgba(15, 23, 42, .16) !important;
       }
-      .ec-unified-header .mega-tools-wrapper {
-        position: static !important;
-      }
       .ec-unified-header .tools-dropdown.mega-tools {
         position: absolute !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        top: 100% !important;
+        left: 0 !important;
         right: auto !important;
+        top: 100% !important;
         width: min(980px, calc(100vw - 2rem)) !important;
         grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
       }
@@ -172,7 +172,7 @@
         <span>EverythingConvert</span>
       </a>
       <nav class="top-nav" aria-label="Primary navigation">
-        <div class="tools-menu mega-tools-wrapper">
+        <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">All Tools</button>
           <div class="tools-dropdown mega-tools">
             <div class="tools-group">
