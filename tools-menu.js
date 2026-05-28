@@ -30,7 +30,7 @@
         color: #0f172a !important;
         text-decoration: none !important;
         font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important;
-        font-size: 1.15rem !important;
+        font-size: 1.1rem !important;
         font-weight: 900 !important;
         white-space: nowrap !important;
         display: flex !important;
@@ -137,7 +137,7 @@
         background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
       }
-      @media (max-width: 1100px) {
+      @media (max-width: 950px) {
         .ec-unified-header {
           display: flex !important;
           flex-wrap: wrap !important;
