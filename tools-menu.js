@@ -14,8 +14,8 @@
         position: sticky !important;
         top: 0 !important;
         z-index: 9000 !important;
-        display: grid !important;
-        grid-template-columns: 1fr auto 1fr !important;
+        display: flex !important;
+        justify-content: space-between !important;
         align-items: center !important;
         gap: 1.2rem !important;
         min-height: 4.4rem !important;
@@ -27,7 +27,6 @@
         -webkit-backdrop-filter: blur(18px) !important;
       }
       .ec-unified-header .logo {
-        justify-self: start !important;
         color: #0f172a !important;
         text-decoration: none !important;
         font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important;
@@ -50,9 +49,9 @@
         display: flex !important;
         align-items: center !important;
         justify-content: flex-end !important;
+        flex-wrap: nowrap !important;
         gap: clamp(.5rem, .8vw, .75rem) !important;
         min-width: 0 !important;
-        justify-self: end !important;
       }
       .ec-unified-header .top-nav a,
       .ec-unified-header .top-actions a,
