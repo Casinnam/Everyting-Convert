@@ -227,7 +227,7 @@
         </div>
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">PDF</button>
-          <div class="tools-dropdown" style="display: flex; gap: 0.5rem; width: max-content; padding: 0.5rem;">
+          <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
             <div style="display: flex; flex-direction: column; min-width: 160px;">
               <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-file-export"></i> Convert</div>
               <a href="${prefix}pdf to word/pdf-to-word.html">PDF to Word</a>
