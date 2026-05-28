@@ -15,7 +15,7 @@
         top: 0 !important;
         z-index: 9000 !important;
         display: grid !important;
-        grid-template-columns: auto minmax(0, 1fr) !important;
+        grid-template-columns: 1fr auto 1fr !important;
         align-items: center !important;
         gap: 1.2rem !important;
         min-height: 4.4rem !important;
@@ -27,22 +27,35 @@
         -webkit-backdrop-filter: blur(18px) !important;
       }
       .ec-unified-header .logo {
+        justify-self: start !important;
         color: #0f172a !important;
         text-decoration: none !important;
         font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important;
         font-size: 1.15rem !important;
         font-weight: 900 !important;
         white-space: nowrap !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
       }
       .ec-unified-header .top-nav {
         display: flex !important;
         align-items: center !important;
-        justify-content: flex-end !important;
+        justify-content: center !important;
         gap: clamp(.7rem, 1.2vw, 1.15rem) !important;
         flex-wrap: nowrap !important;
         min-width: 0 !important;
       }
+      .ec-unified-header .top-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: clamp(.5rem, .8vw, .75rem) !important;
+        min-width: 0 !important;
+        justify-self: end !important;
+      }
       .ec-unified-header .top-nav a,
+      .ec-unified-header .top-actions a,
       .ec-unified-header .tools-toggle {
         color: #0f172a !important;
         text-decoration: none !important;
@@ -126,7 +139,16 @@
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
       }
       @media (max-width: 1100px) {
-        .ec-unified-header .top-nav { flex-wrap: wrap !important; justify-content: flex-start !important; }
+        .ec-unified-header {
+          display: flex !important;
+          flex-wrap: wrap !important;
+          justify-content: space-between !important;
+        }
+        .ec-unified-header .top-nav,
+        .ec-unified-header .top-actions {
+          flex-wrap: wrap !important;
+          justify-content: flex-start !important;
+        }
         .ec-unified-header .ec-tool-search { order: 20; width: min(100%, 18rem) !important; }
       }
     `;
@@ -240,6 +262,8 @@
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>
+      </nav>
+      <div class="top-actions">
         <label class="ec-tool-search" aria-label="Search tools">
           <i class="fa-solid fa-magnifying-glass"></i>
           <input type="search" placeholder="Search tools...">
@@ -249,7 +273,7 @@
         <a href="#" data-auth-logout style="display:none;">Logout</a>
         <a href="${prefix}admin.html" data-admin-only style="display:none;">Admin</a>
         <a class="ec-try-pro" href="${prefix}pricing.html">Try Pro</a>
-      </nav>
+      </div>
     `;
     const nav = header.querySelector('.top-nav');
     if (nav) nav.dataset.ecHeaderEnhanced = 'true';
