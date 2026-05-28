@@ -195,7 +195,6 @@
   }
 
   function init() {
-    input.value = SAMPLE_JSON;
     document.getElementById('convertButton').addEventListener('click', convert);
     document.getElementById('sampleButton').addEventListener('click', () => {
       input.value = SAMPLE_JSON;
@@ -218,7 +217,7 @@
     flattenInput.addEventListener('change', () => input.value.trim() && convert());
     bomInput.addEventListener('change', () => input.value.trim() && convert());
     delimiterSelect.addEventListener('change', () => input.value.trim() && convert());
-    convert();
+    setStatus('Paste JSON to start.');
   }
 
   if (document.readyState === 'loading') {

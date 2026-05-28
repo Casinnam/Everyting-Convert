@@ -6,7 +6,7 @@
       icon: 'fa-link',
       intro: 'Link to any website',
       fields: [
-        { name: 'url', label: 'Enter URL', type: 'url', placeholder: 'https://example.com', full: true, value: 'https://www.everythingconvert.com' },
+        { name: 'url', label: 'Enter URL', type: 'url', placeholder: 'https://example.com', full: true },
         { name: 'name', label: 'QR Code Name (Optional)', type: 'text', placeholder: 'My QR Code', full: true, maxlength: 50 }
       ],
       build: (v) => v.url
@@ -17,7 +17,7 @@
       icon: 'fa-align-left',
       intro: 'Plain text or notes',
       fields: [
-        { name: 'text', label: 'Enter Text', type: 'textarea', placeholder: 'Write the text you want to share...', full: true, value: 'EverythingConvert makes file work faster.' },
+        { name: 'text', label: 'Enter Text', type: 'textarea', placeholder: 'Write the text you want to share...', full: true },
         { name: 'name', label: 'QR Code Name (Optional)', type: 'text', placeholder: 'Text QR', full: true, maxlength: 50 }
       ],
       build: (v) => v.text
@@ -28,7 +28,7 @@
       icon: 'fa-envelope',
       intro: 'Email address',
       fields: [
-        { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@example.com', value: 'everythingconvert@gmail.com' },
+        { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@example.com' },
         { name: 'subject', label: 'Subject', type: 'text', placeholder: 'Hello' },
         { name: 'body', label: 'Message', type: 'textarea', placeholder: 'Email message', full: true }
       ],
@@ -61,7 +61,7 @@
       icon: 'fa-wifi',
       intro: 'Wi-Fi network access',
       fields: [
-        { name: 'ssid', label: 'Network Name', type: 'text', placeholder: 'Wi-Fi SSID', value: 'EverythingConvert WiFi' },
+        { name: 'ssid', label: 'Network Name', type: 'text', placeholder: 'Wi-Fi SSID' },
         { name: 'password', label: 'Password', type: 'text', placeholder: 'Wi-Fi password' },
         { name: 'encryption', label: 'Security', type: 'select', options: ['WPA', 'WEP', 'nopass'], value: 'WPA' }
       ],
@@ -73,7 +73,7 @@
       icon: 'fa-address-card',
       intro: 'Digital business card',
       fields: [
-        { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'Jane Smith', value: 'Everything Convert' },
+        { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'Jane Smith' },
         { name: 'organization', label: 'Organization', type: 'text', placeholder: 'Company' },
         { name: 'phone', label: 'Phone', type: 'tel', placeholder: '+1 555 123 4567' },
         { name: 'email', label: 'Email', type: 'email', placeholder: 'name@example.com' },
@@ -108,7 +108,7 @@
       icon: 'fa-calendar-days',
       intro: 'Calendar event',
       fields: [
-        { name: 'title', label: 'Event Title', type: 'text', placeholder: 'Meeting', value: 'EverythingConvert Event' },
+        { name: 'title', label: 'Event Title', type: 'text', placeholder: 'Meeting' },
         { name: 'date', label: 'Date', type: 'date' },
         { name: 'time', label: 'Time', type: 'time' },
         { name: 'location', label: 'Location', type: 'text', placeholder: 'Event location', full: true }

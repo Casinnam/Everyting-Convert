@@ -140,7 +140,16 @@
                         <button id="clearButton" type="button"><i class="fa-regular fa-trash-can"></i> Clear</button>
                     </div>
                 </div>
-                <textarea id="jsonInput" spellcheck="false" aria-label="JSON input"></textarea>
+                <textarea id="jsonInput" spellcheck="false" aria-label="JSON input" placeholder='[
+  {
+    "id": 1,
+    "name": "Jane Smith",
+    "contact": {
+      "email": "jane@example.com",
+      "country": "Canada"
+    }
+  }
+]'></textarea>
                 <div class="json-options">
                     <label><input id="flattenInput" type="checkbox" checked> Flatten nested objects</label>
                     <label><input id="bomInput" type="checkbox"> Add Excel UTF-8 BOM</label>
