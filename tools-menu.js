@@ -204,8 +204,9 @@
           </div>
         </div>
         <div class="tools-menu">
-          <button class="tools-toggle" type="button" aria-expanded="false">PDF Convert</button>
-          <div class="tools-dropdown">
+          <button class="tools-toggle" type="button" aria-expanded="false">PDF</button>
+          <div class="tools-dropdown" style="max-height: 70vh; overflow-y: auto;">
+            <div style="padding: 0.75rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-file-export"></i> Convert</div>
             <a href="${prefix}pdf to word/pdf-to-word.html">PDF to Word</a>
             <a href="${prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
             <a href="${prefix}pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
@@ -213,11 +214,8 @@
             <a href="${prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
             <a href="${prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
             <a href="${prefix}ebook converter/ebook-converter.html">Ebook Converter</a>
-          </div>
-        </div>
-        <div class="tools-menu">
-          <button class="tools-toggle" type="button" aria-expanded="false">PDF Tools</button>
-          <div class="tools-dropdown">
+            
+            <div style="padding: 0.75rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; border-top: 1px solid #e2e8f0; margin-top: 0.5rem; pointer-events: none;"><i class="fa-solid fa-wrench"></i> Tools</div>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=split">Split PDF</a>
