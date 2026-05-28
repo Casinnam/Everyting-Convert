@@ -185,7 +185,8 @@
     'MP4 to GIF': ['gif converter/gif-converter.html?mode=mp4-gif', 'fa-file-video', 'Create GIFs from MP4'],
     'WEBM to GIF': ['gif converter/gif-converter.html?mode=webm-gif', 'fa-file-video', 'Create GIFs from WEBM'],
     'GIF to MP4': ['gif converter/gif-converter.html?mode=gif-mp4', 'fa-file-video', 'Convert GIFs to video'],
-    'Image to GIF': ['gif converter/gif-converter.html?mode=image-gif', 'fa-images', 'Animate images as GIF']
+    'Image to GIF': ['gif converter/gif-converter.html?mode=image-gif', 'fa-images', 'Animate images as GIF'],
+    'QR Code Generator': ['qr code generator/qr-code-generator.html', 'fa-qrcode', 'Create custom QR codes instantly']
   };
 
   function currentFileName() {
@@ -292,6 +293,7 @@
             <a href="${prefix}pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
+            <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>
           </div>
         </div>
       `;
