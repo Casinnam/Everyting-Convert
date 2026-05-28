@@ -143,19 +143,6 @@
         background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
       }
-      @media (max-width: 950px) {
-        .ec-unified-header {
-          display: flex !important;
-          flex-wrap: wrap !important;
-          justify-content: space-between !important;
-        }
-        .ec-unified-header .top-nav,
-        .ec-unified-header .top-actions {
-          flex-wrap: wrap !important;
-          justify-content: flex-start !important;
-        }
-        .ec-unified-header .ec-tool-search { order: 20; width: min(100%, 18rem) !important; }
-      }
     `;
     document.head.appendChild(style);
   }
