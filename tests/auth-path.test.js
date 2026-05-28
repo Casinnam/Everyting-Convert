@@ -56,7 +56,7 @@ function loadAuth(pathname, protocol = 'https:') {
 }
 
 {
-  const auth = loadAuth('/D:/아는척하기/웹사이트 제작/Everything Convert Main/pdf to word/pdf-to-word.html', 'file:');
+  const auth = loadAuth('/D:/projects/website_dev/Everything Convert Main/pdf to word/pdf-to-word.html', 'file:');
   assert.strictEqual(auth.getAuthPath(), '../auth.html');
   assert.strictEqual(auth.getAuthRedirectUrl(), 'http://127.0.0.1:8016/auth.html');
 }

@@ -285,16 +285,20 @@
     }
 
     let data = { session: null };
+    let isTimeout = false;
     try {
-      const result = await withTimeout(client.auth.getSession(), '세션 확인');
+      const result = await withTimeout(client.auth.getSession(), '세션 확인', 15000);
       data = result.data || data;
       if (result.error) console.warn('Could not read auth session:', result.error.message);
     } catch (error) {
       console.warn('Could not read auth session:', error.message);
+      if (error.message.includes('초과')) isTimeout = true;
     }
 
-    state.session = data && data.session ? data.session : null;
-    state.user = state.session ? state.session.user : null;
+    if (!isTimeout) {
+      state.session = data && data.session ? data.session : null;
+      state.user = state.session ? state.session.user : null;
+    }
     if (state.user) {
       setFallbackProfile();
       state.ready = true;

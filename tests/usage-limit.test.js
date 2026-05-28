@@ -90,7 +90,7 @@ const api = loadModule();
   const twoLevelApi = loadModule('/tools/pdf/word.html', 'https:');
   assert.strictEqual(twoLevelApi.rootPrefix(), '../../');
 
-  const fileApi = loadModule('/D:/아는척하기/웹사이트 제작/Everything Convert Main/pdf to word/pdf-to-word.html', 'file:');
+  const fileApi = loadModule('/D:/projects/website_dev/Everything Convert Main/pdf to word/pdf-to-word.html', 'file:');
   assert.strictEqual(fileApi.rootPrefix(), '../');
 }
 
