@@ -186,7 +186,8 @@
     'WEBM to GIF': ['gif converter/gif-converter.html?mode=webm-gif', 'fa-file-video', 'Create GIFs from WEBM'],
     'GIF to MP4': ['gif converter/gif-converter.html?mode=gif-mp4', 'fa-file-video', 'Convert GIFs to video'],
     'Image to GIF': ['gif converter/gif-converter.html?mode=image-gif', 'fa-images', 'Animate images as GIF'],
-    'QR Code Generator': ['qr code generator/qr-code-generator.html', 'fa-qrcode', 'Create custom QR codes instantly']
+    'QR Code Generator': ['qr code generator/qr-code-generator.html', 'fa-qrcode', 'Create custom QR codes instantly'],
+    'JSON to CSV': ['json to csv/json-to-csv.html', 'fa-code', 'Convert JSON data to spreadsheet CSV']
   };
 
   function currentFileName() {
@@ -294,6 +295,7 @@
             <a href="${prefix}pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
             <a href="${prefix}pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
             <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>
+            <a href="${prefix}json to csv/json-to-csv.html">JSON to CSV</a>
           </div>
         </div>
       `;
