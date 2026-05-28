@@ -86,9 +86,15 @@
         background: rgba(255, 255, 255, .98) !important;
         box-shadow: 0 24px 70px rgba(15, 23, 42, .16) !important;
       }
+      .ec-unified-header .mega-tools-wrapper {
+        position: static !important;
+      }
       .ec-unified-header .tools-dropdown.mega-tools {
-        right: 0 !important;
-        left: auto !important;
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: 100% !important;
+        right: auto !important;
         width: min(980px, calc(100vw - 2rem)) !important;
         grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
       }
@@ -166,7 +172,7 @@
         <span>EverythingConvert</span>
       </a>
       <nav class="top-nav" aria-label="Primary navigation">
-        <div class="tools-menu">
+        <div class="tools-menu mega-tools-wrapper">
           <button class="tools-toggle" type="button" aria-expanded="false">All Tools</button>
           <div class="tools-dropdown mega-tools">
             <div class="tools-group">
