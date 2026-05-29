@@ -150,7 +150,8 @@
     type: 'url',
     dark: '#111827',
     light: '#ffffff',
-    size: 512
+    size: 512,
+    format: 'png'
   };
 
   const quickTabs = document.getElementById('quickTypeTabs');
@@ -382,15 +383,95 @@
     generateQr();
   }
 
+  function getFilename(ext) {
+    const nameField = form.querySelector('[name="name"]');
+    const name = (nameField && nameField.value.trim()) || `${TYPES[state.type].label}-qr-code`;
+    return `${name.replace(/[^\w\-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'qr-code'}.${ext}`;
+  }
+
   async function downloadPng() {
     const ok = await generateQr();
     if (!ok) return;
     const link = document.createElement('a');
-    const nameField = form.querySelector('[name="name"]');
-    const name = (nameField && nameField.value.trim()) || `${TYPES[state.type].label}-qr-code`;
     link.href = canvas.toDataURL('image/png');
-    link.download = `${name.replace(/[^\w\-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'qr-code'}.png`;
+    link.download = getFilename('png');
     link.click();
+  }
+
+  async function downloadSvg() {
+    const text = payload();
+    if (!text) return;
+    try {
+      const svgString = await new Promise((resolve, reject) => {
+        window.QRCode.toString(text, {
+          type: 'svg',
+          width: state.size,
+          margin: 2,
+          errorCorrectionLevel: 'H',
+          color: { dark: state.dark, light: state.light }
+        }, (err, string) => {
+          if (err) reject(err);
+          else resolve(string);
+        });
+      });
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = getFilename('svg');
+      link.click();
+    } catch (e) {
+      status.textContent = 'Failed to generate SVG.';
+    }
+  }
+
+  async function downloadPdf() {
+    const ok = await generateQr();
+    if (!ok) return;
+    try {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [state.size, state.size]
+      });
+      const imgData = canvas.toDataURL('image/png');
+      pdf.addImage(imgData, 'PNG', 0, 0, state.size, state.size);
+      pdf.save(getFilename('pdf'));
+    } catch (e) {
+      status.textContent = 'Failed to generate PDF. Make sure jsPDF is loaded.';
+    }
+  }
+
+  async function handleDownload() {
+    if (state.format === 'svg') await downloadSvg();
+    else if (state.format === 'pdf') await downloadPdf();
+    else await downloadPng();
+  }
+
+  function selectFormat(format) {
+    if ((format === 'svg' || format === 'pdf') && window.EverythingConvertAuth) {
+      if (!window.EverythingConvertAuth.isPro()) return;
+    }
+    state.format = format;
+    document.querySelectorAll('.qr-format-row button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.format === format);
+    });
+    const downloadBtn = document.getElementById('downloadQrButton');
+    if (format === 'svg') downloadBtn.innerHTML = 'Download SVG <i class="fa-solid fa-download"></i>';
+    else if (format === 'pdf') downloadBtn.innerHTML = 'Download PDF <i class="fa-solid fa-download"></i>';
+    else downloadBtn.innerHTML = 'Download PNG <i class="fa-solid fa-download"></i>';
+  }
+
+  function applyProFeatures() {
+    const isPro = window.EverythingConvertAuth && typeof window.EverythingConvertAuth.isPro === 'function' ? window.EverythingConvertAuth.isPro() : false;
+    document.querySelectorAll('.qr-format-row button[data-format="svg"], .qr-format-row button[data-format="pdf"]').forEach(btn => {
+      if (isPro) {
+        btn.removeAttribute('disabled');
+      } else {
+        btn.setAttribute('disabled', 'true');
+        if (state.format === btn.dataset.format) selectFormat('png');
+      }
+    });
   }
 
   function testQr() {
@@ -412,7 +493,15 @@
     renderSwatches();
     renderForm();
     document.getElementById('generateQrButton').addEventListener('click', generateQr);
-    document.getElementById('downloadQrButton').addEventListener('click', downloadPng);
+    document.getElementById('downloadQrButton').addEventListener('click', handleDownload);
+    
+    document.querySelectorAll('.qr-format-row button').forEach(btn => {
+      btn.addEventListener('click', () => selectFormat(btn.dataset.format));
+    });
+
+    window.addEventListener('everything-header-ready', applyProFeatures);
+    applyProFeatures();
+
     document.getElementById('resetQrButton').addEventListener('click', resetFields);
     document.getElementById('resetDesignButton').addEventListener('click', resetDesign);
     document.getElementById('testQrButton').addEventListener('click', testQr);

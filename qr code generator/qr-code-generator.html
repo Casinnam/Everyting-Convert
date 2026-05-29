@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -280,12 +280,207 @@
                     <button type="button" data-language="fr">Francais</button>
                 </div>
             </div>
+            <a href="../json to csv/json-to-csv.html">JSON to CSV</a>
+            <a href="../index.html#tool-browser">Image</a>
+            <a href="../index.html#tool-browser">Video & Audio</a>
+            <a href="../index.html#tool-browser">Office</a>
+            <a href="../index.html#ai-preview">AI Tools</a>
+            <a href="../index.html#tool-browser">Developer</a>
+            <a href="../pricing.html">Pricing</a>
+            <label class="ec-tool-search" aria-label="Search tools">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" placeholder="Search tools...">
+            </label>
+            <a href="../auth.html" data-auth-login>Login</a>
+            <a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="#" data-auth-logout style="display:none;">Logout</a>
+            <a href="../admin.html" data-admin-only style="display:none;">Admin</a>
+            <a class="ec-try-pro" href="../pricing.html">Try Pro</a>
+        </nav>
+    </header>
+
+    <main class="qr-main">
+        <nav class="qr-breadcrumb" aria-label="Breadcrumb">
+            <a href="../index.html">Home</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="../index.html#tool-browser">Developer</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>QR Code Generator</span>
+        </nav>
+
+        <section class="qr-hero" aria-labelledby="qrTitle">
+            <div class="qr-hero-decoration left-dot"></div>
+            <div class="qr-hero-decoration right-grid"></div>
+            <div class="qr-mini-flow" aria-hidden="true">
+                <span><i class="fa-solid fa-link"></i></span>
+                <i class="fa-solid fa-arrow-right"></i>
+                <span><i class="fa-solid fa-qrcode"></i></span>
+            </div>
+            <h1 id="qrTitle"><span>QR Code</span> Generator</h1>
+            <p>Create custom QR codes for links, Wi-Fi, contacts, files, events, social profiles, and more. Fast, free, and easy to use.</p>
+            <div class="qr-benefits" aria-label="QR generator benefits">
+                <span><i class="fa-regular fa-circle-check"></i> Free to use</span>
+                <span><i class="fa-regular fa-user"></i> No signup required</span>
+                <span><i class="fa-regular fa-gem"></i> High Quality</span>
+                <span><i class="fa-solid fa-shield-halved"></i> Privacy First</span>
+            </div>
+        </section>
+
+        <section class="qr-workspace" aria-label="QR code workspace">
+            <div class="qr-builder-card">
+                <section class="qr-editor" aria-label="QR code settings">
+                    <div class="qr-type-tabs" id="quickTypeTabs" aria-label="Popular QR types"></div>
+                    <div class="qr-selected-type">
+                        <div>
+                            <span id="activeCategoryLabel">Basic QR</span>
+                            <h2 id="activeTypeTitle">URL QR</h2>
+                        </div>
+                        <button class="qr-ghost-button" id="resetQrButton" type="button">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Reset
+                        </button>
+                    </div>
+                    <form class="qr-form" id="qrForm"></form>
+                    <div class="qr-option-row">
+                        <label class="qr-checkbox">
+                            <input type="checkbox" disabled>
+                            <span>Make Dynamic <em>PRO</em></span>
+                        </label>
+                        <label class="qr-checkbox">
+                            <input type="checkbox" disabled>
+                            <span>Set Expiration Date <em>PRO</em></span>
+                        </label>
+                    </div>
+                    <button class="qr-generate-button" id="generateQrButton" type="button">
+                        Generate QR Code
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <aside class="qr-safe-card">
+                        <span><i class="fa-solid fa-shield-halved"></i></span>
+                        <div>
+                            <strong>Your data is safe with us</strong>
+                            <p>Your QR code is generated in your browser. We do not store the text you enter on this page.</p>
+                        </div>
+                    </aside>
+                </section>
+
+                <aside class="qr-preview-panel" aria-label="QR code preview">
+                    <div class="qr-preview-header">
+                        <h2>QR Code Preview</h2>
+                        <button id="testQrButton" type="button"><i class="fa-solid fa-up-right-from-square"></i> Test</button>
+                    </div>
+                    <div class="qr-canvas-shell">
+                        <canvas id="qrCanvas" width="512" height="512" aria-label="Generated QR code"></canvas>
+                        <div class="qr-logo-mark" aria-hidden="true">
+                            <img src="../favicon.svg" alt="">
+                        </div>
+                    </div>
+                    <p class="qr-status" id="qrStatus" role="status" aria-live="polite">Ready to generate.</p>
+
+                    <div class="qr-customize">
+                        <div class="qr-customize-header">
+                            <h3>Customize Design</h3>
+                            <button id="resetDesignButton" type="button">Reset</button>
+                        </div>
+                        <div class="qr-design-tabs" aria-label="Design options">
+                            <button class="active" type="button">Color</button>
+                            <button type="button" disabled>Logo <em>PRO</em></button>
+                            <button type="button" disabled>Frame <em>PRO</em></button>
+                            <button type="button" disabled>Style</button>
+                        </div>
+                        <label class="qr-control-label">Foreground Color</label>
+                        <div class="qr-color-swatches" id="foregroundSwatches"></div>
+                        <label class="qr-control-label">Background Color</label>
+                        <input class="qr-color-input" id="backgroundColorInput" type="color" value="#ffffff" aria-label="Background color">
+                        <label class="qr-control-label" for="qrSizeSelect">Size</label>
+                        <select class="qr-select" id="qrSizeSelect">
+                            <option value="512">512 x 512 px</option>
+                            <option value="768">768 x 768 px</option>
+                            <option value="1024">1024 x 1024 px</option>
+                        </select>
+                        <div class="qr-format-row" aria-label="Download format">
+                            <button class="active" type="button"><i class="fa-regular fa-file-image"></i> PNG</button>
+                            <button type="button" disabled><i class="fa-regular fa-file-code"></i> SVG <em>PRO</em></button>
+                            <button type="button" disabled><i class="fa-regular fa-file-pdf"></i> PDF <em>PRO</em></button>
+                        </div>
+                        <button class="qr-download-button" id="downloadQrButton" type="button">
+                            Download PNG
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="qr-feature-strip" aria-label="QR generator features">
+            <article><i class="fa-solid fa-infinity"></i><strong>Unlimited QR Codes</strong><span>Create as many QR codes as you need.</span></article>
+            <article><i class="fa-solid fa-award"></i><strong>High Quality</strong><span>Download crisp PNG files.</span></article>
+            <article><i class="fa-solid fa-wand-magic-sparkles"></i><strong>Customizable</strong><span>Choose colors and output size.</span></article>
+            <article><i class="fa-solid fa-chart-simple"></i><strong>Track & Update</strong><span>Dynamic tracking can be added later for Pro.</span></article>
+        </section>
+
+        <section class="qr-catalog" aria-labelledby="qrCatalogTitle">
+            <div class="section-heading">
+                <p>Choose a QR purpose, then enter the details above.</p>
+                <h2 id="qrCatalogTitle">What would you like to create?</h2>
+            </div>
+            <div class="qr-category-grid" id="qrCategoryGrid"></div>
+        </section>
+
+        <section class="qr-how" aria-labelledby="qrHowTitle">
+            <h2 id="qrHowTitle">How It Works</h2>
+            <div class="qr-steps">
+                <article><b>1</b><strong>Choose Type</strong><span>Select the type of QR code you want to create.</span></article>
+                <article><b>2</b><strong>Enter Details</strong><span>Add the required information and customize your design.</span></article>
+                <article><b>3</b><strong>Generate & Download</strong><span>Download your QR code as a PNG file.</span></article>
+            </div>
+        </section>
+
+        <section class="qr-everyone">
+            <div>
+                <h2>Built for Everyone</h2>
+                <p>Whether you are a business owner, marketer, student, creator, or just sharing something with friends, QR codes make it simple.</p>
+            </div>
+            <article><i class="fa-solid fa-mobile-screen"></i><strong>Works on Any Device</strong><span>Scan on iOS, Android, and tablets.</span></article>
+            <article><i class="fa-regular fa-clock"></i><strong>No Expiration</strong><span>Static QR codes keep working.</span></article>
+            <article><i class="fa-solid fa-lock"></i><strong>Secure & Private</strong><span>We do not store your private QR data.</span></article>
+        </section>
+    </main>
+
+    <footer class="site-footer home-footer">
+        <div class="footer-legal-row">
+            <a href="../about.html">About Us</a>
+            <a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a>
+            <a href="../privacy.html">Privacy</a>
+            <a href="../terms.html">Terms</a>
+            <a href="../security.html">Security and Compliance</a>
+            <a href="../contact.html">Contact</a>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <img class="brand-icon" src="../favicon.svg" alt="" width="24" height="24">
+                <span>EverythingConvert.com v.00</span>
+            </div>
+            <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <div class="language-menu">
+                <button class="language-toggle" type="button" aria-expanded="false">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-language-current>English</span>
+                </button>
+                <div class="language-dropdown">
+                    <button type="button" data-language="en">English</button>
+                    <button type="button" data-language="ko">Korean</button>
+                    <button type="button" data-language="de">Deutsch</button>
+                    <button type="button" data-language="es">Espanol</button>
+                    <button type="button" data-language="fr">Francais</button>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="qrcode-local.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>`n    <script src="../supabase-config.js"></script>
     <script src="../auth.js?v=auth-20260528b"></script>
     <script src="../tools-menu.js?v=nav-20260528g"></script>
     <script src="../language-menu.js?v=lang-20260528a"></script>
