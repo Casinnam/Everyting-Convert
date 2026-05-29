@@ -147,12 +147,12 @@
                     </div>
                     <form class="qr-form" id="qrForm"></form>
                     <div class="qr-option-row">
-                        <label class="qr-checkbox">
-                            <input type="checkbox" disabled>
+                        <label class="qr-checkbox" id="makeDynamicWrapper">
+                            <input type="checkbox" id="makeDynamicCheck" disabled>
                             <span>Make Dynamic <em>PRO</em></span>
                         </label>
-                        <label class="qr-checkbox">
-                            <input type="checkbox" disabled>
+                        <label class="qr-checkbox" id="setExpirationWrapper">
+                            <input type="checkbox" id="setExpirationCheck" disabled>
                             <span>Set Expiration Date <em>PRO</em></span>
                         </label>
                     </div>
@@ -188,15 +188,38 @@
                             <button id="resetDesignButton" type="button">Reset</button>
                         </div>
                         <div class="qr-design-tabs" aria-label="Design options">
-                            <button class="active" type="button">Color</button>
-                            <button type="button" disabled>Logo <em>PRO</em></button>
-                            <button type="button" disabled>Frame <em>PRO</em></button>
-                            <button type="button" disabled>Style</button>
+                            <button class="active" type="button" data-tab="color">Color</button>
+                            <button type="button" disabled data-tab="logo">Logo <em>PRO</em></button>
+                            <button type="button" disabled data-tab="frame">Frame <em>PRO</em></button>
                         </div>
-                        <label class="qr-control-label">Foreground Color</label>
-                        <div class="qr-color-swatches" id="foregroundSwatches"></div>
-                        <label class="qr-control-label">Background Color</label>
-                        <input class="qr-color-input" id="backgroundColorInput" type="color" value="#ffffff" aria-label="Background color">
+                        <div id="designPanelColor">
+                            <label class="qr-control-label">Foreground Color</label>
+                            <div class="qr-color-swatches" id="foregroundSwatches"></div>
+                            <label class="qr-control-label">Background Color</label>
+                            <input class="qr-color-input" id="backgroundColorInput" type="color" value="#ffffff" aria-label="Background color">
+                        </div>
+                        <div id="designPanelLogo" style="display: none;">
+                            <label class="qr-control-label">Upload Custom Logo</label>
+                            <div class="qr-logo-upload-box" style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                <input type="file" id="logoUploadInput" accept="image/png, image/jpeg, image/svg+xml" style="display:none;">
+                                <button type="button" id="logoUploadBtn" class="qr-ghost-button" style="flex:1; justify-content: center;"><i class="fa-solid fa-upload"></i> Choose Image</button>
+                                <button type="button" id="logoRemoveBtn" class="qr-ghost-button" style="display:none; color: #ef4444; padding: 0 12px;"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                            <p class="qr-help-text" style="font-size: 0.8rem; color: #6b7280;">Logo is auto-sized to 20% to maintain scan reliability.</p>
+                        </div>
+                        <div id="designPanelFrame" style="display: none;">
+                            <label class="qr-control-label">Frame Template</label>
+                            <div class="qr-frame-selector" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                                <button type="button" class="qr-ghost-button active" data-frame="none" style="flex:1; justify-content: center;">None</button>
+                                <button type="button" class="qr-ghost-button" data-frame="scan_me" style="flex:1; justify-content: center;">SCAN ME</button>
+                            </div>
+                            <div id="frameOptions" style="display: none;">
+                                <label class="qr-control-label">Frame Color</label>
+                                <input class="qr-color-input" id="frameColorInput" type="color" value="#2563eb" aria-label="Frame color">
+                                <label class="qr-control-label" style="margin-top: 8px;">Frame Text</label>
+                                <input type="text" id="frameTextInput" value="SCAN ME" maxlength="20" class="qr-text-input" style="width:100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; margin-bottom: 8px;">
+                            </div>
+                        </div>
                         <label class="qr-control-label" for="qrSizeSelect">Size</label>
                         <select class="qr-select" id="qrSizeSelect">
                             <option value="512">512 x 512 px</option>

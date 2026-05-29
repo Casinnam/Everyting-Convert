@@ -1,4 +1,4 @@
-(function () {
+癤�(function () {
   const TYPES = {
     url: {
       label: 'URL',
@@ -151,11 +151,7 @@
     dark: '#111827',
     light: '#ffffff',
     size: 512,
-    format: 'png',
-    logoUrl: null,
-    frame: 'none',
-    frameColor: '#2563eb',
-    frameText: 'SCAN ME'
+    format: 'png'
   };
 
   const quickTabs = document.getElementById('quickTypeTabs');
@@ -311,10 +307,6 @@
     return String(output || '').trim();
   }
 
-  function escapeHtml(str) {
-    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
-
   async function generateQr() {
     const text = payload();
     if (!text) {
@@ -336,59 +328,7 @@
           light: state.light
         }
       });
-      
-      const ctx = canvas.getContext('2d');
-      
-      if (state.logoUrl) {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        await new Promise((resolve) => {
-          img.onload = resolve;
-          img.onerror = resolve;
-          img.src = state.logoUrl;
-        });
-        if (img.width) {
-          const logoSize = Math.floor(state.size * 0.2);
-          const center = state.size / 2;
-          ctx.fillStyle = state.light;
-          ctx.fillRect(center - logoSize/2 - 4, center - logoSize/2 - 4, logoSize + 8, logoSize + 8);
-          ctx.drawImage(img, center - logoSize/2, center - logoSize/2, logoSize, logoSize);
-        }
-      }
-
-      if (state.frame === 'scan_me') {
-        const qrImg = new Image();
-        qrImg.src = canvas.toDataURL('image/png');
-        await new Promise(r => qrImg.onload = r);
-        
-        const padding = Math.floor(state.size * 0.05);
-        const bannerHeight = Math.floor(state.size * 0.15);
-        const newWidth = state.size + padding * 2;
-        const newHeight = state.size + padding * 2 + bannerHeight;
-        
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-        
-        ctx.fillStyle = state.frameColor;
-        ctx.fillRect(0, 0, newWidth, newHeight);
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold ' + Math.floor(bannerHeight * 0.5) + 'px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(state.frameText || 'SCAN ME', newWidth / 2, padding + state.size + bannerHeight / 2);
-        
-        ctx.fillStyle = state.light;
-        ctx.fillRect(padding, padding, state.size, state.size);
-        ctx.drawImage(qrImg, padding, padding, state.size, state.size);
-      }
-
-      const htmlLogo = document.querySelector('.qr-logo-mark');
-      if (htmlLogo) {
-        htmlLogo.style.display = (state.logoUrl || state.frame !== 'none') ? 'none' : 'grid';
-      }
-
-      status.textContent = TYPES[state.type].label + ' QR code is ready.';
+      status.textContent = `${TYPES[state.type].label} QR code is ready.`;
       return true;
     } catch (error) {
       status.textContent = error.message || 'Could not generate this QR code.';
@@ -462,7 +402,7 @@
     const text = payload();
     if (!text) return;
     try {
-      let svgString = await new Promise((resolve, reject) => {
+      const svgString = await new Promise((resolve, reject) => {
         window.QRCode.toString(text, {
           type: 'svg',
           width: state.size,
@@ -474,32 +414,6 @@
           else resolve(string);
         });
       });
-
-      if (state.logoUrl) {
-        const logoSize = Math.floor(state.size * 0.2);
-        const center = state.size / 2;
-        const imgTag = '<image href="' + state.logoUrl + '" x="' + (center - logoSize/2) + '" y="' + (center - logoSize/2) + '" width="' + logoSize + '" height="' + logoSize + '" />';
-        svgString = svgString.replace('</svg>', '<rect x="' + (center - logoSize/2 - 4) + '" y="' + (center - logoSize/2 - 4) + '" width="' + (logoSize + 8) + '" height="' + (logoSize + 8) + '" fill="' + state.light + '" />' + imgTag + '</svg>');
-      }
-
-      if (state.frame === 'scan_me') {
-        const padding = Math.floor(state.size * 0.05);
-        const bannerHeight = Math.floor(state.size * 0.15);
-        const newWidth = state.size + padding * 2;
-        const newHeight = state.size + padding * 2 + bannerHeight;
-        
-        svgString = svgString.replace(/viewBox="[^"]+"/, 'viewBox="0 0 ' + newWidth + ' ' + newHeight + '"');
-        svgString = svgString.replace(/width="[^"]+"/, 'width="' + newWidth + '"');
-        svgString = svgString.replace(/height="[^"]+"/, 'height="' + newHeight + '"');
-        
-        const frameBg = '<rect x="0" y="0" width="' + newWidth + '" height="' + newHeight + '" fill="' + state.frameColor + '" />';
-        const qrBg = '<rect x="' + padding + '" y="' + padding + '" width="' + state.size + '" height="' + state.size + '" fill="' + state.light + '" />';
-        const bannerText = '<text x="' + (newWidth/2) + '" y="' + (padding + state.size + bannerHeight/2 + bannerHeight*0.15) + '" font-family="sans-serif" font-weight="bold" font-size="' + Math.floor(bannerHeight*0.5) + '" fill="#ffffff" text-anchor="middle">' + escapeHtml(state.frameText || 'SCAN ME') + '</text>';
-        
-        svgString = svgString.replace(/<rect/i, frameBg + qrBg + '<g transform="translate(' + padding + ', ' + padding + ')"><rect');
-        svgString = svgString.replace('</svg>', '</g>' + bannerText + '</svg>');
-      }
-
       const blob = new Blob([svgString], { type: 'image/svg+xml' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -515,15 +429,13 @@
     if (!ok) return;
     try {
       const { jsPDF } = window.jspdf;
-      const pdfWidth = canvas.width;
-      const pdfHeight = canvas.height;
       const pdf = new jsPDF({
-        orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
+        orientation: 'portrait',
         unit: 'px',
-        format: [pdfWidth, pdfHeight]
+        format: [state.size, state.size]
       });
       const imgData = canvas.toDataURL('image/png');
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, state.size, state.size);
       pdf.save(getFilename('pdf'));
     } catch (e) {
       status.textContent = 'Failed to generate PDF. Make sure jsPDF is loaded.';
@@ -558,18 +470,6 @@
     else downloadBtn.innerHTML = 'Download PNG <i class="fa-solid fa-download"></i>';
   }
 
-  function switchDesignTab(tabId) {
-    document.querySelectorAll('.qr-design-tabs button').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === tabId);
-    });
-    const pColor = document.getElementById('designPanelColor');
-    if (pColor) pColor.style.display = tabId === 'color' ? 'block' : 'none';
-    const pLogo = document.getElementById('designPanelLogo');
-    if (pLogo) pLogo.style.display = tabId === 'logo' ? 'block' : 'none';
-    const pFrame = document.getElementById('designPanelFrame');
-    if (pFrame) pFrame.style.display = tabId === 'frame' ? 'block' : 'none';
-  }
-
   function applyProFeatures() {
     let isPro = false;
     if (window.EverythingConvertAuth) {
@@ -581,20 +481,12 @@
         if (cache && cache.plan === 'pro') isPro = true;
       }
     }
-    
     document.querySelectorAll('.qr-format-row button[data-format="svg"], .qr-format-row button[data-format="pdf"]').forEach(btn => {
-      if (isPro) btn.removeAttribute('disabled');
-      else {
+      if (isPro) {
+        btn.removeAttribute('disabled');
+      } else {
         btn.setAttribute('disabled', 'true');
         if (state.format === btn.dataset.format) selectFormat('png');
-      }
-    });
-
-    document.querySelectorAll('.qr-design-tabs button[data-tab="logo"], .qr-design-tabs button[data-tab="frame"]').forEach(btn => {
-      if (isPro) btn.removeAttribute('disabled');
-      else {
-        btn.setAttribute('disabled', 'true');
-        if (btn.classList.contains('active')) switchDesignTab('color');
       }
     });
   }
@@ -624,95 +516,20 @@
       btn.addEventListener('click', () => selectFormat(btn.dataset.format));
     });
 
-    document.querySelectorAll('.qr-design-tabs button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!btn.hasAttribute('disabled')) switchDesignTab(btn.dataset.tab);
-      });
-    });
-
-    const logoInput = document.getElementById('logoUploadInput');
-    if (logoInput) {
-      document.getElementById('logoUploadBtn').addEventListener('click', () => logoInput.click());
-      logoInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          state.logoUrl = ev.target.result;
-          document.getElementById('logoRemoveBtn').style.display = 'inline-block';
-          generateQr();
-        };
-        reader.readAsDataURL(file);
-      });
-      document.getElementById('logoRemoveBtn').addEventListener('click', () => {
-        state.logoUrl = null;
-        logoInput.value = '';
-        document.getElementById('logoRemoveBtn').style.display = 'none';
-        generateQr();
-      });
-    }
-
-    document.querySelectorAll('.qr-frame-selector button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.frame = btn.dataset.frame;
-        document.querySelectorAll('.qr-frame-selector button').forEach(b => b.classList.toggle('active', b.dataset.frame === state.frame));
-        const frameOpts = document.getElementById('frameOptions');
-        if (frameOpts) frameOpts.style.display = state.frame === 'none' ? 'none' : 'block';
-        generateQr();
-      });
-    });
-
-    const frameColorInput = document.getElementById('frameColorInput');
-    if (frameColorInput) {
-      frameColorInput.addEventListener('input', (e) => {
-        state.frameColor = e.target.value;
-        generateQr();
-      });
-    }
-    const frameTextInput = document.getElementById('frameTextInput');
-    if (frameTextInput) {
-      frameTextInput.addEventListener('input', (e) => {
-        state.frameText = e.target.value;
-        generateQr();
-      });
-    }
-
-    const dynCheck = document.getElementById('makeDynamicCheck');
-    if (dynCheck) {
-      dynCheck.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('동적 QR 코드 기능은 백엔드 시스템 연동 후 제공될 예정입니다. (Coming Soon!)');
-      });
-    }
-    const expCheck = document.getElementById('setExpirationCheck');
-    if (expCheck) {
-      expCheck.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('QR 코드 만료일 설정 기능은 백엔드 시스템 연동 후 제공될 예정입니다. (Coming Soon!)');
-      });
-    }
-
     window.addEventListener('everything-auth-change', applyProFeatures);
     applyProFeatures();
 
     document.getElementById('resetQrButton').addEventListener('click', resetFields);
     document.getElementById('resetDesignButton').addEventListener('click', resetDesign);
     document.getElementById('testQrButton').addEventListener('click', testQr);
-    
-    const backgroundInput = document.getElementById('backgroundColorInput');
-    const sizeSelect = document.getElementById('qrSizeSelect');
-    if (backgroundInput) {
-      backgroundInput.addEventListener('input', () => {
-        state.light = backgroundInput.value;
-        generateQr();
-      });
-    }
-    if (sizeSelect) {
-      sizeSelect.addEventListener('change', () => {
-        state.size = Number(sizeSelect.value) || 512;
-        generateQr();
-      });
-    }
+    backgroundInput.addEventListener('input', () => {
+      state.light = backgroundInput.value;
+      generateQr();
+    });
+    sizeSelect.addEventListener('change', () => {
+      state.size = Number(sizeSelect.value) || 512;
+      generateQr();
+    });
     generateQr();
   }
 
