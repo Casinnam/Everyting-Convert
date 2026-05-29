@@ -40,13 +40,12 @@
         gap: 0.5rem !important;
       }
       .ec-unified-header .top-nav {
-        flex: 0 0 auto !important;
         display: flex !important;
         align-items: center !important;
+        gap: 1.15rem !important;
+        margin: 0 auto !important;
+        flex-wrap: wrap !important;
         justify-content: center !important;
-        gap: clamp(.7rem, 1.2vw, 1.15rem) !important;
-        flex-wrap: nowrap !important;
-        min-width: 0 !important;
       }
       .ec-unified-header .top-actions {
         flex: 1 1 0% !important;
@@ -108,6 +107,14 @@
         width: min(980px, calc(100vw - 2rem)) !important;
         grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
       }
+      .ec-unified-header .tools-menu.open .tools-dropdown.mega-tools {
+        display: grid !important;
+      }
+        right: auto !important;
+        top: 100% !important;
+        width: min(980px, calc(100vw - 2rem)) !important;
+        grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
+      }
       .ec-unified-header .tools-dropdown a {
         color: #334155 !important;
         border-radius: 8px !important;
@@ -161,11 +168,12 @@
           gap: .85rem !important;
         }
         .ec-unified-header .top-nav {
-          gap: clamp(.48rem, .9vw, .82rem) !important;
-        }
-        .ec-unified-header .top-actions {
-          flex: 0 0 auto !important;
-        }
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.15rem !important;
+        margin: 0 auto !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
       }
       @media (max-width: 920px) {
         .ec-unified-header {
@@ -176,15 +184,12 @@
           flex: 1 1 auto !important;
         }
         .ec-unified-header .top-nav {
-          order: 3 !important;
-          width: 100% !important;
-          justify-content: flex-start !important;
-          overflow-x: auto !important;
-          padding-bottom: .15rem !important;
-        }
-        .ec-unified-header .top-actions {
-          flex: 0 0 auto !important;
-        }
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.15rem !important;
+        margin: 0 auto !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
       }
       @media (max-width: 560px) {
         .ec-unified-header .top-nav a[data-tab-jump="office"],

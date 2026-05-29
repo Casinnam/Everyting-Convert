@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -15,7 +15,7 @@
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image to PDF ë³€í™˜ê¸°</title>
+<title>Image to PDF º¯È¯±â</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -126,7 +126,7 @@
   }
 
   .tools-toggle::after {
-    content: 'â–¾';
+    content: '?';
     font-size: 0.75rem;
   }
 
@@ -528,7 +528,7 @@
   }
 
   .language-toggle::after {
-    content: 'âŒ„';
+    content: '?';
     color: var(--muted);
     font-size: 0.75rem;
   }
@@ -654,47 +654,47 @@
 
 <main>
   <div class="hero">
-    <h1>ì´ë¯¸ì§€ë¥¼ PDFë¡œ<span class="line2">ë³€í™˜í•˜ì„¸ìš”</span></h1>
-    <p>JPG, PNG, WebP ë“± ì—¬ëŸ¬ ì´ë¯¸ì§€ë¥¼ ì›í•˜ëŠ” ìˆœì„œëŒ€ë¡œ í•˜ë‚˜ì˜ PDF ë¬¸ì„œë¡œ ë³‘í•©í•©ë‹ˆë‹¤</p>
+    <h1>ÀÌ¹ÌÁö¸¦ PDF·Î<span class="line2">º¯È¯ÇÏ¼¼¿ä</span></h1>
+    <p>JPG, PNG, WebP µî ¿©·¯ ÀÌ¹ÌÁö¸¦ ¿øÇÏ´Â ¼ø¼­´ë·Î ÇÏ³ªÀÇ PDF ¹®¼­·Î º´ÇÕÇÕ´Ï´Ù</p>
   </div>
 
   <div class="drop-zone" id="dropZone">
     <div class="drop-icon"></div>
-    <div class="drop-title">ì´ë¯¸ì§€ íŒŒì¼ ì„ íƒ</div>
-    <div class="drop-subtitle">ì—¬ëŸ¬ ì¥ì„ í•œ ë²ˆì— ì„ íƒí•˜ê±°ë‚˜ ì´ê³³ìœ¼ë¡œ ë“œë˜ê·¸í•˜ì„¸ìš”</div>
+    <div class="drop-title">ÀÌ¹ÌÁö ÆÄÀÏ ¼±ÅÃ</div>
+    <div class="drop-subtitle">¿©·¯ ÀåÀ» ÇÑ ¹ø¿¡ ¼±ÅÃÇÏ°Å³ª ÀÌ°÷À¸·Î µå·¡±×ÇÏ¼¼¿ä</div>
     <input id="fileInput" type="file" accept="image/*" multiple>
   </div>
 
   <div class="options" id="options">
     <div class="option-field">
-      <label for="pageSize">í˜ì´ì§€ í¬ê¸°</label>
+      <label for="pageSize">ÆäÀÌÁö Å©±â</label>
       <select id="pageSize">
         <option value="a4">A4</option>
         <option value="letter">Letter</option>
-        <option value="image">ì´ë¯¸ì§€ í¬ê¸° ê·¸ëŒ€ë¡œ</option>
+        <option value="image">ÀÌ¹ÌÁö Å©±â ±×´ë·Î</option>
       </select>
     </div>
     <div class="option-field">
-      <label for="fitMode">ë§ì¶¤ ë°©ì‹</label>
+      <label for="fitMode">¸ÂÃã ¹æ½Ä</label>
       <select id="fitMode">
-        <option value="contain">ì „ì²´ ë³´ì´ê¸°</option>
-        <option value="cover">í˜ì´ì§€ ì±„ìš°ê¸°</option>
-        <option value="stretch">í˜ì´ì§€ì— ë§ê²Œ ëŠ˜ë¦¬ê¸°</option>
+        <option value="contain">ÀüÃ¼ º¸ÀÌ±â</option>
+        <option value="cover">ÆäÀÌÁö Ã¤¿ì±â</option>
+        <option value="stretch">ÆäÀÌÁö¿¡ ¸Â°Ô ´Ã¸®±â</option>
       </select>
     </div>
     <div class="option-field">
-      <label for="marginInput">ì—¬ë°± mm</label>
+      <label for="marginInput">¿©¹é mm</label>
       <input id="marginInput" type="number" min="0" max="40" value="8">
     </div>
   </div>
 
   <div class="file-list" id="fileList"></div>
 
-  <button class="convert-btn" id="convertBtn" type="button">PDF ì €ì¥</button>
+  <button class="convert-btn" id="convertBtn" type="button">PDF ÀúÀå</button>
   <div class="message" id="message"></div>
 
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" id="resetBtn" type="button">ì²˜ìŒë¶€í„° ë‹¤ì‹œ</button>
+    <button class="reset-btn" id="resetBtn" type="button">Ã³À½ºÎÅÍ ´Ù½Ã</button>
   </div>
 </main>
 
@@ -762,7 +762,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>Â© EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>¨Ï EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -770,10 +770,10 @@
       </button>
       <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">í•œêµ­ì–´</button>
+                    <button type="button" data-language="ko">ÇÑ±¹¾î</button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">EspaÃ±ol</button>
-                    <button type="button" data-language="fr">FranÃ§ais</button>
+                    <button type="button" data-language="es">Espanol</button>
+                    <button type="button" data-language="fr">Francais</button>
                 </div>
     </div>
   </div>
@@ -783,7 +783,7 @@
 <script src="../supabase-config.js"></script>
 <script src="../auth.js?v=auth-20260528b"></script>
 <script src="../usage-limit.js"></script>
-<script src="../tools-menu.js?v=nav-20260528g"></script>
+<script src="../tools-menu.js?v=nav-20260529a"></script>
 <script src="../language-menu.js?v=lang-20260528a"></script>
 <script src="../tool-language.js"></script>
 <script>
@@ -824,10 +824,10 @@
   function readImageFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onerror = () => reject(new Error(`${file.name} íŒŒì¼ì„ ì½ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.`));
+      reader.onerror = () => reject(new Error(`${file.name} ÆÄÀÏÀ» ÀĞÀ» ¼ö ¾ø½À´Ï´Ù.`));
       reader.onload = () => {
         const img = new Image();
-        img.onerror = () => reject(new Error(`${file.name} ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì˜¬ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.`));
+        img.onerror = () => reject(new Error(`${file.name} ÀÌ¹ÌÁö¸¦ ºÒ·¯¿Ã ¼ö ¾ø½À´Ï´Ù.`));
         img.onload = () => resolve({
           id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
           file,
@@ -848,16 +848,16 @@
   async function addFiles(fileListInput) {
     const files = Array.from(fileListInput).filter(file => file.type.startsWith('image/'));
     if (!files.length) {
-      setMessage('ì´ë¯¸ì§€ íŒŒì¼ì„ ì„ íƒí•´ ì£¼ì„¸ìš”.', 'error');
+      setMessage('ÀÌ¹ÌÁö ÆÄÀÏÀ» ¼±ÅÃÇØ ÁÖ¼¼¿ä.', 'error');
       return;
     }
 
-    setMessage('ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...');
+    setMessage('ÀÌ¹ÌÁö¸¦ ºÒ·¯¿À´Â Áß...');
     try {
       const loaded = await Promise.all(files.map(readImageFile));
       images = images.concat(loaded);
       renderImages();
-      setMessage(`${loaded.length}ê°œ ì´ë¯¸ì§€ê°€ ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤.`, 'success');
+      setMessage(`${loaded.length}°³ ÀÌ¹ÌÁö°¡ Ãß°¡µÇ¾ú½À´Ï´Ù.`, 'success');
     } catch (error) {
       setMessage(error.message, 'error');
     } finally {
@@ -875,12 +875,12 @@
         <img class="thumb" src="${item.previewUrl}" alt="">
         <div class="image-meta">
           <div class="image-name">${escapeHtml(item.name)}</div>
-          <div class="image-detail">${item.width} x ${item.height}px Â· ${formatBytes(item.size)} Â· ${index + 1}í˜ì´ì§€</div>
+          <div class="image-detail">${item.width} x ${item.height}px ¡¤ ${formatBytes(item.size)} ¡¤ ${index + 1}ÆäÀÌÁö</div>
         </div>
         <div class="image-actions">
-          <button class="icon-btn" type="button" data-move="up" title="ìœ„ë¡œ ì´ë™" ${index === 0 ? 'disabled' : ''}>â†‘</button>
-          <button class="icon-btn" type="button" data-move="down" title="ì•„ë˜ë¡œ ì´ë™" ${index === images.length - 1 ? 'disabled' : ''}>â†“</button>
-          <button class="icon-btn" type="button" data-remove title="ì‚­ì œ">Ã—</button>
+          <button class="icon-btn" type="button" data-move="up" title="À§·Î ÀÌµ¿" ${index === 0 ? 'disabled' : ''}>¡è</button>
+          <button class="icon-btn" type="button" data-move="down" title="¾Æ·¡·Î ÀÌµ¿" ${index === images.length - 1 ? 'disabled' : ''}>¡é</button>
+          <button class="icon-btn" type="button" data-remove title="»èÁ¦">¡¿</button>
         </div>
       `;
       fileList.appendChild(row);
@@ -966,7 +966,7 @@
     const arrayBuffer = pdf.output('arraybuffer');
     const header = new TextDecoder('ascii').decode(new Uint8Array(arrayBuffer, 0, 4));
     if (header !== '%PDF') {
-      throw new Error('PDF íŒŒì¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ ì£¼ì„¸ìš”.');
+      throw new Error('PDF ÆÄÀÏ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù. ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä.');
     }
     return new Blob([arrayBuffer], { type: 'application/pdf' });
   }
@@ -989,7 +989,7 @@
         handle = await window.showSaveFilePicker({
           suggestedName: fileName,
           types: [{
-            description: 'PDF ë¬¸ì„œ',
+            description: 'PDF ¹®¼­',
             accept: { 'application/pdf': ['.pdf'] },
           }],
         });
@@ -1013,17 +1013,17 @@
 
   async function createPdf() {
     if (!images.length) {
-      setMessage('ë¨¼ì € ì´ë¯¸ì§€ë¥¼ ì¶”ê°€í•´ ì£¼ì„¸ìš”.', 'error');
+      setMessage('¸ÕÀú ÀÌ¹ÌÁö¸¦ Ãß°¡ÇØ ÁÖ¼¼¿ä.', 'error');
       return;
     }
 
     if (!jsPDF) {
-      setMessage('PDF ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ë¶ˆëŸ¬ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤. ì¸í„°ë„· ì—°ê²°ì„ í™•ì¸í•œ ë’¤ ìƒˆë¡œê³ ì¹¨í•´ ì£¼ì„¸ìš”.', 'error');
+      setMessage('PDF ¶óÀÌºê·¯¸®¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù. ÀÎÅÍ³İ ¿¬°áÀ» È®ÀÎÇÑ µÚ »õ·Î°íÄ§ÇØ ÁÖ¼¼¿ä.', 'error');
       return;
     }
 
     convertBtn.disabled = true;
-    setMessage('PDFë¥¼ ë§Œë“œëŠ” ì¤‘...');
+    setMessage('PDF¸¦ ¸¸µå´Â Áß...');
 
     try {
       const timestamp = new Date().toISOString().slice(0, 10);
@@ -1044,25 +1044,25 @@
 
         const placement = getPlacement(item, pageWidth, pageHeight, margin);
         pdf.addImage(imageToJpegData(item), 'JPEG', placement.x, placement.y, placement.width, placement.height);
-        setMessage(`${index + 1}/${images.length} í˜ì´ì§€ ì²˜ë¦¬ ì¤‘...`);
+        setMessage(`${index + 1}/${images.length} ÆäÀÌÁö Ã³¸® Áß...`);
       }
 
       const pdfBlob = createPdfBlob(pdf);
-      setMessage('PDF íŒŒì¼ì„ ì €ì¥í•˜ëŠ” ì¤‘...');
+      setMessage('PDF ÆÄÀÏÀ» ÀúÀåÇÏ´Â Áß...');
       const result = await savePdfBlob(pdfBlob, fileName);
       setMessage(
         result.pickedLocation
-          ? `${fileName} íŒŒì¼ì´ ì„ íƒí•œ ìœ„ì¹˜ì— ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤.`
+          ? `${fileName} ÆÄÀÏÀÌ ¼±ÅÃÇÑ À§Ä¡¿¡ ÀúÀåµÇ¾ú½À´Ï´Ù.`
           : result.securityFallback
-            ? `${fileName} íŒŒì¼ ë‹¤ìš´ë¡œë“œë¥¼ ì‹œì‘í–ˆìŠµë‹ˆë‹¤. ë¸Œë¼ìš°ì €ê°€ ì €ì¥ ìœ„ì¹˜ ì„ íƒì„ ì œí•œí•´ ë‹¤ìš´ë¡œë“œ ë°©ì‹ìœ¼ë¡œ ì €ì¥í–ˆìŠµë‹ˆë‹¤.`
-          : `${fileName} íŒŒì¼ ë‹¤ìš´ë¡œë“œë¥¼ ì‹œì‘í–ˆìŠµë‹ˆë‹¤. ë¸Œë¼ìš°ì €ì˜ ë‹¤ìš´ë¡œë“œ í´ë”ë¥¼ í™•ì¸í•´ ì£¼ì„¸ìš”.`,
+            ? `${fileName} ÆÄÀÏ ´Ù¿î·Îµå¸¦ ½ÃÀÛÇß½À´Ï´Ù. ºê¶ó¿ìÀú°¡ ÀúÀå À§Ä¡ ¼±ÅÃÀ» Á¦ÇÑÇØ ´Ù¿î·Îµå ¹æ½ÄÀ¸·Î ÀúÀåÇß½À´Ï´Ù.`
+          : `${fileName} ÆÄÀÏ ´Ù¿î·Îµå¸¦ ½ÃÀÛÇß½À´Ï´Ù. ºê¶ó¿ìÀúÀÇ ´Ù¿î·Îµå Æú´õ¸¦ È®ÀÎÇØ ÁÖ¼¼¿ä.`,
         'success',
       );
     } catch (error) {
       if (error && error.name === 'AbortError') {
-        setMessage('ì €ì¥ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì €ì¥í•˜ë ¤ë©´ ë²„íŠ¼ì„ ëˆŒëŸ¬ ì£¼ì„¸ìš”.');
+        setMessage('ÀúÀåÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù. ´Ù½Ã ÀúÀåÇÏ·Á¸é ¹öÆ°À» ´­·¯ ÁÖ¼¼¿ä.');
       } else {
-        setMessage(error.message || 'PDF ë³€í™˜ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.', 'error');
+        setMessage(error.message || 'PDF º¯È¯ Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù.', 'error');
       }
     } finally {
       convertBtn.disabled = false;
@@ -1097,7 +1097,7 @@
     if (event.target.closest('[data-remove]')) {
       images.splice(index, 1);
       renderImages();
-      setMessage(images.length ? `${images.length}ê°œ ì´ë¯¸ì§€ê°€ ì¤€ë¹„ë˜ì—ˆìŠµë‹ˆë‹¤.` : '');
+      setMessage(images.length ? `${images.length}°³ ÀÌ¹ÌÁö°¡ ÁØºñµÇ¾ú½À´Ï´Ù.` : '');
       return;
     }
 
