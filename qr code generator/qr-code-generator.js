@@ -449,8 +449,16 @@
   }
 
   function selectFormat(format) {
-    if ((format === 'svg' || format === 'pdf') && window.EverythingConvertAuth) {
-      if (!window.EverythingConvertAuth.isPro()) return;
+    if (format === 'svg' || format === 'pdf') {
+      let isPro = false;
+      if (window.EverythingConvertAuth) {
+        if (typeof window.EverythingConvertAuth.isPro === 'function') isPro = window.EverythingConvertAuth.isPro();
+        if (!isPro && typeof window.EverythingConvertAuth.cachedAuthSnapshot === 'function') {
+          const cache = window.EverythingConvertAuth.cachedAuthSnapshot();
+          if (cache && cache.plan === 'pro') isPro = true;
+        }
+      }
+      if (!isPro) return;
     }
     state.format = format;
     document.querySelectorAll('.qr-format-row button').forEach(btn => {
@@ -463,7 +471,16 @@
   }
 
   function applyProFeatures() {
-    const isPro = window.EverythingConvertAuth && typeof window.EverythingConvertAuth.isPro === 'function' ? window.EverythingConvertAuth.isPro() : false;
+    let isPro = false;
+    if (window.EverythingConvertAuth) {
+      if (typeof window.EverythingConvertAuth.isPro === 'function') {
+        isPro = window.EverythingConvertAuth.isPro();
+      }
+      if (!isPro && typeof window.EverythingConvertAuth.cachedAuthSnapshot === 'function') {
+        const cache = window.EverythingConvertAuth.cachedAuthSnapshot();
+        if (cache && cache.plan === 'pro') isPro = true;
+      }
+    }
     document.querySelectorAll('.qr-format-row button[data-format="svg"], .qr-format-row button[data-format="pdf"]').forEach(btn => {
       if (isPro) {
         btn.removeAttribute('disabled');
@@ -499,7 +516,7 @@
       btn.addEventListener('click', () => selectFormat(btn.dataset.format));
     });
 
-    window.addEventListener('everything-header-ready', applyProFeatures);
+    window.addEventListener('everything-auth-change', applyProFeatures);
     applyProFeatures();
 
     document.getElementById('resetQrButton').addEventListener('click', resetFields);
