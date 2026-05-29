@@ -525,10 +525,20 @@
     const logoutButton = event.target.closest('[data-auth-logout]');
     if (!logoutButton) return;
     event.preventDefault();
+    
+    // 즉각적인 시각적 피드백 제공
+    const originalText = logoutButton.innerHTML;
+    logoutButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 로그아웃 중...';
+    logoutButton.style.pointerEvents = 'none';
+    logoutButton.style.opacity = '0.7';
+
     try {
       await signOut();
       window.location.href = getAuthPath();
     } catch (error) {
+      logoutButton.innerHTML = originalText;
+      logoutButton.style.pointerEvents = '';
+      logoutButton.style.opacity = '1';
       alert('로그아웃 실패: ' + error.message);
     }
   });
