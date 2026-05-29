@@ -242,6 +242,12 @@
 
   function renderAuthWidgets() {
     const checkingAuth = !state.ready && !state.user && !state.missingConfig;
+    
+    // 네트워크 확인 중(Checking)일 때 캐시 정보가 있으면 덮어쓰지 않고 캐시 화면 유지
+    if (checkingAuth && renderCachedAuthWidgets()) {
+      return;
+    }
+
     const authLabel = state.missingConfig
       ? translateAuth('authSupabaseRequired')
       : state.user
