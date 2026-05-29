@@ -50,6 +50,7 @@
       : {
           authGuest: 'Guest',
           authLoginRequired: 'Login required',
+          authChecking: 'Checking...',
           authSupabaseRequired: 'Supabase setup required',
           authFree: 'Free',
           authPro: 'Pro',
@@ -240,11 +241,14 @@
   }
 
   function renderAuthWidgets() {
+    const checkingAuth = !state.ready && !state.user && !state.missingConfig;
     const authLabel = state.missingConfig
       ? translateAuth('authSupabaseRequired')
       : state.user
         ? `${shortName(displayName())} · ${formatPlan()}`
-        : translateAuth('authLoginRequired');
+        : checkingAuth
+          ? translateAuth('authChecking')
+          : translateAuth('authLoginRequired');
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
       delete element.dataset.i18nKey;
@@ -252,11 +256,11 @@
     });
 
     document.querySelectorAll('[data-auth-account]').forEach((element) => {
-      element.style.display = state.user ? '' : 'none';
+      element.style.display = state.user || checkingAuth ? '' : 'none';
     });
 
     document.querySelectorAll('[data-auth-login]').forEach((element) => {
-      element.style.display = state.user ? 'none' : '';
+      element.style.display = state.user || checkingAuth ? 'none' : '';
     });
 
     document.querySelectorAll('[data-auth-logout]').forEach((element) => {

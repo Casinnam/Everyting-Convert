@@ -308,8 +308,8 @@
           <i class="fa-solid fa-magnifying-glass"></i>
           <input type="search" placeholder="Search tools...">
         </label>
-        <a href="${prefix}auth.html" data-auth-login>Login</a>
-        <a href="${prefix}auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+        <a href="${prefix}auth.html" data-auth-login style="display:none;">Login</a>
+        <a href="${prefix}auth.html" data-auth-state data-auth-account>Checking...</a>
         <a href="#" data-auth-logout style="display:none;">Logout</a>
         <a href="${prefix}admin.html" data-admin-only style="display:none;">Admin</a>
         <a class="ec-try-pro" href="${prefix}pricing.html">Try Pro</a>
