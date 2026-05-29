@@ -153,7 +153,7 @@
         background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
       }
-      @media (max-width: 1450px) {
+      @media (max-width: 1600px) {
         .ec-unified-header .ec-tool-search {
           display: none !important;
         }
