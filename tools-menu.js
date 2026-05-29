@@ -84,6 +84,10 @@
         border-top: .32rem solid currentColor;
       }
       .ec-unified-header .tools-dropdown {
+        position: absolute !important;
+        top: calc(100% + 0.6rem) !important;
+        left: 0 !important;
+        right: auto !important;
         z-index: 9100 !important;
         max-height: min(72vh, 620px) !important;
         overflow: auto !important;
@@ -91,6 +95,10 @@
         border-radius: 12px !important;
         background: rgba(255, 255, 255, .98) !important;
         box-shadow: 0 24px 70px rgba(15, 23, 42, .16) !important;
+        display: none !important;
+      }
+      .ec-unified-header .tools-menu.open .tools-dropdown {
+        display: flex !important;
       }
       .ec-unified-header .tools-dropdown.mega-tools {
         position: absolute !important;
