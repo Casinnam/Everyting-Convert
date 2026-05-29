@@ -76,10 +76,12 @@
         cursor: pointer !important;
       }
       .ec-unified-header .tools-toggle::after {
-        content: '\\f078' !important;
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        font-size: .62rem;
+        content: '' !important;
+        width: 0;
+        height: 0;
+        border-left: .23rem solid transparent;
+        border-right: .23rem solid transparent;
+        border-top: .32rem solid currentColor;
       }
       .ec-unified-header .tools-dropdown {
         z-index: 9100 !important;
@@ -142,6 +144,51 @@
         color: #fff !important;
         background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
+      }
+      @media (max-width: 1450px) {
+        .ec-unified-header .ec-tool-search {
+          display: none !important;
+        }
+        .ec-unified-header {
+          gap: .85rem !important;
+        }
+        .ec-unified-header .top-nav {
+          gap: clamp(.48rem, .9vw, .82rem) !important;
+        }
+        .ec-unified-header .top-actions {
+          flex: 0 0 auto !important;
+        }
+      }
+      @media (max-width: 920px) {
+        .ec-unified-header {
+          align-items: flex-start !important;
+          flex-wrap: wrap !important;
+        }
+        .ec-unified-header .logo {
+          flex: 1 1 auto !important;
+        }
+        .ec-unified-header .top-nav {
+          order: 3 !important;
+          width: 100% !important;
+          justify-content: flex-start !important;
+          overflow-x: auto !important;
+          padding-bottom: .15rem !important;
+        }
+        .ec-unified-header .top-actions {
+          flex: 0 0 auto !important;
+        }
+      }
+      @media (max-width: 560px) {
+        .ec-unified-header .top-nav a[data-tab-jump="office"],
+        .ec-unified-header .top-nav a[data-tab-jump="ai"],
+        .ec-unified-header .top-nav a[data-tab-jump="video"],
+        .ec-unified-header .developer-tools-menu {
+          display: none !important;
+        }
+        .ec-unified-header .ec-try-pro {
+          min-height: 2.25rem !important;
+          padding: 0 .75rem !important;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -247,7 +294,7 @@
         <a href="${prefix}index.html#tool-browser" data-tab-jump="video">Video & Audio</a>
         <a href="${prefix}index.html#tool-browser" data-tab-jump="office">Office</a>
         <a href="${prefix}index.html#ai-preview" data-tab-jump="ai">AI Tools</a>
-        <div class="tools-menu">
+        <div class="tools-menu developer-tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Developer</button>
           <div class="tools-dropdown">
             <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>

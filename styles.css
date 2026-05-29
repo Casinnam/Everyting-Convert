@@ -2391,8 +2391,183 @@ nav {
     border-color: var(--sub-line) !important;
 }
 
+.legal-page,
+.contact-page,
+.admin-page,
+.about-page {
+    color: var(--sub-text);
+    background:
+        radial-gradient(circle at 8% 12%, rgba(219, 234, 254, 0.86), transparent 30rem),
+        radial-gradient(circle at 92% 8%, rgba(237, 233, 254, 0.82), transparent 28rem),
+        linear-gradient(180deg, #f8fbff 0%, #ffffff 46%, #f8fbff 100%);
+    font-family: Inter, "Noto Sans KR", system-ui, sans-serif;
+}
+
+.legal-page .pricing-main,
+.contact-page .pricing-main,
+.admin-page .main-container,
+.about-page .main-container {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: clamp(3rem, 7vw, 5.5rem) 0;
+}
+
+.legal-page .pricing-hero,
+.contact-page .pricing-hero,
+.about-page .hero,
+.admin-page .hero {
+    max-width: 820px;
+    margin: 0 auto 2rem;
+    text-align: center;
+}
+
+.legal-page .pricing-kicker,
+.contact-page .pricing-kicker,
+.about-page .hero-kicker,
+.admin-page .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin: 0 0 .9rem;
+    padding: .45rem .8rem;
+    border: 1px solid var(--sub-line);
+    border-radius: 999px;
+    color: var(--sub-primary);
+    background: rgba(255, 255, 255, .82);
+    font-size: .82rem;
+    font-weight: 900;
+}
+
+.legal-page .pricing-hero h1,
+.contact-page .pricing-hero h1,
+.about-page .hero-title,
+.admin-page .hero-title {
+    margin: 0;
+    color: var(--sub-text);
+    font-size: clamp(2.5rem, 6vw, 4.8rem);
+    line-height: .98;
+    letter-spacing: 0;
+}
+
+.legal-page .pricing-hero p,
+.contact-page .pricing-hero p,
+.about-page .hero-subtitle,
+.admin-page .hero-subtitle {
+    color: var(--sub-muted);
+    font-size: clamp(1rem, 1.8vw, 1.18rem);
+    line-height: 1.75;
+}
+
+.legal-page .pricing-note,
+.contact-page .pricing-note,
+.about-page .about-panel,
+.admin-page .admin-panel {
+    border: 1px solid var(--sub-line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .84);
+    box-shadow: 0 20px 60px rgba(15, 23, 42, .07);
+}
+
+.legal-page .pricing-note,
+.contact-page .pricing-note {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    margin-bottom: 1rem;
+}
+
+.legal-page .pricing-note h2,
+.contact-page .pricing-note h2,
+.about-page .about-panel h2,
+.admin-page .admin-panel h2 {
+    color: var(--sub-text);
+}
+
+.legal-page .pricing-note p,
+.contact-page .pricing-note p,
+.about-page .about-panel p,
+.admin-page .admin-panel p,
+.admin-page .db-note {
+    color: var(--sub-muted);
+}
+
+.legal-page .pricing-note a,
+.contact-page .pricing-note a,
+.about-page .about-panel a,
+.admin-page .admin-panel a {
+    color: var(--sub-primary);
+}
+
+.about-page .about-section,
+.about-page .about-feature-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.about-page .about-section {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+.about-page .about-feature-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.about-page .about-panel {
+    padding: clamp(1.2rem, 2.5vw, 1.75rem);
+}
+
+.about-page .about-panel i {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+    border-radius: 16px;
+    color: var(--sub-primary);
+    background: linear-gradient(135deg, rgba(219, 234, 254, .95), rgba(237, 233, 254, .95));
+}
+
+.admin-page .admin-panel,
+.admin-page .quick-link,
+.admin-page .stat-card,
+.admin-page .admin-filters input,
+.admin-page .admin-filters select,
+.admin-page .admin-table select {
+    border-color: var(--sub-line);
+    background: rgba(255, 255, 255, .86);
+    color: var(--sub-text);
+}
+
+.admin-page .admin-button.primary,
+.contact-page .contact-submit {
+    background: linear-gradient(135deg, var(--sub-primary), var(--sub-secondary));
+    color: #fff !important;
+    box-shadow: 0 16px 34px rgba(37, 99, 235, .22);
+}
+
+.contact-page .contact-field input,
+.contact-page .contact-field select,
+.contact-page .contact-field textarea,
+.contact-page .contact-cancel,
+.contact-page .contact-status {
+    border-color: var(--sub-line);
+    background: rgba(255, 255, 255, .88);
+    color: var(--sub-text);
+}
+
+.contact-page .contact-field input:focus,
+.contact-page .contact-field select:focus,
+.contact-page .contact-field textarea:focus {
+    border-color: var(--sub-primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+}
+
 @media (max-width: 1080px) {
     .pricing-page .pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .about-page .about-section,
+    .about-page .about-feature-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
@@ -2405,5 +2580,18 @@ nav {
     .pricing-page .pricing-grid,
     .premium-subpage .footer-grid {
         grid-template-columns: 1fr;
+    }
+
+    .about-page .about-section,
+    .about-page .about-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .legal-page .pricing-main,
+    .contact-page .pricing-main,
+    .admin-page .main-container,
+    .about-page .main-container {
+        width: min(100% - 1rem, 1120px);
+        padding-top: 2rem;
     }
 }

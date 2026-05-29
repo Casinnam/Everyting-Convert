@@ -16,8 +16,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Everything Convert</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=ui-20260528b">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .admin-layout {
@@ -234,7 +234,7 @@
         }
     </style>
 </head>
-<body>
+<body class="premium-subpage admin-page">
     <header class="header">
         <div class="logo">
             <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
@@ -365,75 +365,13 @@
     </main>
 
     <footer class="site-footer">
-        <div class="footer-grid">
-            <div class="footer-group">
-                <h2><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"> Everything Convert</h2>
-                <a href="pricing.html">Pricing</a>
-                <a href="index.html#tools">All tools</a>
-                <a href="auth.html">Account</a>
-            </div>
-            <div class="footer-group">
-                <h2><i class="fa-solid fa-file-export"></i> PDF Convert</h2>
-                <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
-                <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
-                <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
-                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
-                <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-                <a href="docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
-                <a href="pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
-                <a href="ebook converter/ebook-converter.html">Ebook Converter</a>
-            </div>
-            <div class="footer-group">
-                <h2><i class="fa-solid fa-wrench"></i> PDF Tools</h2>
-                <a href="pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
-                <a href="pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
-                <a href="pdf tools/pdf-tools.html?mode=split">Split PDF</a>
-                <a href="pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
-                <a href="pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
-                <a href="pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
-                <a href="pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
-            </div>
-            <div class="footer-group">
-                <h2><i class="fa-regular fa-image"></i> Image</h2>
-                <a href="image to pdf/image-to-pdf.html">JPG to PDF</a>
-                <a href="image to pdf/image-to-pdf.html">PNG to PDF</a>
-                <a href="image converter/image-converter.html">Image Converter</a>
-                <a href="image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
-                <a href="image converter/image-converter.html?mode=jfif-png">JFIF to PNG</a>
-                <a href="image converter/image-converter.html?mode=png-svg">PNG to SVG</a>
-                <a href="image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
-                <a href="image converter/image-converter.html?mode=svg">SVG Converter</a>
-            </div>
-            <div class="footer-group">
-                <h2><i class="fa-regular fa-circle-play"></i> Video & Audio</h2>
-                <a href="media converter/media-converter.html">Video Converter</a>
-                <a href="media converter/media-converter.html?mode=audio">Audio Converter</a>
-                <a href="media converter/media-converter.html?mode=mp3">MP3 Converter</a>
-                <a href="media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
-                <a href="media converter/media-converter.html?mode=video-mp3">Video to MP3</a>
-                <a href="media converter/media-converter.html?mode=mov-mp4">MOV to MP4</a>
-            </div>
-        </div>
-
         <div class="footer-legal-row"><a href="about.html">About Us</a><a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security and Compliance</a><a href="contact.html">Contact</a></div>
         <div class="footer-bottom">
-            <div class="footer-logo">
-                <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
-                <span>Everything Convert</span>
-            </div>
+            <div class="footer-logo"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>EverythingConvert</span></div>
             <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
             <div class="language-menu">
-                <button class="language-toggle" type="button" aria-expanded="false">
-                    <i class="fa-solid fa-globe"></i>
-                    <span data-language-current>English</span>
-                </button>
-                <div class="language-dropdown">
-                    <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">한국어</button>
-                    <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">Español</button>
-                    <button type="button" data-language="fr">Français</button>
-                </div>
+                <button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button>
+                <div class="language-dropdown"><button type="button" data-language="en">English</button><button type="button" data-language="ko">&#54620;&#44397;&#50612;</button><button type="button" data-language="de">Deutsch</button><button type="button" data-language="es">Espa&ntilde;ol</button><button type="button" data-language="fr">Fran&ccedil;ais</button></div>
             </div>
         </div>
     </footer>
@@ -441,7 +379,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="auth.js?v=auth-20260528a"></script>
-    <script src="tools-menu.js?v=nav-20260528a"></script>
+    <script src="tools-menu.js?v=nav-20260528f"></script>
     <script src="language-menu.js"></script>
     <script>
         const adminStatus = document.getElementById('adminStatus');
