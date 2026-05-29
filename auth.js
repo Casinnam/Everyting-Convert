@@ -276,10 +276,16 @@
     window.dispatchEvent(new CustomEvent('everything-auth-change', { detail: { ...state } }));
   }
 
+  function rerenderAfterHeaderChange() {
+    if (!state.ready && !state.user && renderCachedAuthWidgets()) return;
+    renderAuthWidgets();
+  }
+
   async function refresh() {
     const client = initClient();
     if (!client) {
       state.ready = true;
+      clearAuthCache();
       renderAuthWidgets();
       return state;
     }
@@ -298,6 +304,7 @@
     if (!isTimeout) {
       state.session = data && data.session ? data.session : null;
       state.user = state.session ? state.session.user : null;
+      if (!state.user) clearAuthCache();
     }
     if (state.user) {
       setFallbackProfile();
@@ -523,6 +530,7 @@
   });
 
   window.addEventListener('everything-language-change', renderAuthWidgets);
+  window.addEventListener('everything-header-ready', rerenderAfterHeaderChange);
 
   async function startAuth() {
     if (normalizeAuthRedirect()) return;
@@ -568,5 +576,6 @@
     displayName,
     cachedAuthSnapshot,
     updateUsername,
+    renderAuthWidgets,
   };
 })();

@@ -149,7 +149,8 @@
 
   function normalizeHeader() {
     const header = document.querySelector('header');
-    if (!header || header.dataset.ecUnifiedHeader === 'true') return;
+    if (!header) return false;
+    if (header.dataset.ecUnifiedHeader === 'true') return true;
     const prefix = scriptPrefix();
     header.dataset.ecUnifiedHeader = 'true';
     header.classList.add('ec-unified-header');
@@ -269,6 +270,18 @@
     `;
     const nav = header.querySelector('.top-nav');
     if (nav) nav.dataset.ecHeaderEnhanced = 'true';
+    return true;
+  }
+
+  function syncAuthHeaderState() {
+    window.dispatchEvent(new CustomEvent('everything-header-ready'));
+    if (
+      window.EverythingConvertAuth &&
+      typeof window.EverythingConvertAuth.renderAuthWidgets === 'function' &&
+      (window.EverythingConvertAuth.state?.ready || window.EverythingConvertAuth.state?.user)
+    ) {
+      window.EverythingConvertAuth.renderAuthWidgets();
+    }
   }
 
   function bindHomeHeaderTools() {
@@ -337,6 +350,6 @@
   });
 
   injectHeaderStyles();
-  normalizeHeader();
+  if (normalizeHeader()) syncAuthHeaderState();
   bindHomeHeaderTools();
 })();
