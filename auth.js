@@ -392,6 +392,9 @@
       provider: 'google',
       options: {
         redirectTo,
+        queryParams: {
+          prompt: 'select_account'
+        }
       },
     });
     if (error) throw error;
