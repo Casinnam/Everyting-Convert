@@ -30,6 +30,7 @@ function loadAuth(pathname, protocol = 'https:') {
     },
     setTimeout,
     URL,
+    URLSearchParams,
     console,
     CustomEvent: function CustomEvent(type, init) {
       return { type, detail: init && init.detail };

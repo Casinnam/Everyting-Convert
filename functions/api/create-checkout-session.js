@@ -47,7 +47,7 @@ async function getSupabaseUser(request, env) {
 async function createStripeCheckoutSession({ env, request, user }) {
   const priceId = env.STRIPE_PRO_MONTHLY_PRICE_ID || 'price_1TaqXWAOoOvoyo5BqKt0fQ19';
   const origin = siteOrigin(request, env);
-  const successUrl = `${origin}/auth.html?stripe=success`;
+  const successUrl = `${origin}/payment-success.html?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/pricing.html?stripe=cancel`;
   const body = new URLSearchParams();
 
