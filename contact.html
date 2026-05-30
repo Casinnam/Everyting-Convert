@@ -244,14 +244,21 @@
             if (submitLabel) submitLabel.textContent = 'Sending...';
             formStatus.textContent = 'Sending your message...';
 
-            fetch('/api/contact', {
+            fetch('https://api.emailjs.com/api/v1.0/email/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({
+                    service_id: 'service_0nl2i8p',
+                    template_id: 'template_1al0iq7',
+                    user_id: 'eN35me9wW_dQcuLWu',
+                    template_params: payload
+                }),
             })
                 .then(async (response) => {
-                    const result = await response.json().catch(() => ({}));
-                    if (!response.ok) throw new Error(result.error || 'Message could not be sent.');
+                    if (!response.ok) {
+                        const errText = await response.text();
+                        throw new Error(errText || 'Message could not be sent.');
+                    }
                     contactForm.reset();
                     formStatus.className = 'contact-status success';
                     formStatus.textContent = 'Message sent. Redirecting...';
@@ -260,7 +267,7 @@
                 })
                 .catch((error) => {
                     formStatus.className = 'contact-status error';
-                    formStatus.textContent = `Message could not be sent: ${error.message} You can also email us directly at ${supportEmail}.`;
+                    formStatus.textContent = `Message could not be sent. You can also email us directly at ${supportEmail}.`;
                 })
                 .finally(() => {
                     submitButton.disabled = false;
