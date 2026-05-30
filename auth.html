@@ -15,7 +15,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Everything Convert - 로그??/title>
+    <title>Everything Convert - 로그인</title>
     <link rel="stylesheet" href="styles.css?v=ui-20260528c">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -342,34 +342,34 @@
     <main class="main-container">
         <section class="hero">
             <div class="subpage-kicker"><i class="fa-solid fa-user-shield"></i> Everything Convert Account</div>
-            <h1 class="hero-title">계정?�로 기능??br><span class="gradient-text">관리하?�요</span></h1>
-            <p class="hero-subtitle">무료 ?�원?� ?�반 추출?? Pro ?�원?� ??감�? 강화??변?�을 ?�용?????�습?�다.</p>
+            <h1 class="hero-title">계정으로 기능을<br><span class="gradient-text">관리하세요</span></h1>
+            <p class="hero-subtitle">무료 회원은 일반 추출을, Pro 회원은 표 감지 강화형 변환을 사용할 수 있습니다.</p>
         </section>
 
         <section class="auth-shell">
             <div class="auth-tabs">
-                <button class="auth-tab active" id="loginTab" type="button">로그??/button>
-                <button class="auth-tab" id="signupTab" type="button">?�원가??/button>
+                <button class="auth-tab active" id="loginTab" type="button">로그인</button>
+                <button class="auth-tab" id="signupTab" type="button">회원가입</button>
             </div>
 
             <form class="auth-form" id="authForm">
                 <button class="google-btn" id="googleBtn" type="button">
                     <i class="fa-brands fa-google"></i>
-                    Gmail�?계속?�기
+                    Gmail로 계속하기
                 </button>
-                <div class="oauth-divider">?�는 ?�메?�로 계속</div>
+                <div class="oauth-divider">또는 이메일로 계속</div>
                 <div class="auth-field hidden" id="signupUsernameField">
-                    <label for="username">?��? ID</label>
+                    <label for="username">유저 ID</label>
                     <input id="username" type="text" autocomplete="nickname" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}">
-                    <div class="field-hint">?�문, ?�자, 밑줄(_)�??�용?????�습?�다. ?? hijacker05</div>
+                    <div class="field-hint">영문, 숫자, 밑줄(_)만 사용할 수 있습니다. 예: hijacker05</div>
                 </div>
                 <div class="auth-field">
-                    <label for="email">?�메??/label>
+                    <label for="email">이메일</label>
                     <input id="email" type="email" autocomplete="email" list="rememberedEmails" required>
                     <datalist id="rememberedEmails"></datalist>
                 </div>
                 <div class="auth-field">
-                    <label for="password">비�?번호</label>
+                    <label for="password">비밀번호</label>
                     <div class="password-wrap">
                         <input id="password" type="password" autocomplete="current-password" minlength="6" required>
                         <button class="password-toggle" id="passwordToggle" type="button" aria-label="Show password" aria-pressed="false">
@@ -379,38 +379,38 @@
                 </div>
                 <label class="remember-row" for="rememberEmail">
                     <input id="rememberEmail" type="checkbox">
-                    <span>???�이??기억?�기</span>
+                    <span>내 아이디 기억하기</span>
                 </label>
-                <button class="auth-submit" id="submitBtn" type="submit">로그??/button>
+                <button class="auth-submit" id="submitBtn" type="submit">로그인</button>
                 <div class="auth-message" id="authMessage"></div>
             </form>
 
             <div class="account-panel" id="accountPanel">
                 <div class="account-card">
-                    <div>?�시 ?�름: <strong id="accountName">-</strong></div>
-                    <div>?�원 ?�급: <strong id="accountPlan" data-no-i18n>-</strong></div>
+                    <div>표시 이름: <strong id="accountName">-</strong></div>
+                    <div>회원 등급: <strong id="accountPlan" data-no-i18n>-</strong></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
-                            <label for="accountUsername">?��? ID 변�?/label>
+                            <label for="accountUsername">유저 ID 변경</label>
                             <input id="accountUsername" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required>
-                            <div class="field-hint">?�단 계정 ?�시?� 관리자 ?�면?????�름??보입?�다.</div>
+                            <div class="field-hint">상단 계정 표시와 관리자 화면에 이 이름이 보입니다.</div>
                         </div>
-                        <button class="auth-submit" id="usernameSaveBtn" type="submit">?��? ID ?�??/button>
+                        <button class="auth-submit" id="usernameSaveBtn" type="submit">유저 ID 저장</button>
                         <div class="auth-message" id="usernameMessage"></div>
                     </form>
                     <div id="accountHint" style="margin-top:0.75rem;"></div>
                 </div>
                 <div class="account-actions">
-                    <a class="account-link" href="index.html#tools">?�구�??�동</a>
+                    <a class="account-link" href="index.html#tools">도구로 이동</a>
                     <a class="account-link secondary" href="pricing.html">Upgrade</a>
-                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">관리자 ?�이지</a>
+                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">관리자 페이지</a>
                 </div>
             </div>
 
             <div class="auth-status-card">
-                <div>?�재 ?�태: <strong data-auth-state data-no-i18n>?�인 �?..</strong></div>
+                <div>현재 상태: <strong data-auth-state data-no-i18n>확인 중...</strong></div>
                 <div style="margin-top:0.75rem;">
-                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">로그?�웃</button>
+                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">로그아웃</button>
                 </div>
             </div>
         </section>
@@ -489,7 +489,7 @@
                 </button>
                 <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">?�국??/button>
+                    <button type="button" data-language="ko">한국어</button>
                     <button type="button" data-language="de">Deutsch</button>
                     <button type="button" data-language="es">Español</button>
                     <button type="button" data-language="fr">Français</button>
@@ -501,7 +501,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=auth-20260522d"></script>
     <script src="auth.js?v=auth-20260528b"></script>
-    <script src="tools-menu.js?v=nav-20260529a"></script>
+    <script src="tools-menu.js?v=nav-20260528g"></script>
     <script src="language-menu.js?v=lang-20260528a"></script>
     <script>
         let mode = 'login';
@@ -812,19 +812,19 @@
         function friendlyAuthError(error) {
             const message = error && error.message ? error.message : String(error);
             if (/Invalid login credentials/i.test(message)) {
-                return '?�메???�는 비�?번호가 맞�? ?�습?�다. ?�원가?????�메???�인???�요???�정?�면 받�? 메일??먼�? ?�인??주세??';
+                return '이메일 또는 비밀번호가 맞지 않습니다. 회원가입 후 이메일 확인이 필요한 설정이면 받은 메일을 먼저 확인해 주세요.';
             }
             if (/Email not confirmed/i.test(message)) {
-                return '?�메???�인???�직 ?�료?��? ?�았?�니?? 받�? 메일?�에??Supabase ?�인 메일???�어 ?�증??주세??';
+                return '이메일 확인이 아직 완료되지 않았습니다. 받은 메일함에서 Supabase 확인 메일을 열어 인증해 주세요.';
             }
             if (/Database error saving new user/i.test(message)) {
-                return '?�원 ?�로???�성 �??�류가 ?�습?�다. Supabase SQL Editor?�서 supabase-setup.sql ?�체�??�시 ?�행??주세??';
+                return '회원 프로필 생성 중 오류가 났습니다. Supabase SQL Editor에서 supabase-setup.sql 전체를 다시 실행해 주세요.';
             }
             if (/User already registered/i.test(message)) {
-                return '?��? 가?�된 ?�메?�입?�다. 로그????��??로그?�해 주세??';
+                return '이미 가입된 이메일입니다. 로그인 탭에서 로그인해 주세요.';
             }
-            if (/username/i.test(message) || /?��? ID/i.test(message)) {
-                return '?��? ID???�문, ?�자, 밑줄(_)�??�용?�서 3~24?�로 ?�력??주세?? ?��? ?�용 중인 ID???�도 ?�습?�다.';
+            if (/username/i.test(message) || /유저 ID/i.test(message)) {
+                return '유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요. 이미 사용 중인 ID일 수도 있습니다.';
             }
             return message;
         }
@@ -867,7 +867,7 @@
             if (!auth) return;
 
             googleBtn.disabled = true;
-            setMessage('Google 로그???�이지�??�동 �?..', '');
+            setMessage('Google 로그인 페이지로 이동 중...', '');
             try {
                 await auth.signInWithGoogle();
             } catch (error) {
@@ -883,7 +883,7 @@
             const username = normalizeUsername(usernameInput.value);
 
             if (mode === 'signup' && !isValidUsername(username)) {
-                setMessage('?��? ID???�문, ?�자, 밑줄(_)�??�용?�서 3~24?�로 ?�력??주세??', 'error');
+                setMessage('유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요.', 'error');
                 return;
             }
 
@@ -891,7 +891,7 @@
             if (!auth) return;
 
             submitBtn.disabled = true;
-            setMessage(mode === 'login' ? '로그??�?..' : '?�원가??�?..', '');
+            setMessage(mode === 'login' ? '로그인 중...' : '회원가입 중...', '');
 
             try {
                 if (mode === 'login') {
@@ -900,13 +900,13 @@
                         saveRememberedEmail(email);
                         hydrateRememberedEmails();
                     }
-                    setMessage('로그?�되?�습?�다. 계정 ?�태가 갱신?�면 ?�구 ?�이지�??�동?????�습?�다.', 'success');
+                    setMessage('로그인되었습니다. 계정 상태가 갱신되면 도구 페이지로 이동할 수 있습니다.', 'success');
                     updateAccountView();
                     if (await handleRedirectAfterAuth(auth)) return;
                     setTimeout(() => {
                         const state = auth.state;
                         if (state.user) {
-                            setMessage(`${auth.displayName()} 계정?�로 로그?�되?�습?�다.`, 'success');
+                            setMessage(`${auth.displayName()} 계정으로 로그인되었습니다.`, 'success');
                             updateAccountView();
                             handleRedirectAfterAuth(auth);
                         }
@@ -914,11 +914,11 @@
                 } else {
                     const result = await auth.signUp(email, password, username);
                     if (result.session) {
-                        setMessage('?�원가?�과 로그?�이 ?�료?�었?�니??', 'success');
+                        setMessage('회원가입과 로그인이 완료되었습니다.', 'success');
                         updateAccountView();
                     } else {
                         setMode('login', { clearMessage: false });
-                        setMessage('?�원가???�청???�료?�었?�니?? 받�? 메일?�에???�인 링크�??�른 ??로그?�해 주세??', 'success');
+                        setMessage('회원가입 요청이 완료되었습니다. 받은 메일함에서 확인 링크를 누른 뒤 로그인해 주세요.', 'success');
                     }
                 }
             } catch (error) {
@@ -932,13 +932,13 @@
             event.preventDefault();
             const username = normalizeUsername(accountUsername.value);
             if (!isValidUsername(username)) {
-                usernameMessage.textContent = '?��? ID???�문, ?�자, 밑줄(_)�??�용?�서 3~24?�로 ?�력??주세??';
+                usernameMessage.textContent = '유저 ID는 영문, 숫자, 밑줄(_)만 사용해서 3~24자로 입력해 주세요.';
                 usernameMessage.className = 'auth-message error';
                 return;
             }
 
             usernameSaveBtn.disabled = true;
-            usernameMessage.textContent = '?�??�?..';
+            usernameMessage.textContent = '저장 중...';
             usernameMessage.className = 'auth-message';
             try {
                 const auth = getAuthApi();
@@ -949,7 +949,7 @@
                 if (currentUsername.toLowerCase() !== username.toLowerCase()) {
                     await auth.updateUsername(username);
                 }
-                usernameMessage.textContent = '?��? ID가 ?�?�되?�습?�다. ?�으�??�동?�니??..';
+                usernameMessage.textContent = '유저 ID가 저장되었습니다. 홈으로 이동합니다...';
                 usernameMessage.className = 'auth-message success';
                 updateAccountView();
                 setTimeout(() => {
