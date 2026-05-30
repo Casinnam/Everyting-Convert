@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --qr-ink: #111827;
     --qr-muted: #64748b;
     --qr-line: rgba(30, 41, 59, .12);
@@ -721,4 +721,41 @@ body.qr-page {
     .qr-everyone {
         border-radius: 16px;
     }
+}
+
+.qr-canvas-shell.needs-generation #qrCanvas,
+.qr-canvas-shell.needs-generation .qr-logo-mark {
+    filter: blur(12px) grayscale(40%);
+    opacity: 0.35;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.qr-canvas-shell::after {
+    content: '\f021';
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    font-size: 3rem;
+    color: var(--primary);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.qr-canvas-shell.needs-generation::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+.qr-download-button:disabled,
+#testQrButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #94a3b8 !important;
+    box-shadow: none !important;
+    transform: none !important;
 }

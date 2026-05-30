@@ -252,7 +252,7 @@
     state.type = typeKey;
     renderForm();
     syncActiveTabs();
-    generateQr();
+    markNeedsGeneration();
   }
 
   function syncActiveTabs() {
@@ -282,8 +282,8 @@
       return `<div class="qr-field${full}"><label for="${id}">${field.label}</label><input id="${id}" name="${field.name}" type="${field.type || 'text'}"${placeholder}${maxlength}${value}></div>`;
     }).join('');
     form.querySelectorAll('input, textarea, select').forEach((control) => {
-      control.addEventListener('input', debounce(generateQr, 150));
-      control.addEventListener('change', generateQr);
+      control.addEventListener('input', markNeedsGeneration);
+      control.addEventListener('change', markNeedsGeneration);
     });
   }
 
@@ -313,6 +313,16 @@
 
   function escapeHtml(str) {
     return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function markNeedsGeneration() {
+    const shell = document.querySelector('.qr-canvas-shell');
+    if (shell) shell.classList.add('needs-generation');
+    const dlBtn = document.getElementById('downloadQrButton');
+    if (dlBtn) dlBtn.disabled = true;
+    const tBtn = document.getElementById('testQrButton');
+    if (tBtn) tBtn.disabled = true;
+    status.textContent = 'Click "Generate QR Code" to apply your changes.';
   }
 
   async function generateQr() {
@@ -389,6 +399,12 @@
       }
 
       status.textContent = TYPES[state.type].label + ' QR code is ready.';
+      const shell = document.querySelector('.qr-canvas-shell');
+      if (shell) shell.classList.remove('needs-generation');
+      const dlBtn = document.getElementById('downloadQrButton');
+      if (dlBtn) dlBtn.disabled = false;
+      const tBtn = document.getElementById('testQrButton');
+      if (tBtn) tBtn.disabled = false;
       return true;
     } catch (error) {
       status.textContent = error.message || 'Could not generate this QR code.';
@@ -409,7 +425,7 @@
       if (!button) return;
       state.dark = button.dataset.color;
       updateSwatchState();
-      generateQr();
+      markNeedsGeneration();
     });
     updateSwatchState();
   }
@@ -640,7 +656,7 @@
         reader.onload = (ev) => {
           state.logoUrl = ev.target.result;
           document.getElementById('logoRemoveBtn').style.display = 'inline-block';
-          generateQr();
+          markNeedsGeneration();
         };
         reader.readAsDataURL(file);
       });
@@ -648,7 +664,7 @@
         state.logoUrl = null;
         logoInput.value = '';
         document.getElementById('logoRemoveBtn').style.display = 'none';
-        generateQr();
+        markNeedsGeneration();
       });
     }
 
@@ -658,7 +674,7 @@
         document.querySelectorAll('.qr-frame-selector button').forEach(b => b.classList.toggle('active', b.dataset.frame === state.frame));
         const frameOpts = document.getElementById('frameOptions');
         if (frameOpts) frameOpts.style.display = state.frame === 'none' ? 'none' : 'block';
-        generateQr();
+        markNeedsGeneration();
       });
     });
 
@@ -666,14 +682,14 @@
     if (frameColorInput) {
       frameColorInput.addEventListener('input', (e) => {
         state.frameColor = e.target.value;
-        generateQr();
+        markNeedsGeneration();
       });
     }
     const frameTextInput = document.getElementById('frameTextInput');
     if (frameTextInput) {
       frameTextInput.addEventListener('input', (e) => {
         state.frameText = e.target.value;
-        generateQr();
+        markNeedsGeneration();
       });
     }
 
@@ -681,14 +697,14 @@
     if (dynCheck) {
       dynCheck.addEventListener('click', (e) => {
         e.preventDefault();
-        alert('µ¿Àû QR ÄÚµå ±â´ÉÀº ¹é¿£µå ½Ã½ºÅÛ ¿¬µ¿ ÈÄ Á¦°øµÉ ¿¹Á¤ÀÔ´Ï´Ù. (Coming Soon!)');
+        alert('ë™ì  QR ì½”ë“œ ê¸°ëŠ¥ì€ ë°±ì—”ë“œ ì‹œìŠ¤í…œ ì—°ë™ í›„ ì œê³µë  ì˜ˆì •ìž…ë‹ˆë‹¤. (Coming Soon!)');
       });
     }
     const expCheck = document.getElementById('setExpirationCheck');
     if (expCheck) {
       expCheck.addEventListener('click', (e) => {
         e.preventDefault();
-        alert('QR ÄÚµå ¸¸·áÀÏ ¼³Á¤ ±â´ÉÀº ¹é¿£µå ½Ã½ºÅÛ ¿¬µ¿ ÈÄ Á¦°øµÉ ¿¹Á¤ÀÔ´Ï´Ù. (Coming Soon!)');
+        alert('QR ì½”ë“œ ë§Œë£Œì¼ ì„¤ì • ê¸°ëŠ¥ì€ ë°±ì—”ë“œ ì‹œìŠ¤í…œ ì—°ë™ í›„ ì œê³µë  ì˜ˆì •ìž…ë‹ˆë‹¤. (Coming Soon!)');
       });
     }
 
@@ -704,13 +720,13 @@
     if (backgroundInput) {
       backgroundInput.addEventListener('input', () => {
         state.light = backgroundInput.value;
-        generateQr();
+        markNeedsGeneration();
       });
     }
     if (sizeSelect) {
       sizeSelect.addEventListener('change', () => {
         state.size = Number(sizeSelect.value) || 512;
-        generateQr();
+        markNeedsGeneration();
       });
     }
     generateQr();
