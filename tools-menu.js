@@ -279,7 +279,7 @@
           </div>
         </div>
         <div class="tools-menu">
-          <button class="tools-toggle" type="button" aria-expanded="false">PDF</button>
+          <button class="tools-toggle" type="button" aria-expanded="false">Documents</button>
           <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
             <div style="display: flex; flex-direction: column; min-width: 160px;">
               <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-file-export"></i> Convert</div>
@@ -303,15 +303,31 @@
             </div>
           </div>
         </div>
-        <a href="${prefix}index.html#tool-browser" data-tab-jump="image">Image</a>
-        <a href="${prefix}index.html#tool-browser" data-tab-jump="video">Video & Audio</a>
-        <a href="${prefix}index.html#tool-browser" data-tab-jump="office">Office</a>
-        <a href="${prefix}index.html#ai-preview" data-tab-jump="ai">AI Tools</a>
+        <div class="tools-menu">
+          <button class="tools-toggle" type="button" aria-expanded="false">Media</button>
+          <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
+            <div style="display: flex; flex-direction: column; min-width: 160px;">
+              <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-regular fa-image"></i> Image</div>
+              <a href="${prefix}image converter/image-converter.html">Image Converter</a>
+              <a href="${prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
+              <a href="${prefix}image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 160px; border-left: 1px solid #f1f5f9; padding-left: 0.5rem;">
+              <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
+              <a href="${prefix}media converter/media-converter.html">Video Converter</a>
+              <a href="${prefix}media converter/media-converter.html?mode=audio">Audio Converter</a>
+              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
+              <a href="${prefix}gif converter/gif-converter.html">GIF Converter</a>
+            </div>
+          </div>
+        </div>
         <div class="tools-menu developer-tools-menu">
-          <button class="tools-toggle" type="button" aria-expanded="false">Developer</button>
+          <button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>
           <div class="tools-dropdown">
-            <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>
-            <a href="${prefix}json to csv/json-to-csv.html">JSON to CSV</a>
+            <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><i class="fa-solid fa-wand-magic-sparkles" style="width: 1.2rem;"></i> AI Tools</a>
+            <a href="${prefix}qr code generator/qr-code-generator.html"><i class="fa-solid fa-qrcode" style="width: 1.2rem;"></i> QR Code</a>
+            <a href="${prefix}json to csv/json-to-csv.html"><i class="fa-solid fa-file-code" style="width: 1.2rem;"></i> JSON to CSV</a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>
