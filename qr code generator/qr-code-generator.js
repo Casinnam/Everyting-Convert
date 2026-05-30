@@ -693,20 +693,7 @@
       });
     }
 
-    const dynCheck = document.getElementById('makeDynamicCheck');
-    if (dynCheck) {
-      dynCheck.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('동적 QR 코드 기능은 백엔드 시스템 연동 후 제공될 예정입니다. (Coming Soon!)');
-      });
-    }
-    const expCheck = document.getElementById('setExpirationCheck');
-    if (expCheck) {
-      expCheck.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('QR 코드 만료일 설정 기능은 백엔드 시스템 연동 후 제공될 예정입니다. (Coming Soon!)');
-      });
-    }
+
 
     window.addEventListener('everything-auth-change', applyProFeatures);
     applyProFeatures();
