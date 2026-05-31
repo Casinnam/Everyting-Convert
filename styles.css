@@ -2294,6 +2294,11 @@ nav {
     color: var(--sub-muted);
 }
 
+.pricing-page .pricing-note p.billing-error {
+    color: #b91c1c;
+    font-weight: 800;
+}
+
 .pricing-page .popular-badge {
     color: var(--sub-secondary);
     background: rgba(124, 58, 237, 0.1);

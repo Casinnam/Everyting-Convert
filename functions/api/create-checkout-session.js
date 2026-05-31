@@ -45,7 +45,7 @@ async function getSupabaseUser(request, env) {
 }
 
 async function createStripeCheckoutSession({ env, request, user }) {
-  const priceId = env.STRIPE_PRO_MONTHLY_PRICE_ID || 'price_1TaqXWAOoOvoyo5BqKt0fQ19';
+  const priceId = String(env.STRIPE_PRO_MONTHLY_PRICE_ID || '').trim();
   const origin = siteOrigin(request, env);
   const successUrl = `${origin}/payment-success.html?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/pricing.html?stripe=cancel`;
@@ -98,8 +98,23 @@ export async function onRequestOptions() {
 export async function onRequestPost(context) {
   const env = context.env || {};
 
-  if (!env.STRIPE_SECRET_KEY) {
+  const stripeSecretKey = String(env.STRIPE_SECRET_KEY || '').trim();
+  const stripePriceId = String(env.STRIPE_PRO_MONTHLY_PRICE_ID || '').trim();
+
+  if (!stripeSecretKey) {
     return jsonResponse({ error: 'Stripe is not configured yet.' }, 500);
+  }
+
+  if (!stripeSecretKey.startsWith('sk_')) {
+    return jsonResponse({ error: 'Stripe secret key is invalid. It should start with sk_test_ or sk_live_.' }, 500);
+  }
+
+  if (!stripePriceId) {
+    return jsonResponse({ error: 'Stripe Pro monthly price ID is not configured. Add STRIPE_PRO_MONTHLY_PRICE_ID in Cloudflare and redeploy.' }, 500);
+  }
+
+  if (!stripePriceId.startsWith('price_')) {
+    return jsonResponse({ error: 'Stripe Pro monthly price ID is invalid. It should start with price_.' }, 500);
   }
 
   const { user, error, status } = await getSupabaseUser(context.request, env);

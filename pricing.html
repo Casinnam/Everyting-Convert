@@ -211,6 +211,7 @@
 
             function setStatus(message) {
                 status.textContent = message;
+                status.classList.toggle('billing-error', /could not|invalid|expired|not configured|missing|failed/i.test(message));
             }
 
             function waitForAuth() {

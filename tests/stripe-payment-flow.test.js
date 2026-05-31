@@ -5,6 +5,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 const checkoutSource = fs.readFileSync(path.join(root, 'functions', 'api', 'create-checkout-session.js'), 'utf8');
 const confirmSource = fs.readFileSync(path.join(root, 'functions', 'api', 'confirm-checkout-session.js'), 'utf8');
+const envCheckSource = fs.readFileSync(path.join(root, 'functions', 'api', 'env-check.js'), 'utf8');
 const successPage = fs.readFileSync(path.join(root, 'payment-success.html'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
 
@@ -16,6 +17,21 @@ assert(
 assert(
   checkoutSource.includes('/pricing.html?stripe=cancel'),
   'Stripe checkout cancel URL should still return to pricing.',
+);
+
+assert(
+  !checkoutSource.includes("|| 'price_1TaqXWAOoOvoyo5BqKt0fQ19'"),
+  'Live checkout must not silently fall back to the old test price id.',
+);
+
+assert(
+  checkoutSource.includes('STRIPE_PRO_MONTHLY_PRICE_ID in Cloudflare and redeploy'),
+  'Checkout should explain missing price configuration clearly.',
+);
+
+assert(
+  envCheckSource.includes('stripeMode') && envCheckSource.includes('priceIdLooksValid'),
+  'Env check should expose safe Stripe configuration diagnostics.',
 );
 
 assert(
