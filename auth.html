@@ -927,10 +927,16 @@
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
             accountPlan.textContent = auth.formatPlan();
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
-            accountHint.dataset.i18nKey = auth.isPro() ? 'proMemberHint' : 'freeMemberHint';
-            accountHint.textContent = auth.isPro()
-                ? 'You are a Pro member. Enhanced table detection is available.'
-                : 'You are a Free member. Standard text extraction is available, and enhanced table detection requires Pro.';
+            const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
+            if (!profilePlan) {
+                accountHint.dataset.i18nKey = 'checking';
+                accountHint.textContent = 'Refreshing account status...';
+            } else {
+                accountHint.dataset.i18nKey = auth.isPro() ? 'proMemberHint' : 'freeMemberHint';
+                accountHint.textContent = auth.isPro()
+                    ? 'You are a Pro member. Enhanced table detection is available.'
+                    : 'You are a Free member. Standard text extraction is available, and enhanced table detection requires Pro.';
+            }
             applyCurrentLanguage();
         }
 

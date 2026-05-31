@@ -61,6 +61,7 @@
 
   function formatPlan() {
     if (!state.user) return translateAuth('authGuest');
+    if (!state.profile || !state.profile.plan) return translateAuth('authChecking');
     const plan = isPro() ? translateAuth('authPro') : translateAuth('authFree');
     return isAdmin() ? `${plan} · ${translateAuth('authAdmin')}` : plan;
   }
@@ -95,7 +96,7 @@
   }
 
   function writeAuthCache() {
-    if (!state.user || !state.profile) return;
+    if (!state.user || !state.profile || !state.profile.plan) return;
     try {
       window.localStorage.setItem(cacheKey, JSON.stringify({
         username: displayName(),
@@ -163,9 +164,19 @@
   }
 
   function setFallbackProfile() {
-    state.profile = state.user
-      ? { id: state.user.id, email: state.user.email, username: emailPrefix(state.user.email), plan: 'free', role: 'user' }
-      : null;
+    if (!state.user) {
+      state.profile = null;
+      return state.profile;
+    }
+
+    const cached = readAuthCache();
+    state.profile = {
+      id: state.user.id,
+      email: state.user.email,
+      username: cached && cached.username ? cached.username : emailPrefix(state.user.email),
+      plan: cached && cached.plan ? cached.plan : '',
+      role: cached && cached.role ? cached.role : 'user',
+    };
     return state.profile;
   }
 

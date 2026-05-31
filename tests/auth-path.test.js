@@ -15,6 +15,16 @@ assert(
   'Logout should prevent overlapping auth refresh work while sign-out is in progress.',
 );
 
+assert(
+  source.includes("!state.profile.plan) return translateAuth('authChecking')"),
+  'Logged-in users should see Checking instead of a temporary Free plan before profile data resolves.',
+);
+
+assert(
+  source.includes("plan: cached && cached.plan ? cached.plan : ''"),
+  'Fallback profiles should use cached plan data and avoid defaulting logged-in users to Free.',
+);
+
 function loadAuth(pathname, protocol = 'https:') {
   const sandbox = {
     window: {
