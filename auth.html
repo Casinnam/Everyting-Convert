@@ -567,6 +567,20 @@
         }
 
         let checkoutStartedFromAuth = false;
+        let checkoutResumeTimer = null;
+
+        function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+            return fetch(url, {
+                ...options,
+                signal: controller.signal,
+            }).finally(() => window.clearTimeout(timer));
+        }
+
+        function setCheckoutMessage(text, type = '') {
+            setMessage(text, type);
+        }
 
         async function startCheckoutFromAuth(auth) {
             if (checkoutStartedFromAuth) return true;
@@ -578,7 +592,7 @@
             setMessage('Opening secure Stripe checkout...', '');
 
             try {
-                const response = await fetch('/api/create-checkout-session', {
+                const response = await fetchWithTimeout('/api/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${session.access_token}`,
@@ -596,9 +610,50 @@
                 return true;
             } catch (error) {
                 checkoutStartedFromAuth = false;
-                setMessage(error.message || 'Stripe checkout could not be opened.', 'error');
+                const message = error.name === 'AbortError'
+                    ? 'Stripe checkout is taking too long to open. Please try again from Pricing.'
+                    : error.message || 'Stripe checkout could not be opened.';
+                setCheckoutMessage(message, 'error');
                 return false;
             }
+        }
+
+        function scheduleCheckoutResume(reason = '') {
+            if (!isProCheckoutRedirect() || checkoutStartedFromAuth || checkoutResumeTimer) return;
+            if (reason) setCheckoutMessage(reason, '');
+
+            let attempts = 0;
+            checkoutResumeTimer = window.setInterval(async () => {
+                attempts += 1;
+                const auth = window.EverythingConvertAuth;
+                const state = auth ? auth.state : null;
+
+                if (checkoutStartedFromAuth) {
+                    window.clearInterval(checkoutResumeTimer);
+                    checkoutResumeTimer = null;
+                    return;
+                }
+
+                if (state && state.ready && !state.user) {
+                    setCheckoutMessage('Please log in to continue to secure Stripe checkout.', '');
+                    window.clearInterval(checkoutResumeTimer);
+                    checkoutResumeTimer = null;
+                    return;
+                }
+
+                if (state && state.user && state.session && state.session.access_token) {
+                    window.clearInterval(checkoutResumeTimer);
+                    checkoutResumeTimer = null;
+                    await startCheckoutFromAuth(auth);
+                    return;
+                }
+
+                if (attempts > 40) {
+                    window.clearInterval(checkoutResumeTimer);
+                    checkoutResumeTimer = null;
+                    setCheckoutMessage('Login is taking longer than expected. Please press Login again or return to Pricing.', 'error');
+                }
+            }, 250);
         }
 
         async function handleRedirectAfterAuth(auth) {
@@ -606,7 +661,7 @@
 
             if (isProCheckoutRedirect()) {
                 if (await startCheckoutFromAuth(auth)) return true;
-                setMessage('Login complete. Preparing secure Stripe checkout...', '');
+                scheduleCheckoutResume('Login complete. Preparing secure Stripe checkout...');
                 return true;
             }
 
@@ -971,6 +1026,8 @@
                 setTimeout(async () => {
                     await handleRedirectAfterAuth(auth);
                 }, 100);
+            } else if (isProCheckoutRedirect()) {
+                scheduleCheckoutResume();
             }
         });
 
@@ -994,6 +1051,8 @@
                 setTimeout(async () => {
                     await handleRedirectAfterAuth(auth);
                 }, 250);
+            } else if (isProCheckoutRedirect()) {
+                scheduleCheckoutResume('Please log in to continue to secure Stripe checkout.');
             }
         });
     </script>

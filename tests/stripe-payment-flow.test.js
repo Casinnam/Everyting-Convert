@@ -64,4 +64,14 @@ assert(
   'Legacy auth success redirects should move to the confirmation page instead of showing Free first.',
 );
 
+assert(
+  authPage.includes('function scheduleCheckoutResume') && authPage.includes('fetchWithTimeout'),
+  'Auth page should keep trying to resume checkout after login and avoid hanging forever.',
+);
+
+assert(
+  authPage.includes('Please log in to continue to secure Stripe checkout.'),
+  'Auth page should explain why it is waiting before Stripe checkout.',
+);
+
 console.log('stripe payment flow tests passed');
