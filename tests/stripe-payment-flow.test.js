@@ -8,6 +8,7 @@ const confirmSource = fs.readFileSync(path.join(root, 'functions', 'api', 'confi
 const envCheckSource = fs.readFileSync(path.join(root, 'functions', 'api', 'env-check.js'), 'utf8');
 const successPage = fs.readFileSync(path.join(root, 'payment-success.html'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
+const pricingPage = fs.readFileSync(path.join(root, 'pricing.html'), 'utf8');
 
 assert(
   checkoutSource.includes('/payment-success.html?session_id={CHECKOUT_SESSION_ID}'),
@@ -70,6 +71,11 @@ assert(
 );
 
 assert(
+  authPage.includes('function resolveCheckoutSession') && authPage.includes('client.auth.getSession()'),
+  'Auth checkout resume should read the Supabase session directly when profile loading is slow.',
+);
+
+assert(
   authPage.includes('checkoutResumePanel') && authPage.includes('Continue to Stripe Checkout'),
   'Auth page should show a visible manual checkout resume panel when automatic Stripe resume is slow.',
 );
@@ -82,6 +88,11 @@ assert(
 assert(
   authPage.includes('Please log in to continue to secure Stripe checkout.'),
   'Auth page should explain why it is waiting before Stripe checkout.',
+);
+
+assert(
+  pricingPage.includes('function resolveCheckoutSession') && pricingPage.includes('client.auth.getSession()'),
+  'Pricing checkout should not redirect to login before directly checking the Supabase session.',
 );
 
 console.log('stripe payment flow tests passed');

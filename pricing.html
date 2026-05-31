@@ -223,6 +223,14 @@
                 }).finally(() => window.clearTimeout(timer));
             }
 
+            function promiseWithTimeout(promise, timeoutMs = 6000) {
+                let timer;
+                const timeout = new Promise((_, reject) => {
+                    timer = window.setTimeout(() => reject(new Error('Session check timed out.')), timeoutMs);
+                });
+                return Promise.race([promise, timeout]).finally(() => window.clearTimeout(timer));
+            }
+
             function waitForAuth() {
                 return new Promise((resolve) => {
                     const startedAt = Date.now();
@@ -240,6 +248,28 @@
                 });
             }
 
+            async function resolveCheckoutSession(auth) {
+                const currentSession = auth && auth.state ? auth.state.session : null;
+                if (currentSession && currentSession.access_token) return currentSession;
+
+                const client = auth && auth.state ? auth.state.client : null;
+                if (!client || !client.auth || !client.auth.getSession) return null;
+
+                try {
+                    const result = await promiseWithTimeout(client.auth.getSession(), 6000);
+                    const session = result && result.data ? result.data.session : null;
+                    if (session && session.access_token) {
+                        auth.state.session = session;
+                        auth.state.user = session.user || auth.state.user;
+                        return session;
+                    }
+                } catch (error) {
+                    console.warn('Could not resolve checkout session:', error.message);
+                }
+
+                return null;
+            }
+
             const params = new URLSearchParams(window.location.search);
             if (params.get('stripe') === 'cancel') {
                 setStatus('Checkout was cancelled. You can restart Pro checkout any time.');
@@ -250,7 +280,7 @@
                 setStatus('Checking your login before opening Stripe...');
 
                 const auth = await waitForAuth();
-                const session = auth && auth.state ? auth.state.session : null;
+                const session = await resolveCheckoutSession(auth);
 
                 if (!session || !session.access_token) {
                     setStatus('Redirecting to login before opening Stripe...');
