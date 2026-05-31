@@ -203,6 +203,35 @@
         .auth-message.error { color: #9f1239; }
         .auth-message.success { color: #166534; }
 
+        .checkout-resume-panel {
+            display: none;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            border-radius: 10px;
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .checkout-resume-panel.visible {
+            display: grid;
+        }
+
+        .checkout-resume-panel.error {
+            border-color: rgba(244, 63, 94, 0.35);
+            background: rgba(244, 63, 94, 0.08);
+        }
+
+        .checkout-resume-panel strong {
+            color: var(--text-main);
+        }
+
+        .checkout-resume-panel p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
         .auth-status-card {
             margin-top: 1rem;
             padding: 1rem;
@@ -350,6 +379,12 @@
             <div class="auth-tabs">
                 <button class="auth-tab active" id="loginTab" type="button">로그인</button>
                 <button class="auth-tab" id="signupTab" type="button">회원가입</button>
+            </div>
+
+            <div class="checkout-resume-panel" id="checkoutResumePanel">
+                <strong>Continue to Pro checkout</strong>
+                <p id="checkoutResumeText">After logging in, we will open secure Stripe Checkout for your Pro membership.</p>
+                <button class="auth-submit" id="continueCheckoutBtn" type="button">Continue to Stripe Checkout</button>
             </div>
 
             <form class="auth-form" id="authForm">
@@ -529,6 +564,9 @@
         const usernameSaveBtn = document.getElementById('usernameSaveBtn');
         const usernameMessage = document.getElementById('usernameMessage');
         const adminLink = document.getElementById('adminLink');
+        const checkoutResumePanel = document.getElementById('checkoutResumePanel');
+        const checkoutResumeText = document.getElementById('checkoutResumeText');
+        const continueCheckoutBtn = document.getElementById('continueCheckoutBtn');
         const redirectTarget = safeRedirectTarget();
         const rememberedEmailKey = 'everything_convert_remembered_emails';
         let passwordTouched = false;
@@ -580,16 +618,37 @@
 
         function setCheckoutMessage(text, type = '') {
             setMessage(text, type);
+            showCheckoutResumePanel(text, type);
+        }
+
+        function showCheckoutResumePanel(text = '', type = '') {
+            if (!checkoutResumePanel || !isProCheckoutRedirect()) return;
+            checkoutResumePanel.classList.add('visible');
+            checkoutResumePanel.classList.toggle('error', type === 'error');
+            if (checkoutResumeText && text) {
+                checkoutResumeText.textContent = text;
+            }
+        }
+
+        function setContinueCheckoutLoading(isLoading) {
+            if (!continueCheckoutBtn) return;
+            continueCheckoutBtn.disabled = isLoading;
+            continueCheckoutBtn.textContent = isLoading ? 'Opening Stripe...' : 'Continue to Stripe Checkout';
         }
 
         async function startCheckoutFromAuth(auth) {
             if (checkoutStartedFromAuth) return true;
             if (!isProCheckoutRedirect()) return false;
             const session = auth && auth.state ? auth.state.session : null;
-            if (!session || !session.access_token) return false;
+            if (!session || !session.access_token) {
+                setContinueCheckoutLoading(false);
+                setCheckoutMessage('Please log in to continue to secure Stripe checkout.', '');
+                return false;
+            }
 
             checkoutStartedFromAuth = true;
-            setMessage('Opening secure Stripe checkout...', '');
+            setContinueCheckoutLoading(true);
+            setCheckoutMessage('Opening secure Stripe checkout...', '');
 
             try {
                 const response = await fetchWithTimeout('/api/create-checkout-session', {
@@ -610,6 +669,7 @@
                 return true;
             } catch (error) {
                 checkoutStartedFromAuth = false;
+                setContinueCheckoutLoading(false);
                 const message = error.name === 'AbortError'
                     ? 'Stripe checkout is taking too long to open. Please try again from Pricing.'
                     : error.message || 'Stripe checkout could not be opened.';
@@ -620,6 +680,7 @@
 
         function scheduleCheckoutResume(reason = '') {
             if (!isProCheckoutRedirect() || checkoutStartedFromAuth || checkoutResumeTimer) return;
+            showCheckoutResumePanel(reason || 'Please log in to continue to secure Stripe checkout.', '');
             if (reason) setCheckoutMessage(reason, '');
 
             let attempts = 0;
@@ -654,6 +715,14 @@
                     setCheckoutMessage('Login is taking longer than expected. Please press Login again or return to Pricing.', 'error');
                 }
             }, 250);
+        }
+
+        if (continueCheckoutBtn) {
+            continueCheckoutBtn.addEventListener('click', async () => {
+                const auth = window.EverythingConvertAuth;
+                if (await startCheckoutFromAuth(auth)) return;
+                scheduleCheckoutResume('Preparing secure Stripe checkout...');
+            });
         }
 
         async function handleRedirectAfterAuth(auth) {

@@ -70,6 +70,16 @@ assert(
 );
 
 assert(
+  authPage.includes('checkoutResumePanel') && authPage.includes('Continue to Stripe Checkout'),
+  'Auth page should show a visible manual checkout resume panel when automatic Stripe resume is slow.',
+);
+
+assert(
+  authPage.includes('continueCheckoutBtn.addEventListener') && authPage.includes('startCheckoutFromAuth(auth)'),
+  'Auth page should let users manually continue to Stripe checkout after login.',
+);
+
+assert(
   authPage.includes('Please log in to continue to secure Stripe checkout.'),
   'Auth page should explain why it is waiting before Stripe checkout.',
 );
