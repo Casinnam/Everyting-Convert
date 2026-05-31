@@ -16,7 +16,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - Everything Convert</title>
-    <link rel="stylesheet" href="styles.css?v=ui-20260528c">
+    <link rel="stylesheet" href="styles.css?v=ui-20260531a">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -214,6 +214,15 @@
                 status.classList.toggle('billing-error', /could not|invalid|expired|not configured|missing|failed/i.test(message));
             }
 
+            function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+                const controller = new AbortController();
+                const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+                return fetch(url, {
+                    ...options,
+                    signal: controller.signal,
+                }).finally(() => window.clearTimeout(timer));
+            }
+
             function waitForAuth() {
                 return new Promise((resolve) => {
                     const startedAt = Date.now();
@@ -237,18 +246,21 @@
             }
 
             async function startCheckout() {
+                setButtonLoading(true);
+                setStatus('Checking your login before opening Stripe...');
+
                 const auth = await waitForAuth();
                 const session = auth && auth.state ? auth.state.session : null;
 
                 if (!session || !session.access_token) {
+                    setStatus('Redirecting to login before opening Stripe...');
                     window.location.href = `auth.html?next=${encodeURIComponent('pricing.html?checkout=pro')}`;
                     return;
                 }
 
                 try {
-                    setButtonLoading(true);
                     setStatus('Creating a secure Stripe checkout...');
-                    const response = await fetch('/api/create-checkout-session', {
+                    const response = await fetchWithTimeout('/api/create-checkout-session', {
                         method: 'POST',
                         headers: {
                             Authorization: `Bearer ${session.access_token}`,
@@ -265,7 +277,10 @@
                     window.location.href = payload.url;
                 } catch (error) {
                     setButtonLoading(false);
-                    setStatus(error.message || 'Stripe checkout could not be opened.');
+                    const message = error.name === 'AbortError'
+                        ? 'Stripe checkout is taking too long to open. Please try again in a moment.'
+                        : error.message || 'Stripe checkout could not be opened.';
+                    setStatus(message);
                 }
             }
 
