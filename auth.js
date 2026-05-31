@@ -15,6 +15,7 @@
     missingConfig,
   };
   const cacheKey = 'everything_convert_auth_snapshot';
+  let signingOut = false;
 
   function initClient() {
     if (missingConfig || !window.supabase) return null;
@@ -292,6 +293,8 @@
   }
 
   async function refresh() {
+    if (signingOut) return state;
+
     const client = initClient();
     if (!client) {
       state.ready = true;
@@ -404,13 +407,19 @@
   async function signOut() {
     const client = initClient();
     if (!client) return;
-    const { error } = await client.auth.signOut();
-    if (error) throw error;
-    state.session = null;
-    state.user = null;
-    state.profile = null;
-    clearAuthCache();
-    renderAuthWidgets();
+    signingOut = true;
+    try {
+      const { error } = await client.auth.signOut({ scope: 'local' });
+      if (error) throw error;
+      state.session = null;
+      state.user = null;
+      state.profile = null;
+      state.ready = true;
+      clearAuthCache();
+      renderAuthWidgets();
+    } finally {
+      signingOut = false;
+    }
   }
 
   function requireLogin(message) {
@@ -534,6 +543,7 @@
     const logoutButton = event.target.closest('[data-auth-logout]');
     if (!logoutButton) return;
     event.preventDefault();
+    if (signingOut) return;
     
     // 즉각적인 시각적 피드백 제공
     const originalText = logoutButton.innerHTML;
@@ -561,6 +571,7 @@
     const client = initClient();
     if (client) {
       client.auth.onAuthStateChange(async () => {
+        if (signingOut) return;
         await refresh();
       });
       try {

@@ -5,6 +5,16 @@ const vm = require('vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'auth.js'), 'utf8');
 
+assert(
+  source.includes("client.auth.signOut({ scope: 'local' })"),
+  'Logout should use Supabase local scope so the current browser session ends quickly.',
+);
+
+assert(
+  source.includes('if (signingOut) return state;') && source.includes('if (signingOut) return;'),
+  'Logout should prevent overlapping auth refresh work while sign-out is in progress.',
+);
+
 function loadAuth(pathname, protocol = 'https:') {
   const sandbox = {
     window: {
