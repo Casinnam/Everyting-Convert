@@ -56,6 +56,11 @@
         gap: clamp(.5rem, .8vw, .75rem) !important;
         min-width: 0 !important;
       }
+      .ec-unified-header .tools-menu {
+        position: relative !important;
+        display: inline-flex !important;
+        align-items: center !important;
+      }
       .ec-unified-header .top-nav a,
       .ec-unified-header .top-actions a,
       .ec-unified-header .tools-toggle {
@@ -95,36 +100,58 @@
         background: rgba(255, 255, 255, .98) !important;
         box-shadow: 0 24px 70px rgba(15, 23, 42, .16) !important;
         display: none !important;
+        gap: .45rem !important;
+        padding: .65rem !important;
       }
       .ec-unified-header .tools-menu.open .tools-dropdown {
         display: flex !important;
       }
       .ec-unified-header .tools-dropdown.mega-tools {
         position: absolute !important;
-        left: 0 !important;
+        left: 50% !important;
         right: auto !important;
         top: 100% !important;
         width: min(980px, calc(100vw - 2rem)) !important;
+        transform: translateX(-50%) !important;
         grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
+        gap: .75rem !important;
+        padding: .9rem !important;
       }
       .ec-unified-header .tools-menu.open .tools-dropdown.mega-tools {
         display: grid !important;
       }
-        right: auto !important;
-        top: 100% !important;
-        width: min(980px, calc(100vw - 2rem)) !important;
-        grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
+      .ec-unified-header .tools-group {
+        display: grid !important;
+        align-content: start !important;
+        gap: .22rem !important;
+        min-width: 0 !important;
       }
       .ec-unified-header .tools-dropdown a {
+        display: flex !important;
+        align-items: center !important;
+        min-height: 2.35rem !important;
+        padding: .58rem .7rem !important;
         color: #334155 !important;
         border-radius: 8px !important;
+        text-decoration: none !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
       }
       .ec-unified-header .tools-dropdown a:hover {
         color: #2563eb !important;
         background: rgba(37, 99, 235, .08) !important;
       }
       .ec-unified-header .tools-group-title {
+        display: flex !important;
+        align-items: center !important;
+        gap: .35rem !important;
+        padding: .35rem .7rem .55rem !important;
         color: #0f172a !important;
+        font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important;
+        font-size: .86rem !important;
+        font-weight: 900 !important;
+        white-space: nowrap !important;
+        border-bottom: 1px solid #e2e8f0 !important;
         border-bottom-color: #e2e8f0 !important;
       }
       .ec-unified-header .ec-tool-search {
@@ -168,12 +195,8 @@
           gap: .85rem !important;
         }
         .ec-unified-header .top-nav {
-        display: flex !important;
-        align-items: center !important;
-        gap: 1.15rem !important;
-        margin: 0 auto !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
+          gap: .8rem !important;
+        }
       }
       @media (max-width: 920px) {
         .ec-unified-header {
@@ -184,12 +207,17 @@
           flex: 1 1 auto !important;
         }
         .ec-unified-header .top-nav {
-        display: flex !important;
-        align-items: center !important;
-        gap: 1.15rem !important;
-        margin: 0 auto !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
+          order: 3 !important;
+          width: 100% !important;
+          justify-content: flex-start !important;
+          gap: .85rem !important;
+        }
+        .ec-unified-header .tools-dropdown.mega-tools {
+          left: 0 !important;
+          transform: none !important;
+          width: min(92vw, 720px) !important;
+          grid-template-columns: repeat(2, minmax(160px, 1fr)) !important;
+        }
       }
       @media (max-width: 560px) {
         .ec-unified-header .top-nav a[data-tab-jump="office"],
