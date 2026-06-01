@@ -36,15 +36,26 @@ assert(
 );
 
 assert(
+  sql.includes('create or replace function public.is_pro'),
+  'Supabase setup should define an is_pro helper for Pro-only features.',
+);
+
+assert(
   sql.includes('Users can read own conversion history') &&
-    sql.includes('auth.uid() = user_id or public.is_admin()'),
-  'Users should only read their own conversion history unless they are admins.',
+    sql.includes('using ((auth.uid() = user_id and public.is_pro()) or public.is_admin())'),
+  'Only Pro users should read their own conversion history unless they are admins.',
 );
 
 assert(
   sql.includes('Users can insert own conversion history') &&
-    sql.includes('with check (auth.uid() = user_id)'),
-  'Users should only insert conversion history for their own account.',
+    sql.includes('with check ((auth.uid() = user_id and public.is_pro()) or public.is_admin())'),
+  'Only Pro users should insert conversion history for their own account unless they are admins.',
+);
+
+assert(
+  sql.includes('for update') &&
+    sql.includes('with check ((auth.uid() = user_id and public.is_pro()) or public.is_admin())'),
+  'Only Pro users or admins should update conversion history rows.',
 );
 
 console.log('conversion history schema tests passed');

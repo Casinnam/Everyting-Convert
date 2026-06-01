@@ -36,6 +36,21 @@ as $$
   );
 $$;
 
+create or replace function public.is_pro(user_id uuid default auth.uid())
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where (id = user_id or lower(email) = lower(auth.jwt()->>'email'))
+      and plan = 'pro'
+  );
+$$;
+
 drop policy if exists "Users can read own profile" on public.profiles;
 create policy "Users can read own profile"
 on public.profiles
@@ -295,29 +310,29 @@ create policy "Users can read own conversion history"
 on public.conversion_history
 for select
 to authenticated
-using (auth.uid() = user_id or public.is_admin());
+using ((auth.uid() = user_id and public.is_pro()) or public.is_admin());
 
 drop policy if exists "Users can insert own conversion history" on public.conversion_history;
 create policy "Users can insert own conversion history"
 on public.conversion_history
 for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((auth.uid() = user_id and public.is_pro()) or public.is_admin());
 
 drop policy if exists "Users can update own conversion history" on public.conversion_history;
 create policy "Users can update own conversion history"
 on public.conversion_history
 for update
 to authenticated
-using (auth.uid() = user_id or public.is_admin())
-with check (auth.uid() = user_id or public.is_admin());
+using ((auth.uid() = user_id and public.is_pro()) or public.is_admin())
+with check ((auth.uid() = user_id and public.is_pro()) or public.is_admin());
 
 drop policy if exists "Users can delete own conversion history" on public.conversion_history;
 create policy "Users can delete own conversion history"
 on public.conversion_history
 for delete
 to authenticated
-using (auth.uid() = user_id or public.is_admin());
+using ((auth.uid() = user_id and public.is_pro()) or public.is_admin());
 
 comment on table public.conversion_history is
 'Stores lightweight conversion activity records only. Converted files are not stored here.';
