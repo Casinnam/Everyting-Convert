@@ -190,6 +190,7 @@
     'JPG to PDF': ['image to pdf/image-to-pdf.html', 'fa-file-pdf', 'Turn JPGs into PDF'],
     'PNG to PDF': ['image to pdf/image-to-pdf.html', 'fa-file-pdf', 'Turn PNGs into PDF'],
     'WEBP to PNG': ['image converter/image-converter.html?mode=webp-png', 'fa-image', 'Convert WEBP to PNG'],
+    'WEBP to JPG': ['image converter/image-converter.html?mode=webp-jpg', 'fa-image', 'Convert WEBP to JPG'],
     'HEIC to JPG': ['image converter/image-converter.html?mode=heic-jpg', 'fa-image', 'Convert HEIC photos'],
     'PNG to SVG': ['image converter/image-converter.html?mode=png-svg', 'fa-bezier-curve', 'Vectorize PNG files'],
     'MP4 to MP3': ['media converter/media-converter.html?mode=mp4-mp3', 'fa-music', 'Extract audio from video'],

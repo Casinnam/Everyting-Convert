@@ -285,6 +285,7 @@
               <a href="${prefix}image converter/image-converter.html">Image Converter</a>
               <a href="${prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-jpg">WEBP to JPG</a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
               <a href="${prefix}image converter/image-converter.html?mode=png-svg">PNG to SVG</a>
               <a href="${prefix}image converter/image-converter.html?mode=svg">SVG Converter</a>
@@ -340,6 +341,7 @@
               <a href="${prefix}image converter/image-converter.html">Image Converter</a>
               <a href="${prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-jpg">WEBP to JPG</a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
             </div>
             <div style="display: flex; flex-direction: column; min-width: 160px; border-left: 1px solid #f1f5f9; padding-left: 0.5rem;">
