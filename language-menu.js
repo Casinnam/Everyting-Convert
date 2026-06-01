@@ -126,9 +126,17 @@
     securityPrivate: { en: 'Private by design.', ko: '설계부터 프라이버시를 고려합니다.', de: 'Private by Design.', es: 'Privacidad por diseño.', fr: 'Privé par conception.' },
     securityPrivateDesc: { en: 'No suspicious downloads, no required browser extensions, and no unnecessary permissions. Just secure browser-based file conversion.', ko: '의심스러운 다운로드, 브라우저 확장 프로그램 설치 요구, 불필요한 권한 요청이 없습니다. 안전한 브라우저 기반 파일 변환만 제공합니다.', de: 'Keine verdächtigen Downloads, keine erforderlichen Browser-Erweiterungen und keine unnötigen Berechtigungen. Nur sichere webbasierte Dateikonvertierung.', es: 'Sin descargas sospechosas, sin extensiones de navegador requeridas y sin permisos innecesarios. Solo conversión segura basada en el navegador.', fr: 'Aucun téléchargement suspect, aucune extension de navigateur requise et aucune autorisation inutile. Juste une conversion de fichiers sécurisée basée sur le navigateur.' },
     // Subscription
+    subKicker: { en: 'Newsletter', ko: '소식 받기', de: 'Newsletter', es: 'Boletín', fr: 'Newsletter' },
+    subHeading: { en: 'Stay Updated', ko: '구독하기', de: 'Bleiben Sie auf dem Laufenden', es: 'Mantente actualizado', fr: 'Restez informé' },
     subCopy1: { en: 'Good information is not discovered by chance, but received consistently.', ko: '좋은 정보는 우연히 발견하는 것이 아니라, 꾸준히 받아보는 것입니다.', de: 'Gute Informationen werden nicht zufällig entdeckt, sondern konsequent empfangen.', es: 'La buena información no se descubre por casualidad, sino que se recibe de forma constante.', fr: 'Les bonnes informations ne se découvrent pas par hasard, mais se reçoivent régulièrement.' },
     subCopy2: { en: 'We send carefully selected useful information and practical tips every week.', ko: '매주 엄선한 유용한 정보와 실전 팁을 이메일로 보내드립니다.', de: 'Wir senden jede Woche sorgfältig ausgewählte nützliche Informationen und praktische Tipps.', es: 'Enviamos información útil cuidadosamente seleccionada y consejos prácticos cada semana.', fr: 'Nous envoyons chaque semaine des informations utiles soigneusement sélectionnées et des conseils pratiques.' },
     subCopy3: { en: 'Be the first to receive content you won\'t want to miss.', ko: '놓치면 아쉬운 콘텐츠를 가장 먼저 받아보세요.', de: 'Seien Sie der Erste, der Inhalte erhält, die Sie nicht verpassen möchten.', es: 'Sé el primero en recibir contenido que no querrás perderte.', fr: 'Soyez le premier à recevoir du contenu que vous ne voudrez pas manquer.' },
+    subTitle: { en: 'Subscribe to Newsletter', ko: '뉴스레터 구독 신청', de: 'Newsletter abonnieren', es: 'Suscribirse al boletín', fr: 'S\'abonner à la newsletter' },
+    subEmailLabel: { en: 'Email', ko: '이메일', de: 'E-Mail', es: 'Correo electrónico', fr: 'E-mail' },
+    subBtn: { en: 'Subscribe', ko: '구독하기', de: 'Abonnieren', es: 'Suscribirse', fr: 'S\'abonner' },
+    subCancel: { en: 'Cancel', ko: '취소', de: 'Abbrechen', es: 'Cancelar', fr: 'Annuler' },
+    subStatusMsg: { en: 'Your email will be sent to contact@everythingconvert.com for subscription.', ko: '입력하신 이메일은 구독 신청을 위해 contact@everythingconvert.com으로 전송됩니다.', de: 'Ihre E-Mail wird für das Abonnement an contact@everythingconvert.com gesendet.', es: 'Su correo electrónico se enviará a contact@everythingconvert.com para su suscripción.', fr: 'Votre e-mail sera envoyé à contact@everythingconvert.com pour abonnement.' },
+    subWelcomeKicker: { en: 'Welcome', ko: '환영합니다', de: 'Willkommen', es: 'Bienvenido', fr: 'Bienvenue' },
     subWelcomeTitle: { en: 'You have successfully subscribed.', ko: '구독이 성공적으로 완료되었습니다.', de: 'Sie haben sich erfolgreich angemeldet.', es: 'Te has suscrito correctamente.', fr: 'Vous vous êtes abonné avec succès.' },
     subWelcomeDesc: { en: 'Thank you for subscribing! We will send you updates and useful tips.', ko: '구독해주셔서 감사합니다! 유용한 팁과 업데이트를 보내드리겠습니다.', de: 'Danke fürs Abonnieren! Wir senden Ihnen Updates und nützliche Tipps.', es: '¡Gracias por suscribirte! Te enviaremos actualizaciones y consejos útiles.', fr: 'Merci de vous être abonné ! Nous vous enverrons des mises à jour et des conseils utiles.' },
     subReturnToMain: { en: 'Return to Main Page', ko: '메인 페이지로 돌아가기', de: 'Zurück zur Hauptseite', es: 'Volver a la página principal', fr: 'Retour à la page principale' },
@@ -285,6 +293,13 @@
     setText('.hero-subtitle', text('authSubtitle', language));
   }
 
+  function applySubscribe(language) {
+    const emailInput = document.getElementById('subscribeEmail');
+    if (emailInput) {
+      emailInput.placeholder = text('subEmailLabel', language);
+    }
+  }
+
   function updateLanguageMenu(language) {
     document.querySelectorAll('[data-language-current]').forEach((element) => {
       element.textContent = labels[language];
@@ -306,6 +321,7 @@
     applyHome(selected);
     applyFooter(selected);
     applyAuth(selected);
+    applySubscribe(selected);
     updateLanguageMenu(selected);
     updateLinks(selected);
     if (window.EverythingConvertToolLanguage) {
