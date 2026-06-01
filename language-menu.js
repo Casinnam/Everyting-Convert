@@ -94,6 +94,37 @@
     authFree: { en: 'Free', ko: '무료', de: 'Kostenlos', es: 'Gratis', fr: 'Gratuit' },
     authPro: { en: 'Pro', ko: 'Pro', de: 'Pro', es: 'Pro', fr: 'Pro' },
     authAdmin: { en: 'Admin', ko: '관리자', de: 'Admin', es: 'Admin', fr: 'Admin' },
+    // Why section
+    whyFast: { en: 'Fast Conversion', ko: '빠른 변환', de: 'Schnelle Konvertierung', es: 'Conversión rápida', fr: 'Conversion rapide' },
+    whyFastDesc: { en: 'Convert files in seconds with a clean workflow.', ko: '깔끔한 워크플로우로 몇 초 만에 파일을 변환하세요.', de: 'Konvertiere Dateien in Sekunden mit einem klaren Workflow.', es: 'Convierte archivos en segundos con un flujo de trabajo limpio.', fr: 'Convertissez des fichiers en quelques secondes avec un flux de travail clair.' },
+    whyPrivacy: { en: 'Privacy First', ko: '개인정보 보호 최우선', de: 'Datenschutz zuerst', es: 'Privacidad primero', fr: 'La confidentialité d\'abord' },
+    whyPrivacyDesc: { en: 'Your files are processed securely and never shared.', ko: '파일은 안전하게 처리되며 절대 공유되지 않습니다.', de: 'Deine Dateien werden sicher verarbeitet und niemals geteilt.', es: 'Tus archivos se procesan de forma segura y nunca se comparten.', fr: 'Vos fichiers sont traités en toute sécurité et ne sont jamais partagés.' },
+    whyNoInstall: { en: 'No Software Install', ko: '소프트웨어 설치 없음', de: 'Keine Software-Installation', es: 'Sin instalación de software', fr: 'Aucune installation de logiciel' },
+    whyNoInstallDesc: { en: '100% web-based. Nothing to download or install.', ko: '100% 웹 기반입니다. 다운로드하거나 설치할 필요가 없습니다.', de: '100% webbasiert. Nichts herunterzuladen oder zu installieren.', es: '100% basado en web. Nada que descargar o instalar.', fr: '100% basé sur le web. Rien à télécharger ou à installer.' },
+    whyAnywhere: { en: 'Works Everywhere', ko: '어디서나 작동', de: 'Funktioniert überall', es: 'Funciona en todas partes', fr: 'Fonctionne partout' },
+    whyAnywhereDesc: { en: 'Access tools from any device, anytime, anywhere.', ko: '언제 어디서나 모든 장치에서 도구에 접속하세요.', de: 'Greife jederzeit, überall und von jedem Gerät auf Tools zu.', es: 'Accede a las herramientas desde cualquier dispositivo, en cualquier momento y lugar.', fr: 'Accédez aux outils depuis n\'importe quel appareil, à tout moment, n\'importe où.' },
+    // AI Section
+    aiEyebrow: { en: 'Go beyond conversion.', ko: '단순한 변환 그 이상.', de: 'Gehe über Konvertierung hinaus.', es: 'Ve más allá de la conversión.', fr: 'Allez au-delà de la conversion.' },
+    aiTitle: { en: 'Turn documents, audio, and images into usable content.', ko: '문서, 오디오, 이미지를 유용한 콘텐츠로 변환하세요.', de: 'Mache Dokumente, Audio und Bilder zu nutzbaren Inhalten.', es: 'Convierte documentos, audio e imágenes en contenido útil.', fr: 'Transformez des documents, de l\'audio et des images en contenu utile.' },
+    tryAiTools: { en: 'Try AI Tools', ko: 'AI 도구 체험하기', de: 'KI-Tools ausprobieren', es: 'Probar herramientas de IA', fr: 'Essayer les outils d\'IA' },
+    aiPdfSummary: { en: 'PDF Summary', ko: 'PDF 요약', de: 'PDF-Zusammenfassung', es: 'Resumen de PDF', fr: 'Résumé PDF' },
+    aiPdfSummaryDesc: { en: 'Summarize long PDFs in seconds.', ko: '몇 초 만에 긴 PDF를 요약하세요.', de: 'Fasse lange PDFs in Sekunden zusammen.', es: 'Resume PDFs largos en segundos.', fr: 'Résumez de longs PDF en quelques secondes.' },
+    aiAudioText: { en: 'Audio to Text', ko: '오디오를 텍스트로', de: 'Audio zu Text', es: 'Audio a texto', fr: 'Audio en texte' },
+    aiAudioTextDesc: { en: 'Transcribe audio and video to text.', ko: '오디오 및 비디오를 텍스트로 변환하세요.', de: 'Transkribiere Audio und Video zu Text.', es: 'Transcribe audio y video a texto.', fr: 'Transcrivez de l\'audio et de la vidéo en texte.' },
+    aiBgRemover: { en: 'Background Remover', ko: '배경 제거', de: 'Hintergrund-Entferner', es: 'Eliminador de fondo', fr: 'Suppresseur de fond' },
+    aiBgRemoverDesc: { en: 'Remove backgrounds from any image.', ko: '모든 이미지의 배경을 제거하세요.', de: 'Entferne Hintergründe von jedem Bild.', es: 'Elimina el fondo de cualquier imagen.', fr: 'Supprimez les fonds de n\'importe quelle image.' },
+    aiImageUpscaler: { en: 'Image Upscaler', ko: '이미지 업스케일러', de: 'Bild-Upscaler', es: 'Mejorador de imagen', fr: 'Améliorateur d\'image' },
+    aiImageUpscalerDesc: { en: 'Enhance resolution without losing quality.', ko: '품질 저하 없이 해상도를 향상시키세요.', de: 'Verbessere die Auflösung ohne Qualitätsverlust.', es: 'Mejora la resolución sin perder calidad.', fr: 'Améliorez la resolución sans perte de qualité.' },
+    // Use Cases Section
+    useCasesTitle: { en: 'Built for everyone', ko: '모두를 위한 도구', de: 'Für alle gemacht', es: 'Construido para todos', fr: 'Conçu pour tout le monde' },
+    forOfficeWorkers: { en: 'For Office Workers', ko: '직장인을 위해', de: 'Für Büroangestellte', es: 'Para oficinistas', fr: 'Pour les employés de bureau' },
+    forCreators: { en: 'For Creators', ko: '크리에이터를 위해', de: 'Für Creator', es: 'Para creadores', fr: 'Pour les créateurs' },
+    forStudents: { en: 'For Students', ko: '학생을 위해', de: 'Für Studenten', es: 'Para estudiantes', fr: 'Pour les étudiants' },
+    forDevelopers: { en: 'For Developers', ko: '개발자를 위해', de: 'Für Entwickler', es: 'Para desarrolladores', fr: 'Pour les développeurs' },
+    forOnlineSellers: { en: 'For Online Sellers', ko: '온라인 판매자를 위해', de: 'Für Online-Verkäufer', es: 'Para vendedores online', fr: 'Pour les vendeurs en ligne' },
+    // Security note
+    securityPrivate: { en: 'Private by design.', ko: '설계부터 프라이버시를 고려합니다.', de: 'Private by Design.', es: 'Privacidad por diseño.', fr: 'Privé par conception.' },
+    securityPrivateDesc: { en: 'No suspicious downloads, no required browser extensions, and no unnecessary permissions. Just secure browser-based file conversion.', ko: '의심스러운 다운로드, 브라우저 확장 프로그램 설치 요구, 불필요한 권한 요청이 없습니다. 안전한 브라우저 기반 파일 변환만 제공합니다.', de: 'Keine verdächtigen Downloads, keine erforderlichen Browser-Erweiterungen und keine unnötigen Berechtigungen. Nur sichere webbasierte Dateikonvertierung.', es: 'Sin descargas sospechosas, sin extensiones de navegador requeridas y sin permisos innecesarios. Solo conversión segura basada en el navegador.', fr: 'Aucun téléchargement suspect, aucune extension de navigateur requise et aucune autorisation inutile. Juste une conversion de fichiers sécurisée basée sur le navigateur.' },
   };
 
   const phraseToKey = {};
