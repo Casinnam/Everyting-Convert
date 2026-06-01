@@ -15,4 +15,9 @@ assert(
   'Pricing page should explain where Pro users can review conversion history.',
 );
 
+assert(
+  pricing.includes('<a class="plan-button secondary-plan" href="contact.html">Contact us</a>'),
+  'Business Contact us button should link to the site contact page.',
+);
+
 console.log('pricing history notice tests passed');
