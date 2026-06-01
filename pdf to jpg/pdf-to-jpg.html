@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -827,8 +827,8 @@
 
 <main>
   <div class="hero">
-    <h1>PDFë¥¼ JPGë¡œ<span class="line2">ë³€í™˜í•˜ì„¸ìš”</span></h1>
-    <p>ë¸Œë¼ìš°ì €ì—ì„œ ë°”ë¡œ Â· ì„œë²„ ì—…ë¡œë“œ ì—†ìŒ Â· ë¬´ë£Œ</p>
+    <h1>PDF¸¦ JPG·Î<span class="line2">º¯È¯ÇÏ¼¼¿ä</span></h1>
+    <p>ºê¶ó¿ìÀú¿¡¼­ ¹Ù·Î ¡¤ ¼­¹ö ¾÷·Îµå ¾øÀ½ ¡¤ ¹«·á</p>
   </div>
 
   <!-- Drop Zone -->
@@ -841,41 +841,41 @@
         <polyline points="9 15 12 18 15 15"/>
       </svg>
     </div>
-    <h2>PDF íŒŒì¼ì„ ë“œë˜ê·¸í•˜ì„¸ìš”</h2>
-    <p>ë˜ëŠ” ì•„ë˜ ë²„íŠ¼ì„ í´ë¦­í•˜ì—¬ íŒŒì¼ì„ ì„ íƒí•˜ì„¸ìš”</p>
-    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">íŒŒì¼ ì„ íƒ</button>
+    <h2>PDF ÆÄÀÏÀ» µå·¡±×ÇÏ¼¼¿ä</h2>
+    <p>¶Ç´Â ¾Æ·¡ ¹öÆ°À» Å¬¸¯ÇÏ¿© ÆÄÀÏÀ» ¼±ÅÃÇÏ¼¼¿ä</p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">ÆÄÀÏ ¼±ÅÃ</button>
     <input type="file" id="fileInput" accept=".pdf">
   </div>
 
   <!-- Settings -->
   <div class="settings-panel" id="settingsPanel">
-    <div class="settings-title">ë³€í™˜ ì„¤ì •</div>
+    <div class="settings-title">º¯È¯ ¼³Á¤</div>
     <div class="settings-grid">
       <div class="setting-item">
-        <label>í•´ìƒë„ (DPI)</label>
+        <label>ÇØ»óµµ (DPI)</label>
         <select id="dpiSelect">
-          <option value="1">72 DPI (ì›¹ìš©)</option>
+          <option value="1">72 DPI (À¥¿ë)</option>
           <option value="1.5">108 DPI</option>
-          <option value="2" selected>144 DPI (ê¶Œì¥)</option>
-          <option value="3">216 DPI (ê³ í™”ì§ˆ)</option>
-          <option value="4">288 DPI (ìµœê³ í™”ì§ˆ)</option>
+          <option value="2" selected>144 DPI (±ÇÀå)</option>
+          <option value="3">216 DPI (°íÈ­Áú)</option>
+          <option value="4">288 DPI (ÃÖ°íÈ­Áú)</option>
         </select>
       </div>
       <div class="setting-item">
-        <label>JPG í’ˆì§ˆ <span class="quality-val" id="qualityVal">90%</span></label>
+        <label>JPG Ç°Áú <span class="quality-val" id="qualityVal">90%</span></label>
         <input type="range" id="qualityRange" min="50" max="100" value="90" step="5">
       </div>
       <div class="setting-item">
-        <label>í˜ì´ì§€ ë²”ìœ„</label>
+        <label>ÆäÀÌÁö ¹üÀ§</label>
         <select id="pageRange">
-          <option value="all">ëª¨ë“  í˜ì´ì§€</option>
-          <option value="first">ì²« ë²ˆì§¸ í˜ì´ì§€ë§Œ</option>
-          <option value="custom">ì§ì ‘ ì…ë ¥</option>
+          <option value="all">¸ğµç ÆäÀÌÁö</option>
+          <option value="first">Ã¹ ¹øÂ° ÆäÀÌÁö¸¸</option>
+          <option value="custom">Á÷Á¢ ÀÔ·Â</option>
         </select>
       </div>
     </div>
     <div id="customPageInput" style="margin-top:1rem;display:none;">
-      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">í˜ì´ì§€ ë²ˆí˜¸ (ì˜ˆ: 1,3,5-8)</label>
+      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">ÆäÀÌÁö ¹øÈ£ (¿¹: 1,3,5-8)</label>
       <input type="text" id="customPages" placeholder="1,3,5-8" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;border-radius:2px;outline:none;">
     </div>
   </div>
@@ -901,13 +901,13 @@
       <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
     </svg>
-    ë³€í™˜ ì‹œì‘
+    º¯È¯ ½ÃÀÛ
   </button>
 
   <!-- Progress -->
   <div class="progress-section" id="progressSection">
     <div class="progress-header">
-      <span class="progress-label" id="progressLabel">ë³€í™˜ ì¤‘...</span>
+      <span class="progress-label" id="progressLabel">º¯È¯ Áß...</span>
       <span class="progress-pct" id="progressPct">0%</span>
     </div>
     <div class="progress-bar-bg">
@@ -918,8 +918,8 @@
   <!-- Results -->
   <div class="results-section" id="resultsSection">
     <div class="results-header">
-      <div class="results-title">ë³€í™˜ ì™„ë£Œ ? <span id="pageCount">0</span>í˜ì´ì§€</div>
-      <button class="download-all-btn" id="downloadAllBtn" onclick="downloadAll()">ì „ì²´ ë‹¤ìš´ë¡œë“œ</button>
+      <div class="results-title">º¯È¯ ¿Ï·á ? <span id="pageCount">0</span>ÆäÀÌÁö</div>
+      <button class="download-all-btn" id="downloadAllBtn" onclick="downloadAll()">ÀüÃ¼ ´Ù¿î·Îµå</button>
     </div>
     <div class="images-grid" id="imagesGrid"></div>
     <div class="jszip-note" id="zipNote"></div>
@@ -927,7 +927,7 @@
 
   <!-- Reset -->
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" onclick="resetAll()">ìƒˆ íŒŒì¼ ë³€í™˜í•˜ê¸°</button>
+    <button class="reset-btn" onclick="resetAll()">»õ ÆÄÀÏ º¯È¯ÇÏ±â</button>
   </div>
 </main>
 
@@ -995,7 +995,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>â“’ EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>¨Ï EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -1003,7 +1003,7 @@
       </button>
       <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">í•œêµ­ì–´</button>
+                    <button type="button" data-language="ko">ÇÑ±¹¾î</button>
                     <button type="button" data-language="de">Deutsch</button>
                     <button type="button" data-language="es">Espanol</button>
                     <button type="button" data-language="fr">Francais</button>
@@ -1047,7 +1047,7 @@
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type === 'application/pdf') loadFile(file);
-    else alert('PDF íŒŒì¼ë§Œ ì—…ë¡œë“œ ê°€ëŠ¥í•©ë‹ˆë‹¤.');
+    else alert('PDF ÆÄÀÏ¸¸ ¾÷·Îµå °¡´ÉÇÕ´Ï´Ù.');
   });
 
   document.getElementById('fileInput').addEventListener('change', e => {
@@ -1060,7 +1060,7 @@
     pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
     document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}í˜ì´ì§€ Â· ${formatSize(file.size)}`;
+    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}ÆäÀÌÁö ¡¤ ${formatSize(file.size)}`;
     document.getElementById('fileInfo').classList.add('visible');
     document.getElementById('settingsPanel').classList.add('visible');
     document.getElementById('convertBtn').classList.add('visible');
@@ -1110,7 +1110,7 @@
     for (let i = 0; i < pages.length; i++) {
       const pageNum = pages[i];
       const pct = Math.round((i / pages.length) * 100);
-      updateProgress(`í˜ì´ì§€ ${pageNum} ë³€í™˜ ì¤‘...`, pct);
+      updateProgress(`ÆäÀÌÁö ${pageNum} º¯È¯ Áß...`, pct);
 
       const page = await pdfDoc.getPage(pageNum);
       const viewport = page.getViewport({ scale });
@@ -1125,7 +1125,7 @@
       addImageCard(dataURL, pageNum, i);
     }
 
-    updateProgress('ì™„ë£Œ!', 100);
+    updateProgress('¿Ï·á!', 100);
     setTimeout(() => {
       document.getElementById('progressSection').classList.remove('visible');
       document.getElementById('resultsSection').classList.add('visible');
@@ -1146,12 +1146,12 @@
     card.className = 'image-card';
     card.style.animationDelay = (index * 0.05) + 's';
     card.innerHTML = `
-      <img src="${dataURL}" alt="í˜ì´ì§€ ${pageNum}" loading="lazy">
+      <img src="${dataURL}" alt="ÆäÀÌÁö ${pageNum}" loading="lazy">
       <div class="image-card-footer">
         <span class="page-label">PAGE ${pageNum}</span>
         <button class="dl-btn" onclick="downloadSingle('${dataURL}', ${pageNum})">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          ì €ì¥
+          ÀúÀå
         </button>
       </div>
     `;
@@ -1169,7 +1169,7 @@
     if (generatedImages.length === 0) return;
 
     const btn = document.getElementById('downloadAllBtn');
-    btn.textContent = 'ZIP ìƒì„± ì¤‘...';
+    btn.textContent = 'ZIP »ı¼º Áß...';
     btn.disabled = true;
 
     try {
@@ -1195,11 +1195,11 @@
       setTimeout(() => URL.revokeObjectURL(url), 3000);
 
     } catch (e) {
-      console.error('ZIP ìƒì„± ì‹¤íŒ¨:', e);
-      alert('ZIP ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. í˜ì´ì§€ë³„ ì €ì¥ ë²„íŠ¼ì„ ì´ìš©í•´ ì£¼ì„¸ìš”.');
+      console.error('ZIP »ı¼º ½ÇÆĞ:', e);
+      alert('ZIP »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù. ÆäÀÌÁöº° ÀúÀå ¹öÆ°À» ÀÌ¿ëÇØ ÁÖ¼¼¿ä.');
     }
 
-    btn.textContent = 'ì „ì²´ ë‹¤ìš´ë¡œë“œ';
+    btn.textContent = 'ÀüÃ¼ ´Ù¿î·Îµå';
     btn.disabled = false;
   }
 
@@ -1219,6 +1219,6 @@
     document.getElementById('customPageInput').style.display = 'none';
   }
 </script>
-<script src="../tool-page-redesign.js?v=20260526a"></script>
+<script src="../tool-page-redesign.js?v=20260601d"></script>
 </body>
 </html>

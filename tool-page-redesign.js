@@ -346,10 +346,14 @@
     if (!dropZone.querySelector('.ec-drop-cloud')) {
       dropZone.insertAdjacentHTML('afterbegin', '<div class="ec-drop-cloud"><i class="fa-solid fa-file-arrow-up"></i></div>');
     }
-    const title = dropZone.querySelector('#dropTitle, .drop-title, h2, strong, p');
+    const title = dropZone.querySelector('#dropTitle, .drop-title, h2, strong, p:first-of-type');
     if (title) title.textContent = meta.drop;
-    const subtitle = dropZone.querySelector('.drop-subtitle, p + p, span');
+    const subtitle = dropZone.querySelector('.drop-subtitle, p:last-of-type, span');
     if (subtitle && subtitle !== title) subtitle.textContent = 'or choose a file from your device';
+    const oldIcons = dropZone.querySelectorAll('.drop-icon, svg:not(.fa-solid)');
+    oldIcons.forEach(i => i.style.display = 'none');
+    const oldBtn = dropZone.querySelector('.browse-btn');
+    if (oldBtn) oldBtn.style.display = 'none';
     if (!dropZone.querySelector('.ec-choose-file')) {
       const chooseButton = document.createElement('button');
       chooseButton.className = 'primary-btn ec-choose-file';

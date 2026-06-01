@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -139,12 +139,12 @@
                 <a href="../gif converter/gif-converter.html?mode=apng-gif">APNG to GIF</a>
                 <a href="../gif converter/gif-converter.html?mode=gif-mp4">GIF to MP4</a>
                 <a href="../gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
-            </div></div><div class="footer-legal-row" style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:1rem 0 1.25rem;border-top:1px solid rgba(47,38,18,.12);"><a style="color:inherit;text-decoration:none;font-weight:700;" href="../about.html">About Us</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../privacy.html">Privacy</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../terms.html">Terms</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../security.html">Security and Compliance</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../contact.html">Contact</a></div><div class="footer-bottom"><div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28"><span>Everything Convert</span></div><p>짤 EverythingConvert.com v.00 All rights reserved (2026)</p><div class="language-menu"><button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button><div class="language-dropdown">
+            </div></div><div class="footer-legal-row" style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:1rem 0 1.25rem;border-top:1px solid rgba(47,38,18,.12);"><a style="color:inherit;text-decoration:none;font-weight:700;" href="../about.html">About Us</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../privacy.html">Privacy</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../terms.html">Terms</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../security.html">Security and Compliance</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="../contact.html">Contact</a></div><div class="footer-bottom"><div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28"><span>Everything Convert</span></div><p>© EverythingConvert.com v.00 All rights reserved (2026)</p><div class="language-menu"><button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button><div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">?쒓뎅??/button>
+                    <button type="button" data-language="ko">?�국??/button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">Espa챰ol</button>
-                    <button type="button" data-language="fr">Fran챌ais</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
                 </div></div></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../supabase-config.js"></script><script src="../auth.js?v=auth-20260528b"></script>
 <script src="../usage-limit.js"></script><script src="../tools-menu.js?v=nav-20260528g"></script><script src="../language-menu.js?v=lang-20260601c"></script>
@@ -157,6 +157,6 @@
   async function convert(){ if(!currentFile) return; setStatus('Reading DOCX...'); const arrayBuffer = await currentFile.arrayBuffer(); const result = await mammoth.extractRawText({ arrayBuffer }); const text = result.value.trim() || 'No readable text found.'; const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, lineHeight = 14, maxWidth = 500; let y = margin; doc.setFontSize(11); text.split(/\n+/).forEach(paragraph => { const lines = doc.splitTextToSize(paragraph, maxWidth); lines.forEach(line => { if (y > 790) { doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 8; }); doc.save(currentFile.name.replace(/\.docx$/i, '') + '.pdf'); setStatus('PDF download started.'); }
   dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
 </script>
-<script src="../tool-page-redesign.js?v=20260526a"></script>
+<script src="../tool-page-redesign.js?v=20260601d"></script>
 </body>
 </html>
