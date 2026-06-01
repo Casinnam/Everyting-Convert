@@ -126,7 +126,7 @@
                     <div class="quick-convert-row">
                         <label>
                             <span>Convert from:</span>
-                            <select>
+                            <select id="homeConvertSource">
                                 <option>Auto detect</option>
                                 <option>PDF</option>
                                 <option>Image</option>
@@ -138,13 +138,25 @@
                         <label>
                             <span>Convert to:</span>
                             <select id="homeConvertTarget">
-                                <option value="pdf to word/pdf-to-word.html">PDF / Word</option>
-                                <option value="image converter/image-converter.html">JPG / PNG / WEBP</option>
-                                <option value="media converter/media-converter.html">MP3 / MP4</option>
+                                <option value="pdf to word/pdf-to-word.html">PDF to Word</option>
+                                <option value="pdf to jpg/pdf-to-jpg.html">PDF to JPG</option>
+                                <option value="pdf to excel/pdf-to-excel.html">PDF to Excel</option>
                                 <option value="image to pdf/image-to-pdf.html">Image to PDF</option>
+                                <option value="excel to pdf/excel-to-pdf.html">Excel to PDF</option>
+                                <option value="docx to pdf/docx-to-pdf.html">DOCX to PDF</option>
+                                <option value="image converter/image-converter.html">Image Converter</option>
+                                <option value="media converter/media-converter.html">Video Converter</option>
+                                <option value="media converter/media-converter.html?mode=audio">Audio Converter</option>
+                                <option value="gif converter/gif-converter.html">Video to GIF</option>
+                                <option value="json to csv/json-to-csv.html">JSON to CSV</option>
                             </select>
                         </label>
                     </div>
+                    <button class="home-convert-button" type="button" id="homeOpenConverter">
+                        Continue to selected tool
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <p class="home-route-note" id="homeRouteNote">Choose a file and a converter. We will open the right tool page for you.</p>
                 </div>
                 <div class="trust-strip" aria-label="Conversion trust badges">
                     <span><i class="fa-regular fa-user"></i>No signup required</span>
@@ -455,14 +467,21 @@
             const chooseFile = document.getElementById('homeChooseFile');
             const selectedFileName = document.getElementById('selectedFileName');
             const dropzone = document.getElementById('homeDropzone');
+            const convertSource = document.getElementById('homeConvertSource');
+            const convertTarget = document.getElementById('homeConvertTarget');
+            const openConverter = document.getElementById('homeOpenConverter');
+            const routeNote = document.getElementById('homeRouteNote');
             const searchInput = document.getElementById('homeToolSearch');
             const cards = Array.from(document.querySelectorAll('.home-tool-card'));
             const tabs = Array.from(document.querySelectorAll('.tool-tab'));
             const emptyMessage = document.getElementById('toolEmptyMessage');
             let activeTab = 'popular';
+            let selectedFile = null;
 
             function updateFileName(file) {
-                selectedFileName.textContent = file ? file.name : 'No file selected';
+                selectedFile = file || null;
+                selectedFileName.textContent = selectedFile ? selectedFile.name : 'No file selected';
+                updateRouteNote(selectedFile ? 'ready' : '');
             }
 
             chooseFile.addEventListener('click', () => fileInput.click());
@@ -484,6 +503,40 @@
                     }
                 });
             });
+
+            function selectedToolLabel() {
+                return convertTarget.options[convertTarget.selectedIndex]
+                    ? convertTarget.options[convertTarget.selectedIndex].textContent.trim()
+                    : 'the selected tool';
+            }
+
+            function updateRouteNote(state) {
+                routeNote.classList.remove('ready', 'warning');
+                if (state) routeNote.classList.add(state);
+                if (selectedFile) {
+                    routeNote.textContent = `${selectedFile.name} is ready. Continue to ${selectedToolLabel()} and select the file there to convert.`;
+                    return;
+                }
+                routeNote.textContent = 'Choose a file and a converter. We will open the right tool page for you.';
+            }
+
+            function openSelectedConverter() {
+                if (!selectedFile) {
+                    updateRouteNote('warning');
+                    routeNote.textContent = 'Please choose or drop a file first, then continue to the selected converter.';
+                    fileInput.click();
+                    return;
+                }
+
+                const targetUrl = convertTarget.value;
+                const source = encodeURIComponent(convertSource.value || 'Auto detect');
+                const target = encodeURIComponent(selectedToolLabel());
+                window.location.href = `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}from=${source}&target=${target}&fromHome=1`;
+            }
+
+            convertTarget.addEventListener('change', () => updateRouteNote(selectedFile ? 'ready' : ''));
+            convertSource.addEventListener('change', () => updateRouteNote(selectedFile ? 'ready' : ''));
+            openConverter.addEventListener('click', openSelectedConverter);
 
             function setActiveTab(nextTab) {
                 activeTab = nextTab;
