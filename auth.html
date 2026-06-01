@@ -372,42 +372,40 @@
     </header>
 
     <main class="main-container">
-        <section class="hero">
+                <section class="hero">
             <div class="subpage-kicker"><i class="fa-solid fa-user-shield"></i> Everything Convert Account</div>
-            <h1 class="hero-title">ê³„ì •?¼ë¡œ ê¸°ëŠ¥??br><span class="gradient-text">ê´€ë¦¬í•˜?¸ìš”</span></h1>
-            <p class="hero-subtitle">ë¬´ë£Œ ?Œì›?€ ?¼ë°˜ ì¶”ì¶œ?? Pro ?Œì›?€ ??ê°ì? ê°•í™”??ë³€?˜ì„ ?¬ìš©?????ˆìŠµ?ˆë‹¤.</p>
+            <h1 class="hero-title">Manage features<br><span class="gradient-text">with your account</span></h1>
+            <p class="hero-subtitle">Free members can use standard extraction, and Pro members can use enhanced table detection.</p>
         </section>
 
-        <section class="auth-shell">
+                <section class="auth-shell">
             <div class="auth-tabs">
-                <button class="auth-tab active" id="loginTab" type="button">ë¡œê·¸??/button>
-                <button class="auth-tab" id="signupTab" type="button">?Œì›ê°€??/button>
+                <button class="auth-tab active" id="loginTab" type="button">Login</button>
+                <button class="auth-tab" id="signupTab" type="button">Sign up</button>
             </div>
-
             <div class="checkout-resume-panel" id="checkoutResumePanel">
                 <strong>Continue to Pro checkout</strong>
                 <p id="checkoutResumeText">After logging in, we will open secure Stripe Checkout for your Pro membership.</p>
                 <button class="auth-submit" id="continueCheckoutBtn" type="button">Continue to Stripe Checkout</button>
             </div>
-
             <form class="auth-form" id="authForm">
                 <button class="google-btn" id="googleBtn" type="button">
                     <i class="fa-brands fa-google"></i>
-                    Gmailë¡?ê³„ì†?˜ê¸°
+                    Continue with Gmail
                 </button>
-                <div class="oauth-divider">?ëŠ” ?´ë©”?¼ë¡œ ê³„ì†</div>
+                <div class="oauth-divider">or continue with email</div>
                 <div class="auth-field hidden" id="signupUsernameField">
-                    <label for="username">? ì? ID</label>
+                    <label for="username">User ID</label>
                     <input id="username" type="text" autocomplete="nickname" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}">
-                    <div class="field-hint">?ë¬¸, ?«ì, ë°‘ì¤„(_)ë§??¬ìš©?????ˆìŠµ?ˆë‹¤. ?? hijacker05</div>
+                    <div class="field-hint">Use 3-24 letters, numbers, or underscores. Example: hijacker05</div>
                 </div>
                 <div class="auth-field">
-                    <label for="email">?´ë©”??/label>
+                    <label for="email">Email</label>
                     <input id="email" type="email" autocomplete="email" list="rememberedEmails" required>
                     <datalist id="rememberedEmails"></datalist>
                 </div>
                 <div class="auth-field">
-                    <label for="password">ë¹„ë?ë²ˆí˜¸</label>
+                    <label for="password">Password</label>
                     <div class="password-wrap">
                         <input id="password" type="password" autocomplete="current-password" minlength="6" required>
                         <button class="password-toggle" id="passwordToggle" type="button" aria-label="Show password" aria-pressed="false">
@@ -417,39 +415,37 @@
                 </div>
                 <label class="remember-row" for="rememberEmail">
                     <input id="rememberEmail" type="checkbox">
-                    <span>???„ì´??ê¸°ì–µ?˜ê¸°</span>
+                    <span>Remember my email</span>
                 </label>
-                <button class="auth-submit" id="submitBtn" type="submit">ë¡œê·¸??/button>
+                <button class="auth-submit" id="submitBtn" type="submit">Login</button>
                 <div class="auth-message" id="authMessage"></div>
             </form>
-
             <div class="account-panel" id="accountPanel">
                 <div class="account-card">
-                    <div>?œì‹œ ?´ë¦„: <strong id="accountName">-</strong></div>
-                    <div>?Œì› ?±ê¸‰: <strong id="accountPlan" data-no-i18n>-</strong></div>
+                    <div>Display name: <strong id="accountName">-</strong></div>
+                    <div>Membership level: <strong id="accountPlan" data-no-i18n>-</strong></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
-                            <label for="accountUsername">? ì? ID ë³€ê²?/label>
+                            <label for="accountUsername">Change User ID</label>
                             <input id="accountUsername" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required>
-                            <div class="field-hint">?ë‹¨ ê³„ì • ?œì‹œ?€ ê´€ë¦¬ì ?”ë©´?????´ë¦„??ë³´ì…?ˆë‹¤.</div>
+                            <div class="field-hint">This name appears in the top account label and the admin screen.</div>
                         </div>
-                        <button class="auth-submit" id="usernameSaveBtn" type="submit">? ì? ID ?€??/button>
+                        <button class="auth-submit" id="usernameSaveBtn" type="submit">Save User ID</button>
                         <div class="auth-message" id="usernameMessage"></div>
                     </form>
                     <div id="accountHint" style="margin-top:0.75rem;"></div>
                 </div>
                 <div class="account-actions">
-                    <a class="account-link" href="index.html#tools">?„êµ¬ë¡??´ë™</a>
+                    <a class="account-link" href="index.html#tools">Go to tools</a>
                     <a class="account-link secondary" href="my-conversions.html">My Conversions</a>
                     <a class="account-link secondary" href="pricing.html">Upgrade</a>
-                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">ê´€ë¦¬ì ?˜ì´ì§€</a>
+                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">Admin page</a>
                 </div>
             </div>
-
             <div class="auth-status-card">
-                <div>?„ì¬ ?íƒœ: <strong data-auth-state data-no-i18n>?•ì¸ ì¤?..</strong></div>
+                <div>Current status: <strong data-auth-state data-no-i18n>Checking...</strong></div>
                 <div style="margin-top:0.75rem;">
-                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">ë¡œê·¸?„ì›ƒ</button>
+                    <button class="auth-submit" data-auth-logout type="button" style="display:none;width:100%;">Logout</button>
                 </div>
             </div>
         </section>
@@ -520,7 +516,7 @@
                 <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
                 <span>Everything Convert</span>
             </div>
-            <p>Â© EverythingConvert.com v.00 All rights reserved (2026)</p>
+            <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
             <div class="language-menu">
                 <button class="language-toggle" type="button" aria-expanded="false">
                     <i class="fa-solid fa-globe"></i>
@@ -528,10 +524,10 @@
                 </button>
                 <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">?œêµ­??/button>
+                    <button type="button" data-language="ko">Korean</button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">EspaÃ±ol</button>
-                    <button type="button" data-language="fr">FranÃ§ais</button>
+                    <button type="button" data-language="es">Spanish</button>
+                    <button type="button" data-language="fr">French</button>
                 </div>
             </div>
         </div>
@@ -976,19 +972,19 @@
         function friendlyAuthError(error) {
             const message = error && error.message ? error.message : String(error);
             if (/Invalid login credentials/i.test(message)) {
-                return '?´ë©”???ëŠ” ë¹„ë?ë²ˆí˜¸ê°€ ë§ì? ?ŠìŠµ?ˆë‹¤. ?Œì›ê°€?????´ë©”???•ì¸???„ìš”???¤ì •?´ë©´ ë°›ì? ë©”ì¼??ë¨¼ì? ?•ì¸??ì£¼ì„¸??';
+                return 'Email or password is incorrect. If you just signed up, please confirm your email first.';
             }
             if (/Email not confirmed/i.test(message)) {
-                return '?´ë©”???•ì¸???„ì§ ?„ë£Œ?˜ì? ?Šì•˜?µë‹ˆ?? ë°›ì? ë©”ì¼?¨ì—??Supabase ?•ì¸ ë©”ì¼???´ì–´ ?¸ì¦??ì£¼ì„¸??';
+                return 'Please confirm your email first. Open the confirmation link from the email we sent you.';
             }
             if (/Database error saving new user/i.test(message)) {
-                return '?Œì› ?„ë¡œ???ì„± ì¤??¤ë¥˜ê°€ ?¬ìŠµ?ˆë‹¤. Supabase SQL Editor?ì„œ supabase-setup.sql ?„ì²´ë¥??¤ì‹œ ?¤í–‰??ì£¼ì„¸??';
+                return 'There was a problem creating your profile. Please try again, or contact support if it continues.';
             }
             if (/User already registered/i.test(message)) {
-                return '?´ë? ê°€?…ëœ ?´ë©”?¼ì…?ˆë‹¤. ë¡œê·¸????—??ë¡œê·¸?¸í•´ ì£¼ì„¸??';
+                return 'This email is already registered. Please switch to Login and sign in.';
             }
-            if (/username/i.test(message) || /? ì? ID/i.test(message)) {
-                return '? ì? ID???ë¬¸, ?«ì, ë°‘ì¤„(_)ë§??¬ìš©?´ì„œ 3~24?ë¡œ ?…ë ¥??ì£¼ì„¸?? ?´ë? ?¬ìš© ì¤‘ì¸ ID???˜ë„ ?ˆìŠµ?ˆë‹¤.';
+            if (/username/i.test(message) || /User ID/i.test(message)) {
+                return 'Use 3-24 letters, numbers, or underscores for your User ID. This ID may already be taken.';
             }
             return message;
         }
@@ -1031,7 +1027,7 @@
             if (!auth) return;
 
             googleBtn.disabled = true;
-            setMessage('Google ë¡œê·¸???˜ì´ì§€ë¡??´ë™ ì¤?..', '');
+            setMessage('Opening Google sign-in...', '');
             try {
                 await auth.signInWithGoogle();
             } catch (error) {
@@ -1047,7 +1043,7 @@
             const username = normalizeUsername(usernameInput.value);
 
             if (mode === 'signup' && !isValidUsername(username)) {
-                setMessage('? ì? ID???ë¬¸, ?«ì, ë°‘ì¤„(_)ë§??¬ìš©?´ì„œ 3~24?ë¡œ ?…ë ¥??ì£¼ì„¸??', 'error');
+                setMessage('Use 3-24 letters, numbers, or underscores for your User ID.', 'error');
                 return;
             }
 
@@ -1055,7 +1051,7 @@
             if (!auth) return;
 
             submitBtn.disabled = true;
-            setMessage(mode === 'login' ? 'ë¡œê·¸??ì¤?..' : '?Œì›ê°€??ì¤?..', '');
+            setMessage(mode === 'login' ? 'Logging in...' : 'Creating account...', '');
 
             try {
                 if (mode === 'login') {
@@ -1064,13 +1060,13 @@
                         saveRememberedEmail(email);
                         hydrateRememberedEmails();
                     }
-                    setMessage('ë¡œê·¸?¸ë˜?ˆìŠµ?ˆë‹¤. ê³„ì • ?íƒœê°€ ê°±ì‹ ?˜ë©´ ?„êµ¬ ?˜ì´ì§€ë¡??´ë™?????ˆìŠµ?ˆë‹¤.', 'success');
+                    setMessage('Logged in. Your account status is refreshing...', 'success');
                     updateAccountView();
                     if (await handleRedirectAfterAuth(auth)) return;
                     setTimeout(() => {
                         const state = auth.state;
                         if (state.user) {
-                            setMessage(`${auth.displayName()} ê³„ì •?¼ë¡œ ë¡œê·¸?¸ë˜?ˆìŠµ?ˆë‹¤.`, 'success');
+                            setMessage(`${auth.displayName()} account is signed in.`, 'success');
                             updateAccountView();
                             handleRedirectAfterAuth(auth);
                         }
@@ -1078,11 +1074,11 @@
                 } else {
                     const result = await auth.signUp(email, password, username);
                     if (result.session) {
-                        setMessage('?Œì›ê°€?…ê³¼ ë¡œê·¸?¸ì´ ?„ë£Œ?˜ì—ˆ?µë‹ˆ??', 'success');
+                        setMessage('Account created and signed in.', 'success');
                         updateAccountView();
                     } else {
                         setMode('login', { clearMessage: false });
-                        setMessage('?Œì›ê°€???”ì²­???„ë£Œ?˜ì—ˆ?µë‹ˆ?? ë°›ì? ë©”ì¼?¨ì—???•ì¸ ë§í¬ë¥??„ë¥¸ ??ë¡œê·¸?¸í•´ ì£¼ì„¸??', 'success');
+                        setMessage('Sign-up request completed. Please confirm your email, then log in.', 'success');
                     }
                 }
             } catch (error) {
@@ -1096,13 +1092,13 @@
             event.preventDefault();
             const username = normalizeUsername(accountUsername.value);
             if (!isValidUsername(username)) {
-                usernameMessage.textContent = '? ì? ID???ë¬¸, ?«ì, ë°‘ì¤„(_)ë§??¬ìš©?´ì„œ 3~24?ë¡œ ?…ë ¥??ì£¼ì„¸??';
+                usernameMessage.textContent = 'Use 3-24 letters, numbers, or underscores for your User ID.';
                 usernameMessage.className = 'auth-message error';
                 return;
             }
 
             usernameSaveBtn.disabled = true;
-            usernameMessage.textContent = '?€??ì¤?..';
+            usernameMessage.textContent = 'Saving...';
             usernameMessage.className = 'auth-message';
             try {
                 const auth = getAuthApi();
@@ -1113,7 +1109,7 @@
                 if (currentUsername.toLowerCase() !== username.toLowerCase()) {
                     await auth.updateUsername(username);
                 }
-                usernameMessage.textContent = '? ì? IDê°€ ?€?¥ë˜?ˆìŠµ?ˆë‹¤. ?ˆìœ¼ë¡??´ë™?©ë‹ˆ??..';
+                usernameMessage.textContent = 'User ID saved. Moving to the home page...';
                 usernameMessage.className = 'auth-message success';
                 updateAccountView();
                 setTimeout(() => {
