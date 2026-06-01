@@ -153,6 +153,20 @@
       max: 'Short clips work best for GIF conversion.',
       steps: ['Upload your source file', 'Choose GIF settings', 'Download converted file'],
       related: ['Video to GIF', 'MP4 to GIF', 'WEBM to GIF', 'GIF to MP4', 'Image to GIF']
+    },
+    'csv-converter.html': {
+      category: 'Developer',
+      title: 'CSV Converter',
+      accent: 'CSV',
+      description: 'Convert CSV to JSON, Excel, or XML and convert Excel spreadsheets to CSV.',
+      input: 'CSV',
+      output: 'JSON',
+      iconIn: 'fa-file-csv',
+      iconOut: 'fa-file-code',
+      drop: 'Drag & drop your CSV or Excel file here',
+      max: 'Supports CSV, TSV, XLSX, and XLS files.',
+      steps: ['Upload your CSV or Excel file', 'Choose output format', 'Download converted file'],
+      related: ['JSON to CSV', 'Excel to PDF', 'PDF to Excel', 'Image Converter', 'QR Code Generator']
     }
   };
 
@@ -187,7 +201,8 @@
     'GIF to MP4': ['gif converter/gif-converter.html?mode=gif-mp4', 'fa-file-video', 'Convert GIFs to video'],
     'Image to GIF': ['gif converter/gif-converter.html?mode=image-gif', 'fa-images', 'Animate images as GIF'],
     'QR Code Generator': ['qr code generator/qr-code-generator.html', 'fa-qrcode', 'Create custom QR codes instantly'],
-    'JSON to CSV': ['json to csv/json-to-csv.html', 'fa-code', 'Convert JSON data to spreadsheet CSV']
+    'JSON to CSV': ['json to csv/json-to-csv.html', 'fa-code', 'Convert JSON data to spreadsheet CSV'],
+    'CSV Converter': ['csv converter/csv-converter.html', 'fa-file-csv', 'Convert CSV to JSON, Excel, or XML']
   };
 
   function currentFileName() {

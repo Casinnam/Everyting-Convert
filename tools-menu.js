@@ -302,6 +302,7 @@
               <div class="tools-group-title"><i class="fa-solid fa-code"></i> Developer</div>
               <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>
               <a href="${prefix}json to csv/json-to-csv.html">JSON to CSV</a>
+              <a href="${prefix}csv converter/csv-converter.html">CSV Converter</a>
               <a href="${prefix}contact.html">Contact</a>
             </div>
           </div>
@@ -356,6 +357,7 @@
             <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><i class="fa-solid fa-wand-magic-sparkles" style="width: 1.2rem;"></i> AI Tools</a>
             <a href="${prefix}qr code generator/qr-code-generator.html"><i class="fa-solid fa-qrcode" style="width: 1.2rem;"></i> QR Code</a>
             <a href="${prefix}json to csv/json-to-csv.html"><i class="fa-solid fa-file-code" style="width: 1.2rem;"></i> JSON to CSV</a>
+            <a href="${prefix}csv converter/csv-converter.html"><i class="fa-solid fa-file-csv" style="width: 1.2rem;"></i> CSV Converter</a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>
