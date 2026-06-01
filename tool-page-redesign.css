@@ -10,6 +10,240 @@
   --tool-shadow: rgba(15, 23, 42, 0.12);
 }
 
+/* ── Base reset (needed by pages that have NO other stylesheet) ── */
+.ec-tool-page *, .ec-tool-page *::before, .ec-tool-page *::after {
+  box-sizing: border-box;
+}
+
+body.ec-tool-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.ec-tool-page main {
+  width: min(980px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3rem 0 2rem;
+}
+
+.ec-tool-page .hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.ec-tool-page .eyebrow {
+  color: var(--tool-blue);
+  font-weight: 900;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.ec-tool-page h1 {
+  font-family: Inter, 'Noto Sans KR', system-ui, sans-serif;
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin: 0.4rem 0 0.8rem;
+  color: var(--tool-ink);
+}
+
+.ec-tool-page .hero p {
+  color: var(--tool-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.ec-tool-page input[type="file"] {
+  display: none !important;
+}
+
+.ec-tool-page .options {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.ec-tool-page label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--tool-muted);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.ec-tool-page select {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1.5px solid var(--tool-line);
+  color: var(--tool-ink);
+  border-radius: 10px;
+  padding: 0.78rem 1rem;
+  font: inherit;
+  font-weight: 600;
+}
+
+.ec-tool-page .primary-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, var(--tool-blue), var(--tool-purple));
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.ec-tool-page .primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.28);
+}
+
+.ec-tool-page .primary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ec-tool-page .status {
+  color: var(--tool-muted);
+  line-height: 1.6;
+  min-height: 1.4rem;
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+}
+
+/* ── Footer base ── */
+.ec-tool-page .site-footer {
+  width: min(1200px, calc(100% - 4rem));
+  margin: 3rem auto 0;
+  padding: 2rem 0;
+  border-top: 1px solid var(--tool-line);
+  color: var(--tool-muted);
+}
+
+.ec-tool-page .footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.ec-tool-page .footer-group {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.ec-tool-page .footer-group h2 {
+  display: flex;
+  gap: 0.55rem;
+  color: var(--tool-ink);
+  font-size: 0.95rem;
+}
+
+.ec-tool-page .footer-group a,
+.ec-tool-page .footer-group span {
+  color: var(--tool-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.ec-tool-page .footer-group a:hover {
+  color: var(--tool-ink);
+}
+
+.ec-tool-page .footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--tool-line);
+}
+
+.ec-tool-page .footer-logo {
+  display: inline-flex;
+  gap: 0.6rem;
+  align-items: center;
+  color: var(--tool-ink);
+  font-weight: 800;
+}
+
+.ec-tool-page .language-menu {
+  position: relative;
+  margin-left: auto;
+}
+
+.ec-tool-page .language-toggle {
+  display: inline-flex;
+  gap: 0.6rem;
+  align-items: center;
+  border: 1px solid var(--tool-line);
+  background: var(--tool-card);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  color: var(--tool-ink);
+  font-weight: 800;
+  font: inherit;
+}
+
+.ec-tool-page .language-dropdown {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.65rem);
+  min-width: 170px;
+  display: none;
+  padding: 0.45rem;
+  background: var(--tool-card);
+  border: 1px solid var(--tool-line);
+  border-radius: 8px;
+  z-index: 25;
+}
+
+.ec-tool-page .language-menu.open .language-dropdown {
+  display: grid;
+}
+
+.ec-tool-page .language-dropdown button {
+  border: 0;
+  background: transparent;
+  color: var(--tool-muted);
+  border-radius: 6px;
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ec-tool-page .language-dropdown button:hover,
+.ec-tool-page .language-dropdown button.active {
+  color: var(--tool-ink);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+@media (max-width: 760px) {
+  .ec-tool-page .options {
+    grid-template-columns: 1fr;
+  }
+  .ec-tool-page .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .ec-tool-page .site-footer {
+    width: min(100% - 2rem, 1200px);
+  }
+}
+
 body.ec-tool-page {
   background:
     radial-gradient(circle at 8% 18%, rgba(6, 182, 212, 0.16), transparent 24rem),
@@ -479,6 +713,45 @@ body.ec-tool-page::before {
 
 .ec-tool-page .language-dropdown {
   z-index: 5000 !important;
+}
+
+/* ── Tool Tabs (mode selector for media/gif/image converters) ── */
+.ec-tool-page .tool-tabs,
+.tool-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+  gap: 0.6rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.ec-tool-page .tool-tab,
+.tool-tab {
+  border: 1.5px solid #cbd5e1 !important;
+  background: rgba(248, 250, 252, 0.72) !important;
+  color: #64748b !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 0.5rem !important;
+  font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  text-align: center !important;
+}
+
+.ec-tool-page .tool-tab:hover,
+.tool-tab:hover {
+  color: var(--tool-blue, #3b82f6) !important;
+  border-color: var(--tool-blue, #3b82f6) !important;
+  background: rgba(59, 130, 246, 0.06) !important;
+}
+
+.ec-tool-page .tool-tab.active,
+.tool-tab.active {
+  color: #fff !important;
+  background: var(--tool-blue, #3b82f6) !important;
+  border-color: var(--tool-blue, #3b82f6) !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.22) !important;
 }
 
 @media (max-width: 980px) {
