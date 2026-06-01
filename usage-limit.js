@@ -124,10 +124,17 @@
     return controller;
   }
 
+  function authHeaders() {
+    const auth = window.EverythingConvertAuth;
+    const token = auth && auth.state && auth.state.session ? auth.state.session.access_token : '';
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
   async function fetchServerUsage(method = 'GET') {
     const response = await fetch(`${rootPrefix()}api/usage-limit`, {
       method,
       cache: 'no-store',
+      headers: authHeaders(),
     });
     const data = await response.json().catch(() => null);
     if (!response.ok) {
@@ -143,10 +150,12 @@
   async function getUsageStatus() {
     if (isProUser()) {
       return {
-        limit: DEFAULT_LIMIT,
+        accountType: 'pro',
+        limit: null,
         count: 0,
-        remaining: Infinity,
+        remaining: null,
         canConvert: true,
+        unlimited: true,
       };
     }
 
@@ -160,13 +169,23 @@
         count: fallback.count(),
         remaining: fallback.remaining(),
         canConvert: fallback.canConvert(),
+        accountType: window.EverythingConvertAuth && window.EverythingConvertAuth.state && window.EverythingConvertAuth.state.user ? 'free' : 'guest',
+        unlimited: false,
       };
     }
   }
 
-  function panelText(remaining) {
-    if (remaining === Infinity) return 'Pro plan active: unlimited conversions';
-    return `${remaining} free conversions left`;
+  function remainingValue(usage) {
+    if (!usage) return 0;
+    if (typeof usage.remaining === 'function') return usage.remaining();
+    return usage.remaining;
+  }
+
+  function panelText(usage) {
+    if (usage && usage.unlimited) return 'Pro plan active: unlimited conversions';
+    const remaining = remainingValue(usage);
+    const label = usage && usage.accountType === 'free' ? 'free account conversions' : 'guest conversions';
+    return `${remaining} ${label} left`;
   }
 
   function ensureStyles() {
@@ -279,7 +298,7 @@
   async function renderUsage() {
     const usage = await getUsageStatus();
     document.querySelectorAll('[data-usage-badge]').forEach((element) => {
-      element.textContent = panelText(usage.remaining());
+      element.textContent = panelText(usage);
     });
   }
 
@@ -287,17 +306,25 @@
     const oldModal = document.querySelector('.usage-modal-backdrop');
     if (oldModal) oldModal.remove();
 
+    const usage = serverUsage || {};
+    const limit = usage.limit || DEFAULT_LIMIT;
+    const isGuestLimit = usage.accountType === 'guest';
+    const message = isGuestLimit
+      ? 'Create a free account for 20 total conversions, or upgrade to Pro for unlimited conversions, enhanced table detection, and larger-file workflows.'
+      : 'Upgrade to Pro to keep converting without limits, use enhanced table detection, and unlock larger-file workflows.';
+    const accountLabel = isGuestLimit ? 'Log in or sign up' : 'Account';
+
     const backdrop = document.createElement('div');
     backdrop.className = 'usage-modal-backdrop';
     backdrop.innerHTML = `
       <div class="usage-modal" role="dialog" aria-modal="true" aria-labelledby="usageModalTitle">
         <button class="usage-modal-close" type="button" aria-label="Close">×</button>
         <p class="usage-kicker">Free limit reached</p>
-        <h2 id="usageModalTitle">You used all 10 free conversions.</h2>
-        <p>Log in with a Pro account to keep converting without limits, use enhanced table detection, and unlock larger-file workflows.</p>
+        <h2 id="usageModalTitle">You used all ${limit} free conversions.</h2>
+        <p>${message}</p>
         <div class="usage-modal-actions">
           <a class="usage-primary" href="${rootPrefix()}pricing.html">See pricing</a>
-          <a class="usage-secondary" href="${rootPrefix()}auth.html">Log in</a>
+          <a class="usage-secondary" href="${rootPrefix()}auth.html">${accountLabel}</a>
         </div>
       </div>
     `;
@@ -342,6 +369,14 @@
 
       const fallback = await getController();
       if (!fallback.canConvert()) {
+        serverUsage = {
+          accountType: window.EverythingConvertAuth && window.EverythingConvertAuth.state && window.EverythingConvertAuth.state.user ? 'free' : 'guest',
+          limit: fallback.limit,
+          count: fallback.count(),
+          remaining: 0,
+          canConvert: false,
+          unlimited: false,
+        };
         showUpgradeModal();
         renderUsage();
         return false;

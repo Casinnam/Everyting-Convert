@@ -4,6 +4,8 @@ const path = require('path');
 const vm = require('vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'usage-limit.js'), 'utf8');
+const serverSource = fs.readFileSync(path.join(__dirname, '..', 'functions', 'api', 'usage-limit.js'), 'utf8');
+const pricing = fs.readFileSync(path.join(__dirname, '..', 'pricing.html'), 'utf8');
 
 function loadModule(pathname = '/index.html', protocol = 'https:') {
   const sandbox = {
@@ -79,6 +81,35 @@ const api = loadModule();
   }
   assert.strictEqual(controller.remaining(), Infinity);
 }
+
+assert(
+  serverSource.includes('FREE_ACCOUNT_LIMIT = 20') &&
+    serverSource.includes('GUEST_LIMIT = 10') &&
+    serverSource.includes("accountType: 'free'") &&
+    serverSource.includes("accountType: 'guest'"),
+  'Server usage limit should distinguish 10 guest conversions and 20 free account conversions.',
+);
+
+assert(
+  serverSource.includes("profile.plan === 'pro'") &&
+    serverSource.includes("profile.role === 'admin'") &&
+    serverSource.includes('unlimited: true'),
+  'Server usage limit should bypass counts for Pro users and admins.',
+);
+
+assert(
+  source.includes('Authorization: `Bearer ${token}`') &&
+    source.includes('free account conversions') &&
+    source.includes('guest conversions'),
+  'Browser usage helper should send auth tokens and show account-specific remaining text.',
+);
+
+assert(
+  pricing.includes('10 guest conversions') &&
+    pricing.includes('20 conversions with a free account') &&
+    pricing.includes('unlimited work'),
+  'Pricing page should explain guest, free account, and Pro conversion limits.',
+);
 
 {
   const rootApi = loadModule('/index.html', 'https:');
