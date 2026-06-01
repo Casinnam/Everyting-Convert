@@ -7,8 +7,13 @@ const page = fs.readFileSync(path.join(root, 'my-conversions.html'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
 
 assert(
-  page.includes('My Conversions') && page.includes('conversion_history'),
-  'My Conversions page should exist and query conversion_history.',
+  page.includes('My Conversions') && page.includes('conversion-history.js'),
+  'My Conversions page should exist and load the conversion history helper.',
+);
+
+assert(
+  page.includes('EverythingConvertHistory') && page.includes('fetchHistory()'),
+  'My Conversions page should load records through the conversion history API helper.',
 );
 
 assert(

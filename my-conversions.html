@@ -307,6 +307,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="auth.js?v=auth-20260528b"></script>
+    <script src="conversion-history.js?v=history-20260531a"></script>
     <script src="language-menu.js?v=lang-20260528a"></script>
     <script>
         (function () {
@@ -415,11 +416,11 @@
                     return;
                 }
 
-                const client = auth.state.client;
-                if (!client) {
+                const historyApi = window.EverythingConvertHistory;
+                if (!historyApi || typeof historyApi.fetchHistory !== 'function') {
                     showState(
                         'fa-solid fa-triangle-exclamation',
-                        'Supabase is not ready',
+                        'History helper is not ready',
                         'Please refresh this page after your account finishes loading.',
                     );
                     return;
@@ -429,14 +430,8 @@
                 showState('fa-solid fa-spinner fa-spin', 'Loading history...', 'Fetching your recent conversion records.');
 
                 try {
-                    const { data, error } = await client
-                        .from('conversion_history')
-                        .select('id,tool_id,tool_name,source_filename,output_filename,status,error_message,metadata,created_at,completed_at')
-                        .order('created_at', { ascending: false })
-                        .limit(50);
-
-                    if (error) throw error;
-                    renderRows(data || []);
+                    const result = await historyApi.fetchHistory();
+                    renderRows(result.history || []);
                 } catch (error) {
                     showState(
                         'fa-solid fa-triangle-exclamation',

@@ -135,7 +135,8 @@
     }[char]));
   }
 
-  function convert() {
+  function convert(options = {}) {
+    const shouldRecord = Boolean(options.record);
     try {
       const data = parseJson();
       const rows = normalizeRows(data);
@@ -147,6 +148,21 @@
       copyButton.disabled = false;
       downloadButton.disabled = false;
       setStatus(`Converted ${result.objects.length} row(s) and ${result.headers.length} column(s).`, 'success');
+      if (shouldRecord && window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordConversion === 'function') {
+        window.EverythingConvertHistory.recordConversion({
+          tool_id: 'json-to-csv',
+          tool_name: 'JSON to CSV',
+          output_filename: 'everythingconvert-data.csv',
+          output_size: new Blob([currentCsv]).size,
+          status: 'completed',
+          metadata: {
+            rows: result.objects.length,
+            columns: result.headers.length,
+            delimiter: delimiterSelect.value,
+            flattened: flattenInput.checked,
+          },
+        });
+      }
     } catch (error) {
       currentCsv = '';
       output.value = '';
@@ -188,17 +204,17 @@
     const reader = new FileReader();
     reader.onload = () => {
       input.value = reader.result || '';
-      convert();
+      convert({ record: true });
     };
     reader.onerror = () => setStatus('Could not read this JSON file.', 'error');
     reader.readAsText(file);
   }
 
   function init() {
-    document.getElementById('convertButton').addEventListener('click', convert);
+    document.getElementById('convertButton').addEventListener('click', () => convert({ record: true }));
     document.getElementById('sampleButton').addEventListener('click', () => {
       input.value = SAMPLE_JSON;
-      convert();
+      convert({ record: false });
     });
     document.getElementById('clearButton').addEventListener('click', () => {
       input.value = '';
@@ -214,9 +230,9 @@
     document.getElementById('jsonFileInput').addEventListener('change', (event) => loadFile(event.target.files[0]));
     copyButton.addEventListener('click', copyCsv);
     downloadButton.addEventListener('click', downloadCsv);
-    flattenInput.addEventListener('change', () => input.value.trim() && convert());
-    bomInput.addEventListener('change', () => input.value.trim() && convert());
-    delimiterSelect.addEventListener('change', () => input.value.trim() && convert());
+    flattenInput.addEventListener('change', () => input.value.trim() && convert({ record: false }));
+    bomInput.addEventListener('change', () => input.value.trim() && convert({ record: false }));
+    delimiterSelect.addEventListener('change', () => input.value.trim() && convert({ record: false }));
     setStatus('Paste JSON to start.');
   }
 

@@ -325,7 +325,8 @@
     status.textContent = 'Click "Generate QR Code" to apply your changes.';
   }
 
-  async function generateQr() {
+  async function generateQr(options = {}) {
+    const shouldRecord = Boolean(options.record);
     const text = payload();
     if (!text) {
       status.textContent = 'Enter details to generate your QR code.';
@@ -405,6 +406,20 @@
       if (dlBtn) dlBtn.disabled = false;
       const tBtn = document.getElementById('testQrButton');
       if (tBtn) tBtn.disabled = false;
+      if (shouldRecord && window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordConversion === 'function') {
+        window.EverythingConvertHistory.recordConversion({
+          tool_id: 'qr-code-generator',
+          tool_name: 'QR Code Generator',
+          output_filename: getFilename(state.format || 'png'),
+          status: 'completed',
+          metadata: {
+            qr_type: state.type,
+            format: state.format,
+            size: state.size,
+            frame: state.frame,
+          },
+        });
+      }
       return true;
     } catch (error) {
       status.textContent = error.message || 'Could not generate this QR code.';
@@ -466,7 +481,7 @@
   }
 
   async function downloadPng() {
-    const ok = await generateQr();
+    const ok = await generateQr({ record: true });
     if (!ok) return;
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
@@ -527,7 +542,7 @@
   }
 
   async function downloadPdf() {
-    const ok = await generateQr();
+    const ok = await generateQr({ record: true });
     if (!ok) return;
     try {
       const { jsPDF } = window.jspdf;
@@ -633,7 +648,7 @@
     renderCategoryGrid();
     renderSwatches();
     renderForm();
-    document.getElementById('generateQrButton').addEventListener('click', generateQr);
+    document.getElementById('generateQrButton').addEventListener('click', () => generateQr({ record: true }));
     document.getElementById('downloadQrButton').addEventListener('click', handleDownload);
     
     document.querySelectorAll('.qr-format-row button').forEach(btn => {
@@ -716,7 +731,7 @@
         markNeedsGeneration();
       });
     }
-    generateQr();
+    generateQr({ record: false });
   }
 
   if (document.readyState === 'loading') {
