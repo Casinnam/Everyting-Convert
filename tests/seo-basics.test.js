@@ -57,4 +57,10 @@ assert(
   'Account, admin, and duplicate legacy pages should be noindex.',
 );
 
+assert(
+  auth.includes('<title>Everything Convert - Login</title>') &&
+    !/<title>[^<]*\/title>/.test(auth),
+  'Auth page should have a valid closing title tag so the page body renders.',
+);
+
 console.log('seo basics tests passed');
