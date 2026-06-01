@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -667,47 +667,47 @@
 
 <main>
   <div class="hero">
-    <h1>ÀÌ¹ÌÁö¸¦ PDF·Î<span class="line2">º¯È¯ÇÏ¼¼¿ä</span></h1>
-    <p>JPG, PNG, WebP µî ¿©·¯ ÀÌ¹ÌÁö¸¦ ¿øÇÏ´Â ¼ø¼­´ë·Î ÇÏ³ªÀÇ PDF ¹®¼­·Î º´ÇÕÇÕ´Ï´Ù</p>
+    <h1>ì´ë¯¸ì§€ë¥¼ PDFë¡œ<span class="line2">ë³€í™˜í•˜ì„¸ìš”</span></h1>
+    <p>JPG, PNG, WebP ë“± ì—¬ëŸ¬ ì´ë¯¸ì§€ë¥¼ ì›í•˜ëŠ” ìˆœì„œëŒ€ë¡œ í•˜ë‚˜ì˜ PDF ë¬¸ì„œë¡œ ë³‘í•©í•©ë‹ˆë‹¤</p>
   </div>
 
   <div class="drop-zone" id="dropZone">
     <div class="drop-icon"></div>
-    <div class="drop-title">ÀÌ¹ÌÁö ÆÄÀÏ ¼±ÅÃ</div>
-    <div class="drop-subtitle">¿©·¯ ÀåÀ» ÇÑ ¹ø¿¡ ¼±ÅÃÇÏ°Å³ª ÀÌ°÷À¸·Î µå·¡±×ÇÏ¼¼¿ä</div>
+    <div class="drop-title">ì´ë¯¸ì§€ íŒŒì¼ ì„ íƒ</div>
+    <div class="drop-subtitle">ì—¬ëŸ¬ ì¥ì„ í•œ ë²ˆì— ì„ íƒí•˜ê±°ë‚˜ ì´ê³³ìœ¼ë¡œ ë“œë˜ê·¸í•˜ì„¸ìš”</div>
     <input id="fileInput" type="file" accept="image/*" multiple>
   </div>
 
   <div class="options" id="options">
     <div class="option-field">
-      <label for="pageSize">ÆäÀÌÁö Å©±â</label>
+      <label for="pageSize">í˜ì´ì§€ í¬ê¸°</label>
       <select id="pageSize">
         <option value="a4">A4</option>
         <option value="letter">Letter</option>
-        <option value="image">ÀÌ¹ÌÁö Å©±â ±×´ë·Î</option>
+        <option value="image">ì´ë¯¸ì§€ í¬ê¸° ê·¸ëŒ€ë¡œ</option>
       </select>
     </div>
     <div class="option-field">
-      <label for="fitMode">¸ÂÃã ¹æ½Ä</label>
+      <label for="fitMode">ë§ì¶¤ ë°©ì‹</label>
       <select id="fitMode">
-        <option value="contain">ÀüÃ¼ º¸ÀÌ±â</option>
-        <option value="cover">ÆäÀÌÁö Ã¤¿ì±â</option>
-        <option value="stretch">ÆäÀÌÁö¿¡ ¸Â°Ô ´Ã¸®±â</option>
+        <option value="contain">ì „ì²´ ë³´ì´ê¸°</option>
+        <option value="cover">í˜ì´ì§€ ì±„ìš°ê¸°</option>
+        <option value="stretch">í˜ì´ì§€ì— ë§ê²Œ ëŠ˜ë¦¬ê¸°</option>
       </select>
     </div>
     <div class="option-field">
-      <label for="marginInput">¿©¹é mm</label>
+      <label for="marginInput">ì—¬ë°± mm</label>
       <input id="marginInput" type="number" min="0" max="40" value="8">
     </div>
   </div>
 
   <div class="file-list" id="fileList"></div>
 
-  <button class="convert-btn" id="convertBtn" type="button">PDF ÀúÀå</button>
+  <button class="convert-btn" id="convertBtn" type="button">PDF ì €ì¥</button>
   <div class="message" id="message"></div>
 
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" id="resetBtn" type="button">Ã³À½ºÎÅÍ ´Ù½Ã</button>
+    <button class="reset-btn" id="resetBtn" type="button">ì²˜ìŒë¶€í„° ë‹¤ì‹œ</button>
   </div>
 </main>
 
@@ -775,7 +775,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>¨Ï EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>â“’ EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -783,7 +783,7 @@
       </button>
       <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">ÇÑ±¹¾î</button>
+                    <button type="button" data-language="ko">í•œêµ­ì–´</button>
                     <button type="button" data-language="de">Deutsch</button>
                     <button type="button" data-language="es">Espanol</button>
                     <button type="button" data-language="fr">Francais</button>
@@ -837,10 +837,10 @@
   function readImageFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onerror = () => reject(new Error(`${file.name} ÆÄÀÏÀ» ÀĞÀ» ¼ö ¾ø½À´Ï´Ù.`));
+      reader.onerror = () => reject(new Error(`${file.name} íŒŒì¼ì„ ì½ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.`));
       reader.onload = () => {
         const img = new Image();
-        img.onerror = () => reject(new Error(`${file.name} ÀÌ¹ÌÁö¸¦ ºÒ·¯¿Ã ¼ö ¾ø½À´Ï´Ù.`));
+        img.onerror = () => reject(new Error(`${file.name} ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì˜¬ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.`));
         img.onload = () => resolve({
           id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
           file,
@@ -861,16 +861,16 @@
   async function addFiles(fileListInput) {
     const files = Array.from(fileListInput).filter(file => file.type.startsWith('image/'));
     if (!files.length) {
-      setMessage('ÀÌ¹ÌÁö ÆÄÀÏÀ» ¼±ÅÃÇØ ÁÖ¼¼¿ä.', 'error');
+      setMessage('ì´ë¯¸ì§€ íŒŒì¼ì„ ì„ íƒí•´ ì£¼ì„¸ìš”.', 'error');
       return;
     }
 
-    setMessage('ÀÌ¹ÌÁö¸¦ ºÒ·¯¿À´Â Áß...');
+    setMessage('ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...');
     try {
       const loaded = await Promise.all(files.map(readImageFile));
       images = images.concat(loaded);
       renderImages();
-      setMessage(`${loaded.length}°³ ÀÌ¹ÌÁö°¡ Ãß°¡µÇ¾ú½À´Ï´Ù.`, 'success');
+      setMessage(`${loaded.length}ê°œ ì´ë¯¸ì§€ê°€ ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤.`, 'success');
     } catch (error) {
       setMessage(error.message, 'error');
     } finally {
@@ -888,12 +888,12 @@
         <img class="thumb" src="${item.previewUrl}" alt="">
         <div class="image-meta">
           <div class="image-name">${escapeHtml(item.name)}</div>
-          <div class="image-detail">${item.width} x ${item.height}px ¡¤ ${formatBytes(item.size)} ¡¤ ${index + 1}ÆäÀÌÁö</div>
+          <div class="image-detail">${item.width} x ${item.height}px Â· ${formatBytes(item.size)} Â· ${index + 1}í˜ì´ì§€</div>
         </div>
         <div class="image-actions">
-          <button class="icon-btn" type="button" data-move="up" title="À§·Î ÀÌµ¿" ${index === 0 ? 'disabled' : ''}>¡è</button>
-          <button class="icon-btn" type="button" data-move="down" title="¾Æ·¡·Î ÀÌµ¿" ${index === images.length - 1 ? 'disabled' : ''}>¡é</button>
-          <button class="icon-btn" type="button" data-remove title="»èÁ¦">¡¿</button>
+          <button class="icon-btn" type="button" data-move="up" title="ìœ„ë¡œ ì´ë™" ${index === 0 ? 'disabled' : ''}>â†‘</button>
+          <button class="icon-btn" type="button" data-move="down" title="ì•„ë˜ë¡œ ì´ë™" ${index === images.length - 1 ? 'disabled' : ''}>â†“</button>
+          <button class="icon-btn" type="button" data-remove title="ì‚­ì œ">Ã—</button>
         </div>
       `;
       fileList.appendChild(row);
@@ -979,7 +979,7 @@
     const arrayBuffer = pdf.output('arraybuffer');
     const header = new TextDecoder('ascii').decode(new Uint8Array(arrayBuffer, 0, 4));
     if (header !== '%PDF') {
-      throw new Error('PDF ÆÄÀÏ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù. ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä.');
+      throw new Error('PDF íŒŒì¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ ì£¼ì„¸ìš”.');
     }
     return new Blob([arrayBuffer], { type: 'application/pdf' });
   }
@@ -1002,7 +1002,7 @@
         handle = await window.showSaveFilePicker({
           suggestedName: fileName,
           types: [{
-            description: 'PDF ¹®¼­',
+            description: 'PDF ë¬¸ì„œ',
             accept: { 'application/pdf': ['.pdf'] },
           }],
         });
@@ -1026,17 +1026,17 @@
 
   async function createPdf() {
     if (!images.length) {
-      setMessage('¸ÕÀú ÀÌ¹ÌÁö¸¦ Ãß°¡ÇØ ÁÖ¼¼¿ä.', 'error');
+      setMessage('ë¨¼ì € ì´ë¯¸ì§€ë¥¼ ì¶”ê°€í•´ ì£¼ì„¸ìš”.', 'error');
       return;
     }
 
     if (!jsPDF) {
-      setMessage('PDF ¶óÀÌºê·¯¸®¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù. ÀÎÅÍ³İ ¿¬°áÀ» È®ÀÎÇÑ µÚ »õ·Î°íÄ§ÇØ ÁÖ¼¼¿ä.', 'error');
+      setMessage('PDF ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ë¶ˆëŸ¬ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤. ì¸í„°ë„· ì—°ê²°ì„ í™•ì¸í•œ ë’¤ ìƒˆë¡œê³ ì¹¨í•´ ì£¼ì„¸ìš”.', 'error');
       return;
     }
 
     convertBtn.disabled = true;
-    setMessage('PDF¸¦ ¸¸µå´Â Áß...');
+    setMessage('PDFë¥¼ ë§Œë“œëŠ” ì¤‘...');
 
     try {
       const timestamp = new Date().toISOString().slice(0, 10);
@@ -1057,25 +1057,25 @@
 
         const placement = getPlacement(item, pageWidth, pageHeight, margin);
         pdf.addImage(imageToJpegData(item), 'JPEG', placement.x, placement.y, placement.width, placement.height);
-        setMessage(`${index + 1}/${images.length} ÆäÀÌÁö Ã³¸® Áß...`);
+        setMessage(`${index + 1}/${images.length} í˜ì´ì§€ ì²˜ë¦¬ ì¤‘...`);
       }
 
       const pdfBlob = createPdfBlob(pdf);
-      setMessage('PDF ÆÄÀÏÀ» ÀúÀåÇÏ´Â Áß...');
+      setMessage('PDF íŒŒì¼ì„ ì €ì¥í•˜ëŠ” ì¤‘...');
       const result = await savePdfBlob(pdfBlob, fileName);
       setMessage(
         result.pickedLocation
-          ? `${fileName} ÆÄÀÏÀÌ ¼±ÅÃÇÑ À§Ä¡¿¡ ÀúÀåµÇ¾ú½À´Ï´Ù.`
+          ? `${fileName} íŒŒì¼ì´ ì„ íƒí•œ ìœ„ì¹˜ì— ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤.`
           : result.securityFallback
-            ? `${fileName} ÆÄÀÏ ´Ù¿î·Îµå¸¦ ½ÃÀÛÇß½À´Ï´Ù. ºê¶ó¿ìÀú°¡ ÀúÀå À§Ä¡ ¼±ÅÃÀ» Á¦ÇÑÇØ ´Ù¿î·Îµå ¹æ½ÄÀ¸·Î ÀúÀåÇß½À´Ï´Ù.`
-          : `${fileName} ÆÄÀÏ ´Ù¿î·Îµå¸¦ ½ÃÀÛÇß½À´Ï´Ù. ºê¶ó¿ìÀúÀÇ ´Ù¿î·Îµå Æú´õ¸¦ È®ÀÎÇØ ÁÖ¼¼¿ä.`,
+            ? `${fileName} íŒŒì¼ ë‹¤ìš´ë¡œë“œë¥¼ ì‹œì‘í–ˆìŠµë‹ˆë‹¤. ë¸Œë¼ìš°ì €ê°€ ì €ì¥ ìœ„ì¹˜ ì„ íƒì„ ì œí•œí•´ ë‹¤ìš´ë¡œë“œ ë°©ì‹ìœ¼ë¡œ ì €ì¥í–ˆìŠµë‹ˆë‹¤.`
+          : `${fileName} íŒŒì¼ ë‹¤ìš´ë¡œë“œë¥¼ ì‹œì‘í–ˆìŠµë‹ˆë‹¤. ë¸Œë¼ìš°ì €ì˜ ë‹¤ìš´ë¡œë“œ í´ë”ë¥¼ í™•ì¸í•´ ì£¼ì„¸ìš”.`,
         'success',
       );
     } catch (error) {
       if (error && error.name === 'AbortError') {
-        setMessage('ÀúÀåÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù. ´Ù½Ã ÀúÀåÇÏ·Á¸é ¹öÆ°À» ´­·¯ ÁÖ¼¼¿ä.');
+        setMessage('ì €ì¥ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì €ì¥í•˜ë ¤ë©´ ë²„íŠ¼ì„ ëˆŒëŸ¬ ì£¼ì„¸ìš”.');
       } else {
-        setMessage(error.message || 'PDF º¯È¯ Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù.', 'error');
+        setMessage(error.message || 'PDF ë³€í™˜ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.', 'error');
       }
     } finally {
       convertBtn.disabled = false;
@@ -1110,7 +1110,7 @@
     if (event.target.closest('[data-remove]')) {
       images.splice(index, 1);
       renderImages();
-      setMessage(images.length ? `${images.length}°³ ÀÌ¹ÌÁö°¡ ÁØºñµÇ¾ú½À´Ï´Ù.` : '');
+      setMessage(images.length ? `${images.length}ê°œ ì´ë¯¸ì§€ê°€ ì¤€ë¹„ë˜ì—ˆìŠµë‹ˆë‹¤.` : '');
       return;
     }
 
