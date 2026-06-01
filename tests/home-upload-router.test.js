@@ -7,8 +7,13 @@ const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const styles = fs.readFileSync(path.join(root, 'styles.css'), 'utf8');
 
 assert(
-  index.includes('id="homeOpenConverter"') && index.includes('Continue to selected tool'),
+  index.includes('id="homeOpenConverter"') && index.includes('Open selected converter'),
   'Home upload console should include a clear continue button.',
+);
+
+assert(
+  index.includes('styles.css?v=ui-20260531b'),
+  'Home page should bust the cached stylesheet after upload console styling changes.',
 );
 
 assert(
