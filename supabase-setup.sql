@@ -228,3 +228,99 @@ begin
     true;
 end;
 $$;
+
+create extension if not exists pgcrypto;
+
+create table if not exists public.conversion_history (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  user_email text,
+  tool_id text not null,
+  tool_name text not null,
+  source_filename text,
+  output_filename text,
+  source_size bigint check (source_size is null or source_size >= 0),
+  output_size bigint check (output_size is null or output_size >= 0),
+  status text not null default 'completed'
+    check (status in ('started', 'completed', 'failed')),
+  error_message text,
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  completed_at timestamptz
+);
+
+alter table public.conversion_history
+add column if not exists user_email text;
+
+alter table public.conversion_history
+add column if not exists tool_id text;
+
+alter table public.conversion_history
+add column if not exists tool_name text;
+
+alter table public.conversion_history
+add column if not exists source_filename text;
+
+alter table public.conversion_history
+add column if not exists output_filename text;
+
+alter table public.conversion_history
+add column if not exists source_size bigint;
+
+alter table public.conversion_history
+add column if not exists output_size bigint;
+
+alter table public.conversion_history
+add column if not exists status text not null default 'completed';
+
+alter table public.conversion_history
+add column if not exists error_message text;
+
+alter table public.conversion_history
+add column if not exists metadata jsonb not null default '{}'::jsonb;
+
+alter table public.conversion_history
+add column if not exists completed_at timestamptz;
+
+create index if not exists conversion_history_user_created_idx
+on public.conversion_history (user_id, created_at desc);
+
+create index if not exists conversion_history_tool_created_idx
+on public.conversion_history (tool_id, created_at desc);
+
+alter table public.conversion_history enable row level security;
+
+drop policy if exists "Users can read own conversion history" on public.conversion_history;
+create policy "Users can read own conversion history"
+on public.conversion_history
+for select
+to authenticated
+using (auth.uid() = user_id or public.is_admin());
+
+drop policy if exists "Users can insert own conversion history" on public.conversion_history;
+create policy "Users can insert own conversion history"
+on public.conversion_history
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update own conversion history" on public.conversion_history;
+create policy "Users can update own conversion history"
+on public.conversion_history
+for update
+to authenticated
+using (auth.uid() = user_id or public.is_admin())
+with check (auth.uid() = user_id or public.is_admin());
+
+drop policy if exists "Users can delete own conversion history" on public.conversion_history;
+create policy "Users can delete own conversion history"
+on public.conversion_history
+for delete
+to authenticated
+using (auth.uid() = user_id or public.is_admin());
+
+comment on table public.conversion_history is
+'Stores lightweight conversion activity records only. Converted files are not stored here.';
+
+comment on column public.conversion_history.metadata is
+'Optional JSON for future result links, Google Drive file IDs, conversion options, or retention data.';
