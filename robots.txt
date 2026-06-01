@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /auth.html
+Disallow: /my-conversions.html
+Disallow: /payment-success.html
+Disallow: /contact-success.html
+Disallow: /donate.html
+Disallow: /everything%20convert/
+Disallow: /node_modules/
+
+Sitemap: https://www.everythingconvert.com/sitemap.xml
