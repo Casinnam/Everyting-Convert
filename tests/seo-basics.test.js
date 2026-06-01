@@ -6,6 +6,7 @@ const root = path.join(__dirname, '..');
 
 const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 const robots = fs.readFileSync(path.join(root, 'robots.txt'), 'utf8');
+const adsTxt = fs.readFileSync(path.join(root, 'ads.txt'), 'utf8');
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const pricing = fs.readFileSync(path.join(root, 'pricing.html'), 'utf8');
 const pdfWord = fs.readFileSync(path.join(root, 'pdf to word', 'pdf-to-word.html'), 'utf8');
@@ -27,6 +28,11 @@ assert(
     sitemap.includes('<loc>https://www.everythingconvert.com/pdf%20to%20word/pdf-to-word.html</loc>') &&
     sitemap.includes('<loc>https://www.everythingconvert.com/qr%20code%20generator/qr-code-generator.html</loc>'),
   'sitemap.xml should include the homepage and public tool pages.',
+);
+
+assert(
+  adsTxt.trim() === 'google.com, pub-7281685131923147, DIRECT, f08c47fec0942fa0',
+  'ads.txt should publish the AdSense publisher ID at the site root.',
 );
 
 assert(
