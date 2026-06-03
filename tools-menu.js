@@ -344,23 +344,23 @@
           <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
             <div style="display: flex; flex-direction: column; min-width: 160px;">
               <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-file-export"></i> Convert</div>
-              <a href="${prefix}pdf to word/pdf-to-word.html">PDF to Word</a>
-              <a href="${prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
-              <a href="${prefix}pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
-              <a href="${prefix}excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-              <a href="${prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
-              <a href="${prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
-              <a href="${prefix}ebook converter/ebook-converter.html">Ebook Converter</a>
+              <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
+              <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel</span></a>
+              <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
+              <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
+              <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>
+              <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
+              <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
             </div>
             <div style="display: flex; flex-direction: column; min-width: 160px; border-left: 1px solid #f1f5f9; padding-left: 0.5rem;">
               <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-wrench"></i> Tools</div>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=split">Split PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=merge"><span class="tool-emoji pdf">&#128279;</span><span>Merge PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=compress"><span class="tool-emoji pdf">&#128230;</span><span>Compress PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=split"><span class="tool-emoji pdf">&#9986;</span><span>Split PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=rotate"><span class="tool-emoji pdf">&#8635;</span><span>Rotate PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=remove"><span class="tool-emoji lock">&#128465;</span><span>Remove Pages</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=extract"><span class="tool-emoji pdf">&#128229;</span><span>Extract Pages</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=organize"><span class="tool-emoji pdf">&#128450;</span><span>Organize PDF</span></a>
             </div>
           </div>
         </div>
@@ -369,28 +369,28 @@
           <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
             <div style="display: flex; flex-direction: column; min-width: 160px;">
               <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-regular fa-image"></i> Image</div>
-              <a href="${prefix}image converter/image-converter.html">Image Converter</a>
-              <a href="${prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
-              <a href="${prefix}image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
-              <a href="${prefix}image converter/image-converter.html?mode=webp-jpg">WEBP to JPG</a>
-              <a href="${prefix}image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
+              <a href="${prefix}image converter/image-converter.html"><span class="tool-emoji image">&#128247;</span><span>Image Converter</span></a>
+              <a href="${prefix}image to pdf/image-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Image to PDF</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
             </div>
             <div style="display: flex; flex-direction: column; min-width: 160px; border-left: 1px solid #f1f5f9; padding-left: 0.5rem;">
               <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
-              <a href="${prefix}media converter/media-converter.html">Video Converter</a>
-              <a href="${prefix}media converter/media-converter.html?mode=audio">Audio Converter</a>
-              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
-              <a href="${prefix}gif converter/gif-converter.html">GIF Converter</a>
+              <a href="${prefix}media converter/media-converter.html"><span class="tool-emoji video">&#9654;</span><span>Video Converter</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=audio"><span class="tool-emoji audio">&#127911;</span><span>Audio Converter</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3"><span class="tool-emoji audio">&#9835;</span><span>MP4 to MP3</span></a>
+              <a href="${prefix}gif converter/gif-converter.html"><span class="tool-emoji gif">GIF</span><span>GIF Converter</span></a>
             </div>
           </div>
         </div>
         <div class="tools-menu developer-tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>
           <div class="tools-dropdown">
-            <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><i class="fa-solid fa-wand-magic-sparkles" style="width: 1.2rem;"></i> AI Tools</a>
-            <a href="${prefix}qr code generator/qr-code-generator.html"><i class="fa-solid fa-qrcode" style="width: 1.2rem;"></i> QR Code</a>
-            <a href="${prefix}json to csv/json-to-csv.html"><i class="fa-solid fa-file-code" style="width: 1.2rem;"></i> JSON to CSV</a>
-            <a href="${prefix}csv converter/csv-converter.html"><i class="fa-solid fa-file-csv" style="width: 1.2rem;"></i> CSV Converter</a>
+            <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">AI</span><span>AI Tools</span></a>
+            <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code</span></a>
+            <a href="${prefix}json to csv/json-to-csv.html"><span class="tool-emoji dev">{ }</span><span>JSON to CSV</span></a>
+            <a href="${prefix}csv converter/csv-converter.html"><span class="tool-emoji excel">CSV</span><span>CSV Converter</span></a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>

@@ -23,6 +23,16 @@ assert(
 );
 
 assert(
+  menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Documents</button>') &&
+    menu.includes('PDF to EPUB</span>') &&
+    menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Media</button>') &&
+    menu.includes('Audio Converter</span>') &&
+    menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>') &&
+    menu.includes('QR Code</span>'),
+  'Documents, Media, and Advanced dropdowns should use the same colored icon badge link pattern as All Tools.',
+);
+
+assert(
   !menu.includes('display: grid !important;\n      }\n        right: auto !important;'),
   'Unified tools menu CSS should not contain orphaned dropdown declarations.',
 );
