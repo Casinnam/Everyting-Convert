@@ -12,9 +12,14 @@ assert(
     menu.includes('position: relative !important') &&
     menu.includes('.ec-unified-header .tools-group') &&
     menu.includes('display: grid !important') &&
+    menu.includes('width: min(1320px, calc(100vw - 2rem)) !important') &&
+    menu.includes('grid-template-columns: repeat(6, minmax(150px, 1fr)) !important') &&
     menu.includes('transform: translateX(-50%) !important') &&
-    menu.includes('white-space: nowrap !important'),
-  'Unified tools menu should define stable dropdown positioning, grouped layout, centered mega menu placement, and readable link labels.',
+    menu.includes('white-space: nowrap !important') &&
+    menu.includes('.ec-unified-header .tool-emoji') &&
+    menu.includes('&#128444;') &&
+    menu.includes('AI Tools'),
+  'Unified tools menu should define stable dropdown positioning, a wide grouped mega layout, colored icon badges, and readable link labels.',
 );
 
 assert(

@@ -107,15 +107,19 @@
         display: flex !important;
       }
       .ec-unified-header .tools-dropdown.mega-tools {
-        position: absolute !important;
-        left: 50% !important;
+        position: fixed !important;
+        left: 50vw !important;
         right: auto !important;
-        top: 100% !important;
-        width: min(980px, calc(100vw - 2rem)) !important;
+        top: 4.45rem !important;
+        width: min(1320px, calc(100vw - 2rem)) !important;
         transform: translateX(-50%) !important;
-        grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
-        gap: .75rem !important;
-        padding: .9rem !important;
+        grid-template-columns: repeat(6, minmax(150px, 1fr)) !important;
+        gap: 1.05rem !important;
+        padding: 1.05rem !important;
+        background:
+          radial-gradient(circle at 15% 20%, rgba(59, 130, 246, .12), transparent 28%),
+          radial-gradient(circle at 82% 10%, rgba(124, 58, 237, .12), transparent 26%),
+          rgba(255, 255, 255, .98) !important;
       }
       .ec-unified-header .tools-menu.open .tools-dropdown.mega-tools {
         display: grid !important;
@@ -123,23 +127,26 @@
       .ec-unified-header .tools-group {
         display: grid !important;
         align-content: start !important;
-        gap: .22rem !important;
+        gap: .18rem !important;
         min-width: 0 !important;
       }
       .ec-unified-header .tools-dropdown a {
         display: flex !important;
         align-items: center !important;
-        min-height: 2.35rem !important;
-        padding: .58rem .7rem !important;
+        gap: .58rem !important;
+        min-height: 2.5rem !important;
+        padding: .5rem .6rem !important;
         color: #334155 !important;
         border-radius: 8px !important;
         text-decoration: none !important;
         line-height: 1.2 !important;
         white-space: nowrap !important;
+        transition: background .16s ease, color .16s ease, transform .16s ease !important;
       }
       .ec-unified-header .tools-dropdown a:hover {
         color: #2563eb !important;
         background: rgba(37, 99, 235, .08) !important;
+        transform: translateX(2px) !important;
       }
       .ec-unified-header .tools-group-title {
         display: flex !important;
@@ -154,6 +161,28 @@
         border-bottom: 1px solid #e2e8f0 !important;
         border-bottom-color: #e2e8f0 !important;
       }
+      .ec-unified-header .tool-emoji {
+        display: inline-grid !important;
+        place-items: center !important;
+        flex: 0 0 1.85rem !important;
+        width: 1.85rem !important;
+        height: 1.85rem !important;
+        border-radius: 8px !important;
+        color: #fff !important;
+        font-size: 1rem !important;
+        line-height: 1 !important;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, .12) !important;
+      }
+      .ec-unified-header .tool-emoji.pdf { background: linear-gradient(135deg, #ef4444, #fb7185) !important; }
+      .ec-unified-header .tool-emoji.word { background: linear-gradient(135deg, #2563eb, #60a5fa) !important; }
+      .ec-unified-header .tool-emoji.excel { background: linear-gradient(135deg, #16a34a, #22c55e) !important; }
+      .ec-unified-header .tool-emoji.image { background: linear-gradient(135deg, #06b6d4, #2dd4bf) !important; }
+      .ec-unified-header .tool-emoji.video { background: linear-gradient(135deg, #7c3aed, #a855f7) !important; }
+      .ec-unified-header .tool-emoji.audio { background: linear-gradient(135deg, #f59e0b, #fb923c) !important; }
+      .ec-unified-header .tool-emoji.gif { background: linear-gradient(135deg, #ec4899, #f472b6) !important; }
+      .ec-unified-header .tool-emoji.dev { background: linear-gradient(135deg, #0f172a, #475569) !important; }
+      .ec-unified-header .tool-emoji.ai { background: linear-gradient(135deg, #4f46e5, #8b5cf6) !important; }
+      .ec-unified-header .tool-emoji.lock { background: linear-gradient(135deg, #64748b, #94a3b8) !important; }
       .ec-unified-header .ec-tool-search {
         display: grid !important;
         grid-template-columns: auto minmax(5.8rem, 1fr) !important;
@@ -213,7 +242,8 @@
           gap: .85rem !important;
         }
         .ec-unified-header .tools-dropdown.mega-tools {
-          left: 0 !important;
+          left: 1rem !important;
+          top: 7.4rem !important;
           transform: none !important;
           width: min(92vw, 720px) !important;
           grid-template-columns: repeat(2, minmax(160px, 1fr)) !important;
@@ -253,58 +283,59 @@
           <div class="tools-dropdown mega-tools">
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-regular fa-star"></i> Popular</div>
-              <a href="${prefix}pdf to word/pdf-to-word.html">PDF to Word</a>
-              <a href="${prefix}pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
-              <a href="${prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
-              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
-              <a href="${prefix}gif converter/gif-converter.html">Video to GIF</a>
-              <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>
+              <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
+              <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
+              <a href="${prefix}image to pdf/image-to-pdf.html"><span class="tool-emoji pdf">&#128196;</span><span>Image to PDF</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3"><span class="tool-emoji audio">&#127925;</span><span>MP4 to MP3</span></a>
+              <a href="${prefix}gif converter/gif-converter.html"><span class="tool-emoji gif">GIF</span><span>Video to GIF</span></a>
+              <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code Generator</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-solid fa-file-export"></i> PDF Convert</div>
-              <a href="${prefix}pdf to word/pdf-to-word.html">PDF to Word</a>
-              <a href="${prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
-              <a href="${prefix}pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
-              <a href="${prefix}excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-              <a href="${prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
-              <a href="${prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
-              <a href="${prefix}ebook converter/ebook-converter.html">Ebook Converter</a>
+              <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
+              <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel</span></a>
+              <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
+              <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
+              <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>
+              <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
+              <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-solid fa-wrench"></i> PDF Tools</div>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=split">Split PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=rotate">Rotate PDF</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=remove">Remove Pages</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=extract">Extract Pages</a>
-              <a href="${prefix}pdf tools/pdf-tools.html?mode=organize">Organize PDF</a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=merge"><span class="tool-emoji pdf">&#128279;</span><span>Merge PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=compress"><span class="tool-emoji pdf">&#128230;</span><span>Compress PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=split"><span class="tool-emoji pdf">&#9986;</span><span>Split PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=rotate"><span class="tool-emoji pdf">&#8635;</span><span>Rotate PDF</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=remove"><span class="tool-emoji lock">&#128465;</span><span>Remove Pages</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=extract"><span class="tool-emoji pdf">&#128229;</span><span>Extract Pages</span></a>
+              <a href="${prefix}pdf tools/pdf-tools.html?mode=organize"><span class="tool-emoji pdf">&#128450;</span><span>Organize PDF</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
-              <a href="${prefix}image converter/image-converter.html">Image Converter</a>
-              <a href="${prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
-              <a href="${prefix}image converter/image-converter.html?mode=webp-png">WEBP to PNG</a>
-              <a href="${prefix}image converter/image-converter.html?mode=webp-jpg">WEBP to JPG</a>
-              <a href="${prefix}image converter/image-converter.html?mode=heic-jpg">HEIC to JPG</a>
-              <a href="${prefix}image converter/image-converter.html?mode=png-svg">PNG to SVG</a>
-              <a href="${prefix}image converter/image-converter.html?mode=svg">SVG Converter</a>
+              <a href="${prefix}image converter/image-converter.html"><span class="tool-emoji image">&#128247;</span><span>Image Converter</span></a>
+              <a href="${prefix}image to pdf/image-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Image to PDF</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=png-svg"><span class="tool-emoji image">SVG</span><span>PNG to SVG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=svg"><span class="tool-emoji image">&#9671;</span><span>SVG Converter</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
-              <a href="${prefix}media converter/media-converter.html">Video Converter</a>
-              <a href="${prefix}media converter/media-converter.html?mode=audio">Audio Converter</a>
-              <a href="${prefix}media converter/media-converter.html?mode=mp3">MP3 Converter</a>
-              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3">MP4 to MP3</a>
-              <a href="${prefix}media converter/media-converter.html?mode=mov-mp4">MOV to MP4</a>
-              <a href="${prefix}gif converter/gif-converter.html">GIF Converter</a>
+              <a href="${prefix}media converter/media-converter.html"><span class="tool-emoji video">&#9654;</span><span>Video Converter</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=audio"><span class="tool-emoji audio">&#127911;</span><span>Audio Converter</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=mp3"><span class="tool-emoji audio">MP3</span><span>MP3 Converter</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3"><span class="tool-emoji audio">&#9835;</span><span>MP4 to MP3</span></a>
+              <a href="${prefix}media converter/media-converter.html?mode=mov-mp4"><span class="tool-emoji video">MP4</span><span>MOV to MP4</span></a>
+              <a href="${prefix}gif converter/gif-converter.html"><span class="tool-emoji gif">GIF</span><span>GIF Converter</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-solid fa-code"></i> Developer</div>
-              <a href="${prefix}qr code generator/qr-code-generator.html">QR Code Generator</a>
-              <a href="${prefix}json to csv/json-to-csv.html">JSON to CSV</a>
-              <a href="${prefix}csv converter/csv-converter.html">CSV Converter</a>
-              <a href="${prefix}contact.html">Contact</a>
+              <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code Generator</span></a>
+              <a href="${prefix}json to csv/json-to-csv.html"><span class="tool-emoji dev">{ }</span><span>JSON to CSV</span></a>
+              <a href="${prefix}csv converter/csv-converter.html"><span class="tool-emoji excel">CSV</span><span>CSV Converter</span></a>
+              <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">AI</span><span>AI Tools</span></a>
+              <a href="${prefix}contact.html"><span class="tool-emoji lock">&#9993;</span><span>Contact</span></a>
             </div>
           </div>
         </div>
