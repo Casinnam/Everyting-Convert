@@ -21,6 +21,11 @@ body.ec-tool-page {
   min-height: 100vh;
 }
 
+.ec-tool-page header:not(.ec-unified-header) {
+  visibility: hidden;
+  min-height: 4.4rem;
+}
+
 .ec-tool-page main {
   width: min(980px, calc(100% - 2rem));
   margin: 0 auto;
