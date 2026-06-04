@@ -12,7 +12,7 @@ assert(
 );
 
 assert(
-  index.includes('styles.css?v=ui-20260531b'),
+  index.includes('styles.css?v=ui-20260603a'),
   'Home page should bust the cached stylesheet after upload console styling changes.',
 );
 

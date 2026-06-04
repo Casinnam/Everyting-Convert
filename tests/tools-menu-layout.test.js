@@ -16,10 +16,15 @@ assert(
     menu.includes('grid-template-columns: repeat(6, minmax(150px, 1fr)) !important') &&
     menu.includes('transform: translateX(-50%) !important') &&
     menu.includes('white-space: nowrap !important') &&
+    menu.includes('.ec-mobile-toggle') &&
+    menu.includes('.ec-unified-header.mobile-open .top-nav') &&
+    menu.includes('.ec-unified-header.mobile-open .top-actions') &&
+    menu.includes('grid-template-columns: 1fr !important') &&
+    menu.includes('position: static !important') &&
     menu.includes('.ec-unified-header .tool-emoji') &&
     menu.includes('&#128444;') &&
     menu.includes('AI Tools'),
-  'Unified tools menu should define stable dropdown positioning, a wide grouped mega layout, colored icon badges, and readable link labels.',
+  'Unified tools menu should define stable dropdown positioning, a wide grouped mega layout, mobile hamburger behavior, colored icon badges, and readable link labels.',
 );
 
 assert(
@@ -38,8 +43,8 @@ assert(
 );
 
 assert(
-  mediaPage.includes('tools-menu.js?v=nav-20260601a') &&
-    pdfWordPage.includes('tools-menu.js?v=nav-20260601a'),
+  mediaPage.includes('tools-menu.js?v=nav-20260603a') &&
+    pdfWordPage.includes('tools-menu.js?v=nav-20260603a'),
   'Tool pages should use the latest tools menu cache-busting version.',
 );
 

@@ -56,6 +56,20 @@
         gap: clamp(.5rem, .8vw, .75rem) !important;
         min-width: 0 !important;
       }
+      .ec-unified-header .ec-mobile-toggle {
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 3rem !important;
+        height: 3rem !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 14px !important;
+        background: rgba(255, 255, 255, .92) !important;
+        color: #0f172a !important;
+        font-size: 1.2rem !important;
+        cursor: pointer !important;
+        box-shadow: 0 12px 24px rgba(15, 23, 42, .08) !important;
+      }
       .ec-unified-header .tools-menu {
         position: relative !important;
         display: inline-flex !important;
@@ -229,32 +243,89 @@
       }
       @media (max-width: 920px) {
         .ec-unified-header {
-          align-items: flex-start !important;
+          align-items: center !important;
           flex-wrap: wrap !important;
         }
         .ec-unified-header .logo {
           flex: 1 1 auto !important;
         }
+        .ec-unified-header .ec-mobile-toggle {
+          display: inline-flex !important;
+        }
         .ec-unified-header .top-nav {
           order: 3 !important;
+          display: none !important;
           width: 100% !important;
+          margin: 0 !important;
+          padding: .85rem !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 18px !important;
+          background: rgba(255, 255, 255, .96) !important;
+          box-shadow: 0 22px 50px rgba(15, 23, 42, .12) !important;
+          flex-direction: column !important;
+          align-items: stretch !important;
           justify-content: flex-start !important;
-          gap: .85rem !important;
+          gap: .45rem !important;
+        }
+        .ec-unified-header.mobile-open .top-nav {
+          display: flex !important;
+        }
+        .ec-unified-header .top-actions {
+          order: 4 !important;
+          display: none !important;
+          width: 100% !important;
+          flex: 0 0 100% !important;
+          justify-content: stretch !important;
+          align-items: stretch !important;
+          flex-direction: column !important;
+          gap: .55rem !important;
+        }
+        .ec-unified-header.mobile-open .top-actions {
+          display: flex !important;
+        }
+        .ec-unified-header .top-nav > a,
+        .ec-unified-header .tools-toggle,
+        .ec-unified-header .top-actions > a {
+          width: 100% !important;
+          min-height: 2.75rem !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          padding: .75rem .85rem !important;
+          border-radius: 12px !important;
+          background: rgba(248, 250, 252, .9) !important;
+        }
+        .ec-unified-header .tools-menu {
+          display: grid !important;
+          width: 100% !important;
+        }
+        .ec-unified-header .tools-dropdown,
+        .ec-unified-header .tools-dropdown.mega-tools {
+          position: static !important;
+          left: auto !important;
+          right: auto !important;
+          top: auto !important;
+          width: 100% !important;
+          max-height: min(58vh, 540px) !important;
+          transform: none !important;
+          grid-template-columns: 1fr !important;
+          flex-direction: column !important;
+          margin-top: .45rem !important;
+          box-shadow: 0 16px 34px rgba(15, 23, 42, .1) !important;
         }
         .ec-unified-header .tools-dropdown.mega-tools {
-          left: 1rem !important;
-          top: 7.4rem !important;
-          transform: none !important;
-          width: min(92vw, 720px) !important;
-          grid-template-columns: repeat(2, minmax(160px, 1fr)) !important;
+          grid-template-columns: 1fr !important;
+        }
+        .ec-unified-header .tools-menu.open .tools-dropdown,
+        .ec-unified-header .tools-menu.open .tools-dropdown.mega-tools {
+          display: grid !important;
+        }
+        .ec-unified-header .tools-dropdown a {
+          white-space: normal !important;
         }
       }
       @media (max-width: 560px) {
-        .ec-unified-header .top-nav a[data-tab-jump="office"],
-        .ec-unified-header .top-nav a[data-tab-jump="ai"],
-        .ec-unified-header .top-nav a[data-tab-jump="video"],
-        .ec-unified-header .developer-tools-menu {
-          display: none !important;
+        .ec-unified-header {
+          padding: .75rem 1rem !important;
         }
         .ec-unified-header .ec-try-pro {
           min-height: 2.25rem !important;
@@ -277,6 +348,9 @@
         <img class="brand-icon" src="${prefix}favicon.svg" alt="" width="28" height="28">
         <span>EverythingConvert</span>
       </a>
+      <button class="ec-mobile-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
       <nav class="top-nav" aria-label="Primary navigation">
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">All Tools</button>
@@ -469,7 +543,43 @@
     });
   }
 
+  function closeMobileMenu() {
+    document.querySelectorAll('.ec-unified-header.mobile-open').forEach((header) => {
+      header.classList.remove('mobile-open');
+      const toggle = header.querySelector('.ec-mobile-toggle');
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', 'false');
+        const icon = toggle.querySelector('i');
+        if (icon) {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars');
+        }
+      }
+    });
+  }
+
+  function toggleMobileMenu(button) {
+    const header = button.closest('.ec-unified-header');
+    if (!header) return;
+    const willOpen = !header.classList.contains('mobile-open');
+    closeAll();
+    header.classList.toggle('mobile-open', willOpen);
+    button.setAttribute('aria-expanded', String(willOpen));
+    const icon = button.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-bars', !willOpen);
+      icon.classList.toggle('fa-xmark', willOpen);
+    }
+  }
+
   document.addEventListener('click', (event) => {
+    const mobileToggle = event.target.closest('.ec-mobile-toggle');
+    if (mobileToggle) {
+      event.preventDefault();
+      toggleMobileMenu(mobileToggle);
+      return;
+    }
+
     const toggle = event.target.closest('.tools-toggle');
     if (toggle) {
       event.preventDefault();
@@ -482,10 +592,14 @@
     }
 
     if (!event.target.closest('.tools-menu')) closeAll();
+    if (!event.target.closest('.ec-unified-header')) closeMobileMenu();
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeAll();
+    if (event.key === 'Escape') {
+      closeAll();
+      closeMobileMenu();
+    }
   });
 
   injectHeaderStyles();

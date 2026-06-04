@@ -19,6 +19,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Inter', 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     background:
@@ -245,7 +249,7 @@ nav {
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, #20170a, #8b5e05);
+    background: linear-gradient(135deg, #20170a, #2563eb);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -345,7 +349,7 @@ nav {
 .showcase-actions a:first-child {
     color: #fff;
     border-color: transparent;
-    background: linear-gradient(135deg, #2f2612, #8b5e05);
+    background: linear-gradient(135deg, #0f172a, #2563eb);
 }
 
 .showcase-converter {
@@ -516,7 +520,7 @@ nav {
     bottom: 13%;
     left: 38%;
     color: #fff;
-    background: linear-gradient(135deg, #2f2612, #8b5e05);
+    background: linear-gradient(135deg, #0f172a, #2563eb);
     animation-delay: -4.4s;
 }
 
@@ -662,7 +666,7 @@ nav {
     min-height: 3rem;
     border: 0;
     border-radius: 8px;
-    background: linear-gradient(135deg, #2f2612, #7b5205);
+    background: linear-gradient(135deg, #0f172a, #7b5205);
     color: #fff;
     text-decoration: none;
     font-weight: 800;
@@ -1270,6 +1274,7 @@ nav {
 
 .home-hero {
     position: relative;
+    overflow: hidden;
     display: grid;
     grid-template-columns: minmax(0, 0.92fr) minmax(340px, 1.08fr);
     gap: clamp(2rem, 6vw, 5rem);
