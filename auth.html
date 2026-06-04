@@ -524,10 +524,10 @@
                 </button>
                 <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">Korean</button>
+                    <button type="button" data-language="ko">한국어</button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">Spanish</button>
-                    <button type="button" data-language="fr">French</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
                 </div>
             </div>
         </div>
@@ -834,12 +834,6 @@
             element.textContent = fallback;
         }
 
-        function cachedPlanLabel(cached) {
-            if (!cached) return 'Checking...';
-            const plan = cached.plan === 'pro' ? 'Pro' : 'Free';
-            return cached.role === 'admin' ? `${plan} · Admin` : plan;
-        }
-
         function showCachedAccountView() {
             const auth = window.EverythingConvertAuth;
             const cached = auth && auth.cachedAuthSnapshot ? auth.cachedAuthSnapshot() : null;
@@ -852,9 +846,9 @@
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = cached.username;
             accountUsername.value = cached.username;
-            accountPlan.textContent = cachedPlanLabel(cached);
-            adminLink.style.display = cached.role === 'admin' ? '' : 'none';
-            accountHint.dataset.i18nKey = 'checking';
+            accountPlan.textContent = '';
+            adminLink.style.display = 'none';
+            accountHint.dataset.i18nKey = 'accountLoadingHint';
             accountHint.textContent = 'Refreshing account status...';
             applyCurrentLanguage();
             return true;
@@ -894,13 +888,6 @@
                 statusLabel.dataset.i18nKey = 'currentStatus';
             }
 
-            document.querySelectorAll('.auth-status-card [data-auth-state]').forEach((element) => {
-                if (element.textContent.trim()) {
-                    element.dataset.i18nKey = 'checking';
-                    element.textContent = 'Checking...';
-                }
-            });
-
             setMode(mode, { clearMessage: false });
             applyCurrentLanguage();
         }
@@ -925,11 +912,11 @@
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = name;
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
-            accountPlan.textContent = auth.formatPlan();
+            accountPlan.textContent = auth.formatPlan() || '';
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             if (!profilePlan) {
-                accountHint.dataset.i18nKey = 'checking';
+                accountHint.dataset.i18nKey = 'accountLoadingHint';
                 accountHint.textContent = 'Refreshing account status...';
             } else {
                 accountHint.dataset.i18nKey = auth.isPro() ? 'proMemberHint' : 'freeMemberHint';

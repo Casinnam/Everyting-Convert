@@ -62,9 +62,19 @@
 
   function formatPlan() {
     if (!state.user) return translateAuth('authGuest');
-    if (!state.profile || !state.profile.plan) return translateAuth('authChecking');
+    if (!state.profile || !state.profile.plan) return '';
     const plan = isPro() ? translateAuth('authPro') : translateAuth('authFree');
     return isAdmin() ? `${plan} | ${translateAuth('authAdmin')}` : plan;
+  }
+
+  function accountLabel() {
+    if (state.missingConfig) return translateAuth('authSupabaseRequired');
+    if (state.user) {
+      const plan = formatPlan();
+      const name = shortName(displayName());
+      return plan ? `${name} | ${plan}` : name;
+    }
+    return !state.ready ? translateAuth('authChecking') : translateAuth('authLoginRequired');
   }
 
   function emailPrefix(email) {
@@ -257,13 +267,7 @@
       return;
     }
 
-    const authLabel = state.missingConfig
-      ? translateAuth('authSupabaseRequired')
-      : state.user
-        ? `${shortName(displayName())} | ${formatPlan()}`
-        : checkingAuth
-          ? translateAuth('authChecking')
-          : translateAuth('authLoginRequired');
+    const authLabel = accountLabel();
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
       delete element.dataset.i18nKey;
@@ -615,6 +619,7 @@
     isPro,
     isAdmin,
     formatPlan,
+    accountLabel,
     displayName,
     cachedAuthSnapshot,
     updateUsername,

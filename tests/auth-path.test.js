@@ -16,8 +16,10 @@ assert(
 );
 
 assert(
-  source.includes("!state.profile.plan) return translateAuth('authChecking')"),
-  'Logged-in users should see Checking instead of a temporary Free plan before profile data resolves.',
+  source.includes("!state.profile.plan) return ''") &&
+    source.includes('function accountLabel()') &&
+    source.includes("return plan ? `${name} | ${plan}` : name;"),
+  'Logged-in users should see their name without a temporary Checking or Free plan before profile data resolves.',
 );
 
 assert(

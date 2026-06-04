@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const auth = fs.readFileSync(path.join(root, 'auth.html'), 'latin1');
+const auth = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
 
 [
   'Manage features',
@@ -27,10 +27,11 @@ const forbiddenVisibleText = [
   '??/label>',
   '?/button>',
   '?/label>',
-  String.fromCharCode(0x00eb),
-  String.fromCharCode(0x00ec),
-  String.fromCharCode(0x00ed),
-  String.fromCharCode(0x00ea),
+  '\uFFFD',
+  '占쏙옙',
+  '??�뎅',
+  'Espa챰ol',
+  'Fran챌ais',
 ];
 
 forbiddenVisibleText.forEach((text) => {

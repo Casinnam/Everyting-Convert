@@ -769,8 +769,8 @@
 
 <main>
   <div class="hero">
-    <h1>PDF¸¦ Excel·Î<span class="line2">º¯È¯ÇÏ¼¼¿ä</span></h1>
-    <p>PDF ÅØ½ºÆ®ÀÇ ÁÂÇ¥¸¦ ºĞ¼®ÇØ Çà°ú ¿­À» ÃßÁ¤ÇÏ°í Excel ¹®¼­(.xlsx)·Î ÀúÀåÇÕ´Ï´Ù</p>
+    <h1>PDF to Excel<span class="line2">Converter</span></h1>
+    <p>Extract PDF text and tables into an Excel workbook (.xlsx).</p>
   </div>
 
   <div class="drop-zone" id="dropZone">
@@ -781,50 +781,50 @@
         <path d="M8 13h8M8 17h8M8 9h2"/>
       </svg>
     </div>
-    <h2>PDF ÆÄÀÏÀ» µå·¡±×ÇÏ¼¼¿ä</h2>
-    <p>Ç¥°¡ Æ÷ÇÔµÈ PDF¸¦ ¼±ÅÃÇÏ¸é Çà°ú ¿­À» ÀÚµ¿À¸·Î ÃßÁ¤ÇÕ´Ï´Ù</p>
-    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">ÆÄÀÏ ¼±ÅÃ</button>
+    <h2>Drag your PDF file here</h2>
+    <p>Choose a PDF with text or tables and select a conversion mode.</p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
     <input type="file" id="fileInput" accept=".pdf">
   </div>
 
   <div class="settings-panel" id="settingsPanel">
-    <div class="settings-title">º¯È¯ ¼³Á¤</div>
+    <div class="settings-title">Conversion settings</div>
     <div class="settings-grid">
       <div class="setting-item">
-        <label>º¯È¯ ¸ğµå</label>
+        <label>Conversion mode</label>
         <select id="conversionMode">
-          <option value="simple">ÀÏ¹İ ÅØ½ºÆ® ÃßÃâ</option>
-          <option value="enhanced">Ç¥ °¨Áö °­È­Çü (Pro)</option>
+          <option value="simple">Standard text extraction</option>
+          <option value="enhanced">Enhanced table detection (Pro)</option>
         </select>
       </div>
       <div class="setting-item">
-        <label>ÆäÀÌÁö ¹üÀ§</label>
+        <label>Page range</label>
         <select id="pageRange">
-          <option value="all">¸ğµç ÆäÀÌÁö</option>
-          <option value="first">Ã¹ ¹øÂ° ÆäÀÌÁö¸¸</option>
-          <option value="custom">Á÷Á¢ ÀÔ·Â</option>
+          <option value="all">All pages</option>
+          <option value="first">First page only</option>
+          <option value="custom">Custom range</option>
         </select>
       </div>
       <div class="setting-item">
-        <label>½ÃÆ® ±¸¼º</label>
+        <label>Sheet layout</label>
         <div style="padding-top:0.5rem;">
-          <input type="checkbox" id="sheetPerPage" checked> ÆäÀÌÁöº° ½ÃÆ® »ı¼º
+          <input type="checkbox" id="sheetPerPage" checked> Create one sheet per page
         </div>
       </div>
       <div class="setting-item">
-        <label>¿­ °¨Áö ¹Î°¨µµ</label>
+        <label>Column grouping sensitivity</label>
         <select id="sensitivity">
-          <option value="normal">±âº»</option>
-          <option value="loose">´À½¼ÇÏ°Ô</option>
-          <option value="strict">ÃÎÃÎÇÏ°Ô</option>
+          <option value="normal">Normal</option>
+          <option value="loose">Loose</option>
+          <option value="strict">Strict</option>
         </select>
       </div>
     </div>
     <div id="proNotice" style="margin-top:1rem;color:var(--muted);font-size:0.85rem;line-height:1.5;">
-      ÇöÀç »óÅÂ: <strong style="color:var(--text);" data-auth-state>È®ÀÎ Áß...</strong>
+      Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>
     </div>
     <div id="customPageInput" style="margin-top:1rem;display:none;">
-      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">ÆäÀÌÁö ¹øÈ£ (¿¹: 1,3,5-8)</label>
+      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">Page numbers (ex: 1,3,5-8)</label>
       <input type="text" id="customPages" placeholder="1,3,5-8" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;border-radius:2px;outline:none;">
     </div>
   </div>
@@ -840,7 +840,7 @@
       <div class="file-name" id="fileName">-</div>
       <div class="file-meta" id="fileMeta">-</div>
     </div>
-    <button class="remove-file" onclick="resetAll()">¡¿</button>
+    <button class="remove-file" onclick="resetAll()">Remove</button>
   </div>
 
   <button class="convert-btn" id="convertBtn" onclick="startConversion()">
@@ -848,12 +848,12 @@
       <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
     </svg>
-    Excel ¹®¼­·Î º¯È¯
+    Convert to Excel
   </button>
 
   <div class="progress-section" id="progressSection">
     <div class="progress-header">
-      <span class="progress-label" id="progressLabel">Ç¥ ±¸Á¶ ºĞ¼® Áß...</span>
+      <span class="progress-label" id="progressLabel">Analyzing tables...</span>
       <span class="progress-pct" id="progressPct">0%</span>
     </div>
     <div class="progress-bar-bg">
@@ -862,33 +862,33 @@
   </div>
 
   <div class="results-section" id="resultsSection">
-    <div class="results-title">º¯È¯ ¿Ï·á ? <span id="pageCount">0</span>ÆäÀÌÁö ºĞ¼®</div>
+    <div class="results-title">Conversion complete - analyzed <span id="pageCount">0</span> pages</div>
     <div class="summary-grid">
       <div class="summary-item">
         <div class="summary-value" id="rowCount">0</div>
-        <div class="summary-label">°¨ÁöµÈ Çà</div>
+        <div class="summary-label">Rows</div>
       </div>
       <div class="summary-item">
         <div class="summary-value" id="columnCount">0</div>
-        <div class="summary-label">ÃÖ´ë ¿­</div>
+        <div class="summary-label">Max columns</div>
       </div>
       <div class="summary-item">
         <div class="summary-value" id="sheetCount">0</div>
-        <div class="summary-label">½ÃÆ®</div>
+        <div class="summary-label">Sheets</div>
       </div>
     </div>
     <button class="download-excel-btn" id="downloadExcelBtn">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Excel ¹®¼­ ´Ù¿î·Îµå (.xlsx)
+      Download Excel file (.xlsx)
     </button>
     <p style="margin-top:1rem;color:var(--muted);font-size:0.85rem;">
-      ¡Ø ÀÏ¹İ ÃßÃâÀº ÅØ½ºÆ®¸¦ ÁÙ ´ÜÀ§·Î ÀúÀåÇÏ°í, Ç¥ °¨Áö °­È­ÇüÀº ÁÂÇ¥ ±â¹İÀ¸·Î Çà°ú ¿­À» ÃßÁ¤ÇÕ´Ï´Ù. ½ºÄµ ÀÌ¹ÌÁö PDF´Â OCRÀÌ ¾ø¾î ÅØ½ºÆ®¸¦ ÃßÃâÇÒ ¼ö ¾ø½À´Ï´Ù.
+      Standard mode extracts readable text. Enhanced table detection tries to preserve table-like rows and columns for Pro members.
     </p>
     <div class="preview-wrap" id="previewWrap"></div>
   </div>
 
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" onclick="resetAll()">»õ ÆÄÀÏ º¯È¯ÇÏ±â</button>
+    <button class="reset-btn" onclick="resetAll()">Convert another file</button>
   </div>
 </main>
 
@@ -956,7 +956,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>¨Ï EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -964,10 +964,10 @@
       </button>
       <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">ÇÑ±¹¾î</button>
+                    <button type="button" data-language="ko">í•œêµ­ì–´</button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">Espanol</button>
-                    <button type="button" data-language="fr">Francais</button>
+                    <button type="button" data-language="es">EspaÃ±ol</button>
+                    <button type="button" data-language="fr">FranÃ§ais</button>
                 </div>
     </div>
   </div>
@@ -997,9 +997,9 @@
   function updateModeNotice() {
     const notice = document.getElementById('proNotice');
     if (conversionMode.value === 'enhanced') {
-      notice.innerHTML = 'Ç¥ °¨Áö °­È­ÇüÀº Pro È¸¿ø Àü¿ëÀÔ´Ï´Ù. ÇöÀç »óÅÂ: <strong style="color:var(--text);" data-auth-state>È®ÀÎ Áß...</strong>';
+      notice.innerHTML = 'Enhanced table detection is available to Pro members. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     } else {
-      notice.innerHTML = 'ÀÏ¹İ ÅØ½ºÆ® ÃßÃâÀº ·Î±×ÀÎ ¾øÀÌµµ »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù. ÇöÀç »óÅÂ: <strong style="color:var(--text);" data-auth-state>È®ÀÎ Áß...</strong>';
+      notice.innerHTML = 'Standard text extraction is available without login. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     }
     if (window.EverythingConvertAuth) EverythingConvertAuth.refresh();
   }
@@ -1012,7 +1012,7 @@
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type === 'application/pdf') loadFile(file);
-    else alert('PDF ÆÄÀÏ¸¸ ¾÷·Îµå °¡´ÉÇÕ´Ï´Ù.');
+    else alert('Please upload a PDF file.');
   });
 
   document.getElementById('fileInput').addEventListener('change', e => {
@@ -1021,7 +1021,7 @@
 
   async function loadFile(file) {
     if (!window.pdfjsLib) {
-      alert('PDF.js ¶óÀÌºê·¯¸®¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù. ÀÎÅÍ³İ ¿¬°áÀ» È®ÀÎÇÑ µÚ ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä.');
+      alert('PDF.js could not be loaded. Check your internet connection and try again.');
       return;
     }
 
@@ -1030,7 +1030,7 @@
     pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
     document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}ÆäÀÌÁö ¡¤ ${formatSize(file.size)}`;
+    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages} pages - ${formatSize(file.size)}`;
     document.getElementById('fileInfo').classList.add('visible');
     document.getElementById('settingsPanel').classList.add('visible');
     document.getElementById('convertBtn').classList.add('visible');
@@ -1128,7 +1128,7 @@
       }
 
       const gap = item.x - previous.endX;
-      const looksContinuous = gap <= wordGap && !/[:£º]$/.test(previous.text);
+      const looksContinuous = gap <= wordGap && !/[:]$/.test(previous.text);
       if (looksContinuous) {
         previous.text += ' ' + item.text;
         previous.endX = Math.max(previous.endX, item.endX);
@@ -1226,7 +1226,7 @@
   function renderPreview(rows) {
     const previewRows = rows.slice(0, 12);
     const maxColumns = Math.max(1, ...previewRows.map(row => row.length));
-    const header = Array.from({ length: maxColumns }, (_, index) => `<th>¿­ ${index + 1}</th>`).join('');
+    const header = Array.from({ length: maxColumns }, (_, index) => `<th>Column ${index + 1}</th>`).join('');
     const body = previewRows.map(row => {
       const cells = Array.from({ length: maxColumns }, (_, index) => `<td>${escapeHtml(row[index] || '')}</td>`).join('');
       return `<tr>${cells}</tr>`;
@@ -1251,18 +1251,18 @@
   async function startConversion() {
     if (!pdfDoc) return;
     if (!window.XLSX) {
-      alert('Excel º¯È¯ ¶óÀÌºê·¯¸®¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù. ÀÎÅÍ³İ ¿¬°áÀ» È®ÀÎÇÑ µÚ ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä.');
+      alert('The Excel conversion library could not be loaded. Check your internet connection and try again.');
       return;
     }
 
     const pages = getPageIndices();
     const mode = document.getElementById('conversionMode').value;
     if (!pages.length) {
-      alert('º¯È¯ÇÒ ÆäÀÌÁö¸¦ ¼±ÅÃÇØ ÁÖ¼¼¿ä.');
+      alert('Please select data to convert.');
       return;
     }
 
-    if (mode === 'enhanced' && window.EverythingConvertAuth && !EverythingConvertAuth.requirePro('Ç¥ °¨Áö °­È­ÇüÀº Pro È¸¿ø¸¸ »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù.')) {
+    if (mode === 'enhanced' && window.EverythingConvertAuth && !EverythingConvertAuth.requirePro('Enhanced table detection is available to Pro members.')) {
       return;
     }
 
@@ -1280,13 +1280,13 @@
 
       for (let i = 0; i < pages.length; i++) {
         const pageNum = pages[i];
-        updateProgress(`ÆäÀÌÁö ${pageNum} ${mode === 'enhanced' ? 'Ç¥ ±¸Á¶ ºĞ¼®' : 'ÅØ½ºÆ® ÃßÃâ'} Áß...`, Math.round((i / pages.length) * 90));
+        updateProgress(`Page ${pageNum} ${mode === 'enhanced' ? 'table analysis' : 'text extraction'}...`, Math.round((i / pages.length) * 90));
         const page = await pdfDoc.getPage(pageNum);
         const textContent = await page.getTextContent();
         const table = mode === 'enhanced'
           ? extractTable(textContent)
           : { rows: extractSimpleRows(textContent), anchors: [] };
-        const rows = table.rows.length ? table.rows : [[`ÆäÀÌÁö ${pageNum}¿¡¼­ ÃßÃâµÈ ÅØ½ºÆ®°¡ ¾ø½À´Ï´Ù.`]];
+        const rows = table.rows.length ? table.rows : [[`Page ${pageNum} has no extractable text.`]];
         pageTables.push({ pageNum, rows });
 
         if (sheetPerPage) {
@@ -1306,7 +1306,7 @@
         XLSX.utils.book_append_sheet(workbook, worksheet, 'PDF Tables');
       }
 
-      updateProgress('Excel ¹®¼­ »ı¼º Áß...', 96);
+      updateProgress('Creating Excel file...', 96);
       const combinedRows = pageTables.flatMap((page, index) => index ? [[]].concat(page.rows) : page.rows);
       const maxColumns = Math.max(0, ...combinedRows.map(row => row.length));
 
@@ -1321,7 +1321,7 @@
       document.getElementById('sheetCount').textContent = workbook.SheetNames.length;
       renderPreview(combinedRows);
 
-      updateProgress('¿Ï·á!', 100);
+      updateProgress('Done!', 100);
       setTimeout(() => {
         document.getElementById('progressSection').classList.remove('visible');
         document.getElementById('resultsSection').classList.add('visible');
@@ -1329,7 +1329,7 @@
       }, 350);
     } catch (error) {
       console.error(error);
-      alert('º¯È¯ Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù: ' + error.message);
+      alert('An error occurred during conversion: ' + error.message);
       resetAll();
     }
   }

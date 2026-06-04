@@ -724,8 +724,8 @@
 
 <main>
   <div class="hero">
-    <h1>PDF¸¦ Word·Î<span class="line2">º¯È¯ÇÏ¼¼¿ä</span></h1>
-    <p>ºê¶ó¿ìÀú¿¡¼­ Á÷Á¢ ÅØ½ºÆ®¸¦ ÃßÃâÇÏ¿© Word ¹®¼­(.docx)·Î ÀúÀåÇÕ´Ï´Ù</p>
+    <h1>PDF to Word<span class="line2">Converter</span></h1>
+    <p>Extract readable PDF text and create an editable Word document (.docx).</p>
   </div>
 
   <div class="drop-zone" id="dropZone">
@@ -737,32 +737,32 @@
         <polyline points="9 15 12 18 15 15"/>
       </svg>
     </div>
-    <h2>PDF ÆÄÀÏÀ» µå·¡±×ÇÏ¼¼¿ä</h2>
-    <p>¶Ç´Â ¾Æ·¡ ¹öÆ°À» Å¬¸¯ÇÏ¿© ÆÄÀÏÀ» ¼±ÅÃÇÏ¼¼¿ä</p>
-    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">ÆÄÀÏ ¼±ÅÃ</button>
+    <h2>Drag your PDF file here</h2>
+    <p>Or click the button below to choose a file.</p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
     <input type="file" id="fileInput" accept=".pdf">
   </div>
 
   <div class="settings-panel" id="settingsPanel">
-    <div class="settings-title">º¯È¯ ¼³Á¤</div>
+    <div class="settings-title">Conversion settings</div>
     <div class="settings-grid">
       <div class="setting-item">
-        <label>ÆäÀÌÁö ¹øÈ£ Ç¥½Ã</label>
+        <label>Include page numbers</label>
         <div style="padding-top: 0.5rem;">
-            <input type="checkbox" id="includePageNum" checked> °¢ ÆäÀÌÁö¸¶´Ù ¹øÈ£ ±¸ºĞ¼± Ãß°¡
+            <input type="checkbox" id="includePageNum" checked> Add page markers to the document
         </div>
       </div>
       <div class="setting-item">
-        <label>ÆäÀÌÁö ¹üÀ§</label>
+        <label>Page range</label>
         <select id="pageRange">
-          <option value="all">¸ğµç ÆäÀÌÁö</option>
-          <option value="first">Ã¹ ¹øÂ° ÆäÀÌÁö¸¸</option>
-          <option value="custom">Á÷Á¢ ÀÔ·Â</option>
+          <option value="all">All pages</option>
+          <option value="first">First page only</option>
+          <option value="custom">Custom range</option>
         </select>
       </div>
     </div>
     <div id="customPageInput" style="margin-top:1rem;display:none;">
-      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">ÆäÀÌÁö ¹øÈ£ (¿¹: 1,3,5-8)</label>
+      <label style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;">Page numbers (ex: 1,3,5-8)</label>
       <input type="text" id="customPages" placeholder="1,3,5-8" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;border-radius:2px;outline:none;">
     </div>
   </div>
@@ -775,10 +775,10 @@
       </svg>
     </div>
     <div class="file-details">
-      <div class="file-name" id="fileName">?</div>
-      <div class="file-meta" id="fileMeta">?</div>
+      <div class="file-name" id="fileName">-</div>
+      <div class="file-meta" id="fileMeta">-</div>
     </div>
-    <button class="remove-file" onclick="resetAll()">?</button>
+    <button class="remove-file" onclick="resetAll()">Remove</button>
   </div>
 
   <button class="convert-btn" id="convertBtn" onclick="startConversion()">
@@ -786,12 +786,12 @@
       <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
     </svg>
-    Word ¹®¼­·Î º¯È¯
+    Convert to Word
   </button>
 
   <div class="progress-section" id="progressSection">
     <div class="progress-header">
-      <span class="progress-label" id="progressLabel">ÅØ½ºÆ® ÃßÃâ Áß...</span>
+      <span class="progress-label" id="progressLabel">Extracting text...</span>
       <span class="progress-pct" id="progressPct">0%</span>
     </div>
     <div class="progress-bar-bg">
@@ -801,19 +801,19 @@
 
   <div class="results-section" id="resultsSection">
     <div class="results-header">
-      <div class="results-title">º¯È¯ ¿Ï·á ? <span id="pageCount">0</span>ÆäÀÌÁö¿¡¼­ ÅØ½ºÆ® ÃßÃâ ¼º°ø</div>
+      <div class="results-title">Conversion complete - extracted text from <span id="pageCount">0</span> pages</div>
     </div>
     <button class="download-word-btn" id="downloadWordBtn">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Word ¹®¼­ ´Ù¿î·Îµå (.docx)
+      Download Word file (.docx)
     </button>
     <p style="margin-top: 1rem; color: var(--muted); font-size: 0.85rem;">
-        ¡Ø ÀÌ µµ±¸´Â PDF¿¡¼­ ÅØ½ºÆ®¸¸ ÃßÃâÇÏ¿© ¹®¼­·Î ±¸¼ºÇÕ´Ï´Ù. ÀÌ¹ÌÁö³ª º¹ÀâÇÑ Ç¥ ·¹ÀÌ¾Æ¿ôÀº À¯ÁöµÇÁö ¾ÊÀ» ¼ö ÀÖ½À´Ï´Ù.
+      This tool extracts text from PDFs and builds a Word document. Scanned image PDFs may require OCR for best results.
     </p>
   </div>
 
   <div class="reset-area" id="resetArea">
-    <button class="reset-btn" onclick="resetAll()">»õ ÆÄÀÏ º¯È¯ÇÏ±â</button>
+    <button class="reset-btn" onclick="resetAll()">Convert another file</button>
   </div>
 </main>
 
@@ -881,7 +881,7 @@
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
       <span>Everything Convert</span>
     </div>
-    <p>¨Ï EverythingConvert.com v.00 All rights reserved (2026)</p>
+    <p>&copy; EverythingConvert.com v.00 All rights reserved (2026)</p>
     <div class="language-menu">
       <button class="language-toggle" type="button" aria-expanded="false">
         <i class="fa-solid fa-globe"></i>
@@ -889,10 +889,10 @@
       </button>
       <div class="language-dropdown">
                     <button type="button" data-language="en">English</button>
-                    <button type="button" data-language="ko">ÇÑ±¹¾î</button>
+                    <button type="button" data-language="ko">í•œêµ­ì–´</button>
                     <button type="button" data-language="de">Deutsch</button>
-                    <button type="button" data-language="es">Espanol</button>
-                    <button type="button" data-language="fr">Francais</button>
+                    <button type="button" data-language="es">EspaÃ±ol</button>
+                    <button type="button" data-language="fr">FranÃ§ais</button>
                 </div>
     </div>
   </div>
@@ -924,7 +924,7 @@
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type === 'application/pdf') loadFile(file);
-    else alert('PDF ÆÄÀÏ¸¸ ¾÷·Îµå °¡´ÉÇÕ´Ï´Ù.');
+    else alert('Please upload a PDF file.');
   });
 
   document.getElementById('fileInput').addEventListener('change', e => {
@@ -933,7 +933,7 @@
 
   async function loadFile(file) {
     if (!window.pdfjsLib) {
-      alert('PDF.js ¶óÀÌºê·¯¸®¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù. ÀÎÅÍ³İ ¿¬°áÀ» È®ÀÎÇÑ µÚ ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä.');
+      alert('PDF.js could not be loaded. Check your internet connection and try again.');
       return;
     }
 
@@ -942,7 +942,7 @@
     pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
     document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages}ÆäÀÌÁö ¡¤ ${formatSize(file.size)}`;
+    document.getElementById('fileMeta').textContent = `${pdfDoc.numPages} pages - ${formatSize(file.size)}`;
     document.getElementById('fileInfo').classList.add('visible');
     document.getElementById('settingsPanel').classList.add('visible');
     document.getElementById('convertBtn').classList.add('visible');
@@ -978,7 +978,7 @@
     if (!pdfDoc) return;
 
     if (!window.docx) {
-      alert('Word º¯È¯ ¶óÀÌºê·¯¸®¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù. ÀÎÅÍ³İ ¿¬°áÀ» È®ÀÎÇÑ µÚ ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä.');
+      alert('The Word conversion library could not be loaded. Check your internet connection and try again.');
       return;
     }
 
@@ -996,7 +996,7 @@
       for (let i = 0; i < pages.length; i++) {
         const pageNum = pages[i];
         const pct = Math.round((i / pages.length) * 100);
-        updateProgress(`ÆäÀÌÁö ${pageNum} ÅØ½ºÆ® ÃßÃâ Áß...`, pct);
+        updateProgress(`Extracting text from page ${pageNum}...`, pct);
 
         const page = await pdfDoc.getPage(pageNum);
         const textContent = await page.getTextContent();
@@ -1005,7 +1005,7 @@
           docxParagraphs.push(new docx.Paragraph({
               children: [
                   new docx.TextRun({
-                      text: `--- ÆäÀÌÁö ${pageNum} ---`,
+                      text: `--- Page ${pageNum} ---`,
                       bold: true,
                       size: 28
                   })
@@ -1036,7 +1036,7 @@
         docxParagraphs.push(new docx.Paragraph({ children: [new docx.TextRun("")] }));
       }
 
-      updateProgress('Word ¹®¼­ »ı¼º Áß...', 95);
+      updateProgress('Creating Word file...', 95);
 
       const doc = new docx.Document({
           sections: [{
@@ -1054,7 +1054,7 @@
           a.click();
       };
 
-      updateProgress('¿Ï·á!', 100);
+      updateProgress('Done!', 100);
       setTimeout(() => {
         document.getElementById('progressSection').classList.remove('visible');
         document.getElementById('resultsSection').classList.add('visible');
@@ -1064,7 +1064,7 @@
 
     } catch (e) {
       console.error(e);
-      alert('º¯È¯ Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù: ' + e.message);
+      alert('An error occurred during conversion: ' + e.message);
       resetAll();
     }
   }
