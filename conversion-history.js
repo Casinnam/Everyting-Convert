@@ -89,9 +89,26 @@
     }
   }
 
+  async function recordToolConversion(record) {
+    const results = {
+      history: await recordConversion(record),
+      usage: null,
+    };
+
+    if (
+      window.EverythingConvertUsageLimit &&
+      typeof window.EverythingConvertUsageLimit.recordSuccessfulConversion === 'function'
+    ) {
+      results.usage = await window.EverythingConvertUsageLimit.recordSuccessfulConversion();
+    }
+
+    return results;
+  }
+
   window.EverythingConvertHistory = {
     fetchHistory,
     recordConversion,
+    recordToolConversion,
     rootPrefix,
   };
 })();

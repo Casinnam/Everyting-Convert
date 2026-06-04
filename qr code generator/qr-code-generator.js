@@ -406,8 +406,8 @@
       if (dlBtn) dlBtn.disabled = false;
       const tBtn = document.getElementById('testQrButton');
       if (tBtn) tBtn.disabled = false;
-      if (shouldRecord && window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordConversion === 'function') {
-        window.EverythingConvertHistory.recordConversion({
+      if (shouldRecord && window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordToolConversion === 'function') {
+        window.EverythingConvertHistory.recordToolConversion({
           tool_id: 'qr-code-generator',
           tool_name: 'QR Code Generator',
           output_filename: getFilename(state.format || 'png'),

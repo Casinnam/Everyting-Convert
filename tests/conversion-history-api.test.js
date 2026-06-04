@@ -48,8 +48,22 @@ assert(
 );
 
 assert(
+  qrHtml.includes('../usage-limit.js') &&
+    qrHtml.includes('id="generateQrButton" type="button" data-usage-guard') &&
+    qrJs.includes('recordToolConversion'),
+  'QR Code Generator should check limits before generation and record usage only after success.',
+);
+
+assert(
   jsonHtml.includes('../conversion-history.js') && jsonJs.includes("tool_id: 'json-to-csv'"),
   'JSON to CSV should load the helper and record successful CSV activity.',
+);
+
+assert(
+  jsonHtml.includes('../usage-limit.js') &&
+    jsonHtml.includes('id="convertButton" type="button" data-usage-guard') &&
+    jsonJs.includes('recordToolConversion'),
+  'JSON to CSV should check limits before conversion and record usage only after success.',
 );
 
 console.log('conversion history API tests passed');

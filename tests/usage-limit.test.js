@@ -105,6 +105,13 @@ assert(
 );
 
 assert(
+  source.includes('async function checkConversionAllowed') &&
+    source.includes('async function recordSuccessfulConversion') &&
+    source.indexOf("fetchServerUsage('POST')") > source.indexOf('async function recordSuccessfulConversion'),
+  'Browser usage helper should check limits before conversion and record usage only after a successful conversion.',
+);
+
+assert(
   pricing.includes('10 guest conversions') &&
     pricing.includes('20 conversions with a free account') &&
     pricing.includes('unlimited work') &&

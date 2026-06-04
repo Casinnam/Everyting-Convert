@@ -51,7 +51,7 @@
     es: {
       pdfDocuments: 'PDF y documentos',
       image: 'Imagen',
-      media: 'Video y audio',
+      media: 'Vídeo y audio',
       gif: 'GIF',
       dropFile: 'Haz clic o suelta un archivo aquí',
       dropPdf: 'Haz clic o suelta un PDF aquí',
@@ -202,12 +202,12 @@
     mediaConverter: {
       category: 'media',
       drop: 'dropFile',
-      title: { en: 'Video & Audio Converter', ko: '비디오 & 오디오 변환기', de: 'Video- & Audiokonverter', es: 'Convertidor de video y audio', fr: 'Convertisseur vidéo et audio' },
+      title: { en: 'Video & Audio Converter', ko: '비디오 & 오디오 변환기', de: 'Video- & Audiokonverter', es: 'Convertidor de vídeo y audio', fr: 'Convertisseur vidéo et audio' },
       description: {
         en: 'Convert video and audio files in your browser with simple controls.',
         ko: '간단한 설정으로 비디오와 오디오 파일을 브라우저에서 변환하세요.',
         de: 'Konvertieren Sie Video- und Audiodateien im Browser.',
-        es: 'Convierte video y audio en el navegador.',
+        es: 'Convierte vídeo y audio en el navegador.',
         fr: 'Convertissez vidéo et audio dans le navigateur.',
       },
     },

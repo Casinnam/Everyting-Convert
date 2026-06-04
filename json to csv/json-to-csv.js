@@ -148,8 +148,8 @@
       copyButton.disabled = false;
       downloadButton.disabled = false;
       setStatus(`Converted ${result.objects.length} row(s) and ${result.headers.length} column(s).`, 'success');
-      if (shouldRecord && window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordConversion === 'function') {
-        window.EverythingConvertHistory.recordConversion({
+      if (shouldRecord && window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordToolConversion === 'function') {
+        window.EverythingConvertHistory.recordToolConversion({
           tool_id: 'json-to-csv',
           tool_name: 'JSON to CSV',
           output_filename: 'everythingconvert-data.csv',

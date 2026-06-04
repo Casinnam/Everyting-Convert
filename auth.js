@@ -14,7 +14,8 @@
     ready: false,
     missingConfig,
   };
-  const cacheKey = 'everything_convert_auth_snapshot';
+  const identityCacheKey = 'everything_convert_auth_identity_snapshot';
+  const legacyCacheKey = 'everything_convert_auth_snapshot';
   let signingOut = false;
 
   function initClient() {
@@ -63,7 +64,7 @@
     if (!state.user) return translateAuth('authGuest');
     if (!state.profile || !state.profile.plan) return translateAuth('authChecking');
     const plan = isPro() ? translateAuth('authPro') : translateAuth('authFree');
-    return isAdmin() ? `${plan} · ${translateAuth('authAdmin')}` : plan;
+    return isAdmin() ? `${plan} | ${translateAuth('authAdmin')}` : plan;
   }
 
   function emailPrefix(email) {
@@ -86,22 +87,20 @@
     return name.length > 22 ? name.slice(0, 19) + '...' : name;
   }
 
-  function readAuthCache() {
+  function readAuthIdentityCache() {
     try {
-      const raw = window.localStorage.getItem(cacheKey);
+      const raw = window.localStorage.getItem(identityCacheKey);
       return raw ? JSON.parse(raw) : null;
     } catch (error) {
       return null;
     }
   }
 
-  function writeAuthCache() {
-    if (!state.user || !state.profile || !state.profile.plan) return;
+  function writeAuthIdentityCache() {
+    if (!state.user) return;
     try {
-      window.localStorage.setItem(cacheKey, JSON.stringify({
+      window.localStorage.setItem(identityCacheKey, JSON.stringify({
         username: displayName(),
-        plan: state.profile.plan || 'free',
-        role: state.profile.role || 'user',
         savedAt: Date.now(),
       }));
     } catch (error) {
@@ -109,22 +108,20 @@
     }
   }
 
-  function clearAuthCache() {
+  function clearAuthIdentityCache() {
     try {
-      window.localStorage.removeItem(cacheKey);
+      window.localStorage.removeItem(identityCacheKey);
+      window.localStorage.removeItem(legacyCacheKey);
     } catch (error) {
       // Ignore storage failures.
     }
   }
 
   function renderCachedAuthWidgets() {
-    const cached = readAuthCache();
+    const cached = readAuthIdentityCache();
     if (!cached || !cached.username) return false;
 
-    const plan = cached.plan === 'pro' ? 'Pro' : 'Free';
-    const label = cached.role === 'admin'
-      ? `${shortName(cached.username)} · ${plan} · Admin`
-      : `${shortName(cached.username)} · ${plan}`;
+    const label = shortName(cached.username);
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
       delete element.dataset.i18nKey;
@@ -144,14 +141,14 @@
     });
 
     document.querySelectorAll('[data-admin-only]').forEach((element) => {
-      element.style.display = cached.role === 'admin' ? '' : 'none';
+      element.style.display = 'none';
     });
 
     return true;
   }
 
   function cachedAuthSnapshot() {
-    return readAuthCache();
+    return readAuthIdentityCache();
   }
 
   function withTimeout(promise, label, ms = 8000) {
@@ -169,13 +166,13 @@
       return state.profile;
     }
 
-    const cached = readAuthCache();
+    const cached = readAuthIdentityCache();
     state.profile = {
       id: state.user.id,
       email: state.user.email,
       username: cached && cached.username ? cached.username : emailPrefix(state.user.email),
-      plan: cached && cached.plan ? cached.plan : '',
-      role: cached && cached.role ? cached.role : 'user',
+      plan: '',
+      role: 'user',
     };
     return state.profile;
   }
@@ -248,7 +245,7 @@
 
     state.profile = data || { id: state.user.id, email: state.user.email, username: emailPrefix(state.user.email), plan: 'free', role: 'user' };
     if (!state.profile.username) state.profile.username = emailPrefix(state.user.email);
-    writeAuthCache();
+    writeAuthIdentityCache();
     return state.profile;
   }
 
@@ -263,7 +260,7 @@
     const authLabel = state.missingConfig
       ? translateAuth('authSupabaseRequired')
       : state.user
-        ? `${shortName(displayName())} · ${formatPlan()}`
+        ? `${shortName(displayName())} | ${formatPlan()}`
         : checkingAuth
           ? translateAuth('authChecking')
           : translateAuth('authLoginRequired');
@@ -294,7 +291,7 @@
       element.style.display = isAdmin() ? '' : 'none';
     });
 
-    if (state.user) writeAuthCache();
+    if (state.user) writeAuthIdentityCache();
     window.dispatchEvent(new CustomEvent('everything-auth-change', { detail: { ...state } }));
   }
 
@@ -309,7 +306,7 @@
     const client = initClient();
     if (!client) {
       state.ready = true;
-      clearAuthCache();
+      clearAuthIdentityCache();
       renderAuthWidgets();
       return state;
     }
@@ -328,7 +325,7 @@
     if (!isTimeout) {
       state.session = data && data.session ? data.session : null;
       state.user = state.session ? state.session.user : null;
-      if (!state.user) clearAuthCache();
+      if (!state.user) clearAuthIdentityCache();
     }
     if (state.user) {
       setFallbackProfile();
@@ -426,7 +423,7 @@
       state.user = null;
       state.profile = null;
       state.ready = true;
-      clearAuthCache();
+      clearAuthIdentityCache();
       renderAuthWidgets();
     } finally {
       signingOut = false;

@@ -335,7 +335,7 @@
     });
   }
 
-  async function guardConversion() {
+  async function checkConversionAllowed() {
     if (
       window.EverythingConvertAuth &&
       window.EverythingConvertAuth.state &&
@@ -355,8 +355,13 @@
     }
 
     try {
-      const usage = await fetchServerUsage('POST');
+      const usage = await fetchServerUsage('GET');
       serverUsage = usage;
+      if (usage && usage.canConvert === false) {
+        showUpgradeModal();
+        renderUsage();
+        return false;
+      }
       renderUsage();
       return true;
     } catch (error) {
@@ -382,10 +387,60 @@
         return false;
       }
 
-      fallback.recordConversion();
       renderUsage();
       return true;
     }
+  }
+
+  async function recordSuccessfulConversion() {
+    if (isProUser()) {
+      renderUsage();
+      return { skipped: true, reason: 'pro' };
+    }
+
+    try {
+      const usage = await fetchServerUsage('POST');
+      serverUsage = usage;
+      renderUsage();
+      return usage;
+    } catch (error) {
+      if (error.status === 429 || (error.usage && error.usage.canConvert === false)) {
+        serverUsage = error.usage;
+        showUpgradeModal();
+        renderUsage();
+        return { skipped: true, error: error.message };
+      }
+
+      const fallback = await getController();
+      if (!fallback.canConvert()) {
+        serverUsage = {
+          accountType: window.EverythingConvertAuth && window.EverythingConvertAuth.state && window.EverythingConvertAuth.state.user ? 'free' : 'guest',
+          limit: fallback.limit,
+          count: fallback.count(),
+          remaining: 0,
+          canConvert: false,
+          unlimited: false,
+        };
+        showUpgradeModal();
+        renderUsage();
+        return { skipped: true, reason: 'limit_reached' };
+      }
+
+      fallback.recordConversion();
+      renderUsage();
+      return {
+        accountType: window.EverythingConvertAuth && window.EverythingConvertAuth.state && window.EverythingConvertAuth.state.user ? 'free' : 'guest',
+        limit: fallback.limit,
+        count: fallback.count(),
+        remaining: fallback.remaining(),
+        canConvert: fallback.canConvert(),
+        unlimited: false,
+      };
+    }
+  }
+
+  async function guardConversion() {
+    return checkConversionAllowed();
   }
 
   function installConversionGuard() {
@@ -419,6 +474,8 @@
     rootPrefix,
     getController,
     getUsageStatus,
+    checkConversionAllowed,
+    recordSuccessfulConversion,
     guardConversion,
     renderUsage,
     showUpgradeModal,

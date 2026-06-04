@@ -21,8 +21,10 @@ assert(
 );
 
 assert(
-  source.includes("plan: cached && cached.plan ? cached.plan : ''"),
-  'Fallback profiles should use cached plan data and avoid defaulting logged-in users to Free.',
+  source.includes('writeAuthIdentityCache') &&
+    !source.includes("plan: cached && cached.plan ? cached.plan : ''") &&
+    !source.includes("role: cached && cached.role ? cached.role : 'user'"),
+  'Fallback profiles should avoid cached plan/role data so stale Free/Pro labels cannot flash.',
 );
 
 function loadAuth(pathname, protocol = 'https:') {

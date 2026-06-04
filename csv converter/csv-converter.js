@@ -473,8 +473,8 @@
 
   /* ---------- conversion history ---------- */
   function recordHistory(filename, rows, cols) {
-    if (window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordConversion === 'function') {
-      window.EverythingConvertHistory.recordConversion({
+    if (window.EverythingConvertHistory && typeof window.EverythingConvertHistory.recordToolConversion === 'function') {
+      window.EverythingConvertHistory.recordToolConversion({
         tool_id: 'csv-converter',
         tool_name: 'CSV Converter (' + MODES[currentMode].label + ')',
         output_filename: filename,
