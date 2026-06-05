@@ -2036,6 +2036,90 @@ nav {
     color: var(--home-muted);
 }
 
+.home-guides {
+    display: grid;
+    gap: 1.35rem;
+    margin: 1.5rem 0 3rem;
+    padding: clamp(1.25rem, 3vw, 1.8rem);
+    border: 1px solid rgba(147, 197, 253, 0.5);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 8% 12%, rgba(37, 99, 235, 0.08), transparent 18rem),
+        radial-gradient(circle at 92% 18%, rgba(124, 58, 237, 0.08), transparent 18rem),
+        rgba(255, 255, 255, 0.74);
+    box-shadow: 0 18px 48px rgba(37, 99, 235, 0.07);
+}
+
+.home-guides .section-heading {
+    margin-bottom: 0;
+}
+
+.home-guides .section-heading span {
+    display: block;
+    max-width: 760px;
+    margin: 0.7rem auto 0;
+    color: var(--home-muted);
+    line-height: 1.65;
+}
+
+.home-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.home-guide-grid a {
+    display: grid;
+    gap: 0.7rem;
+    min-height: 100%;
+    padding: 1.15rem;
+    border: 1px solid var(--home-border);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.86);
+    color: var(--home-ink);
+    text-decoration: none;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.home-guide-grid a:hover {
+    transform: translateY(-3px);
+    border-color: rgba(37, 99, 235, 0.36);
+    box-shadow: 0 20px 42px rgba(37, 99, 235, 0.12);
+}
+
+.home-guide-grid i {
+    width: 2.8rem;
+    height: 2.8rem;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    color: var(--home-primary);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(124, 58, 237, 0.12));
+    font-size: 1.25rem;
+}
+
+.home-guide-grid strong {
+    font-size: 1.03rem;
+}
+
+.home-guide-grid span {
+    color: var(--home-muted);
+    line-height: 1.55;
+}
+
+.home-guide-grid em {
+    width: fit-content;
+    margin-top: auto;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--home-primary);
+    font-style: normal;
+    font-weight: 900;
+    font-size: 0.82rem;
+}
+
 .home-page .home-footer {
     width: 100%;
     margin-top: 0;
@@ -2169,6 +2253,7 @@ nav {
     .trust-strip,
     .tool-card-grid,
     .why-grid,
+    .home-guide-grid,
     .ai-preview,
     .ai-card-row,
     .use-case-grid,
