@@ -272,6 +272,34 @@
     }
     throw new Error(lastError && lastError.message ? `Media engine failed to load: ${lastError.message}` : 'Media engine failed to load.');
   }
+  async function runConversionCommand(engine, input, output, outFormat) {
+    const sourceExt = ext(currentFile.name);
+    const canRemux = ['mp4', 'mov'].includes(outFormat) && ['mp4', 'mov', 'm4v'].includes(sourceExt);
+    if (outFormat === 'mp3') {
+      await engine.run('-i', input, '-vn', '-b:a', '192k', output);
+      return;
+    }
+    if (outFormat === 'wav') {
+      await engine.run('-i', input, '-vn', output);
+      return;
+    }
+    if (outFormat === 'ogg') {
+      await engine.run('-i', input, '-vn', '-c:a', 'libvorbis', output);
+      return;
+    }
+    if (canRemux) {
+      setStatus('Preparing video without re-encoding...');
+      await engine.run('-i', input, '-c', 'copy', '-movflags', 'faststart', output);
+      return;
+    }
+    if (outFormat === 'webm') {
+      setStatus('Re-encoding video. This can take several minutes in the browser...');
+      await engine.run('-i', input, '-c:v', 'libvpx', '-deadline', 'realtime', '-cpu-used', '8', '-b:v', '1500k', '-c:a', 'libvorbis', output);
+      return;
+    }
+    setStatus('Re-encoding video. This can take several minutes in the browser...');
+    await engine.run('-i', input, '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '28', '-c:a', 'aac', '-movflags', 'faststart', output);
+  }
   async function convert() {
     if (!currentFile) return;
     convertBtn.disabled = true;
@@ -285,12 +313,7 @@
       try { engine.FS('unlink', output); } catch (e) {}
       engine.FS('writeFile', input, await fetchFile(currentFile));
       setStatus('Converting...');
-      if (outFormat === 'mp3') await engine.run('-i', input, '-vn', '-b:a', '192k', output);
-      else if (outFormat === 'wav') await engine.run('-i', input, '-vn', output);
-      else if (outFormat === 'ogg') await engine.run('-i', input, '-vn', '-c:a', 'libvorbis', output);
-      else if (outFormat === 'webm') await engine.run('-i', input, '-c:v', 'libvpx', '-c:a', 'libvorbis', output);
-      else if (outFormat === 'mov') await engine.run('-i', input, '-c', 'copy', output);
-      else await engine.run('-i', input, '-c:v', 'libx264', '-c:a', 'aac', '-movflags', 'faststart', output);
+      await runConversionCommand(engine, input, output, outFormat);
       const data = engine.FS('readFile', output);
       const blob = new Blob([data.buffer], { type: mimeFor(outFormat) });
       const url = URL.createObjectURL(blob);

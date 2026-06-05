@@ -26,9 +26,12 @@ assert(
     mediaConverter.includes('@ffmpeg/core-st@0.11.1') &&
     mediaConverter.includes('async function createEngine(corePath)') &&
     mediaConverter.includes("mainName: 'main'") &&
+    mediaConverter.includes('async function runConversionCommand(engine, input, output, outFormat)') &&
+    mediaConverter.includes("'-c', 'copy'") &&
+    mediaConverter.includes("'-preset', 'ultrafast'") &&
     mediaConverter.includes('for (const corePath of ffmpegCorePaths)') &&
     mediaConverter.includes('id="mediaPreview"'),
-  'Media converter should show selected media and load single-thread FFmpeg cores with the main entry point.',
+  'Media converter should show selected media, load single-thread FFmpeg cores, and avoid needless video re-encoding.',
 );
 
 assert(
