@@ -248,7 +248,7 @@
   }
   async function createEngine(corePath) {
     const { createFFmpeg } = FFmpeg;
-    const engine = createFFmpeg({ log: false, corePath });
+    const engine = createFFmpeg({ log: false, corePath, mainName: 'main' });
     engine.setProgress(({ ratio }) => {
       if (ratio > 0) setStatus(`Converting... ${Math.min(100, Math.round(ratio * 100))}%`);
     });

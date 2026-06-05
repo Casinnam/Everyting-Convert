@@ -25,9 +25,10 @@ assert(
   mediaConverter.includes('const ffmpegCorePaths = [') &&
     mediaConverter.includes('@ffmpeg/core-st@0.11.1') &&
     mediaConverter.includes('async function createEngine(corePath)') &&
+    mediaConverter.includes("mainName: 'main'") &&
     mediaConverter.includes('for (const corePath of ffmpegCorePaths)') &&
     mediaConverter.includes('id="mediaPreview"'),
-  'Media converter should show selected media and try fallback single-thread FFmpeg cores.',
+  'Media converter should show selected media and load single-thread FFmpeg cores with the main entry point.',
 );
 
 assert(
