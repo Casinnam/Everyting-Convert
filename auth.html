@@ -846,10 +846,14 @@
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = cached.username;
             accountUsername.value = cached.username;
-            accountPlan.textContent = '';
+            const cachedPlan = cached.plan === 'pro' ? 'Pro' : '';
+            const cachedRole = cached.role === 'admin' ? 'Admin' : '';
+            accountPlan.textContent = cachedRole ? `${cachedPlan || 'Free'} | ${cachedRole}` : cachedPlan;
             adminLink.style.display = 'none';
-            accountHint.dataset.i18nKey = 'accountLoadingHint';
-            accountHint.textContent = 'Refreshing account status...';
+            accountHint.dataset.i18nKey = cachedPlan ? 'proMemberHint' : 'accountLoadingHint';
+            accountHint.textContent = cachedPlan
+                ? 'You are a Pro member. Enhanced table detection is available.'
+                : 'Refreshing account status...';
             applyCurrentLanguage();
             return true;
         }

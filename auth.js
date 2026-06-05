@@ -11,12 +11,14 @@
     session: null,
     user: null,
     profile: null,
+    profileResolved: false,
     ready: false,
     missingConfig,
   };
   const identityCacheKey = 'everything_convert_auth_identity_snapshot';
   const legacyCacheKey = 'everything_convert_auth_snapshot';
   let signingOut = false;
+  let refreshPromise = null;
 
   function initClient() {
     if (missingConfig || !window.supabase) return null;
@@ -108,11 +110,20 @@
 
   function writeAuthIdentityCache() {
     if (!state.user) return;
+    const previous = readAuthIdentityCache() || {};
+    const cache = {
+      username: displayName(),
+      savedAt: Date.now(),
+    };
+    if (state.profileResolved && state.profile) {
+      cache.plan = state.profile.plan === 'pro' ? 'pro' : '';
+      cache.role = state.profile.role === 'admin' ? 'admin' : 'user';
+    } else if (previous.plan === 'pro' || previous.role === 'admin') {
+      cache.plan = previous.plan === 'pro' ? 'pro' : '';
+      cache.role = previous.role === 'admin' ? 'admin' : 'user';
+    }
     try {
-      window.localStorage.setItem(identityCacheKey, JSON.stringify({
-        username: displayName(),
-        savedAt: Date.now(),
-      }));
+      window.localStorage.setItem(identityCacheKey, JSON.stringify(cache));
     } catch (error) {
       // Ignore storage failures; auth still works through Supabase.
     }
@@ -131,7 +142,10 @@
     const cached = readAuthIdentityCache();
     if (!cached || !cached.username) return false;
 
-    const label = shortName(cached.username);
+    const cachedPlan = cached.plan === 'pro' ? translateAuth('authPro') : '';
+    const cachedRole = cached.role === 'admin' ? translateAuth('authAdmin') : '';
+    const planLabel = cachedRole ? `${cachedPlan || translateAuth('authFree')} | ${cachedRole}` : cachedPlan;
+    const label = planLabel ? `${shortName(cached.username)} | ${planLabel}` : shortName(cached.username);
 
     document.querySelectorAll('[data-auth-state]').forEach((element) => {
       delete element.dataset.i18nKey;
@@ -173,6 +187,7 @@
   function setFallbackProfile() {
     if (!state.user) {
       state.profile = null;
+      state.profileResolved = false;
       return state.profile;
     }
 
@@ -184,6 +199,7 @@
       plan: '',
       role: 'user',
     };
+    state.profileResolved = false;
     return state.profile;
   }
 
@@ -255,6 +271,7 @@
 
     state.profile = data || { id: state.user.id, email: state.user.email, username: emailPrefix(state.user.email), plan: 'free', role: 'user' };
     if (!state.profile.username) state.profile.username = emailPrefix(state.user.email);
+    state.profileResolved = true;
     writeAuthIdentityCache();
     return state.profile;
   }
@@ -304,12 +321,13 @@
     renderAuthWidgets();
   }
 
-  async function refresh() {
+  async function performRefresh() {
     if (signingOut) return state;
 
     const client = initClient();
     if (!client) {
       state.ready = true;
+      state.profileResolved = false;
       clearAuthIdentityCache();
       renderAuthWidgets();
       return state;
@@ -329,7 +347,10 @@
     if (!isTimeout) {
       state.session = data && data.session ? data.session : null;
       state.user = state.session ? state.session.user : null;
-      if (!state.user) clearAuthIdentityCache();
+      if (!state.user) {
+        state.profileResolved = false;
+        clearAuthIdentityCache();
+      }
     }
     if (state.user) {
       setFallbackProfile();
@@ -340,6 +361,15 @@
     state.ready = true;
     renderAuthWidgets();
     return state;
+  }
+
+  async function refresh() {
+    if (signingOut) return state;
+    if (refreshPromise) return refreshPromise;
+    refreshPromise = performRefresh().finally(() => {
+      refreshPromise = null;
+    });
+    return refreshPromise;
   }
 
   async function signUp(email, password, username) {
@@ -426,6 +456,7 @@
       state.session = null;
       state.user = null;
       state.profile = null;
+      state.profileResolved = false;
       state.ready = true;
       clearAuthIdentityCache();
       renderAuthWidgets();

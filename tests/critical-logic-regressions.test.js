@@ -58,11 +58,12 @@ assert(
 );
 
 assert(
-  !auth.includes('plan: state.profile.plan') &&
-    !auth.includes('role: state.profile.role') &&
-    !auth.includes('cached && cached.plan') &&
-    !auth.includes('cached.role'),
-  'Auth identity cache should not store or reuse stale plan/role values.',
+  auth.includes("cache.plan = state.profile.plan === 'pro' ? 'pro' : '';") &&
+    auth.includes("cache.role = state.profile.role === 'admin' ? 'admin' : 'user';") &&
+    auth.includes("previous.plan === 'pro' || previous.role === 'admin'") &&
+    !auth.includes("cache.plan = state.profile.plan || 'free'") &&
+    !auth.includes("cache.role = state.profile.role || 'user'"),
+  'Auth identity cache should only reuse confirmed Pro/Admin values and avoid cached Free flashes.',
 );
 
 assert(

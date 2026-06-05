@@ -24,9 +24,17 @@ assert(
 
 assert(
   source.includes('writeAuthIdentityCache') &&
-    !source.includes("plan: cached && cached.plan ? cached.plan : ''") &&
-    !source.includes("role: cached && cached.role ? cached.role : 'user'"),
-  'Fallback profiles should avoid cached plan/role data so stale Free/Pro labels cannot flash.',
+    source.includes("cache.plan = state.profile.plan === 'pro' ? 'pro' : '';") &&
+    source.includes("previous.plan === 'pro' || previous.role === 'admin'") &&
+    !source.includes("cache.plan = state.profile.plan || 'free'"),
+  'Auth cache may show confirmed Pro/Admin quickly, but should not cache Free as a temporary label.',
+);
+
+assert(
+  source.includes('let refreshPromise = null;') &&
+    source.includes('if (refreshPromise) return refreshPromise;') &&
+    source.includes('refreshPromise = performRefresh().finally'),
+  'Auth refresh should coalesce duplicate session/profile checks.',
 );
 
 function loadAuth(pathname, protocol = 'https:') {
