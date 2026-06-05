@@ -114,7 +114,9 @@
         background: rgba(255, 255, 255, .98) !important;
         box-shadow: 0 24px 70px rgba(15, 23, 42, .16) !important;
         display: none !important;
+        flex-direction: column !important;
         gap: .45rem !important;
+        min-width: 230px !important;
         padding: .65rem !important;
       }
       .ec-unified-header .tools-menu.open .tools-dropdown {

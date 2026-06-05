@@ -12,6 +12,8 @@ assert(
     menu.includes('position: relative !important') &&
     menu.includes('.ec-unified-header .tools-group') &&
     menu.includes('display: grid !important') &&
+    menu.includes('flex-direction: column !important') &&
+    menu.includes('min-width: 230px !important') &&
     menu.includes('width: min(1320px, calc(100vw - 2rem)) !important') &&
     menu.includes('grid-template-columns: repeat(6, minmax(150px, 1fr)) !important') &&
     menu.includes('transform: translateX(-50%) !important') &&
