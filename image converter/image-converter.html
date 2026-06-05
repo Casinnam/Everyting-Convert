@@ -45,7 +45,7 @@
   .top-nav a, .tools-toggle { color:var(--muted); text-decoration:none; font:inherit; font-weight:700; background:none; border:0; cursor:pointer; }
   .top-nav a:hover, .tools-toggle:hover, .top-nav a.active { color:var(--text); }
   .tools-menu { position:relative; }
-  .tools-toggle::after { content:'??; font-size:.75rem; margin-left:.35rem; color:var(--muted); }
+  .tools-toggle::after { content:'\25BE'; font-size:.75rem; margin-left:.35rem; color:var(--muted); }
   .tools-dropdown { position:absolute; top:calc(100% + .75rem); right:0; width:min(900px,calc(100vw - 2rem)); display:none; grid-template-columns:repeat(4,minmax(150px,1fr)); gap:.75rem; padding:.9rem; background:rgba(17,17,24,.98); border:1px solid var(--border); border-radius:8px; z-index:20; box-shadow:0 18px 40px rgba(0,0,0,.35); }
   .tools-menu.open .tools-dropdown { display:grid; }
   .tools-group { display:grid; align-content:start; gap:.25rem; min-width:0; }
@@ -71,15 +71,19 @@
   select { width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:.85rem; font:inherit; }
   .primary-btn { border:0; border-radius:8px; padding:.95rem 1.25rem; background:var(--accent); color:#031014; font:inherit; font-weight:900; cursor:pointer; }
   .primary-btn:disabled { opacity:.45; cursor:not-allowed; }
-  .preview { display:none; gap:1rem; grid-template-columns:160px 1fr; align-items:center; background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:10px; padding:1rem; }
-  .preview.visible { display:grid; }
-  .preview img { max-width:160px; max-height:120px; object-fit:contain; background:white; border-radius:6px; }
+  .preview-list { display:none; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.85rem; }
+  .preview-list.visible { display:grid; }
+  .preview-item { display:grid; gap:.6rem; min-width:0; background:#fff; border:1px solid var(--border); border-radius:12px; padding:.8rem; box-shadow:0 10px 24px rgba(15,23,42,.06); }
+  .preview-thumb { width:100%; aspect-ratio:4/3; display:grid; place-items:center; overflow:hidden; border-radius:9px; background:linear-gradient(135deg,#f8fbff,#eef2ff); border:1px solid rgba(148,163,184,.26); }
+  .preview-thumb img { width:100%; height:100%; object-fit:contain; display:block; }
+  .preview-name { color:var(--text); font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .preview-meta { color:var(--muted); font-size:.82rem; line-height:1.35; }
   .status { color:var(--muted); line-height:1.6; min-height:1.4rem; }
   .site-footer{width:min(1200px,calc(100% - 4rem));margin:4rem auto 0;padding:2rem 0;border-top:1px solid var(--border);color:var(--muted)}
   .footer-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.5rem;padding-bottom:2rem}.footer-group{display:grid;gap:.55rem;align-content:start}.footer-group h2{display:flex;gap:.55rem;color:var(--text);font-size:.95rem}.footer-group a,.footer-group span{color:var(--muted);text-decoration:none;font-size:.9rem;line-height:1.35}.footer-group a:hover{color:var(--text)}.footer-group span{opacity:.58}
   .footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding-top:1.25rem;border-top:1px solid var(--border)}.footer-logo,.language-toggle{display:inline-flex;gap:.6rem;align-items:center;color:var(--text);font-weight:800}
-  .language-menu{position:relative;margin-left:auto}.language-toggle{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.55rem .75rem;cursor:pointer}.language-toggle:after{content:'??;color:var(--muted)}.language-dropdown{position:absolute;right:0;bottom:calc(100% + .65rem);min-width:170px;display:none;padding:.45rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;z-index:25}.language-menu.open .language-dropdown{display:grid}.language-dropdown button{border:0;background:transparent;color:var(--muted);border-radius:6px;padding:.6rem .7rem;text-align:left;font:inherit;font-weight:700;cursor:pointer}.language-dropdown button:hover,.language-dropdown button.active{color:var(--text);background:rgba(6,182,212,.14)}
-  @media(max-width:760px){header{flex-direction:column;align-items:flex-start;padding:1.5rem}.tools-dropdown{left:0;right:auto;grid-template-columns:1fr}.options,.preview{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.site-footer{width:min(100% - 2rem,1200px)}}
+  .language-menu{position:relative;margin-left:auto}.language-toggle{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.55rem .75rem;cursor:pointer}.language-toggle:after{content:'\25BE';color:var(--muted)}.language-dropdown{position:absolute;right:0;bottom:calc(100% + .65rem);min-width:170px;display:none;padding:.45rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;z-index:25}.language-menu.open .language-dropdown{display:grid}.language-dropdown button{border:0;background:transparent;color:var(--muted);border-radius:6px;padding:.6rem .7rem;text-align:left;font:inherit;font-weight:700;cursor:pointer}.language-dropdown button:hover,.language-dropdown button.active{color:var(--text);background:rgba(6,182,212,.14)}
+  @media(max-width:760px){header{flex-direction:column;align-items:flex-start;padding:1.5rem}.tools-dropdown{left:0;right:auto;grid-template-columns:1fr}.options,.preview-list{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.site-footer{width:min(100% - 2rem,1200px)}}
 </style>
 <link rel="stylesheet" href="../tool-page-redesign.css?v=20260602a">
 </head>
@@ -150,9 +154,9 @@
   <section class="hero"><div class="eyebrow">Image</div><h1 id="pageTitle">Image Converter</h1><p id="pageDescription">Convert images between common browser-supported formats directly on your device.</p></section>
   <section class="tool-card">
     <div class="tool-tabs" id="modeGrid"></div>
-    <div class="drop-zone" id="dropZone"><i class="fa-regular fa-image"></i><strong id="dropTitle">Click or drop an image here</strong><span id="dropHint">PNG, JPG, WEBP, JFIF, SVG, and HEIC are supported depending on your browser.</span><input id="fileInput" type="file" accept="image/*,.heic,.heif,.jfif,.svg"></div>
-    <div class="preview" id="preview"><img id="previewImg" alt="Preview"><div><strong id="fileName">No file</strong><div class="status" id="fileMeta"></div></div></div>
-    <div class="options"><label>Output format<select id="formatSelect"><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WEBP</option><option value="svg">SVG wrapper</option></select></label><button class="primary-btn" id="convertBtn" disabled>Convert</button></div>
+    <div class="drop-zone" id="dropZone"><i class="fa-regular fa-image"></i><strong id="dropTitle">Click or drop images here</strong><span id="dropHint">Choose up to 10 images. PNG, JPG, WEBP, JFIF, SVG, and HEIC are supported depending on your browser.</span><input id="fileInput" type="file" accept="image/*,.heic,.heif,.jfif,.svg" multiple></div>
+    <div class="preview-list" id="previewList"></div>
+    <div class="options"><label>Output format<select id="formatSelect"><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WEBP</option><option value="svg">SVG wrapper</option></select></label><button class="primary-btn" id="convertBtn" disabled>Convert selected images</button></div>
     <div class="status" id="status">No file selected.</div>
   </section>
 </main>
@@ -238,21 +242,19 @@
 
   let currentMode = modes.generic;
   let currentModeKey = 'generic';
-  let currentFile = null;
-  let currentObjectUrl = '';
+  let selectedFiles = [];
+  let currentObjectUrls = [];
   const modeGrid = document.getElementById('modeGrid');
   const pageTitle = document.getElementById('pageTitle');
   const pageDescription = document.getElementById('pageDescription');
   const dropZone = document.getElementById('dropZone');
   const dropTitle = document.getElementById('dropTitle');
   const fileInput = document.getElementById('fileInput');
-  const preview = document.getElementById('preview');
-  const previewImg = document.getElementById('previewImg');
-  const fileName = document.getElementById('fileName');
-  const fileMeta = document.getElementById('fileMeta');
+  const previewList = document.getElementById('previewList');
   const formatSelect = document.getElementById('formatSelect');
   const convertBtn = document.getElementById('convertBtn');
   const statusEl = document.getElementById('status');
+  const MAX_IMAGES = 10;
 
   function setStatus(text) { statusEl.textContent = text; }
   function baseName(file) { return file.name.replace(/\.[^.]+$/, '') || 'converted-image'; }
@@ -264,12 +266,12 @@
     currentMode = modes[currentModeKey];
     pageTitle.textContent = currentMode.title;
     pageDescription.textContent = currentMode.description;
-    dropTitle.textContent = `Click or drop ${currentMode.label} file here`;
+    dropTitle.textContent = `Click or drop ${currentMode.label} files here`;
     fileInput.accept = currentMode.accept;
     formatSelect.value = currentMode.format;
     formatSelect.disabled = currentModeKey !== 'generic' && currentModeKey !== 'svg';
     modeGrid.querySelectorAll('[data-mode]').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentModeKey));
-    if (currentFile) setStatus(`${currentFile.name} ready for ${currentMode.label}.`);
+    if (selectedFiles.length) setStatus(`${selectedFiles.length} image${selectedFiles.length === 1 ? '' : 's'} ready for ${currentMode.label}.`);
   }
 
   function buildModes() {
@@ -282,16 +284,40 @@
     setMode(params.get('mode') || 'generic');
   }
 
-  function setFile(file) {
-    currentFile = file;
-    convertBtn.disabled = false;
-    fileName.textContent = file.name;
-    fileMeta.textContent = `${Math.round(file.size / 1024)} KB`;
-    preview.classList.add('visible');
-    if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
-    currentObjectUrl = URL.createObjectURL(file);
-    previewImg.src = currentObjectUrl;
-    setStatus(`${file.name} selected.`);
+  function clearObjectUrls() {
+    currentObjectUrls.forEach(url => URL.revokeObjectURL(url));
+    currentObjectUrls = [];
+  }
+
+  function renderPreviews() {
+    clearObjectUrls();
+    previewList.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+      const url = URL.createObjectURL(file);
+      currentObjectUrls.push(url);
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+      item.innerHTML = `
+        <div class="preview-thumb"><img src="${url}" alt=""></div>
+        <div class="preview-name" title="${file.name.replace(/"/g, '&quot;')}">${index + 1}. ${file.name}</div>
+        <div class="preview-meta">${Math.max(1, Math.round(file.size / 1024))} KB</div>
+      `;
+      previewList.appendChild(item);
+    });
+    previewList.classList.toggle('visible', selectedFiles.length > 0);
+    convertBtn.disabled = selectedFiles.length === 0;
+  }
+
+  function setFiles(fileList) {
+    const files = Array.from(fileList || []).filter(file => file && (file.type.startsWith('image/') || /\.(heic|heif|jfif|svg)$/i.test(file.name)));
+    selectedFiles = files.slice(0, MAX_IMAGES);
+    renderPreviews();
+    if (!files.length) {
+      setStatus('Please choose image files.');
+      return;
+    }
+    const capped = files.length > MAX_IMAGES;
+    setStatus(`${selectedFiles.length} image${selectedFiles.length === 1 ? '' : 's'} selected.${capped ? ' Only the first 10 images will be converted.' : ''}`);
   }
 
   function loadImageFromBlob(blob) {
@@ -304,13 +330,13 @@
     });
   }
 
-  async function getSourceBlob() {
+  async function getSourceBlob(file) {
     if (currentModeKey === 'heic-jpg') {
       if (typeof heic2any === 'undefined') throw new Error('HEIC converter library could not be loaded.');
-      const result = await heic2any({ blob: currentFile, toType: 'image/jpeg', quality: 0.92 });
+      const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
       return Array.isArray(result) ? result[0] : result;
     }
-    return currentFile;
+    return file;
   }
 
   async function makeSvgWrapper(blob) {
@@ -338,21 +364,26 @@
   }
 
   async function convert() {
-    if (!currentFile) return;
+    if (!selectedFiles.length) return;
     convertBtn.disabled = true;
-    setStatus('Converting image...');
+    setStatus(`Converting ${selectedFiles.length} image${selectedFiles.length === 1 ? '' : 's'}...`);
     try {
       const outputFormat = currentMode.format;
-      const sourceBlob = await getSourceBlob();
-      const outputBlob = outputFormat === 'svg' ? await makeSvgWrapper(sourceBlob) : await rasterize(sourceBlob, outputFormat);
-      if (!outputBlob) throw new Error('The browser could not create the converted file.');
-      const url = URL.createObjectURL(outputBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${baseName(currentFile)}.${extensionFor(outputFormat)}`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 3000);
-      setStatus('Download started.');
+      for (let index = 0; index < selectedFiles.length; index += 1) {
+        const file = selectedFiles[index];
+        setStatus(`Converting ${index + 1}/${selectedFiles.length}: ${file.name}`);
+        const sourceBlob = await getSourceBlob(file);
+        const outputBlob = outputFormat === 'svg' ? await makeSvgWrapper(sourceBlob) : await rasterize(sourceBlob, outputFormat);
+        if (!outputBlob) throw new Error(`The browser could not create ${file.name}.`);
+        const url = URL.createObjectURL(outputBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${baseName(file)}.${extensionFor(outputFormat)}`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+        await new Promise(resolve => setTimeout(resolve, 160));
+      }
+      setStatus(`Download started for ${selectedFiles.length} converted image${selectedFiles.length === 1 ? '' : 's'}.`);
     } catch (error) {
       setStatus(error.message || 'Image conversion failed.');
     } finally {
@@ -363,8 +394,9 @@
   dropZone.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('dragover', event => { event.preventDefault(); dropZone.classList.add('dragover'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-  dropZone.addEventListener('drop', event => { event.preventDefault(); dropZone.classList.remove('dragover'); if (event.dataTransfer.files[0]) setFile(event.dataTransfer.files[0]); });
-  fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+  dropZone.addEventListener('drop', event => { event.preventDefault(); dropZone.classList.remove('dragover'); if (event.dataTransfer.files.length) setFiles(event.dataTransfer.files); });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) setFiles(fileInput.files); });
+  window.addEventListener('beforeunload', clearObjectUrls);
   convertBtn.addEventListener('click', convert);
   buildModes();
 </script>

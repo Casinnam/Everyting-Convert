@@ -34,6 +34,46 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <link rel="stylesheet" href="../tool-page-redesign.css?v=20260602a">
+<style>
+  .media-preview {
+    display: none;
+    grid-template-columns: minmax(160px, 260px) 1fr;
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid var(--tool-line, #e2e8f0);
+    border-radius: 16px;
+    background: rgba(255,255,255,.78);
+    padding: 1rem;
+  }
+  .media-preview.visible { display: grid; }
+  .media-preview video,
+  .media-preview audio {
+    width: 100%;
+    max-height: 180px;
+    border-radius: 12px;
+    background: #0f172a;
+  }
+  .media-file-name {
+    color: var(--tool-ink, #0f172a);
+    font-weight: 900;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .media-file-meta {
+    color: var(--tool-muted, #64748b);
+    line-height: 1.55;
+    margin-top: .35rem;
+  }
+  .media-note {
+    color: var(--tool-muted, #64748b);
+    font-size: .9rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 760px) {
+    .media-preview { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body class="ec-tool-page">
 <header><a class="brand-link" href="../index.html"><img class="brand-icon logo-mark-img" src="../favicon.svg" alt="" width="36" height="36"><div class="logo-text">Everything <span>Convert</span></div></a><nav class="top-nav"><a href="../index.html">Home</a><div class="tools-menu"><button class="tools-toggle" type="button" aria-expanded="false">Tools</button><div class="tools-dropdown mega-tools"><div class="tools-group">
@@ -73,7 +113,7 @@
                         <a href="../gif converter/gif-converter.html?mode=gif-mp4">GIF to MP4</a>
                         <a href="../gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
                     </div></div></div><a href="../auth.html" data-auth-login>Login</a><a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a><a href="../admin.html" data-admin-only style="display:none;">Admin</a><a href="#" data-auth-logout style="display:none;">Logout</a></nav></header>
-<main><section class="hero"><div class="eyebrow">Video & Audio</div><h1 id="pageTitle">Media Converter</h1><p id="pageDescription">Convert video and audio files in your browser with FFmpeg. Large files can take a little time.</p></section><section class="tool-card"><div class="tool-tabs" id="modeGrid"></div><div class="drop-zone" id="dropZone"><i class="fa-regular fa-circle-play"></i><strong id="dropTitle">Click or drop a media file here</strong><span>Video and audio files are processed locally in your browser.</span><input id="fileInput" type="file" accept="video/*,audio/*,.mov,.mp4,.webm,.mp3,.wav,.ogg,.m4a"></div><div class="options"><label>Output format<select id="formatSelect"></select></label><button class="primary-btn" id="convertBtn" disabled>Convert</button></div><div class="status" id="status">No file selected.</div></section></main>
+<main><section class="hero"><div class="eyebrow">Video & Audio</div><h1 id="pageTitle">Media Converter</h1><p id="pageDescription">Convert video and audio files in your browser with FFmpeg. Large files can take a little time.</p></section><section class="tool-card"><div class="tool-tabs" id="modeGrid"></div><div class="drop-zone" id="dropZone"><i class="fa-regular fa-circle-play"></i><strong id="dropTitle">Click or drop a media file here</strong><span>Video and audio files are processed locally in your browser.</span><input id="fileInput" type="file" accept="video/*,audio/*,.mov,.mp4,.webm,.mp3,.wav,.ogg,.m4a"></div><div class="media-preview" id="mediaPreview"><div id="mediaPreviewSlot"></div><div><div class="media-file-name" id="fileName">No file</div><div class="media-file-meta" id="fileMeta"></div><p class="media-note">For best results, use small clips first. Browser conversion speed depends on your device.</p></div></div><div class="options"><label>Output format<select id="formatSelect"></select></label><button class="primary-btn" id="convertBtn" disabled>Convert</button></div><div class="status" id="status">No file selected.</div></section></main>
 <footer class="site-footer"><div class="footer-grid"><div class="footer-group"><h2><img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28"> Everything Convert</h2><a href="../index.html#tools">All tools</a><a href="../auth.html">Account</a></div><div class="footer-group">
                 <h2><i class="fa-solid fa-file-export"></i> PDF Convert</h2>
                 <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
@@ -121,16 +161,160 @@
 <script src="../usage-limit.js"></script><script src="../tools-menu.js?v=nav-20260603a"></script><script src="../language-menu.js?v=lang-20260601c"></script>
 <script src="../tool-language.js"></script>
 <script>
-  const modeConfig={video:{label:'Video Converter',title:'Video Converter',description:'Convert videos to MP4, WEBM, or MOV.',accept:'video/*,.mov,.mp4,.webm',formats:['mp4','webm','mov'],defaultFormat:'mp4'},audio:{label:'Audio Converter',title:'Audio Converter',description:'Convert audio files to MP3, OGG, or WAV.',accept:'audio/*,.mp3,.wav,.ogg,.m4a',formats:['mp3','ogg','wav'],defaultFormat:'mp3'},mp3:{label:'MP3 Converter',title:'MP3 Converter',description:'Convert audio or video files to MP3.',accept:'audio/*,video/*',formats:['mp3'],defaultFormat:'mp3'},'mp4-mp3':{label:'MP4 to MP3',title:'MP4 to MP3',description:'Extract MP3 audio from an MP4 video.',accept:'.mp4,video/mp4',formats:['mp3'],defaultFormat:'mp3'},'video-mp3':{label:'Video to MP3',title:'Video to MP3',description:'Extract MP3 audio from video files.',accept:'video/*,.mov,.mp4,.webm',formats:['mp3'],defaultFormat:'mp3'},'mov-mp4':{label:'MOV to MP4',title:'MOV to MP4',description:'Convert MOV videos to MP4.',accept:'.mov,video/quicktime',formats:['mp4'],defaultFormat:'mp4'}};
-  let currentModeKey='video',currentMode=modeConfig.video,currentFile=null,ffmpeg=null;
-  const modeGrid=document.getElementById('modeGrid'),pageTitle=document.getElementById('pageTitle'),pageDescription=document.getElementById('pageDescription'),dropZone=document.getElementById('dropZone'),dropTitle=document.getElementById('dropTitle'),fileInput=document.getElementById('fileInput'),formatSelect=document.getElementById('formatSelect'),convertBtn=document.getElementById('convertBtn'),statusEl=document.getElementById('status');
-  function setStatus(text){statusEl.textContent=text} function ext(name){const m=name.match(/\.([^.]+)$/);return m?m[1].toLowerCase():'dat'} function base(name){return name.replace(/\.[^.]+$/,'')||'converted'}
-  function setMode(key){currentModeKey=modeConfig[key]?key:'video';currentMode=modeConfig[currentModeKey];pageTitle.textContent=currentMode.title;pageDescription.textContent=currentMode.description;dropTitle.textContent=`Click or drop a file for ${currentMode.label}`;fileInput.accept=currentMode.accept;formatSelect.innerHTML=currentMode.formats.map(f=>`<option value="${f}">${f.toUpperCase()}</option>`).join('');formatSelect.value=currentMode.defaultFormat;modeGrid.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===currentModeKey));if(currentFile)setStatus(`${currentFile.name} ready.`)}
-  function buildModes(){modeGrid.innerHTML=Object.entries(modeConfig).map(([k,m])=>`<button class="tool-tab" type="button" data-mode="${k}">${m.label}</button>`).join('');modeGrid.addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b)setMode(b.dataset.mode)});setMode(new URLSearchParams(location.search).get('mode')||'video')}
-  function setFile(file){currentFile=file;convertBtn.disabled=false;setStatus(`${file.name} selected. Output: ${formatSelect.value.toUpperCase()}`)}
-  async function getFFmpeg(){if(!window.FFmpeg)throw new Error('FFmpeg library could not be loaded. Check your internet connection.');if(!ffmpeg){const{createFFmpeg}=FFmpeg;ffmpeg=createFFmpeg({log:false,corePath:'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'});ffmpeg.setProgress(({ratio})=>{if(ratio>0)setStatus(`Converting... ${Math.min(100,Math.round(ratio*100))}%`)});}if(!ffmpeg.isLoaded()){setStatus('Loading media engine...');await ffmpeg.load();}return ffmpeg}
-  async function convert(){if(!currentFile)return;convertBtn.disabled=true;try{const engine=await getFFmpeg();const{fetchFile}=FFmpeg;const input=`input.${ext(currentFile.name)}`;const outFormat=formatSelect.value;const output=`output.${outFormat}`;try{engine.FS('unlink',input)}catch(e){}try{engine.FS('unlink',output)}catch(e){}engine.FS('writeFile',input,await fetchFile(currentFile));setStatus('Converting...');if(outFormat==='mp3')await engine.run('-i',input,'-vn','-b:a','192k',output);else if(outFormat==='wav')await engine.run('-i',input,'-vn',output);else if(outFormat==='ogg')await engine.run('-i',input,'-vn','-c:a','libvorbis',output);else if(outFormat==='webm')await engine.run('-i',input,'-c:v','libvpx','-c:a','libvorbis',output);else if(outFormat==='mov')await engine.run('-i',input,'-c','copy',output);else await engine.run('-i',input,'-c:v','libx264','-c:a','aac',output);const data=engine.FS('readFile',output);const blob=new Blob([data.buffer],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${base(currentFile.name)}.${outFormat}`;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);setStatus('Download started.');}catch(error){setStatus(error.message||'Conversion failed.');}finally{convertBtn.disabled=false}}
-  dropZone.addEventListener('click',()=>fileInput.click());dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')});dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover'));dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover');if(e.dataTransfer.files[0])setFile(e.dataTransfer.files[0])});fileInput.addEventListener('change',()=>{if(fileInput.files[0])setFile(fileInput.files[0])});convertBtn.addEventListener('click',convert);buildModes();
+  const modeConfig = {
+    video: { label: 'Video Converter', title: 'Video Converter', description: 'Convert videos to MP4, WEBM, or MOV.', accept: 'video/*,.mov,.mp4,.webm', formats: ['mp4', 'webm', 'mov'], defaultFormat: 'mp4' },
+    audio: { label: 'Audio Converter', title: 'Audio Converter', description: 'Convert audio files to MP3, OGG, or WAV.', accept: 'audio/*,.mp3,.wav,.ogg,.m4a', formats: ['mp3', 'ogg', 'wav'], defaultFormat: 'mp3' },
+    mp3: { label: 'MP3 Converter', title: 'MP3 Converter', description: 'Convert audio or video files to MP3.', accept: 'audio/*,video/*', formats: ['mp3'], defaultFormat: 'mp3' },
+    'mp4-mp3': { label: 'MP4 to MP3', title: 'MP4 to MP3', description: 'Extract MP3 audio from an MP4 video.', accept: '.mp4,video/mp4', formats: ['mp3'], defaultFormat: 'mp3' },
+    'video-mp3': { label: 'Video to MP3', title: 'Video to MP3', description: 'Extract MP3 audio from video files.', accept: 'video/*,.mov,.mp4,.webm', formats: ['mp3'], defaultFormat: 'mp3' },
+    'mov-mp4': { label: 'MOV to MP4', title: 'MOV to MP4', description: 'Convert MOV videos to MP4.', accept: '.mov,video/quicktime', formats: ['mp4'], defaultFormat: 'mp4' },
+  };
+  const ffmpegCorePaths = [
+    'https://cdn.jsdelivr.net/npm/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js',
+    'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js',
+    'https://cdn.jsdelivr.net/npm/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js',
+  ];
+  let currentModeKey = 'video';
+  let currentMode = modeConfig.video;
+  let currentFile = null;
+  let currentObjectUrl = '';
+  let ffmpeg = null;
+  const modeGrid = document.getElementById('modeGrid');
+  const pageTitle = document.getElementById('pageTitle');
+  const pageDescription = document.getElementById('pageDescription');
+  const dropZone = document.getElementById('dropZone');
+  const dropTitle = document.getElementById('dropTitle');
+  const fileInput = document.getElementById('fileInput');
+  const formatSelect = document.getElementById('formatSelect');
+  const convertBtn = document.getElementById('convertBtn');
+  const statusEl = document.getElementById('status');
+  const mediaPreview = document.getElementById('mediaPreview');
+  const mediaPreviewSlot = document.getElementById('mediaPreviewSlot');
+  const fileName = document.getElementById('fileName');
+  const fileMeta = document.getElementById('fileMeta');
+
+  function setStatus(text) { statusEl.textContent = text; }
+  function ext(name) { const m = name.match(/\.([^.]+)$/); return m ? m[1].toLowerCase() : 'dat'; }
+  function base(name) { return name.replace(/\.[^.]+$/, '') || 'converted'; }
+  function formatBytes(bytes) {
+    if (!bytes) return '0 KB';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let value = bytes;
+    let unit = 0;
+    while (value >= 1024 && unit < units.length - 1) { value /= 1024; unit += 1; }
+    return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${units[unit]}`;
+  }
+  function mimeFor(format) {
+    if (format === 'mp3') return 'audio/mpeg';
+    if (format === 'wav') return 'audio/wav';
+    if (format === 'ogg') return 'audio/ogg';
+    if (format === 'webm') return 'video/webm';
+    if (format === 'mov') return 'video/quicktime';
+    return 'video/mp4';
+  }
+  function setMode(key) {
+    currentModeKey = modeConfig[key] ? key : 'video';
+    currentMode = modeConfig[currentModeKey];
+    pageTitle.textContent = currentMode.title;
+    pageDescription.textContent = currentMode.description;
+    dropTitle.textContent = `Click or drop a file for ${currentMode.label}`;
+    fileInput.accept = currentMode.accept;
+    formatSelect.innerHTML = currentMode.formats.map(f => `<option value="${f}">${f.toUpperCase()}</option>`).join('');
+    formatSelect.value = currentMode.defaultFormat;
+    modeGrid.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b.dataset.mode === currentModeKey));
+    if (currentFile) setStatus(`${currentFile.name} ready. Output: ${formatSelect.value.toUpperCase()}`);
+  }
+  function buildModes() {
+    modeGrid.innerHTML = Object.entries(modeConfig).map(([k, m]) => `<button class="tool-tab" type="button" data-mode="${k}">${m.label}</button>`).join('');
+    modeGrid.addEventListener('click', e => {
+      const b = e.target.closest('[data-mode]');
+      if (b) setMode(b.dataset.mode);
+    });
+    setMode(new URLSearchParams(location.search).get('mode') || 'video');
+  }
+  function setFile(file) {
+    currentFile = file;
+    convertBtn.disabled = false;
+    fileName.textContent = file.name;
+    fileMeta.textContent = `${formatBytes(file.size)} - ${file.type || ext(file.name).toUpperCase()} - Output: ${formatSelect.value.toUpperCase()}`;
+    if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = URL.createObjectURL(file);
+    const isAudio = file.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a)$/i.test(file.name);
+    mediaPreviewSlot.innerHTML = isAudio
+      ? `<audio src="${currentObjectUrl}" controls></audio>`
+      : `<video src="${currentObjectUrl}" controls muted playsinline></video>`;
+    mediaPreview.classList.add('visible');
+    setStatus(`${file.name} selected. Output: ${formatSelect.value.toUpperCase()}`);
+  }
+  async function createEngine(corePath) {
+    const { createFFmpeg } = FFmpeg;
+    const engine = createFFmpeg({ log: false, corePath });
+    engine.setProgress(({ ratio }) => {
+      if (ratio > 0) setStatus(`Converting... ${Math.min(100, Math.round(ratio * 100))}%`);
+    });
+    setStatus('Loading media engine...');
+    await engine.load();
+    return engine;
+  }
+  async function getFFmpeg() {
+    if (!window.FFmpeg) throw new Error('FFmpeg library could not be loaded. Check your internet connection.');
+    if (ffmpeg && ffmpeg.isLoaded()) return ffmpeg;
+    let lastError = null;
+    for (const corePath of ffmpegCorePaths) {
+      try {
+        ffmpeg = await createEngine(corePath);
+        setStatus('Media engine ready.');
+        return ffmpeg;
+      } catch (error) {
+        lastError = error;
+        ffmpeg = null;
+      }
+    }
+    throw new Error(lastError && lastError.message ? `Media engine failed to load: ${lastError.message}` : 'Media engine failed to load.');
+  }
+  async function convert() {
+    if (!currentFile) return;
+    convertBtn.disabled = true;
+    try {
+      const engine = await getFFmpeg();
+      const { fetchFile } = FFmpeg;
+      const input = `input.${ext(currentFile.name)}`;
+      const outFormat = formatSelect.value;
+      const output = `output.${outFormat}`;
+      try { engine.FS('unlink', input); } catch (e) {}
+      try { engine.FS('unlink', output); } catch (e) {}
+      engine.FS('writeFile', input, await fetchFile(currentFile));
+      setStatus('Converting...');
+      if (outFormat === 'mp3') await engine.run('-i', input, '-vn', '-b:a', '192k', output);
+      else if (outFormat === 'wav') await engine.run('-i', input, '-vn', output);
+      else if (outFormat === 'ogg') await engine.run('-i', input, '-vn', '-c:a', 'libvorbis', output);
+      else if (outFormat === 'webm') await engine.run('-i', input, '-c:v', 'libvpx', '-c:a', 'libvorbis', output);
+      else if (outFormat === 'mov') await engine.run('-i', input, '-c', 'copy', output);
+      else await engine.run('-i', input, '-c:v', 'libx264', '-c:a', 'aac', '-movflags', 'faststart', output);
+      const data = engine.FS('readFile', output);
+      const blob = new Blob([data.buffer], { type: mimeFor(outFormat) });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${base(currentFile.name)}.${outFormat}`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+      setStatus('Download started.');
+    } catch (error) {
+      setStatus(error.message || 'Conversion failed.');
+    } finally {
+      convertBtn.disabled = false;
+    }
+  }
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+  formatSelect.addEventListener('change', () => { if (currentFile) setFile(currentFile); });
+  convertBtn.addEventListener('click', convert);
+  window.addEventListener('beforeunload', () => { if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl); });
+  buildModes();
 </script>
 <script src="../tool-page-redesign.js?v=20260601d"></script>
 </body>
