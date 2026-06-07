@@ -138,11 +138,12 @@
           rgba(255, 255, 255, .98) !important;
       }
       .ec-unified-header .tools-dropdown.category-dropdown {
-        grid-template-columns: repeat(2, minmax(180px, 1fr)) !important;
-        gap: .75rem !important;
+        grid-template-columns: repeat(var(--ec-category-cols, 2), minmax(210px, 1fr)) !important;
+        gap: .95rem !important;
         width: max-content !important;
-        min-width: 430px !important;
-        padding: .75rem !important;
+        max-width: calc(100vw - 2rem) !important;
+        min-width: var(--ec-category-width, 460px) !important;
+        padding: .85rem !important;
       }
       .ec-unified-header .tools-menu.open .tools-dropdown.category-dropdown {
         display: grid !important;
@@ -452,7 +453,7 @@
         </div>
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Documents</button>
-          <div class="tools-dropdown category-dropdown">
+          <div class="tools-dropdown category-dropdown" style="--ec-category-cols: 3; --ec-category-width: 690px;">
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-solid fa-file-export"></i> PDF Converters</div>
               <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
@@ -481,7 +482,7 @@
         </div>
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Media</button>
-          <div class="tools-dropdown category-dropdown">
+          <div class="tools-dropdown category-dropdown" style="--ec-category-cols: 2; --ec-category-width: 470px;">
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-regular fa-image"></i> Image Tools</div>
               <a href="${prefix}image converter/image-converter.html"><span class="tool-emoji image">&#128247;</span><span>Image Converter</span></a>
@@ -489,7 +490,6 @@
               <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
-            </div>
               <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji image">&#128247;</span><span>Image Compressor</span></a>
               <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji image">&#8596;</span><span>Image Resizer</span></a>
             </div>
@@ -504,7 +504,7 @@
         </div>
         <div class="tools-menu developer-tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Developer</button>
-          <div class="tools-dropdown category-dropdown">
+          <div class="tools-dropdown category-dropdown" style="--ec-category-cols: 2; --ec-category-width: 470px;">
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-solid fa-qrcode"></i> QR & Data</div>
             <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code</span></a>
