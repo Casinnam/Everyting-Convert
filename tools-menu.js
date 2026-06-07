@@ -137,6 +137,16 @@
           radial-gradient(circle at 82% 10%, rgba(124, 58, 237, .12), transparent 26%),
           rgba(255, 255, 255, .98) !important;
       }
+      .ec-unified-header .tools-dropdown.category-dropdown {
+        grid-template-columns: repeat(2, minmax(180px, 1fr)) !important;
+        gap: .75rem !important;
+        width: max-content !important;
+        min-width: 430px !important;
+        padding: .75rem !important;
+      }
+      .ec-unified-header .tools-menu.open .tools-dropdown.category-dropdown {
+        display: grid !important;
+      }
       .ec-unified-header .tools-menu.open .tools-dropdown.mega-tools {
         display: grid !important;
       }
@@ -176,6 +186,26 @@
         white-space: nowrap !important;
         border-bottom: 1px solid #e2e8f0 !important;
         border-bottom-color: #e2e8f0 !important;
+      }
+      .ec-unified-header .tools-subgroup-title {
+        display: flex !important;
+        align-items: center !important;
+        gap: .4rem !important;
+        padding: .45rem .6rem .35rem !important;
+        color: #64748b !important;
+        font-size: .74rem !important;
+        font-weight: 900 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .05em !important;
+      }
+      .ec-unified-header .tools-dropdown a.tool-disabled {
+        cursor: default !important;
+        color: #94a3b8 !important;
+        background: rgba(248, 250, 252, .72) !important;
+      }
+      .ec-unified-header .tools-dropdown a.tool-disabled:hover {
+        color: #94a3b8 !important;
+        transform: none !important;
       }
       .ec-unified-header .tool-emoji {
         display: inline-grid !important;
@@ -314,6 +344,11 @@
           margin-top: .45rem !important;
           box-shadow: 0 16px 34px rgba(15, 23, 42, .1) !important;
         }
+        .ec-unified-header .tools-dropdown.category-dropdown {
+          width: 100% !important;
+          min-width: 0 !important;
+          grid-template-columns: 1fr !important;
+        }
         .ec-unified-header .tools-dropdown.mega-tools {
           grid-template-columns: 1fr !important;
         }
@@ -367,7 +402,7 @@
               <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code Generator</span></a>
             </div>
             <div class="tools-group">
-              <div class="tools-group-title"><i class="fa-solid fa-file-export"></i> PDF Convert</div>
+              <div class="tools-group-title"><i class="fa-solid fa-file-export"></i> PDF Converters</div>
               <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
               <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel</span></a>
               <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
@@ -417,19 +452,17 @@
         </div>
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Documents</button>
-          <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
-            <div style="display: flex; flex-direction: column; min-width: 160px;">
-              <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-file-export"></i> Convert</div>
+          <div class="tools-dropdown category-dropdown">
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-solid fa-file-export"></i> PDF Converters</div>
               <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
               <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel</span></a>
               <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
               <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
               <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>
-              <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
-              <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
             </div>
-            <div style="display: flex; flex-direction: column; min-width: 160px; border-left: 1px solid #f1f5f9; padding-left: 0.5rem;">
-              <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-solid fa-wrench"></i> Tools</div>
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-solid fa-wrench"></i> PDF Tools</div>
               <a href="${prefix}pdf tools/pdf-tools.html?mode=merge"><span class="tool-emoji pdf">&#128279;</span><span>Merge PDF</span></a>
               <a href="${prefix}pdf tools/pdf-tools.html?mode=compress"><span class="tool-emoji pdf">&#128230;</span><span>Compress PDF</span></a>
               <a href="${prefix}pdf tools/pdf-tools.html?mode=split"><span class="tool-emoji pdf">&#9986;</span><span>Split PDF</span></a>
@@ -438,21 +471,30 @@
               <a href="${prefix}pdf tools/pdf-tools.html?mode=extract"><span class="tool-emoji pdf">&#128229;</span><span>Extract Pages</span></a>
               <a href="${prefix}pdf tools/pdf-tools.html?mode=organize"><span class="tool-emoji pdf">&#128450;</span><span>Organize PDF</span></a>
             </div>
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-solid fa-book"></i> Office & Ebooks</div>
+              <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
+              <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
+              <a class="tool-disabled" href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
+            </div>
           </div>
         </div>
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">Media</button>
-          <div class="tools-dropdown" style="flex-direction: row; gap: 0.5rem; width: max-content; padding: 0.5rem;">
-            <div style="display: flex; flex-direction: column; min-width: 160px;">
-              <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-regular fa-image"></i> Image</div>
+          <div class="tools-dropdown category-dropdown">
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-regular fa-image"></i> Image Tools</div>
               <a href="${prefix}image converter/image-converter.html"><span class="tool-emoji image">&#128247;</span><span>Image Converter</span></a>
               <a href="${prefix}image to pdf/image-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Image to PDF</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
             </div>
-            <div style="display: flex; flex-direction: column; min-width: 160px; border-left: 1px solid #f1f5f9; padding-left: 0.5rem;">
-              <div style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 800; pointer-events: none;"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
+              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji image">&#128247;</span><span>Image Compressor</span></a>
+              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji image">&#8596;</span><span>Image Resizer</span></a>
+            </div>
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
               <a href="${prefix}media converter/media-converter.html"><span class="tool-emoji video">&#9654;</span><span>Video Converter</span></a>
               <a href="${prefix}media converter/media-converter.html?mode=audio"><span class="tool-emoji audio">&#127911;</span><span>Audio Converter</span></a>
               <a href="${prefix}media converter/media-converter.html?mode=mp4-mp3"><span class="tool-emoji audio">&#9835;</span><span>MP4 to MP3</span></a>
@@ -461,12 +503,30 @@
           </div>
         </div>
         <div class="tools-menu developer-tools-menu">
-          <button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>
-          <div class="tools-dropdown">
-            <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">AI</span><span>AI Tools</span></a>
+          <button class="tools-toggle" type="button" aria-expanded="false">Developer</button>
+          <div class="tools-dropdown category-dropdown">
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-solid fa-qrcode"></i> QR & Data</div>
             <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code</span></a>
             <a href="${prefix}json to csv/json-to-csv.html"><span class="tool-emoji dev">{ }</span><span>JSON to CSV</span></a>
             <a href="${prefix}csv converter/csv-converter.html"><span class="tool-emoji excel">CSV</span><span>CSV Converter</span></a>
+            </div>
+            <div class="tools-group">
+              <div class="tools-subgroup-title"><i class="fa-solid fa-code"></i> Developer Utilities</div>
+              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji dev">JSON</span><span>JSON Formatter</span></a>
+              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji dev">64</span><span>Base64 Encode / Decode</span></a>
+              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji dev">URL</span><span>URL Encoder / Decoder</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="tools-menu">
+          <button class="tools-toggle" type="button" aria-expanded="false">AI Tools</button>
+          <div class="tools-dropdown">
+            <div class="tools-subgroup-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Roadmap</div>
+            <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">AI</span><span>AI Tools Overview</span></a>
+            <a class="tool-disabled" href="${prefix}index.html#ai-preview"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
+            <a class="tool-disabled" href="${prefix}index.html#ai-preview"><span class="tool-emoji ai">&#128196;</span><span>PDF Summary</span></a>
+            <a class="tool-disabled" href="${prefix}index.html#ai-preview"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>
@@ -575,6 +635,12 @@
   }
 
   document.addEventListener('click', (event) => {
+    const disabledTool = event.target.closest('.tool-disabled');
+    if (disabledTool) {
+      event.preventDefault();
+      return;
+    }
+
     const mobileToggle = event.target.closest('.ec-mobile-toggle');
     if (mobileToggle) {
       event.preventDefault();

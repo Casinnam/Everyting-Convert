@@ -31,12 +31,17 @@ assert(
 
 assert(
   menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Documents</button>') &&
+    menu.includes('PDF Converters') &&
     menu.includes('PDF to EPUB</span>') &&
     menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Media</button>') &&
+    menu.includes('Image Tools') &&
     menu.includes('Audio Converter</span>') &&
-    menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>') &&
-    menu.includes('QR Code</span>'),
-  'Documents, Media, and Advanced dropdowns should use the same colored icon badge link pattern as All Tools.',
+    menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Developer</button>') &&
+    menu.includes('QR Code</span>') &&
+    menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">AI Tools</button>') &&
+    menu.includes('Smart OCR</span>') &&
+    !menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>'),
+  'Documents, Media, Developer, and AI Tools dropdowns should use clear grouped labels and colored icon badge link patterns.',
 );
 
 assert(

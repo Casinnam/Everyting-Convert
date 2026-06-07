@@ -113,12 +113,17 @@
                 </div>
             </div>
             <div class="tools-menu">
-                <button class="nav-link tools-toggle" type="button" aria-expanded="false">Advanced</button>
+                <button class="nav-link tools-toggle" type="button" aria-expanded="false">Developer</button>
                 <div class="tools-dropdown">
-                    <a href="#ai-preview" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles" style="width: 1.2rem;"></i> AI Tools</a>
                     <a href="qr code generator/qr-code-generator.html" class="nav-link"><i class="fa-solid fa-qrcode" style="width: 1.2rem;"></i> QR Code</a>
                     <a href="json to csv/json-to-csv.html" class="nav-link"><i class="fa-solid fa-file-code" style="width: 1.2rem;"></i> JSON to CSV</a>
                     <a href="csv converter/csv-converter.html" class="nav-link"><i class="fa-solid fa-file-csv" style="width: 1.2rem;"></i> CSV Converter</a>
+                </div>
+            </div>
+            <div class="tools-menu">
+                <button class="nav-link tools-toggle" type="button" aria-expanded="false">AI Tools</button>
+                <div class="tools-dropdown">
+                    <a href="#ai-preview" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles" style="width: 1.2rem;"></i> AI Tools Overview</a>
                 </div>
             </div>
             <a href="pricing.html" class="nav-link">Pricing</a>
@@ -215,65 +220,62 @@
             </div>
             <div class="tool-tabs" role="tablist" aria-label="Tool categories">
                 <button class="tool-tab active" type="button" data-tool-tab="popular">Popular</button>
-                <button class="tool-tab" type="button" data-tool-tab="pdf">PDF</button>
-                <button class="tool-tab" type="button" data-tool-tab="image">Image</button>
-                <button class="tool-tab" type="button" data-tool-tab="video">Video</button>
-                <button class="tool-tab" type="button" data-tool-tab="audio">Audio</button>
-                <button class="tool-tab" type="button" data-tool-tab="office">Office</button>
-                <button class="tool-tab" type="button" data-tool-tab="ai">AI Tools</button>
+                <button class="tool-tab" type="button" data-tool-tab="documents">Documents</button>
+                <button class="tool-tab" type="button" data-tool-tab="media">Media</button>
                 <button class="tool-tab" type="button" data-tool-tab="developer">Developer</button>
+                <button class="tool-tab" type="button" data-tool-tab="ai">AI Tools</button>
             </div>
 
             <div class="tool-card-grid" id="homeToolGrid">
-                <a class="home-tool-card" href="pdf to word/pdf-to-word.html" data-categories="popular pdf office" data-tool-name="PDF to Word">
+                <a class="home-tool-card" href="pdf to word/pdf-to-word.html" data-categories="popular documents pdf office" data-tool-name="PDF to Word">
                     <span class="tool-icon red"><i class="fa-regular fa-file-word"></i></span>
                     <strong>PDF to Word</strong>
                     <small>Convert PDFs into editable DOCX files.</small>
                     <em>Popular</em>
                 </a>
-                <a class="home-tool-card" href="pdf to jpg/pdf-to-jpg.html" data-categories="popular pdf image" data-tool-name="PDF to JPG">
+                <a class="home-tool-card" href="pdf to jpg/pdf-to-jpg.html" data-categories="popular documents media pdf image" data-tool-name="PDF to JPG">
                     <span class="tool-icon orange"><i class="fa-regular fa-file-image"></i></span>
                     <strong>PDF to JPG</strong>
                     <small>Turn PDF pages into high-quality images.</small>
                     <em>Popular</em>
                 </a>
-                <a class="home-tool-card" href="image to pdf/image-to-pdf.html" data-categories="popular pdf image" data-tool-name="Image to PDF">
+                <a class="home-tool-card" href="image to pdf/image-to-pdf.html" data-categories="popular media documents pdf image" data-tool-name="Image to PDF">
                     <span class="tool-icon teal"><i class="fa-regular fa-file-pdf"></i></span>
                     <strong>Image to PDF</strong>
                     <small>Combine images into a clean PDF file.</small>
                     <em>Popular</em>
                 </a>
-                <a class="home-tool-card" href="image converter/image-converter.html?mode=heic-jpg" data-categories="popular image" data-tool-name="HEIC to JPG">
+                <a class="home-tool-card" href="image converter/image-converter.html?mode=heic-jpg" data-categories="popular media image" data-tool-name="HEIC to JPG">
                     <span class="tool-icon purple"><i class="fa-regular fa-image"></i></span>
                     <strong>HEIC to JPG</strong>
                     <small>Convert iPhone photos for easy sharing.</small>
                     <em>Image</em>
                 </a>
-                <a class="home-tool-card" href="image converter/image-converter.html?mode=webp-png" data-categories="popular image" data-tool-name="WEBP to PNG">
+                <a class="home-tool-card" href="image converter/image-converter.html?mode=webp-png" data-categories="popular media image" data-tool-name="WEBP to PNG">
                     <span class="tool-icon mint"><i class="fa-regular fa-images"></i></span>
                     <strong>WEBP to PNG</strong>
                     <small>Convert web images into PNG format.</small>
                     <em>Image</em>
                 </a>
-                <a class="home-tool-card" href="image converter/image-converter.html?mode=webp-jpg" data-categories="image" data-tool-name="WEBP to JPG">
+                <a class="home-tool-card" href="image converter/image-converter.html?mode=webp-jpg" data-categories="media image" data-tool-name="WEBP to JPG">
                     <span class="tool-icon orange"><i class="fa-regular fa-images"></i></span>
                     <strong>WEBP to JPG</strong>
                     <small>Convert web images into JPG format.</small>
                     <em>Image</em>
                 </a>
-                <a class="home-tool-card" href="media converter/media-converter.html?mode=mp4-mp3" data-categories="popular audio video" data-tool-name="MP4 to MP3">
+                <a class="home-tool-card" href="media converter/media-converter.html?mode=mp4-mp3" data-categories="popular media audio video" data-tool-name="MP4 to MP3">
                     <span class="tool-icon violet"><i class="fa-solid fa-music"></i></span>
                     <strong>MP4 to MP3</strong>
                     <small>Extract audio from MP4 videos in seconds.</small>
                     <em>Audio</em>
                 </a>
-                <a class="home-tool-card" href="media converter/media-converter.html?mode=mov-mp4" data-categories="popular video" data-tool-name="MOV to MP4">
+                <a class="home-tool-card" href="media converter/media-converter.html?mode=mov-mp4" data-categories="popular media video" data-tool-name="MOV to MP4">
                     <span class="tool-icon blue"><i class="fa-solid fa-video"></i></span>
                     <strong>MOV to MP4</strong>
                     <small>Convert Apple video files to MP4.</small>
                     <em>Video</em>
                 </a>
-                <a class="home-tool-card" href="gif converter/gif-converter.html" data-categories="popular video image" data-tool-name="Video to GIF">
+                <a class="home-tool-card" href="gif converter/gif-converter.html" data-categories="popular media video image" data-tool-name="Video to GIF">
                     <span class="tool-icon pink"><i class="fa-regular fa-file-video"></i></span>
                     <strong>Video to GIF</strong>
                     <small>Turn short clips into shareable GIFs.</small>
@@ -285,79 +287,79 @@
                     <small>Create clean QR codes instantly.</small>
                     <em>Utility</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=compress" data-categories="popular pdf" data-tool-name="PDF Compress">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=compress" data-categories="popular documents pdf" data-tool-name="PDF Compress">
                     <span class="tool-icon red"><i class="fa-solid fa-compress"></i></span>
                     <strong>PDF Compress</strong>
                     <small>Reduce PDF file size while keeping quality.</small>
                     <em>PDF</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=merge" data-categories="popular pdf" data-tool-name="Merge PDF">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=merge" data-categories="popular documents pdf" data-tool-name="Merge PDF">
                     <span class="tool-icon red"><i class="fa-solid fa-layer-group"></i></span>
                     <strong>Merge PDF</strong>
                     <small>Combine multiple PDFs into one file.</small>
                     <em>PDF Tools</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=split" data-categories="popular pdf" data-tool-name="Split PDF">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=split" data-categories="popular documents pdf" data-tool-name="Split PDF">
                     <span class="tool-icon orange"><i class="fa-solid fa-scissors"></i></span>
                     <strong>Split PDF</strong>
                     <small>Create separate PDF files for each page.</small>
                     <em>PDF Tools</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=rotate" data-categories="pdf" data-tool-name="Rotate PDF">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=rotate" data-categories="documents pdf" data-tool-name="Rotate PDF">
                     <span class="tool-icon blue"><i class="fa-solid fa-rotate-right"></i></span>
                     <strong>Rotate PDF</strong>
                     <small>Rotate every PDF page by 90, 180, or 270 degrees.</small>
                     <em>PDF Tools</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=remove" data-categories="pdf" data-tool-name="Remove PDF Pages">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=remove" data-categories="documents pdf" data-tool-name="Remove PDF Pages">
                     <span class="tool-icon pink"><i class="fa-regular fa-trash-can"></i></span>
                     <strong>Remove PDF Pages</strong>
                     <small>Delete selected pages from a PDF file.</small>
                     <em>PDF Tools</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=extract" data-categories="pdf" data-tool-name="Extract PDF Pages">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=extract" data-categories="documents pdf" data-tool-name="Extract PDF Pages">
                     <span class="tool-icon purple"><i class="fa-regular fa-copy"></i></span>
                     <strong>Extract PDF Pages</strong>
                     <small>Save selected PDF pages as a new file.</small>
                     <em>PDF Tools</em>
                 </a>
-                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=organize" data-categories="pdf" data-tool-name="Organize PDF">
+                <a class="home-tool-card" href="pdf tools/pdf-tools.html?mode=organize" data-categories="documents pdf" data-tool-name="Organize PDF">
                     <span class="tool-icon green"><i class="fa-solid fa-arrow-up-short-wide"></i></span>
                     <strong>Organize PDF</strong>
                     <small>Reorder PDF pages with a simple page list.</small>
                     <em>PDF Tools</em>
                 </a>
-                <a class="home-tool-card" href="pdf to excel/pdf-to-excel.html" data-categories="pdf office" data-tool-name="PDF to Excel">
+                <a class="home-tool-card" href="pdf to excel/pdf-to-excel.html" data-categories="documents pdf office" data-tool-name="PDF to Excel">
                     <span class="tool-icon green"><i class="fa-regular fa-file-excel"></i></span>
                     <strong>PDF to Excel</strong>
                     <small>Extract tables into spreadsheet format.</small>
                     <em>PDF</em>
                 </a>
-                <a class="home-tool-card" href="excel to pdf/excel-to-pdf.html" data-categories="pdf office" data-tool-name="Excel to PDF">
+                <a class="home-tool-card" href="excel to pdf/excel-to-pdf.html" data-categories="documents pdf office" data-tool-name="Excel to PDF">
                     <span class="tool-icon green"><i class="fa-solid fa-table"></i></span>
                     <strong>Excel to PDF</strong>
                     <small>Export spreadsheets as PDF documents.</small>
                     <em>Office</em>
                 </a>
-                <a class="home-tool-card" href="docx to pdf/docx-to-pdf.html" data-categories="pdf office" data-tool-name="DOCX to PDF">
+                <a class="home-tool-card" href="docx to pdf/docx-to-pdf.html" data-categories="documents pdf office" data-tool-name="DOCX to PDF">
                     <span class="tool-icon blue"><i class="fa-regular fa-file-word"></i></span>
                     <strong>DOCX to PDF</strong>
                     <small>Turn Word documents into PDFs.</small>
                     <em>Office</em>
                 </a>
-                <a class="home-tool-card" href="image converter/image-converter.html" data-categories="image" data-tool-name="Image Converter">
+                <a class="home-tool-card" href="image converter/image-converter.html" data-categories="media image" data-tool-name="Image Converter">
                     <span class="tool-icon teal"><i class="fa-regular fa-image"></i></span>
                     <strong>Image Converter</strong>
                     <small>Convert between JPG, PNG, WEBP, HEIC, and SVG.</small>
                     <em>Image</em>
                 </a>
-                <a class="home-tool-card" href="media converter/media-converter.html" data-categories="video" data-tool-name="Video Converter">
+                <a class="home-tool-card" href="media converter/media-converter.html" data-categories="media video" data-tool-name="Video Converter">
                     <span class="tool-icon blue"><i class="fa-solid fa-film"></i></span>
                     <strong>Video Converter</strong>
                     <small>Switch between common video formats.</small>
                     <em>Video</em>
                 </a>
-                <a class="home-tool-card" href="media converter/media-converter.html?mode=audio" data-categories="audio" data-tool-name="Audio Converter">
+                <a class="home-tool-card" href="media converter/media-converter.html?mode=audio" data-categories="media audio" data-tool-name="Audio Converter">
                     <span class="tool-icon violet"><i class="fa-solid fa-headphones"></i></span>
                     <strong>Audio Converter</strong>
                     <small>Prepare MP3 and other audio files.</small>
@@ -369,13 +371,13 @@
                     <small>Summarize long PDFs in seconds.</small>
                     <em>AI</em>
                 </a>
-                <a class="home-tool-card soon-card" href="#ai-preview" data-categories="ai audio" data-tool-name="Audio to Text">
+                <a class="home-tool-card soon-card" href="#ai-preview" data-categories="ai media audio" data-tool-name="Audio to Text">
                     <span class="tool-icon blue"><i class="fa-solid fa-wave-square"></i></span>
                     <strong>Audio to Text</strong>
                     <small>Transcribe audio and video to text.</small>
                     <em>AI</em>
                 </a>
-                <a class="home-tool-card soon-card" href="#ai-preview" data-categories="ai image" data-tool-name="Background Remover">
+                <a class="home-tool-card soon-card" href="#ai-preview" data-categories="ai media image" data-tool-name="Background Remover">
                     <span class="tool-icon mint"><i class="fa-solid fa-chess-board"></i></span>
                     <strong>Background Remover</strong>
                     <small>Remove image backgrounds instantly.</small>
@@ -387,7 +389,7 @@
                     <small>Convert structured data for spreadsheets.</small>
                     <em>Developer</em>
                 </a>
-                <a class="home-tool-card" href="csv converter/csv-converter.html" data-categories="developer office" data-tool-name="CSV Converter">
+                <a class="home-tool-card" href="csv converter/csv-converter.html" data-categories="developer documents office" data-tool-name="CSV Converter">
                     <span class="tool-icon teal"><i class="fa-solid fa-file-csv"></i></span>
                     <strong>CSV Converter</strong>
                     <small>Convert CSV to JSON, Excel, or XML.</small>
