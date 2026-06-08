@@ -14,20 +14,28 @@
         position: sticky !important;
         top: 0 !important;
         z-index: 9000 !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        gap: 1.2rem !important;
+        display: block !important;
         min-height: 4.4rem !important;
-        padding: .85rem clamp(1rem, 4vw, 3rem) !important;
+        padding: 0 !important;
         border-bottom: 1px solid rgba(226, 232, 240, .88) !important;
         background: rgba(255, 255, 255, .9) !important;
         box-shadow: 0 10px 28px rgba(15, 23, 42, .05) !important;
         backdrop-filter: blur(18px) !important;
         -webkit-backdrop-filter: blur(18px) !important;
       }
+      .ec-unified-header .ec-header-inner {
+        width: min(100%, 1220px) !important;
+        min-height: 4.4rem !important;
+        margin: 0 auto !important;
+        padding: .85rem clamp(1.5rem, 3.5vw, 2.5rem) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: clamp(1rem, 2vw, 1.75rem) !important;
+        box-sizing: border-box !important;
+      }
       .ec-unified-header .logo {
-        flex: 1 1 0% !important;
+        flex: 0 0 auto !important;
         justify-content: flex-start !important;
         color: #0f172a !important;
         text-decoration: none !important;
@@ -42,18 +50,20 @@
       .ec-unified-header .top-nav {
         display: flex !important;
         align-items: center !important;
-        gap: 1.15rem !important;
-        margin: 0 auto !important;
-        flex-wrap: wrap !important;
+        gap: clamp(.75rem, 1.3vw, 1.2rem) !important;
+        margin: 0 !important;
+        flex: 1 1 auto !important;
+        flex-wrap: nowrap !important;
         justify-content: center !important;
+        min-width: 0 !important;
       }
       .ec-unified-header .top-actions {
-        flex: 1 1 0% !important;
+        flex: 0 0 auto !important;
         display: flex !important;
         align-items: center !important;
         justify-content: flex-end !important;
         flex-wrap: nowrap !important;
-        gap: clamp(.5rem, .8vw, .75rem) !important;
+        gap: clamp(.55rem, .9vw, .85rem) !important;
         min-width: 0 !important;
       }
       .ec-unified-header .ec-mobile-toggle {
@@ -267,7 +277,7 @@
         .ec-unified-header .ec-tool-search {
           display: none !important;
         }
-        .ec-unified-header {
+        .ec-unified-header .ec-header-inner {
           gap: .85rem !important;
         }
         .ec-unified-header .top-nav {
@@ -275,9 +285,10 @@
         }
       }
       @media (max-width: 920px) {
-        .ec-unified-header {
+        .ec-unified-header .ec-header-inner {
           align-items: center !important;
           flex-wrap: wrap !important;
+          padding: .8rem clamp(1rem, 4vw, 1.35rem) !important;
         }
         .ec-unified-header .logo {
           flex: 1 1 auto !important;
@@ -362,7 +373,7 @@
         }
       }
       @media (max-width: 560px) {
-        .ec-unified-header {
+        .ec-unified-header .ec-header-inner {
           padding: .75rem 1rem !important;
         }
         .ec-unified-header .ec-try-pro {
@@ -382,6 +393,7 @@
     header.dataset.ecUnifiedHeader = 'true';
     header.classList.add('ec-unified-header');
     header.innerHTML = `
+      <div class="ec-header-inner">
       <a class="logo" href="${prefix}index.html" aria-label="EverythingConvert home">
         <img class="brand-icon" src="${prefix}favicon.svg" alt="" width="28" height="28">
         <span>EverythingConvert</span>
@@ -541,6 +553,7 @@
         <a href="#" data-auth-logout style="display:none;">Logout</a>
         <a href="${prefix}admin.html" data-admin-only style="display:none;">Admin</a>
         <a class="ec-try-pro" href="${prefix}pricing.html">Try Pro</a>
+      </div>
       </div>
     `;
     const nav = header.querySelector('.top-nav');

@@ -1135,14 +1135,21 @@ nav {
     position: sticky;
     top: 0;
     z-index: 6000;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: clamp(0.75rem, 2vw, 1.5rem);
-    align-items: center;
-    padding: 0.9rem clamp(1rem, 4vw, 3rem);
     background: rgba(255, 255, 255, 0.84);
     border-bottom: 1px solid rgba(226, 232, 240, 0.85);
     box-shadow: 0 8px 28px rgba(15, 23, 42, 0.04);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.home-page .home-header-inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(1rem, 2.2vw, 1.75rem);
+    align-items: center;
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 0.9rem clamp(1.5rem, 3.5vw, 2.5rem);
 }
 
 .home-page .home-logo {
@@ -2186,7 +2193,7 @@ nav {
 }
 
 @media (max-width: 1120px) {
-    .home-page .home-header {
+    .home-page .home-header-inner {
         grid-template-columns: 1fr;
     }
 
