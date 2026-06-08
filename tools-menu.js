@@ -240,28 +240,6 @@
       .ec-unified-header .tool-emoji.dev { background: linear-gradient(135deg, #0f172a, #475569) !important; }
       .ec-unified-header .tool-emoji.ai { background: linear-gradient(135deg, #4f46e5, #8b5cf6) !important; }
       .ec-unified-header .tool-emoji.lock { background: linear-gradient(135deg, #64748b, #94a3b8) !important; }
-      .ec-unified-header .ec-tool-search {
-        display: grid !important;
-        grid-template-columns: auto minmax(5.8rem, 1fr) !important;
-        align-items: center !important;
-        gap: .45rem !important;
-        min-width: min(12rem, 16vw) !important;
-        padding: .55rem .75rem !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 999px !important;
-        background: rgba(248, 250, 252, .92) !important;
-        color: #64748b !important;
-      }
-      .ec-unified-header .ec-tool-search input {
-        min-width: 0 !important;
-        border: 0 !important;
-        background: transparent !important;
-        color: #0f172a !important;
-        padding: 0 !important;
-        font: inherit !important;
-        font-size: .82rem !important;
-        outline: none !important;
-      }
       .ec-unified-header .ec-try-pro {
         display: inline-flex !important;
         align-items: center !important;
@@ -274,9 +252,6 @@
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
       }
       @media (max-width: 1600px) {
-        .ec-unified-header .ec-tool-search {
-          display: none !important;
-        }
         .ec-unified-header .ec-header-inner {
           gap: .85rem !important;
         }
@@ -544,10 +519,6 @@
         <a href="${prefix}pricing.html">Pricing</a>
       </nav>
       <div class="top-actions">
-        <label class="ec-tool-search" aria-label="Search tools">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="search" placeholder="Search tools...">
-        </label>
         <a href="${prefix}auth.html" data-auth-login style="display:none;">Login</a>
         <a href="${prefix}auth.html" data-auth-state data-auth-account>Checking...</a>
         <a href="#" data-auth-logout style="display:none;">Logout</a>
@@ -574,39 +545,8 @@
 
   function bindHomeHeaderTools() {
     const grid = document.getElementById('homeToolGrid');
-    const searchInput = document.querySelector('.ec-unified-header .ec-tool-search input');
-    if (!grid || !searchInput || searchInput.dataset.ecBound === 'true') return;
-    searchInput.dataset.ecBound = 'true';
-    const cards = Array.from(document.querySelectorAll('.home-tool-card'));
-    const tabs = Array.from(document.querySelectorAll('.tool-tab'));
-    const emptyMessage = document.getElementById('toolEmptyMessage');
-    let activeTab = document.querySelector('.tool-tab.active')?.dataset.toolTab || 'popular';
-
-    function filterCards() {
-      const query = (searchInput.value || '').trim().toLowerCase();
-      let visibleCount = 0;
-      cards.forEach((card) => {
-        const categories = card.dataset.categories || '';
-        const text = `${card.dataset.toolName || ''} ${card.textContent}`.toLowerCase();
-        const matchesTab = activeTab === 'popular' ? categories.includes('popular') : categories.includes(activeTab);
-        const matchesSearch = !query || text.includes(query);
-        const visible = matchesTab && matchesSearch;
-        card.hidden = !visible;
-        if (visible) visibleCount += 1;
-      });
-      if (emptyMessage) emptyMessage.hidden = visibleCount !== 0;
-    }
-
-    function setActiveTab(nextTab) {
-      activeTab = nextTab || 'popular';
-      tabs.forEach((tab) => tab.classList.toggle('active', tab.dataset.toolTab === activeTab));
-      filterCards();
-    }
-
-    searchInput.addEventListener('input', filterCards);
-    document.querySelectorAll('.ec-unified-header [data-tab-jump]').forEach((link) => {
-      link.addEventListener('click', () => setActiveTab(link.dataset.tabJump));
-    });
+    if (!grid || grid.dataset.ecHeaderToolsBound === 'true') return;
+    grid.dataset.ecHeaderToolsBound = 'true';
   }
 
   function closeAll(except) {

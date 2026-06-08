@@ -547,6 +547,20 @@
 
     <script>
         (function () {
+            function tr(key) {
+                if (window.EverythingConvertLanguage) {
+                    return window.EverythingConvertLanguage.translate(key, window.EverythingConvertLanguage.get());
+                }
+                const fallback = {
+                    noFile: 'No file selected',
+                    routeNoteDefault: 'Choose a file and a converter. We will open the right tool page for you.',
+                    routeNoteReady: 'is ready. Continue to',
+                    routeNoteReadySuffix: 'and select the file there to convert.',
+                    routeNoteNoFile: 'Please choose or drop a file first, then continue to the selected converter.',
+                };
+                return fallback[key] || key;
+            }
+
             const fileInput = document.getElementById('homeFileInput');
             const chooseFile = document.getElementById('homeChooseFile');
             const selectedFileName = document.getElementById('selectedFileName');
@@ -564,7 +578,7 @@
 
             function updateFileName(file) {
                 selectedFile = file || null;
-                selectedFileName.textContent = selectedFile ? selectedFile.name : 'No file selected';
+                selectedFileName.textContent = selectedFile ? selectedFile.name : tr('noFile');
                 updateRouteNote(selectedFile ? 'ready' : '');
             }
 
@@ -598,16 +612,16 @@
                 routeNote.classList.remove('ready', 'warning');
                 if (state) routeNote.classList.add(state);
                 if (selectedFile) {
-                    routeNote.textContent = `${selectedFile.name} is ready. Continue to ${selectedToolLabel()} and select the file there to convert.`;
+                    routeNote.textContent = `${selectedFile.name} ${tr('routeNoteReady')} ${selectedToolLabel()} ${tr('routeNoteReadySuffix')}`;
                     return;
                 }
-                routeNote.textContent = 'Choose a file and a converter. We will open the right tool page for you.';
+                routeNote.textContent = tr('routeNoteDefault');
             }
 
             function openSelectedConverter() {
                 if (!selectedFile) {
                     updateRouteNote('warning');
-                    routeNote.textContent = 'Please choose or drop a file first, then continue to the selected converter.';
+                    routeNote.textContent = tr('routeNoteNoFile');
                     fileInput.click();
                     return;
                 }

@@ -51,6 +51,34 @@
     },
     chooseFile: { en: 'Choose File', ko: '파일 선택', de: 'Datei wählen', es: 'Elegir archivo', fr: 'Choisir un fichier' },
     noFile: { en: 'No file selected', ko: '선택된 파일 없음', de: 'Keine Datei ausgewählt', es: 'No hay archivo seleccionado', fr: 'Aucun fichier sélectionné' },
+    routeNoteDefault: {
+      en: 'Choose a file and a converter. We will open the right tool page for you.',
+      ko: '파일과 변환기를 선택하세요. 맞는 도구 페이지를 열어드립니다.',
+      de: 'Wählen Sie eine Datei und einen Konverter. Wir öffnen die richtige Seite.',
+      es: 'Elige un archivo y un convertidor. Abriremos la página correcta por ti.',
+      fr: 'Choisissez un fichier et un convertisseur. Nous ouvrirons la bonne page.',
+    },
+    routeNoteReady: {
+      en: 'is ready. Continue to',
+      ko: '준비됨. 계속하여',
+      de: 'ist bereit. Weiter zu',
+      es: 'está listo. Continúa a',
+      fr: 'est prêt. Continuez vers',
+    },
+    routeNoteReadySuffix: {
+      en: 'and select the file there to convert.',
+      ko: '에서 파일을 선택해 변환하세요.',
+      de: 'und dort die Datei zur Konvertierung auswählen.',
+      es: 'y selecciona el archivo allí para convertir.',
+      fr: 'et sélectionnez le fichier pour convertir.',
+    },
+    routeNoteNoFile: {
+      en: 'Please choose or drop a file first, then continue to the selected converter.',
+      ko: '먼저 파일을 선택하거나 드롭한 후 계속하세요.',
+      de: 'Bitte zuerst eine Datei wählen oder ablegen, dann fortfahren.',
+      es: 'Por favor elige o suelta un archivo primero, luego continúa.',
+      fr: 'Veuillez d\'abord choisir ou déposer un fichier, puis continuer.',
+    },
     convertFrom: { en: 'Convert from:', ko: '변환 전:', de: 'Konvertieren von:', es: 'Convertir desde:', fr: 'Convertir depuis :' },
     convertTo: { en: 'Convert to:', ko: '변환 후:', de: 'Konvertieren zu:', es: 'Convertir a:', fr: 'Convertir vers :' },
     openSelectedConverter: {
@@ -245,6 +273,7 @@
       acceptNode(node) {
         const parent = node.parentElement;
         if (!parent || ['SCRIPT', 'STYLE'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('.ec-unified-header')) return NodeFilter.FILTER_REJECT;
         if (parent.closest('[data-no-i18n]')) return NodeFilter.FILTER_REJECT;
         return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
       },
