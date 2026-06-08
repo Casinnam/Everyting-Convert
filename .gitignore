@@ -4,4 +4,3 @@ Desktop.ini
 *.tmp
 *.log
 node_modules/
-supabase-config.js
