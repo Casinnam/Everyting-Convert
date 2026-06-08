@@ -194,6 +194,7 @@
 
   let activeLanguage = 'en';
   let applying = false;
+  const pendingApplyTimers = [];
 
   function supported(language) {
     return Object.prototype.hasOwnProperty.call(labels, language);
@@ -375,8 +376,11 @@
   }
 
   function scheduleApply(language = activeLanguage) {
+    pendingApplyTimers.forEach((id) => window.clearTimeout(id));
+    pendingApplyTimers.length = 0;
     [0, 100, 500].forEach((delay) => {
-      window.setTimeout(() => applyLanguage(language), delay);
+      const id = window.setTimeout(() => applyLanguage(language), delay);
+      pendingApplyTimers.push(id);
     });
   }
 

@@ -118,7 +118,7 @@
     });
   });
 
-  function getLanguage() {
+  function getSavedLanguage() {
     const params = new URLSearchParams(window.location.search);
     const fromUrl = params.get('lang');
     if (translations[fromUrl] || fromUrl === 'en') return fromUrl;
@@ -158,10 +158,15 @@
     });
   }
 
+  // activeLanguage tracks the most recently requested language so that
+  // applyHeaderLanguage always uses the correct target even if the 30 ms
+  // debounce fires after language-menu.js has already moved on.
+  let activeLanguage = null;
+
   function applyHeaderLanguage() {
     const header = document.querySelector('.ec-unified-header') || document.querySelector('header');
     if (!header) return;
-    const language = getLanguage();
+    const language = activeLanguage || getSavedLanguage();
     const walker = document.createTreeWalker(header, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const parent = node.parentElement;
@@ -178,6 +183,7 @@
   }
 
   let timer = null;
+
   function scheduleApply() {
     window.clearTimeout(timer);
     timer = window.setTimeout(applyHeaderLanguage, 30);
@@ -193,8 +199,20 @@
     observer.observe(document.body, { childList: true, subtree: true, characterData: true });
   });
 
-  window.addEventListener('everything-language-change', scheduleApply);
+  // Capture the target language from the event detail so that even if
+  // language-menu.js fires another scheduleApply in the background the
+  // header always ends up in the language the user just selected.
+  window.addEventListener('everything-language-change', (event) => {
+    const lang = event && event.detail && event.detail.language;
+    if (lang) activeLanguage = lang;
+    scheduleApply();
+  });
+
   document.addEventListener('click', (event) => {
-    if (event.target.closest('[data-language]')) scheduleApply();
+    const btn = event.target.closest('[data-language]');
+    if (btn) {
+      activeLanguage = btn.dataset.language;
+      scheduleApply();
+    }
   });
 })();
