@@ -6,9 +6,13 @@ const root = path.join(__dirname, '..');
 const menu = fs.readFileSync(path.join(root, 'tools-menu.js'), 'utf8');
 const mediaPage = fs.readFileSync(path.join(root, 'media converter', 'media-converter.html'), 'utf8');
 const pdfWordPage = fs.readFileSync(path.join(root, 'pdf to word', 'pdf-to-word.html'), 'utf8');
+const qrCss = fs.readFileSync(path.join(root, 'qr code generator', 'qr-code-generator.css'), 'utf8');
 
 assert(
-  menu.includes('.ec-unified-header .tools-menu') &&
+    menu.includes('.ec-unified-header .tools-menu') &&
+    menu.includes('.ec-unified-header .ec-header-inner') &&
+    menu.includes('width: min(100%, 1220px) !important') &&
+    menu.includes('padding: .85rem clamp(1.5rem, 3.5vw, 2.5rem) !important') &&
     menu.includes('position: relative !important') &&
     menu.includes('.ec-unified-header .tools-group') &&
     menu.includes('display: grid !important') &&
@@ -27,7 +31,14 @@ assert(
     menu.includes('.ec-unified-header .tool-emoji') &&
     menu.includes('&#128444;') &&
     menu.includes('AI Tools'),
-  'Unified tools menu should define stable dropdown positioning, a wide grouped mega layout, mobile hamburger behavior, colored icon badges, and readable link labels.',
+  'Unified tools menu should define centered header spacing, stable dropdown positioning, a wide grouped mega layout, mobile hamburger behavior, colored icon badges, and readable link labels.',
+);
+
+assert(
+  !menu.includes('ec-tool-search') &&
+    !menu.includes('Search tools...') &&
+    !menu.includes('type="search"'),
+  'Unified header should not render a search box on any page.',
 );
 
 assert(
@@ -63,3 +74,12 @@ assert(
 );
 
 console.log('tools menu layout tests passed');
+
+assert(
+  qrCss.includes('.qr-feature-strip span,') &&
+    qrCss.includes('.qr-everyone span,') &&
+    qrCss.includes('grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))') &&
+    qrCss.includes('grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))') &&
+    qrCss.includes('word-break: keep-all'),
+  'QR feature strip descriptions should use roomy card columns instead of wrapping under narrow icon columns.',
+);

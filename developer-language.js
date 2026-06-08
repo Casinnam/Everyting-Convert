@@ -278,7 +278,7 @@
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const parent = node.parentElement;
-        if (!parent || parent.closest('script,style,textarea,select,[data-no-i18n]')) {
+        if (!parent || parent.closest('script,style,textarea,select,.ec-unified-header,[data-no-i18n]')) {
           return NodeFilter.FILTER_REJECT;
         }
         return NodeFilter.FILTER_ACCEPT;
