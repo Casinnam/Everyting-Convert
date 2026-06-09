@@ -65,6 +65,10 @@
     );
   }
 
+  function isFreeToolPage() {
+    return Boolean(document.querySelector('meta[name="usage-limit"][content="none"]'));
+  }
+
   function pathDepth() {
     const path = decodeURIComponent(window.location.pathname || '/').replace(/\\/g, '/');
     const withoutFile = path.endsWith('/')
@@ -336,6 +340,8 @@
   }
 
   async function checkConversionAllowed() {
+    if (isFreeToolPage()) return true;
+
     if (
       window.EverythingConvertAuth &&
       window.EverythingConvertAuth.state &&
@@ -393,6 +399,8 @@
   }
 
   async function recordSuccessfulConversion() {
+    if (isFreeToolPage()) return { skipped: true, reason: 'free-tool' };
+
     if (isProUser()) {
       renderUsage();
       return { skipped: true, reason: 'pro' };
@@ -444,6 +452,8 @@
   }
 
   function installConversionGuard() {
+    if (isFreeToolPage()) return;
+
     ensureStyles();
     ensureUsageBadge();
     renderUsage();

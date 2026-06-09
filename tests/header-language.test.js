@@ -31,7 +31,7 @@ const pagesWithToolsMenu = htmlFiles.filter((file) => {
 
 const missingHeaderLanguage = pagesWithToolsMenu.filter((file) => {
   const html = fs.readFileSync(file, 'utf8');
-  return !html.includes('header-language.js?v=headerlang-20260607a');
+  return !html.includes('header-language.js?v=headerlang-20260608a');
 });
 
 assert.strictEqual(

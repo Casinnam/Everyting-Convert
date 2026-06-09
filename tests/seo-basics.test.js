@@ -45,13 +45,13 @@ assert(
 );
 
 assert(
-  pricing.includes('Choose Everything Convert plans') &&
-    pricing.includes('<meta property="og:title" content="Pricing - Everything Convert">'),
+  pricing.includes('Choose EverythingConvert plans') &&
+    pricing.includes('<meta property="og:title" content="Pricing - EverythingConvert">'),
   'Pricing page should include a search description and Open Graph title.',
 );
 
 assert(
-  pdfWord.includes('PDF to Word Converter - Everything Convert') &&
+  pdfWord.includes('PDF to Word Converter - EverythingConvert') &&
     pdfWord.includes('<link rel="canonical" href="https://www.everythingconvert.com/pdf%20to%20word/pdf-to-word.html">'),
   'PDF to Word page should include tool-specific SEO metadata.',
 );
@@ -64,7 +64,7 @@ assert(
 );
 
 assert(
-  auth.includes('<title>Everything Convert - Login</title>') &&
+  auth.includes('<title>EverythingConvert - Login</title>') &&
     !/<title>[^<]*\/title>/.test(auth),
   'Auth page should have a valid closing title tag so the page body renders.',
 );

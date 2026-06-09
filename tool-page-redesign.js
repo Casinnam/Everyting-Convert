@@ -769,7 +769,7 @@
   function fixFooterText() {
     document.querySelectorAll('.footer-bottom p').forEach((node) => {
       if (node.textContent.includes('EverythingConvert.com')) {
-        node.textContent = '\u00a9 EverythingConvert.com v.00 All rights reserved (2026)';
+        node.textContent = '\u00a9 EverythingConvert.com All rights reserved (2026)';
       }
     });
     document.querySelectorAll('[data-language="ko"]').forEach((node) => { node.textContent = '한국어'; });

@@ -112,11 +112,10 @@ assert(
 );
 
 assert(
-  pricing.includes('10 guest conversions') &&
-    pricing.includes('20 conversions with a free account') &&
-    pricing.includes('unlimited work') &&
+  pricing.includes('Unlimited standard conversions') &&
+    pricing.includes('Unlimited conversions') &&
     pricing.includes('<a class="plan-button secondary-plan" href="auth.html">Create free account</a>'),
-  'Pricing page should explain guest, free account, and Pro conversion limits and send free users to auth.',
+  'Pricing page should explain unlimited free conversions, Pro plan, and send free users to auth.',
 );
 
 {
