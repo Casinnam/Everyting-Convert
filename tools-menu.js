@@ -2,7 +2,8 @@
   function scriptPrefix() {
     const current = document.currentScript || Array.from(document.scripts).find((script) => /tools-menu\.js/.test(script.src || ''));
     const src = current ? current.getAttribute('src') || '' : '';
-    return src.includes('../') ? '../' : '';
+    const match = src.match(/^((?:\.\.\/)+)/);
+    return match ? match[1] : '';
   }
 
   function injectHeaderStyles() {
