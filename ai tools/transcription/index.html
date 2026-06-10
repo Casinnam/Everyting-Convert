@@ -536,7 +536,9 @@
 
     try {
       const res = await fetch(`${SUPABASE_FUNC_BASE}/ai-transcribe`, { method: 'POST', body: form });
-      const data = await res.json();
+      let data;
+      const rawText = await res.text();
+      try { data = JSON.parse(rawText); } catch { data = { error: 'Server error: ' + rawText.slice(0, 200) }; }
 
       if (!res.ok) {
         setStatus(data.error || 'Could not retrieve results. Please contact support.', 'error');
@@ -549,10 +551,9 @@
       paywallBanner.classList.remove('visible');
       setStatus('Download ready! Links expire in 1 hour.', 'success');
 
-      // Clean URL
       window.history.replaceState({}, '', window.location.pathname);
-    } catch {
-      setStatus('Network error. Please contact support if your payment went through.', 'error');
+    } catch (err) {
+      setStatus('Error: ' + (err instanceof Error ? err.message : String(err)), 'error');
     }
   })();
 })();
