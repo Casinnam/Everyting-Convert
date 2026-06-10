@@ -314,8 +314,8 @@
       </div>
 
       <div id="downloadSection" class="download-section">
-        <a id="downloadTxt" class="btn btn-download" href="#" download>&#8659;&nbsp; Download TXT</a>
-        <a id="downloadSrt" class="btn btn-download" href="#" download>&#8659;&nbsp; Download SRT</a>
+        <button id="downloadTxt" class="btn btn-download">&#8659;&nbsp; Download TXT</button>
+        <button id="downloadSrt" class="btn btn-download">&#8659;&nbsp; Download SRT</button>
       </div>
     </div>
 
@@ -380,6 +380,27 @@
 
   let selectedFile = null;
   let currentJobId = null;
+  let txtUrl = null;
+  let srtUrl = null;
+
+  async function triggerDownload(url, filename) {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    } catch {
+      setStatus('Download failed. Please try again.', 'error');
+    }
+  }
+
+  downloadTxt.addEventListener('click', () => { if (txtUrl) triggerDownload(txtUrl, 'transcript.txt'); });
+  downloadSrt.addEventListener('click', () => { if (srtUrl) triggerDownload(srtUrl, 'subtitles.srt'); });
 
   function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -471,8 +492,8 @@
 
       if (!data.needs_payment) {
         // Short file ≤ 60 s — free download
-        downloadTxt.href = data.txt_url;
-        downloadSrt.href = data.srt_url;
+        txtUrl = data.txt_url;
+        srtUrl = data.srt_url;
         downloadSection.classList.add('visible');
         setStatus('Transcription complete. Download your files below.', 'success');
       } else {
