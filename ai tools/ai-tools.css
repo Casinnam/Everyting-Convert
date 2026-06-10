@@ -1,0 +1,267 @@
+:root {
+  --ai-page-bg:
+    radial-gradient(circle at 12% 18%, rgba(125, 211, 252, 0.28), transparent 28rem),
+    radial-gradient(circle at 88% 10%, rgba(167, 139, 250, 0.24), transparent 30rem),
+    linear-gradient(135deg, #f8fbff 0%, #f5f3ff 48%, #ecfeff 100%);
+  --ai-ink: #0f172a;
+  --ai-muted: #637083;
+  --ai-primary: #2563eb;
+  --ai-secondary: #7c3aed;
+  --ai-card: rgba(255, 255, 255, 0.9);
+  --ai-line: rgba(148, 163, 184, 0.28);
+  --ai-shadow: 0 24px 70px rgba(37, 99, 235, 0.12);
+}
+
+body {
+  background: var(--ai-page-bg) !important;
+  color: var(--ai-ink) !important;
+  letter-spacing: 0;
+}
+
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: transparent !important;
+  color: var(--ai-ink) !important;
+  padding: 5rem 1.5rem 3.25rem !important;
+}
+
+.page-hero::before,
+.page-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.page-hero::before {
+  width: 18rem;
+  height: 18rem;
+  left: max(1rem, calc(50% - 42rem));
+  top: 1.5rem;
+  background: rgba(37, 99, 235, 0.11);
+  filter: blur(20px);
+}
+
+.page-hero::after {
+  width: 22rem;
+  height: 22rem;
+  right: max(1rem, calc(50% - 46rem));
+  top: -4rem;
+  background: rgba(124, 58, 237, 0.12);
+  filter: blur(24px);
+}
+
+.page-hero .badge {
+  background: rgba(37, 99, 235, 0.09) !important;
+  border: 1px solid rgba(37, 99, 235, 0.15) !important;
+  color: #3153d8 !important;
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.1);
+}
+
+.page-hero h1 {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: clamp(2.35rem, 5vw, 4.4rem) !important;
+  line-height: 0.96;
+  color: var(--ai-ink);
+}
+
+.page-hero h1 span,
+.page-hero h1 strong {
+  background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.page-hero p,
+.page-hero .subtitle,
+.page-hero .subtitle-ko {
+  color: #475569 !important;
+  line-height: 1.65;
+}
+
+.pricing-note {
+  display: inline-flex !important;
+  flex-wrap: wrap;
+  color: #475569 !important;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+}
+
+.pricing-note strong {
+  color: var(--ai-primary) !important;
+}
+
+main {
+  max-width: 1040px !important;
+  padding-top: 0 !important;
+}
+
+.tool-card,
+.faq details,
+.specs-table table {
+  background: var(--ai-card) !important;
+  border: 1px solid var(--ai-line) !important;
+  box-shadow: var(--ai-shadow);
+  backdrop-filter: blur(16px);
+}
+
+.tool-card {
+  border-radius: 26px !important;
+  padding: clamp(1.25rem, 3vw, 2.25rem) !important;
+}
+
+.upload-zone {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(37, 99, 235, 0.25) !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 251, 255, 0.88)),
+    radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.12), transparent 18rem) !important;
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: rgba(124, 58, 237, 0.6) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 243, 255, 0.92)),
+    radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.18), transparent 18rem) !important;
+}
+
+.upload-zone .icon {
+  width: 4.25rem;
+  height: 4.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.24);
+  color: #fff;
+  font-size: 2rem !important;
+}
+
+.upload-zone h3 {
+  font-size: 1.22rem !important;
+}
+
+.upload-zone p,
+.file-info .file-size,
+.info-box,
+.faq details p {
+  color: var(--ai-muted) !important;
+}
+
+.file-info {
+  background: rgba(239, 246, 255, 0.72) !important;
+  border: 1px solid rgba(37, 99, 235, 0.13);
+  border-radius: 16px !important;
+}
+
+.btn {
+  border-radius: 14px !important;
+  min-height: 48px;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.14);
+}
+
+.btn-primary,
+.btn-pay {
+  background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary)) !important;
+  color: #fff !important;
+}
+
+.btn-download {
+  background: #0f172a !important;
+  color: #fff !important;
+}
+
+.btn:not(:disabled):hover {
+  opacity: 1 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 42px rgba(37, 99, 235, 0.22);
+}
+
+.status-msg,
+.preview-box,
+.spec-result-label,
+.info-box {
+  border-radius: 16px !important;
+}
+
+.preview-box,
+.spec-result-label,
+.info-box {
+  background: rgba(239, 246, 255, 0.66) !important;
+  border: 1px solid rgba(37, 99, 235, 0.12) !important;
+}
+
+.paywall-banner {
+  background:
+    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.18), transparent 11rem),
+    linear-gradient(135deg, #2563eb, #7c3aed) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 44px rgba(79, 70, 229, 0.25);
+}
+
+.paywall-banner p,
+.paywall-banner ul {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.preview-panel img {
+  background-color: #fff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
+
+.warning-banner {
+  background: rgba(255, 251, 235, 0.9) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 14px 36px rgba(245, 158, 11, 0.12);
+}
+
+.faq h2,
+.specs-table h2 {
+  text-align: center;
+  font-size: clamp(1.35rem, 3vw, 1.8rem) !important;
+}
+
+.faq details {
+  border-radius: 18px !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+}
+
+footer {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 900px) {
+  .preview-grid {
+    gap: 1.35rem !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-hero {
+    padding-top: 3.5rem !important;
+  }
+
+  .pricing-note {
+    border-radius: 18px;
+  }
+
+  .tool-card {
+    border-radius: 20px !important;
+  }
+}

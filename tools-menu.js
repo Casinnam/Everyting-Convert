@@ -510,10 +510,10 @@
           <button class="tools-toggle" type="button" aria-expanded="false">AI Tools</button>
           <div class="tools-dropdown">
             <div class="tools-subgroup-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Roadmap</div>
-            <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">AI</span><span>AI Tools Overview</span></a>
-            <a class="tool-disabled" href="${prefix}index.html#ai-preview"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
-            <a class="tool-disabled" href="${prefix}index.html#ai-preview"><span class="tool-emoji ai">&#128196;</span><span>PDF Summary</span></a>
-            <a class="tool-disabled" href="${prefix}index.html#ai-preview"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
+            <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
+            <a href="${prefix}ai tools/background-remover/index.html"><span class="tool-emoji ai">&#128247;</span><span>Background Remover</span></a>
+            <a href="${prefix}ai tools/id-photo/index.html"><span class="tool-emoji ai">&#128100;</span><span>ID / Passport Photo</span></a>
+            <a class="tool-disabled" href="#"><span class="tool-emoji ai">OCR</span><span>Smart OCR (Coming Soon)</span></a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>

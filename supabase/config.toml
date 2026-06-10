@@ -1,0 +1,16 @@
+project_id = "tuwhuftbjqkgduukvbfv"
+
+[functions.ai-transcribe]
+verify_jwt = false
+
+[functions.ai-remove-bg]
+verify_jwt = false
+
+[functions.ai-id-photo]
+verify_jwt = false
+
+[functions.ai-checkout]
+verify_jwt = false
+
+[functions.ai-webhook]
+verify_jwt = false
