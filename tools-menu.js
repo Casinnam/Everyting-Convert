@@ -434,7 +434,7 @@
               <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code Generator</span></a>
               <a href="${prefix}json to csv/json-to-csv.html"><span class="tool-emoji dev">{ }</span><span>JSON to CSV</span></a>
               <a href="${prefix}csv converter/csv-converter.html"><span class="tool-emoji excel">CSV</span><span>CSV Converter</span></a>
-              <a href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">AI</span><span>AI Tools</span></a>
+              <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">AI</span><span>Audio to Text</span></a>
               <a href="${prefix}contact.html"><span class="tool-emoji lock">&#9993;</span><span>Contact</span></a>
             </div>
           </div>
@@ -464,7 +464,7 @@
               <div class="tools-subgroup-title"><i class="fa-solid fa-book"></i> Office & Ebooks</div>
               <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
               <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
-              <a class="tool-disabled" href="${prefix}index.html#ai-preview" data-tab-jump="ai"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
+              <a class="tool-disabled" href="#"><span class="tool-emoji ai">OCR</span><span>Smart OCR (Coming Soon)</span></a>
             </div>
           </div>
         </div>
@@ -514,6 +514,7 @@
             <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
             <a href="${prefix}ai tools/background-remover/index.html"><span class="tool-emoji ai">&#128247;</span><span>Background Remover</span></a>
             <a href="${prefix}ai tools/id-photo/index.html"><span class="tool-emoji ai">&#128100;</span><span>ID / Passport Photo</span></a>
+            <a href="${prefix}ai tools/pdf-summary/index.html"><span class="tool-emoji ai">PDF</span><span>PDF Summary</span></a>
             <a class="tool-disabled" href="#"><span class="tool-emoji ai">OCR</span><span>Smart OCR (Coming Soon)</span></a>
           </div>
         </div>
