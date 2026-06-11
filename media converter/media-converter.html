@@ -31,6 +31,93 @@
     <meta name="twitter:title" content="Video and Audio Converter - EverythingConvert">
     <meta name="twitter:description" content="Convert video and audio files online, including MP4, MP3, MOV, and other common formats.">
     <!-- SEO:END -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Video and Audio Converter",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "url": "https://www.everythingconvert.com/media%20converter/media-converter.html",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "description": "Convert video and audio files between formats in your browser with FFmpeg."
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.everythingconvert.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Video &amp; Audio",
+              "item": "https://www.everythingconvert.com/#tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Media Converter"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What formats are supported?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Popular video and audio formats such as MP4, MP3, MOV, and WAV."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I extract audio from a video?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Convert a video like MP4 straight to MP3 or another audio format."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are my files uploaded?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Conversion runs locally in your browser using FFmpeg."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why is a large file slow?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In-browser conversion uses your device's resources, so big files take longer; a desktop helps."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is it free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, free for everyday use with Pro removing daily limits."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -114,7 +201,68 @@
                         <a href="../gif converter/gif-converter.html?mode=gif-mp4">GIF to MP4</a>
                         <a href="../gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
                     </div></div></div><a href="../auth.html" data-auth-login>Login</a><a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a><a href="../admin.html" data-admin-only style="display:none;">Admin</a><a href="#" data-auth-logout style="display:none;">Logout</a></nav></header>
-<main><section class="hero"><div class="eyebrow">Video & Audio</div><h1 id="pageTitle">Media Converter</h1><p id="pageDescription">Convert video and audio files in your browser with FFmpeg. Large files can take a little time.</p></section><section class="tool-card"><div class="tool-tabs" id="modeGrid"></div><div class="drop-zone" id="dropZone"><i class="fa-regular fa-circle-play"></i><strong id="dropTitle">Click or drop a media file here</strong><span>Video and audio files are processed locally in your browser.</span><input id="fileInput" type="file" accept="video/*,audio/*,.mov,.mp4,.webm,.mp3,.wav,.ogg,.m4a"></div><div class="media-preview" id="mediaPreview"><div id="mediaPreviewSlot"></div><div><div class="media-file-name" id="fileName">No file</div><div class="media-file-meta" id="fileMeta"></div><p class="media-note">For best results, use small clips first. Browser conversion speed depends on your device.</p></div></div><div class="options"><label>Output format<select id="formatSelect"></select></label><button class="primary-btn" id="convertBtn" disabled>Convert</button></div><div class="status" id="status">No file selected.</div></section></main>
+<main><section class="hero"><div class="eyebrow">Video & Audio</div><h1 id="pageTitle">Media Converter</h1><p id="pageDescription">Convert video and audio files in your browser with FFmpeg. Large files can take a little time.</p></section><section class="tool-card"><div class="tool-tabs" id="modeGrid"></div><div class="drop-zone" id="dropZone"><i class="fa-regular fa-circle-play"></i><strong id="dropTitle">Click or drop a media file here</strong><span>Video and audio files are processed locally in your browser.</span><input id="fileInput" type="file" accept="video/*,audio/*,.mov,.mp4,.webm,.mp3,.wav,.ogg,.m4a"></div><div class="media-preview" id="mediaPreview"><div id="mediaPreviewSlot"></div><div><div class="media-file-name" id="fileName">No file</div><div class="media-file-meta" id="fileMeta"></div><p class="media-note">For best results, use small clips first. Browser conversion speed depends on your device.</p></div></div><div class="options"><label>Output format<select id="formatSelect"></select></label><button class="primary-btn" id="convertBtn" disabled>Convert</button></div><div class="status" id="status">No file selected.</div></section>
+  <section class="ec-info-grid" data-static>
+    <article class="ec-info-panel">
+      <h2 data-ko="미디어 파일을 변환하는 방법">How to convert media files</h2>
+      <ol class="ec-step-list">
+        <li><b>1</b><div><strong data-ko="비디오 또는 오디오 업로드">Upload your video or audio</strong><span data-ko="MP4, MOV, MP3, WAV 등 미디어 파일을 추가하세요.">Add an MP4, MOV, MP3, WAV, or other media file.</span></div></li>
+        <li><b>2</b><div><strong data-ko="출력 형식 선택">Choose the output format</strong><span data-ko="MP4나 MP3 같은 대상 형식을 고르세요.">Select the target format, such as MP4 or MP3.</span></div></li>
+        <li><b>3</b><div><strong data-ko="변환된 파일 다운로드">Download the converted file</strong><span data-ko="브라우저 내 변환이 끝나면 결과를 저장하세요.">Save the result once the in-browser conversion finishes.</span></div></li>
+      </ol>
+    </article>
+    <article class="ec-info-panel">
+      <h2 data-ko="여기서 미디어를 변환하는 이유">Why convert media here</h2>
+      <ul class="ec-check-list">
+        <li><i class="fa-solid fa-check"></i><span data-ko="MP4, MP3, MOV, WAV 등 상호 변환">Convert between MP4, MP3, MOV, WAV and more</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="영상에서 오디오 추출">Extract audio from video</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="브라우저 내 FFmpeg로 로컬 실행">Runs locally with in-browser FFmpeg</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="미디어가 업로드되지 않음">Your media is never uploaded</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="ec-seo-guide" data-static>
+    <div class="ec-guide-copy">
+      <p class="ec-guide-kicker" data-ko="비디오 및 오디오">Video &amp; Audio</p>
+      <h2 data-ko="브라우저에서 비디오·오디오 변환">Convert video and audio files in your browser</h2>
+      <p data-ko="영상에서 오디오만 추출하거나, 클립을 더 호환성 좋은 형식으로 바꾸거나, 어디서나 재생되도록 파일을 줄이는 일을 낯선 서버에 미디어를 올리지 않고 할 수 있습니다. 이 변환기는 브라우저 내 FFmpeg로 비디오·오디오를 로컬에서 변환하므로, 큰 개인 파일도 완전히 비공개로 유지됩니다.">Extract the audio from a video, switch a clip to a more compatible format, or shrink a file so it plays anywhere, all without uploading your media to a stranger's server. This converter uses in-browser FFmpeg to transcode video and audio locally, so even large personal files stay completely private.</p>
+    </div>
+    <div class="ec-guide-grid">
+      <article>
+        <i class="fa-solid fa-file-circle-check"></i>
+        <h3 data-ko="최상의 결과를 위해">Best results</h3>
+        <ul>
+          <li data-ko="짧은 클립이 가장 빠르게 변환됨">Shorter clips convert fastest</li>
+          <li data-ko="큰 파일은 데스크톱 사용">Use a desktop for large files</li>
+          <li data-ko="MP4·MP3처럼 널리 지원되는 형식 선택">Pick a widely supported format like MP4 or MP3</li>
+        </ul>
+      </article>
+      <article>
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <h3 data-ko="자주 겪는 문제 해결">Common fixes</h3>
+        <ul>
+          <li data-ko="큰 파일에서 느린가요? 데스크톱 브라우저를 사용하세요">Slow on big files? Try a desktop browser</li>
+          <li data-ko="재생 문제가 있나요? MP4나 MP3로 변환하세요">Playback issues? Convert to MP4 or MP3</li>
+          <li data-ko="메모리가 부족한가요? 더 작은 단위로 변환하세요">Out of memory? Convert in smaller pieces</li>
+        </ul>
+      </article>
+      <article>
+        <i class="fa-solid fa-user-shield"></i>
+        <h3 data-ko="설계부터 프라이버시 우선">Private by design</h3>
+        <p data-ko="변환은 브라우저에서 FFmpeg로 전부 실행되므로 파일이 기기를 떠나지 않습니다.">Transcoding runs entirely in your browser with FFmpeg, so your files never leave your device.</p>
+      </article>
+    </div>
+    <div class="ec-faq-list">
+      <h2 data-ko="자주 묻는 질문">Frequently asked questions</h2>
+      <details><summary data-ko="어떤 형식을 지원하나요?">What formats are supported?</summary><p data-ko="MP4, MP3, MOV, WAV 등 인기 비디오·오디오 형식입니다.">Popular video and audio formats such as MP4, MP3, MOV, and WAV.</p></details>
+      <details><summary data-ko="영상에서 오디오를 추출할 수 있나요?">Can I extract audio from a video?</summary><p data-ko="네. MP4 같은 영상을 바로 MP3나 다른 오디오 형식으로 변환하세요.">Yes. Convert a video like MP4 straight to MP3 or another audio format.</p></details>
+      <details><summary data-ko="내 파일이 업로드되나요?">Are my files uploaded?</summary><p data-ko="아니요. 변환은 FFmpeg로 브라우저에서 로컬로 실행됩니다.">No. Conversion runs locally in your browser using FFmpeg.</p></details>
+      <details><summary data-ko="큰 파일은 왜 느린가요?">Why is a large file slow?</summary><p data-ko="브라우저 내 변환은 기기 자원을 사용하므로 큰 파일은 더 오래 걸립니다. 데스크톱이 도움이 됩니다.">In-browser conversion uses your device's resources, so big files take longer; a desktop helps.</p></details>
+      <details><summary data-ko="무료인가요?">Is it free?</summary><p data-ko="네, 일상적인 사용은 무료이며 Pro는 일일 한도를 없앱니다.">Yes, free for everyday use with Pro removing daily limits.</p></details>
+    </div>
+  </section>
+</main>
 <footer class="site-footer"><div class="footer-grid"><div class="footer-group"><h2><img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28"> EverythingConvert</h2><a href="../index.html#tools">All tools</a><a href="../auth.html">Account</a></div><div class="footer-group">
                 <h2><i class="fa-solid fa-file-export"></i> PDF Convert</h2>
                 <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
@@ -341,5 +489,6 @@
   buildModes();
 </script>
 <script src="../tool-page-redesign.js?v=20260601d"></script>
+<script src="../static-i18n.js"></script>
 </body>
 </html>

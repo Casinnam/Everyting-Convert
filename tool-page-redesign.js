@@ -758,7 +758,11 @@
   }
 
   function renderLocalizedSections(meta, language = currentLanguage()) {
-    document.querySelectorAll('.ec-feature-strip, .ec-info-grid, .ec-seo-guide, .ec-related, .ec-security-band').forEach((node) => node.remove());
+    // Static, hand-authored sections (marked data-static) are unique per page for SEO/AdSense.
+    // Never remove or overwrite them; the add* guards below will skip re-injecting duplicates.
+    document.querySelectorAll('.ec-feature-strip, .ec-info-grid, .ec-seo-guide, .ec-related, .ec-security-band').forEach((node) => {
+      if (!node.hasAttribute('data-static')) node.remove();
+    });
     addFeatureStrip(language);
     addInfoSections(meta, language);
     addSeoGuide(meta, language);
