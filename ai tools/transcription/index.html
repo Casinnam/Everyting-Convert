@@ -311,7 +311,7 @@
   <div class="tool-card">
     <div id="uploadZone" class="upload-zone">
       <div class="icon">&#127908;</div>
-      <h3>Drop your audio or video file here</h3>
+      <h3 data-i18n="trDrop">Drop your audio or video file here</h3>
       <p>MP3, M4A, WAV, OGG, MP4, MOV, WebM &nbsp;·&nbsp; Max 25 MB</p>
       <input type="file" id="fileInput" accept=".mp3,.m4a,.wav,.ogg,.flac,.mp4,.mov,.webm,.mpeg,.mpga">
     </div>
@@ -354,8 +354,8 @@
     </div>
 
     <div class="info-box">
-      <strong>Privacy:</strong> Your file is sent directly to our secure processing server,
-      transcribed, and automatically deleted within 24 hours. We never store or share your audio.
+      <strong data-i18n="aiPrivacyLabel">Privacy:</strong> <span data-i18n="trPrivacy">Your file is sent directly to our secure processing server,
+      transcribed, and automatically deleted within 24 hours. We never store or share your audio.</span>
     </div>
   </div>
 
@@ -370,16 +370,16 @@
       <p data-i18n="trFaq2A">We use OpenAI Whisper, one of the most accurate speech-to-text models available. Accuracy depends on audio quality and accent, but typically exceeds 95% for clear recordings.</p>
     </details>
     <details>
-      <summary>What languages are supported?</summary>
-      <p>Whisper supports over 50 languages including English, Korean, Japanese, Spanish, French, German, Portuguese, Chinese, and more. Language is detected automatically.</p>
+      <summary data-i18n="trFaq3Q">What languages are supported?</summary>
+      <p data-i18n="trFaq3A">Whisper supports over 50 languages including English, Korean, Japanese, Spanish, French, German, Portuguese, Chinese, and more. Language is detected automatically.</p>
     </details>
     <details>
-      <summary>What is the SRT file?</summary>
-      <p>An SRT (SubRip Subtitle) file contains timestamped captions compatible with most video players (VLC, YouTube, Premiere, etc.).</p>
+      <summary data-i18n="trFaq4Q">What is the SRT file?</summary>
+      <p data-i18n="trFaq4A">An SRT (SubRip Subtitle) file contains timestamped captions compatible with most video players (VLC, YouTube, Premiere, etc.).</p>
     </details>
     <details>
-      <summary>Is my payment secure?</summary>
-      <p>Yes. Payments are processed by Stripe. We never see or store your card details.</p>
+      <summary data-i18n="aiFaqPayQ">Is my payment secure?</summary>
+      <p data-i18n="aiFaqPayA">Yes. Payments are processed by Stripe. We never see or store your card details.</p>
     </details>
   </div>
 </main>
@@ -389,10 +389,10 @@
 </footer>
 
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260610ai"></script>
+<script src="../../tools-menu.js?v=nav-20260611dev"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
-<script src="../ai-common.js?v=ai-common-20260610a"></script>
+<script src="../ai-common.js?v=ai-common-20260611a"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';

@@ -246,7 +246,7 @@
 
     <div id="uploadZone" class="upload-zone">
       <div class="icon">&#128100;</div>
-      <h3>Drop your portrait photo here</h3>
+      <h3 data-i18n="idDrop">Drop your portrait photo here</h3>
       <p>정면 얼굴 사진을 올려주세요 &nbsp;·&nbsp; JPEG, PNG, WebP &nbsp;·&nbsp; Max 10 MB</p>
       <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
     </div>
@@ -300,7 +300,7 @@
     </div>
 
     <div class="info-box">
-      <strong>Privacy:</strong> Your photo is processed on our secure server and automatically deleted within 24 hours. It is never used for training or shared with third parties.
+      <strong data-i18n="aiPrivacyLabel">Privacy:</strong> <span data-i18n="idPrivacy">Your photo is processed on our secure server and automatically deleted within 24 hours. It is never used for training or shared with third parties.</span>
     </div>
   </div>
 
@@ -317,7 +317,7 @@
         <tr><td>China Visa</td><td>33 × 48 mm</td><td>390 × 567 px @ 300 dpi</td><td>White / Light blue</td></tr>
       </tbody>
     </table>
-    <p style="font-size:.8rem;color:var(--muted);margin-top:.75rem;">Always confirm final specifications with the issuing authority before printing.</p>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:.75rem;" data-i18n="idSpecNote">Always confirm final specifications with the issuing authority before printing.</p>
   </div>
 
   <div class="faq">
@@ -333,12 +333,12 @@
       Clear portraits with good lighting and a plain background. Side angles, low light, and blurry photos may give poor results.</p>
     </details>
     <details>
-      <summary>What is the print sheet?</summary>
-      <p>A print-ready JPEG with multiple copies of your ID photo arranged on a single page, ready to take to a pharmacy or print shop.</p>
+      <summary data-i18n="idFaq3Q">What is the print sheet?</summary>
+      <p data-i18n="idFaq3A">A print-ready JPEG with multiple copies of your ID photo arranged on a single page, ready to take to a pharmacy or print shop.</p>
     </details>
     <details>
-      <summary>Is my payment secure?</summary>
-      <p>Yes. Payments are processed by Stripe. We never see or store your card details.</p>
+      <summary data-i18n="aiFaqPayQ">Is my payment secure?</summary>
+      <p data-i18n="aiFaqPayA">Yes. Payments are processed by Stripe. We never see or store your card details.</p>
     </details>
   </div>
 </main>
@@ -348,10 +348,10 @@
 </footer>
 
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260610ai"></script>
+<script src="../../tools-menu.js?v=nav-20260611dev"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
-<script src="../ai-common.js?v=ai-common-20260610a"></script>
+<script src="../ai-common.js?v=ai-common-20260611a"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';

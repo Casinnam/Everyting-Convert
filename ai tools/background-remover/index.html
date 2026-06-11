@@ -191,7 +191,7 @@
   <div class="tool-card">
     <div id="uploadZone" class="upload-zone">
       <div class="icon">&#128247;</div>
-      <h3>Drop your image here</h3>
+      <h3 data-i18n="brDrop">Drop your image here</h3>
       <p>JPEG, PNG, WebP &nbsp;·&nbsp; Max 10 MB</p>
       <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
     </div>
@@ -238,7 +238,7 @@
     </div>
 
     <div class="info-box">
-      <strong>Privacy:</strong> Your image is processed on our secure server and automatically deleted within 24 hours. We never use your images for training or any other purpose.
+      <strong data-i18n="aiPrivacyLabel">Privacy:</strong> <span data-i18n="brPrivacy">Your image is processed on our secure server and automatically deleted within 24 hours. We never use your images for training or any other purpose.</span>
     </div>
   </div>
 
@@ -253,12 +253,12 @@
       <p data-i18n="brFaq2A">Clear photos with a distinct subject — portraits, products, logos. Complex backgrounds with similar colors to the subject may have minor edge artifacts.</p>
     </details>
     <details>
-      <summary>What is the difference between the preview and the HD download?</summary>
-      <p>The free preview is a low-resolution version (400px wide). The HD download is the full-resolution result at your original image dimensions.</p>
+      <summary data-i18n="brFaq3Q">What is the difference between the preview and the HD download?</summary>
+      <p data-i18n="brFaq3A">The free preview is a low-resolution version (400px wide). The HD download is the full-resolution result at your original image dimensions.</p>
     </details>
     <details>
-      <summary>Is my payment secure?</summary>
-      <p>Yes. Payments are processed by Stripe. We never see or store your card details.</p>
+      <summary data-i18n="aiFaqPayQ">Is my payment secure?</summary>
+      <p data-i18n="aiFaqPayA">Yes. Payments are processed by Stripe. We never see or store your card details.</p>
     </details>
   </div>
 </main>
@@ -268,10 +268,10 @@
 </footer>
 
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260610ai"></script>
+<script src="../../tools-menu.js?v=nav-20260611dev"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
-<script src="../ai-common.js?v=ai-common-20260610a"></script>
+<script src="../ai-common.js?v=ai-common-20260611a"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
