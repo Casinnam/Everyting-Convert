@@ -51,7 +51,7 @@ assert(
     menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Developer</button>') &&
     menu.includes('QR Code</span>') &&
     menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">AI Tools</button>') &&
-    menu.includes('Smart OCR</span>') &&
+    menu.includes('Smart OCR (Coming Soon)</span>') &&
     !menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Advanced</button>'),
   'Documents, Media, Developer, and AI Tools dropdowns should use clear grouped labels and colored icon badge link patterns.',
 );

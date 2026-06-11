@@ -382,6 +382,35 @@
     .status.success { color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; }
     .status.error { color: var(--danger); background: #fef2f2; border: 1px solid #fecaca; }
 
+    .limit-card {
+      display: none;
+      margin: 1rem 0 0;
+      padding: 1.15rem;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, .08), rgba(124, 58, 237, .08));
+      border: 1px solid rgba(37, 99, 235, .22);
+    }
+
+    .limit-card.visible { display: block; }
+
+    .limit-card p {
+      margin: 0 0 .9rem;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .limit-actions {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+
+    .limit-actions .btn {
+      text-decoration: none;
+      font-size: .92rem;
+    }
+
     .content-guide {
       margin-top: 1.5rem;
       display: grid;
@@ -559,6 +588,13 @@
         </div>
         <article id="summaryCard" class="summary-card" aria-live="polite"></article>
         <div id="statusMsg" class="status"></div>
+        <div id="limitCard" class="limit-card">
+          <p id="limitMessage"></p>
+          <div class="limit-actions">
+            <a id="limitLoginBtn" class="btn btn-soft" href="../../auth.html">Log in</a>
+            <a class="btn btn-primary" href="../../pricing.html">Try Pro</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -637,6 +673,67 @@
   const summaryEmpty = document.getElementById('summaryEmpty');
   const summaryCard = document.getElementById('summaryCard');
   const statusMsg = document.getElementById('statusMsg');
+  const limitCard = document.getElementById('limitCard');
+  const limitMessage = document.getElementById('limitMessage');
+  const limitLoginBtn = document.getElementById('limitLoginBtn');
+
+  function currentLang() {
+    const fromUrl = new URLSearchParams(window.location.search).get('lang');
+    if (fromUrl) return fromUrl;
+    try {
+      return localStorage.getItem('everything_convert_language') || 'en';
+    } catch (error) {
+      return 'en';
+    }
+  }
+
+  const sectionLabels = {
+    en: { key: 'Key points', details: 'Important details' },
+    ko: { key: '핵심 사항', details: '중요 세부 정보' },
+    de: { key: 'Kernpunkte', details: 'Wichtige Details' },
+    es: { key: 'Puntos clave', details: 'Detalles importantes' },
+    fr: { key: 'Points clés', details: 'Détails importants' },
+  };
+
+  const limitText = {
+    guest: {
+      en: 'Daily free limit reached (3 per day). Log in for 10 free summaries per day, or upgrade to Pro for unlimited use.',
+      ko: '오늘의 무료 사용 한도(3회)에 도달했습니다. 로그인하면 하루 10회, Pro로 업그레이드하면 무제한으로 사용할 수 있습니다.',
+      de: 'Tageslimit erreicht (3 pro Tag). Melden Sie sich an für 10 kostenlose Zusammenfassungen pro Tag, oder nutzen Sie Pro unbegrenzt.',
+      es: 'Límite diario gratuito alcanzado (3 al día). Inicia sesión para 10 resúmenes gratis al día, o pásate a Pro para uso ilimitado.',
+      fr: 'Limite gratuite quotidienne atteinte (3 par jour). Connectez-vous pour 10 résumés gratuits par jour, ou passez à Pro pour un usage illimité.',
+    },
+    free: {
+      en: 'Daily free limit reached (10 per day). Upgrade to Pro for unlimited summaries.',
+      ko: '오늘의 무료 사용 한도(10회)에 도달했습니다. Pro로 업그레이드하면 무제한으로 사용할 수 있습니다.',
+      de: 'Tageslimit erreicht (10 pro Tag). Mit Pro fassen Sie unbegrenzt zusammen.',
+      es: 'Límite diario gratuito alcanzado (10 al día). Pásate a Pro para resúmenes ilimitados.',
+      fr: 'Limite gratuite quotidienne atteinte (10 par jour). Passez à Pro pour des résumés illimités.',
+    },
+  };
+
+  const loginLabels = { en: 'Log in', ko: '로그인', de: 'Anmelden', es: 'Iniciar sesión', fr: 'Connexion' };
+
+  const remainingText = {
+    en: (n) => `${n} free ${n === 1 ? 'summary' : 'summaries'} left today.`,
+    ko: (n) => `오늘 무료 요약 ${n}회 남음.`,
+    de: (n) => `Heute noch ${n} kostenlose Zusammenfassung${n === 1 ? '' : 'en'} übrig.`,
+    es: (n) => `Te quedan ${n} resúmenes gratis hoy.`,
+    fr: (n) => `Il vous reste ${n} résumé${n === 1 ? '' : 's'} gratuit${n === 1 ? '' : 's'} aujourd'hui.`,
+  };
+
+  function hideLimitCard() {
+    limitCard.classList.remove('visible');
+  }
+
+  function showLimitCard(loggedIn) {
+    const lang = currentLang();
+    const pool = loggedIn ? limitText.free : limitText.guest;
+    limitMessage.textContent = pool[lang] || pool.en;
+    limitLoginBtn.textContent = loginLabels[lang] || loginLabels.en;
+    limitLoginBtn.style.display = loggedIn ? 'none' : '';
+    limitCard.classList.add('visible');
+  }
 
   let selectedFile = null;
   let extractedText = '';
@@ -703,6 +800,7 @@
     downloadSummaryBtn.disabled = true;
     summarizeBtn.disabled = true;
     clearStatus();
+    hideLimitCard();
 
     if (pdfObjectUrl) URL.revokeObjectURL(pdfObjectUrl);
     pdfObjectUrl = URL.createObjectURL(file);
@@ -740,25 +838,26 @@
     const details = Array.isArray(data.important_details) ? data.important_details : [];
     const title = data.title || 'PDF summary';
     const brief = data.brief || 'Summary generated from the readable text in this PDF.';
+    const labels = sectionLabels[currentLang()] || sectionLabels.en;
 
     summaryTextForDownload = [
       title,
       '',
       brief,
       '',
-      'Key points:',
+      labels.key + ':',
       ...points.map(item => '- ' + item),
       '',
-      'Important details:',
+      labels.details + ':',
       ...details.map(item => '- ' + item),
     ].join('\n');
 
     summaryCard.innerHTML = `
       <h3>${escapeHtml(title)}</h3>
       <p class="summary-brief">${escapeHtml(brief)}</p>
-      <div class="summary-section-title">Key points</div>
+      <div class="summary-section-title">${escapeHtml(labels.key)}</div>
       <ul class="summary-list">${points.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
-      <div class="summary-section-title">Important details</div>
+      <div class="summary-section-title">${escapeHtml(labels.details)}</div>
       <ul class="summary-list">${details.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
     `;
     summaryEmpty.style.display = 'none';
@@ -797,18 +896,22 @@
     if (!selectedFile || !extractedText) return;
     summarizeBtn.disabled = true;
     downloadSummaryBtn.disabled = true;
+    hideLimitCard();
     setStatus('Generating a simple AI summary...', 'info');
 
     try {
-      const lang = new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('everythingConvertLanguage') || 'en';
+      const lang = currentLang();
+      // Send the user's access token when logged in so the server can apply
+      // the account limit (10/day) or Pro unlimited instead of the guest limit.
+      const auth = window.EverythingConvertAuth;
+      const session = auth && auth.state ? auth.state.session : null;
+      const accessToken = session && session.access_token ? session.access_token : '';
       const response = await fetch(`${SUPABASE_FUNC_BASE}/ai-pdf-summary`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(SUPABASE_ANON_KEY ? {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          } : {}),
+          ...(SUPABASE_ANON_KEY ? { apikey: SUPABASE_ANON_KEY } : {}),
+          Authorization: `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({
           file_name: selectedFile.name,
@@ -819,13 +922,24 @@
       const raw = await response.text();
       let data;
       try { data = JSON.parse(raw); } catch { data = { error: raw.slice(0, 300) }; }
+      if (response.status === 429 && data.code === 'limit_reached') {
+        showLimitCard(Boolean(data.logged_in));
+        clearStatus();
+        summarizeBtn.disabled = false;
+        return;
+      }
       if (!response.ok) {
         setStatus(data.error || 'Summary failed. Please try again.', 'error');
         summarizeBtn.disabled = false;
         return;
       }
       renderSummary(data.summary || data);
-      setStatus('Summary ready. Please verify important details against the original PDF.', 'success');
+      let doneMsg = 'Summary ready. Please verify important details against the original PDF.';
+      if (data.usage && typeof data.usage.remaining === 'number') {
+        const fmt = remainingText[lang] || remainingText.en;
+        doneMsg += ' ' + fmt(data.usage.remaining);
+      }
+      setStatus(doneMsg, 'success');
     } catch (error) {
       setStatus('Network error while generating the summary. Please try again.', 'error');
     } finally {

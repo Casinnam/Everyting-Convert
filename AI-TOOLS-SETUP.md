@@ -12,6 +12,13 @@ Paste the contents of `supabase/ai-tools-setup.sql` and click **Run**.
 
 This creates the `ai_jobs` table with RLS enabled.
 
+Then run `supabase/ai-usage-setup.sql` the same way.
+This creates the `ai_usage_counters` table and the `record_ai_usage` RPC
+that enforce the daily free limits for PDF Summary (guest 3/day,
+free account 10/day, Pro unlimited). **PDF Summary returns 503 until
+this SQL has been run** — the function fails closed to protect the
+OpenAI budget.
+
 ---
 
 ## Step 2 — Create Storage buckets
@@ -81,7 +88,13 @@ supabase secrets set IDPHOTO_API_KEY=...
 supabase secrets set IDPHOTO_API_SECRET=...
 supabase secrets set STRIPE_SECRET_KEY=sk_live_...
 supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
+supabase secrets set USAGE_IDENTITY_SALT=any-long-random-string
 ```
+
+> **USAGE_IDENTITY_SALT** is used to hash guest IP addresses for the PDF
+> Summary daily limit. Use the same value as the one configured for the
+> Cloudflare `functions/api/usage-limit.js` if you want consistent hashing,
+> or any long random string otherwise.
 
 > **STRIPE_WEBHOOK_SECRET** is created in Step 5 below. Set it after you complete that step.
 
@@ -97,7 +110,13 @@ supabase functions deploy ai-remove-bg
 supabase functions deploy ai-id-photo
 supabase functions deploy ai-checkout
 supabase functions deploy ai-webhook
+supabase functions deploy ai-pdf-summary --no-verify-jwt
 ```
+
+> `--no-verify-jwt` is required for `ai-pdf-summary` because guests call it
+> with the publishable key (not a JWT). The function does its own auth:
+> it resolves the user from the Authorization header when present and
+> enforces the daily usage limit server-side either way.
 
 Each function will get a URL like:
 `https://tuwhuftbjqkgduukvbfv.functions.supabase.co/<function-name>`
@@ -232,9 +251,14 @@ Edge Functions → Schedule, or use the Supabase Management API.
 | Transcription | First 60 seconds | $2.99 — full transcript + SRT |
 | Background Remover | Low-res preview | $1.99 — HD transparent PNG |
 | ID / Passport Photo | Low-res preview | $2.99 — HD photo + print sheet |
+| PDF Summary | Guest 3/day, account 10/day | Pro subscription — unlimited |
 
-To change prices, edit `supabase/functions/ai-checkout/index.ts` → the `PRICES` object.
+To change per-job prices, edit `supabase/functions/ai-checkout/index.ts` → the `PRICES` object.
 Amounts are in cents (USD).
+
+To change the PDF Summary daily limits, edit the `LIMITS` constant in
+`supabase/functions/ai-pdf-summary/index.ts` and the matching copy in
+`ai tools/pdf-summary/index.html` (`limitText`) and `pricing.html`.
 
 ---
 
