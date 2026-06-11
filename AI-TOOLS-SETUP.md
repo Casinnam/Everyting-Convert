@@ -76,7 +76,9 @@ Set secrets (replace the `...` values with your actual keys):
 
 ```
 supabase secrets set OPENAI_API_KEY=sk-...
+supabase secrets set REMOVEBG_API_KEY=...
 supabase secrets set IDPHOTO_API_KEY=...
+supabase secrets set IDPHOTO_API_SECRET=...
 supabase secrets set STRIPE_SECRET_KEY=sk_live_...
 supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
 ```
@@ -121,25 +123,36 @@ Verify deployment in the Supabase Dashboard → Edge Functions.
 
 ---
 
-## Step 6 — Get an idphoto.ai API key
+## Step 6 — Get the background removal and ID photo API keys
+
+`ai-remove-bg` uses the **remove.bg** API, and `ai-id-photo` uses the **idphoto.ai** API.
+They are separate services with separate keys.
+
+**remove.bg (background removal):**
+
+1. Go to **https://www.remove.bg/api** and create an account
+2. Copy your API key (the free tier includes 50 full-resolution calls per month)
+3. Run:
+   ```
+   supabase secrets set REMOVEBG_API_KEY=your-key-here
+   ```
+
+**idphoto.ai (ID / passport photos):**
 
 1. Go to **https://www.idphoto.ai** and sign up for an API account
-2. Copy your API key from the dashboard
+2. Copy your API key and secret from the dashboard
 3. Run:
    ```
    supabase secrets set IDPHOTO_API_KEY=your-key-here
+   supabase secrets set IDPHOTO_API_SECRET=your-secret-here
    ```
 
-> **IMPORTANT**: Before deploying `ai-remove-bg` and `ai-id-photo`, check the current
-> idphoto.ai API documentation at https://www.idphoto.ai/api-docs to verify:
-> - The exact endpoint URL (the code uses `https://api.idphoto.ai/matting` for bg removal
->   and `https://api.idphoto.ai/idphoto` for ID photos — confirm these are current)
-> - The correct request parameter names
-> - The response format (base64 vs URL)
-> - The authentication header format (`x-api-key` header is assumed — verify this)
->
-> The Edge Function code is in `supabase/functions/ai-remove-bg/index.ts` and
-> `supabase/functions/ai-id-photo/index.ts`. Update as needed after checking the docs.
+> **IMPORTANT**: `ai-remove-bg` calls `https://api.remove.bg/v1.0/removebg` with the
+> `X-Api-Key` header and needs only `REMOVEBG_API_KEY`. Before deploying `ai-id-photo`,
+> check the current idphoto.ai documentation at https://www.idphoto.ai/api-docs to
+> verify the endpoint URL, request parameter names, response format (base64 vs URL),
+> and auth headers. The Edge Function code is in `supabase/functions/ai-remove-bg/index.ts`
+> and `supabase/functions/ai-id-photo/index.ts`.
 
 ---
 
@@ -193,7 +206,7 @@ Edge Functions → Schedule, or use the Supabase Management API.
 3. Upload a longer MP3 (> 60 s) → should see preview text + pay button
 4. Click pay → Stripe checkout → complete → redirected back → downloads appear
 
-### Test background removal (Phase 2 — requires idphoto.ai key)
+### Test background removal (Phase 2 — requires remove.bg key)
 1. Go to `/ai tools/background-remover/index.html`
 2. Upload a JPEG photo → should see low-res preview
 3. Click pay → Stripe checkout → complete → HD PNG download appears
@@ -206,7 +219,7 @@ Edge Functions → Schedule, or use the Supabase Management API.
 
 ### Security checks
 - Open browser DevTools → Network tab
-- Confirm `OPENAI_API_KEY`, `IDPHOTO_API_KEY`, `STRIPE_SECRET_KEY` never appear
+- Confirm `OPENAI_API_KEY`, `REMOVEBG_API_KEY`, `IDPHOTO_API_KEY`, `STRIPE_SECRET_KEY` never appear
   in any network response
 - Confirm full-quality files are not returned before payment
 
@@ -230,12 +243,13 @@ Amounts are in cents (USD).
 ```
 Browser page
   └─ POST multipart/form-data ──→ Supabase Edge Function
-                                      └─ OpenAI Whisper / idphoto.ai API
+                                      └─ OpenAI Whisper / remove.bg / idphoto.ai API
                                       └─ Stores results in Supabase Storage (private)
                                       └─ Creates ai_jobs row in DB
   ←── Returns: job_id + preview data
 
 Browser: shows preview
+
   └─ POST /ai-checkout ──→ Creates Stripe Checkout session (job_id in metadata)
   ←── Returns: checkout_url → redirect
 
