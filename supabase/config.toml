@@ -9,6 +9,9 @@ verify_jwt = false
 [functions.ai-id-photo]
 verify_jwt = false
 
+[functions.ai-pdf-summary]
+verify_jwt = false
+
 [functions.ai-checkout]
 verify_jwt = false
 

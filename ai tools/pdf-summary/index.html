@@ -344,6 +344,8 @@
     }
 
     .question-row {
+      border: 0;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -354,6 +356,40 @@
       margin-top: .5rem;
       color: #1e293b;
       line-height: 1.45;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: background .16s, transform .16s;
+    }
+
+    .question-row:hover {
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    .question-row strong {
+      flex: 0 0 auto;
+      transition: transform .16s;
+    }
+
+    .question-row[aria-expanded="true"] strong {
+      transform: rotate(90deg);
+    }
+
+    .question-answer {
+      display: none;
+      margin: .35rem 0 .75rem;
+      padding: .75rem .9rem;
+      border-left: 3px solid rgba(37, 99, 235, .42);
+      border-radius: 0 12px 12px 0;
+      background: rgba(255, 255, 255, .5);
+      color: #475569;
+      line-height: 1.65;
+      font-size: .92rem;
+    }
+
+    .question-answer.visible {
+      display: block;
     }
 
     .status {
@@ -599,6 +635,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="../../supabase-config.js"></script>
 <script src="../../auth.js"></script>
 <script src="../../tools-menu.js"></script>
 <script src="../../language-menu.js"></script>
@@ -607,6 +644,7 @@
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
   const MAX_EXTRACT_CHARS = 16000;
+  const SUPABASE_ANON_KEY = window.EVERYTHING_CONVERT_SUPABASE?.anonKey || '';
 
   const uploadZone = document.getElementById('uploadZone');
   const fileInput = document.getElementById('fileInput');
@@ -749,12 +787,28 @@
       <div class="summary-section-title">Important details</div>
       <ul class="summary-list">${details.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
       <div class="summary-section-title">Suggested questions</div>
-      ${questions.map(item => `<div class="question-row"><span>${escapeHtml(item)}</span><strong>&rarr;</strong></div>`).join('')}
+      ${questions.map((item, index) => `
+        <button class="question-row" type="button" aria-expanded="false" aria-controls="questionAnswer${index}">
+          <span>${escapeHtml(item)}</span><strong>&rarr;</strong>
+        </button>
+        <div id="questionAnswer${index}" class="question-answer">
+          Use this question as a reading prompt. Check the original PDF on the left for exact wording, dates, amounts, names, and other sensitive details before relying on the answer.
+        </div>
+      `).join('')}
     `;
     summaryEmpty.style.display = 'none';
     summaryCard.classList.add('visible');
     downloadSummaryBtn.disabled = false;
   }
+
+  summaryCard.addEventListener('click', event => {
+    const button = event.target.closest('.question-row');
+    if (!button || !summaryCard.contains(button)) return;
+    const answer = document.getElementById(button.getAttribute('aria-controls'));
+    const expanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!expanded));
+    if (answer) answer.classList.toggle('visible', !expanded);
+  });
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, char => ({
@@ -793,7 +847,13 @@
       const lang = new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('everythingConvertLanguage') || 'en';
       const response = await fetch(`${SUPABASE_FUNC_BASE}/ai-pdf-summary`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(SUPABASE_ANON_KEY ? {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          } : {}),
+        },
         body: JSON.stringify({
           file_name: selectedFile.name,
           text: extractedText,
