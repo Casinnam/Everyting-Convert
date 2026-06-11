@@ -23,6 +23,11 @@ OpenAI budget.
 
 ## Step 2 — Create Storage buckets
 
+> ✅ **Already done.** Both buckets (`ai-uploads`, `ai-results`) were created
+> in a previous session with their policies. Both are capped at **50 MB**
+> because the Supabase free plan does not allow a 100 MB per-file limit.
+> Keep this section as reference in case the project is ever recreated.
+
 In the Supabase Dashboard → Storage → **New bucket**:
 
 ### Bucket: `ai-uploads`
@@ -51,7 +56,7 @@ USING (bucket_id = 'ai-uploads');
 ### Bucket: `ai-results`
 - Name: `ai-results`
 - Public: **OFF**
-- File size limit: **100 MB**
+- File size limit: **50 MB** (free plan maximum; raise after upgrading the Supabase plan if needed)
 
 Add this policy:
 
