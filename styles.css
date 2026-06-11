@@ -2519,6 +2519,141 @@ nav {
     background: linear-gradient(135deg, rgba(239, 246, 255, 0.88), rgba(245, 243, 255, 0.88));
 }
 
+.pricing-page .pricing-section-heading {
+    max-width: 780px;
+    margin: 0 auto 1.35rem;
+    text-align: center;
+}
+
+.pricing-page .pricing-section-heading h2 {
+    color: var(--sub-text);
+    font-size: clamp(1.75rem, 3vw, 2.45rem);
+    line-height: 1.12;
+    letter-spacing: 0;
+    margin-bottom: 0.7rem;
+}
+
+.pricing-page .pricing-section-heading p {
+    color: var(--sub-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.pricing-page .compact-heading {
+    margin-bottom: 1rem;
+}
+
+.pricing-page .ai-pricing-section,
+.pricing-page .pricing-faq {
+    margin-top: clamp(2.4rem, 5vw, 4rem);
+}
+
+.pricing-page .ai-pricing-table {
+    overflow: hidden;
+    border: 1px solid var(--sub-line);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+}
+
+.pricing-page .ai-pricing-row {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1.25fr) minmax(11rem, 0.8fr) minmax(14rem, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.15rem;
+    color: var(--sub-text);
+    text-decoration: none;
+    border-top: 1px solid var(--sub-line);
+}
+
+.pricing-page .ai-pricing-row:first-child {
+    border-top: 0;
+}
+
+.pricing-page .ai-pricing-head {
+    color: #334155;
+    background: rgba(248, 250, 252, 0.95);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pricing-page a.ai-pricing-row {
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.pricing-page a.ai-pricing-row:hover {
+    background: rgba(239, 246, 255, 0.7);
+    transform: translateY(-1px);
+}
+
+.pricing-page .ai-pricing-row strong {
+    display: block;
+    color: var(--sub-text);
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.pricing-page .ai-pricing-row span {
+    display: block;
+    color: var(--sub-muted);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin-top: 0.18rem;
+}
+
+.pricing-page .included-ai-row {
+    background: rgba(236, 253, 245, 0.62);
+}
+
+.pricing-page .ai-pricing-disclaimer {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    width: min(840px, 100%);
+    margin: 1rem auto 0;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(14, 165, 233, 0.22);
+    border-radius: 16px;
+    background: rgba(240, 249, 255, 0.78);
+    color: var(--sub-muted);
+    line-height: 1.6;
+}
+
+.pricing-page .ai-pricing-disclaimer i {
+    color: var(--sub-primary);
+    margin-top: 0.18rem;
+}
+
+.pricing-page .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.pricing-page .faq-grid article {
+    padding: 1.15rem;
+    border: 1px solid var(--sub-line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 16px 44px rgba(15, 23, 42, 0.06);
+}
+
+.pricing-page .faq-grid h3 {
+    color: var(--sub-text);
+    font-size: 1rem;
+    line-height: 1.35;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-page .faq-grid p {
+    color: var(--sub-muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
+}
+
 .auth-page .main-container {
     align-items: center;
 }
@@ -2774,6 +2909,10 @@ nav {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .pricing-page .ai-pricing-row {
+        grid-template-columns: minmax(13rem, 1fr) minmax(10rem, 0.8fr) minmax(12rem, 1fr);
+    }
+
     .about-page .about-section,
     .about-page .about-feature-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2786,8 +2925,44 @@ nav {
     }
 
     .pricing-page .pricing-grid,
+    .pricing-page .faq-grid,
     .premium-subpage .footer-grid {
         grid-template-columns: 1fr;
+    }
+
+    .pricing-page .ai-pricing-table {
+        border-radius: 18px;
+    }
+
+    .pricing-page .ai-pricing-head {
+        display: none;
+    }
+
+    .pricing-page .ai-pricing-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .pricing-page .ai-pricing-row div:nth-child(2),
+    .pricing-page .ai-pricing-row div:nth-child(3) {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: 0.92rem;
+        line-height: 1.45;
+    }
+
+    .pricing-page .ai-pricing-row div:nth-child(2)::before {
+        content: "Preview";
+        color: var(--sub-muted);
+        font-weight: 800;
+    }
+
+    .pricing-page .ai-pricing-row div:nth-child(3)::before {
+        content: "Paid";
+        color: var(--sub-muted);
+        font-weight: 800;
     }
 
     .about-page .about-section,
