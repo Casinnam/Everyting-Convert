@@ -137,7 +137,11 @@ const PHOTO_SPECS: Record<string, { label: string; preset: string }> = {
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
+  try { return await handleRequest(req); }
+  catch (e) { console.error('[ai-id-photo]', e); return json({ error: 'Internal server error.' }, 500); }
+});
 
+async function handleRequest(req: Request): Promise<Response> {
   const idphotoKey = Deno.env.get('IDPHOTO_API_KEY');
   const idphotoSecret = Deno.env.get('IDPHOTO_API_SECRET');
   if (!idphotoKey || !idphotoSecret) return json({ error: 'ID photo service not configured.' }, 500);
@@ -199,14 +203,18 @@ Deno.serve(async (req: Request) => {
       return json({ error: `HD photo retrieval failed: ${err}` }, 502);
     }
 
-    const hdData = await hdRes.json() as { idphotoImageBase64?: string; idPhotoUrl?: string };
+    const hdData = await hdRes.json() as Record<string, unknown>;
+    // Field names use capital-P (idPhotoImageBase64); keep fallbacks for safety.
+    const hdB64 = (hdData.idPhotoImageBase64 ?? hdData.idPhotoPngImageBase64 ??
+      hdData.idphotoImageBase64) as string | undefined;
+    const hdUrl = (hdData.idPhotoUrl ?? hdData.idPhotoPngUrl) as string | undefined;
     let photoBytes: Uint8Array;
 
-    if (hdData.idphotoImageBase64) {
-      const b64 = hdData.idphotoImageBase64.replace(/^data:image\/\w+;base64,/, '');
+    if (hdB64) {
+      const b64 = hdB64.replace(/^data:image\/\w+;base64,/, '');
       photoBytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-    } else if (hdData.idPhotoUrl) {
-      photoBytes = new Uint8Array(await (await fetch(hdData.idPhotoUrl)).arrayBuffer());
+    } else if (hdUrl) {
+      photoBytes = new Uint8Array(await (await fetch(hdUrl)).arrayBuffer());
     } else {
       return json({ error: 'Unexpected response from ID photo service.' }, 502);
     }
@@ -259,22 +267,42 @@ Deno.serve(async (req: Request) => {
     return json({ error: `ID photo processing failed: ${errText}` }, 502);
   }
 
-  const apiData = await apiRes.json() as {
-    photoUuid?: string;
-    idphotoImageBase64?: string;
-    idPhotoUrl?: string;
-  };
+  const apiData = await apiRes.json() as Record<string, unknown>;
+  const photoUuid = apiData.photoUuid as string | undefined;
 
-  if (!apiData.photoUuid) {
+  // The API returns HTTP 200 even when the photo can't be processed; the reason
+  // is in the `issues` array. Map known issue codes to friendly messages.
+  const issues = (apiData.issues as string[] | undefined) ?? [];
+  const issueStr = issues.join(',');
+  if (issueStr.includes('FACE_NOT_FOUND')) {
+    return json({ error: 'No face detected. Please upload a clear, front-facing portrait photo.' }, 422);
+  }
+  if (issueStr.includes('MULTIPLE_FACE') || issueStr.includes('MULTI_FACE')) {
+    return json({ error: 'Multiple faces detected. Please upload a photo with a single person.' }, 422);
+  }
+  if (issueStr.includes('FACE_OCCLUSION') || issueStr.includes('FACE_ANGLE') || issueStr.includes('EYE')) {
+    return json({ error: 'Face not clearly visible. Use a front-facing photo with eyes open and face unobstructed.' }, 422);
+  }
+  if (issues.length > 0) {
+    return json({ error: `Photo does not meet ID requirements (${issueStr}). Please try a different photo.` }, 422);
+  }
+
+  if (!photoUuid) {
     return json({ error: 'Unexpected response from ID photo service.' }, 502);
   }
 
+  // Watermarked preview image. With outputFormat IMAGE_BASE64 the data is in
+  // idPhotoImageBase64; fall back to URL variants if a future response uses them.
+  const b64field = (apiData.idPhotoImageBase64 ?? apiData.idPhotoPngImageBase64 ??
+    apiData.idphotoImageBase64) as string | undefined;
+  const urlField = (apiData.idPhotoUrl ?? apiData.idPhotoPngUrl) as string | undefined;
+
   let previewBytes: Uint8Array;
-  if (apiData.idphotoImageBase64) {
-    const b64 = apiData.idphotoImageBase64.replace(/^data:image\/\w+;base64,/, '');
+  if (b64field) {
+    const b64 = b64field.replace(/^data:image\/\w+;base64,/, '');
     previewBytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-  } else if (apiData.idPhotoUrl) {
-    previewBytes = new Uint8Array(await (await fetch(apiData.idPhotoUrl)).arrayBuffer());
+  } else if (urlField) {
+    previewBytes = new Uint8Array(await (await fetch(urlField)).arrayBuffer());
   } else {
     return json({ error: 'No image data in response from ID photo service.' }, 502);
   }
@@ -297,4 +325,4 @@ Deno.serve(async (req: Request) => {
     spec_label: spec.label,
     needs_payment: true,
   });
-});
+}

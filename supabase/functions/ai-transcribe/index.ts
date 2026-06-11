@@ -65,7 +65,7 @@ async function dbUpdateJob(jobId: string, patch: Record<string, unknown>): Promi
 
 async function storageUpload(bucket: string, path: string, data: Uint8Array, type: string): Promise<void> {
   const { url, key } = supa();
-  await fetch(`${url}/storage/v1/object/${bucket}/${path}`, {
+  const res = await fetch(`${url}/storage/v1/object/${bucket}/${path}`, {
     method: 'POST',
     headers: {
       apikey: key, Authorization: `Bearer ${key}`,
@@ -73,6 +73,10 @@ async function storageUpload(bucket: string, path: string, data: Uint8Array, typ
     },
     body: data,
   });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Storage upload failed (${bucket}/${path}): ${err}`);
+  }
 }
 
 async function storageSignedUrl(bucket: string, path: string, expiresIn = 3600): Promise<string> {
@@ -108,6 +112,11 @@ function toSRT(segments: Array<{ start: number; end: number; text: string }>): s
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
+  try { return await handleRequest(req); }
+  catch (e) { console.error('[ai-transcribe]', e); return json({ error: 'Internal server error.' }, 500); }
+});
+
+async function handleRequest(req: Request): Promise<Response> {
 
   const openAIKey = Deno.env.get('OPENAI_API_KEY');
   if (!openAIKey) return json({ error: 'Transcription service not configured.' }, 500);
@@ -203,14 +212,22 @@ Deno.serve(async (req: Request) => {
 
   // Store full transcript and SRT in private storage
   const enc = new TextEncoder();
+  const BOM = new Uint8Array([0xEF, 0xBB, 0xBF]);
+  function utf8WithBom(text: string): Uint8Array {
+    const body = enc.encode(text);
+    const out = new Uint8Array(BOM.length + body.length);
+    out.set(BOM); out.set(body, BOM.length);
+    return out;
+  }
+
   const newJobId = await dbInsertJob('transcription', {
     preview_text: previewText,
     total_duration: totalDuration,
     segment_count: segments.length,
   });
 
-  await storageUpload('ai-results', `${newJobId}/full.txt`, enc.encode(result.text), 'text/plain');
-  await storageUpload('ai-results', `${newJobId}/subtitles.srt`, enc.encode(toSRT(segments)), 'text/plain');
+  await storageUpload('ai-results', `${newJobId}/full.txt`, utf8WithBom(result.text), 'text/plain; charset=utf-8');
+  await storageUpload('ai-results', `${newJobId}/subtitles.srt`, utf8WithBom(toSRT(segments)), 'text/plain; charset=utf-8');
 
   // If short file (≤ 60 s): free download — return signed URLs immediately
   if (!needsPayment) {
@@ -235,4 +252,4 @@ Deno.serve(async (req: Request) => {
     total_duration: totalDuration,
     needs_payment: true,
   });
-});
+}
