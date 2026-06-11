@@ -343,6 +343,30 @@
       text-transform: uppercase;
     }
 
+    .translate-highlight {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: .55rem;
+      max-width: 680px;
+      margin: 1rem auto 0;
+      padding: .75rem 1.1rem;
+      border-radius: 14px;
+      background: rgba(220, 38, 38, 0.08);
+      border: 1.5px solid rgba(220, 38, 38, 0.35);
+      color: #991b1b;
+      font-size: .92rem;
+      font-weight: 600;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .translate-highlight i {
+      flex-shrink: 0;
+      margin-top: .15rem;
+      font-size: 1.15rem;
+      color: #dc2626;
+    }
+
 
     .status {
       display: none;
@@ -486,25 +510,26 @@
 <header id="ec-header-inject"></header>
 
 <div class="page-hero">
-  <div class="badge">AI PDF TOOL</div>
+  <div class="badge" data-i18n="psBadge">AI PDF TOOL</div>
   <h1><span>PDF</span> Summary</h1>
-  <p>Upload a text-based PDF, keep the original document visible on the left, and create a simple AI outline on the right.</p>
+  <p data-i18n="psHeroDesc">Upload a text-based PDF, keep the original document visible on the left, and create a simple AI outline on the right.</p>
+  <p class="translate-highlight" data-i18n="psTranslateNote"><i class="fa-solid fa-language"></i> Select your language at the bottom of the page before generating a summary. The AI will summarize and translate any PDF into your chosen language automatically.</p>
 </div>
 
 <main>
   <section class="summary-workspace" aria-label="PDF summary workspace">
     <div class="panel">
       <div class="panel-head">
-        <h2>Original PDF</h2>
-        <span id="pageCountLabel">Upload a PDF to preview it here</span>
+        <h2 data-i18n="psOriginal">Original PDF</h2>
+        <span id="pageCountLabel" data-i18n="psUploadHint">Upload a PDF to preview it here</span>
       </div>
       <div class="preview-shell">
         <label id="uploadZone" class="upload-zone">
           <input id="fileInput" type="file" accept="application/pdf,.pdf">
           <span>
             <span class="upload-icon">PDF</span>
-            <h3>Drop your PDF file here</h3>
-            <p>or choose a file from your device. Text-based PDFs work best in this first version.</p>
+            <h3 data-i18n="psDrop">Drop your PDF file here</h3>
+            <p data-i18n="psDropDesc">or choose a file from your device. Text-based PDFs work best in this first version.</p>
           </span>
         </label>
         <iframe id="pdfFrame" class="pdf-frame" title="PDF preview"></iframe>
@@ -521,15 +546,15 @@
 
     <div class="panel">
       <div class="panel-head">
-        <h2>Simple Summary</h2>
-        <button id="downloadSummaryBtn" class="btn btn-soft" type="button" disabled>Download</button>
+        <h2 data-i18n="psSummaryTitle">Simple Summary</h2>
+        <button id="downloadSummaryBtn" class="btn btn-soft" type="button" disabled data-i18n="psDownload">Download</button>
       </div>
       <div class="summary-body">
         <div id="summaryEmpty" class="summary-empty">
           <div>
             <i>AI</i>
-            <h3>No summary yet</h3>
-            <p>Choose a text-based PDF and click Generate summary. The result will appear here as a short outline.</p>
+            <h3 data-i18n="psNoSummary">No summary yet</h3>
+            <p data-i18n="psNoSummaryDesc">Choose a text-based PDF and click Generate summary. The result will appear here as a short outline.</p>
           </div>
         </div>
         <article id="summaryCard" class="summary-card" aria-live="polite"></article>
@@ -540,43 +565,43 @@
 
   <section class="content-guide" aria-label="PDF Summary notes">
     <article class="guide-card">
-      <strong>Best for readable PDFs</strong>
-      <p>Invoices, reports, contracts, statements, and text-based PDFs can usually be summarized quickly.</p>
+      <strong data-i18n="psGuide1Title">Best for readable PDFs</strong>
+      <p data-i18n="psGuide1Desc">Invoices, reports, contracts, statements, and text-based PDFs can usually be summarized quickly.</p>
     </article>
     <article class="guide-card">
-      <strong>OCR comes later</strong>
-      <p>Scanned PDFs are image files inside a PDF wrapper. They need OCR before AI summary can understand the text.</p>
+      <strong data-i18n="psGuide2Title">OCR comes later</strong>
+      <p data-i18n="psGuide2Desc">Scanned PDFs are image files inside a PDF wrapper. They need OCR before AI summary can understand the text.</p>
     </article>
     <article class="guide-card">
-      <strong>Always verify details</strong>
-      <p>Use summaries as a reading aid. For legal, tax, medical, or financial decisions, check the original PDF.</p>
+      <strong data-i18n="psGuide3Title">Always verify details</strong>
+      <p data-i18n="psGuide3Desc">Use summaries as a reading aid. For legal, tax, medical, or financial decisions, check the original PDF.</p>
     </article>
   </section>
 
   <section class="summary-info" aria-label="How PDF Summary works">
     <article class="info-panel">
-      <h2>How to summarize a PDF</h2>
-      <p>PDF Summary is designed for documents that already contain selectable text. The page first reads the text in your browser, then sends only the extracted text to the summary service. Your original PDF is not uploaded to the AI model.</p>
+      <h2 data-i18n="psHowTitle">How to summarize a PDF</h2>
+      <p data-i18n="psHowDesc">PDF Summary is designed for documents that already contain selectable text. The page first reads the text in your browser, then sends only the extracted text to the summary service. Your original PDF is not uploaded to the AI model.</p>
       <ol>
-        <li>Upload a readable PDF such as a report, bill, statement, or contract draft.</li>
-        <li>Check the original document on the left side while the extracted text is prepared.</li>
-        <li>Generate a short outline with key points, important details, and follow-up questions.</li>
-        <li>Download the summary as a text file and compare sensitive details with the original PDF.</li>
+        <li data-i18n="psStep1">Upload a readable PDF such as a report, bill, statement, or contract draft.</li>
+        <li data-i18n="psStep2">Check the original document on the left side while the extracted text is prepared.</li>
+        <li data-i18n="psStep3">Generate a short outline with key points and important details.</li>
+        <li data-i18n="psStep4">Download the summary as a text file and compare sensitive details with the original PDF.</li>
       </ol>
     </article>
     <article class="info-panel">
-      <h2>PDF Summary FAQ</h2>
+      <h2 data-i18n="psFaqTitle">PDF Summary FAQ</h2>
       <div class="faq-item">
-        <strong>Can it summarize scanned PDFs?</strong>
-        <p>Not in this first version. Scanned documents need OCR before the text can be summarized. Smart OCR can be added later as a separate AI tool.</p>
+        <strong data-i18n="psFaq1Q">Can it summarize scanned PDFs?</strong>
+        <p data-i18n="psFaq1A">Not in this first version. Scanned documents need OCR before the text can be summarized. Smart OCR can be added later as a separate AI tool.</p>
       </div>
       <div class="faq-item">
-        <strong>Does this replace legal, tax, or medical advice?</strong>
-        <p>No. The summary is a reading helper. Always confirm names, dates, amounts, account numbers, deadlines, and official wording in the original document.</p>
+        <strong data-i18n="psFaq2Q">Does this replace legal, tax, or medical advice?</strong>
+        <p data-i18n="psFaq2A">No. The summary is a reading helper. Always confirm names, dates, amounts, account numbers, deadlines, and official wording in the original document.</p>
       </div>
       <div class="faq-item">
-        <strong>Why does the result look like an outline?</strong>
-        <p>An outline is easier to scan than a long paragraph. It helps you quickly see the main topic, key details, and questions worth asking next.</p>
+        <strong data-i18n="psFaq3Q">Why does the result look like an outline?</strong>
+        <p data-i18n="psFaq3A">An outline is easier to scan than a long paragraph. It helps you quickly see the main topic, key details, and questions worth asking next.</p>
       </div>
     </article>
   </section>
