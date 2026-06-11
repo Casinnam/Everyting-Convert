@@ -26,8 +26,11 @@ assert(
 );
 
 assert(
-  checkoutSource.includes('STRIPE_PRO_MONTHLY_PRICE_ID in Cloudflare and redeploy'),
-  'Checkout should explain missing price configuration clearly.',
+  checkoutSource.includes('in Cloudflare and redeploy') &&
+    checkoutSource.includes('STRIPE_PRO_MONTHLY_PRICE_ID') &&
+    checkoutSource.includes('STRIPE_PRO_YEARLY_PRICE_ID') &&
+    checkoutSource.includes("body.plan === 'pro_yearly'"),
+  'Checkout should explain missing price configuration clearly and support monthly and yearly plans.',
 );
 
 assert(

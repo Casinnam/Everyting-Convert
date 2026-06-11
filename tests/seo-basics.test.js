@@ -45,7 +45,7 @@ assert(
 );
 
 assert(
-  pricing.includes('Choose EverythingConvert plans') &&
+  pricing.includes('Free unlimited file conversions') &&
     pricing.includes('<meta property="og:title" content="Pricing - EverythingConvert">'),
   'Pricing page should include a search description and Open Graph title.',
 );

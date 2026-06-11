@@ -44,8 +44,16 @@ async function getSupabaseUser(request, env) {
   return { user: await response.json() };
 }
 
-async function createStripeCheckoutSession({ env, request, user }) {
-  const priceId = String(env.STRIPE_PRO_MONTHLY_PRICE_ID || '').trim();
+async function readRequestedPlan(request) {
+  try {
+    const body = await request.json();
+    return body && body.plan === 'pro_yearly' ? 'pro_yearly' : 'pro_monthly';
+  } catch (error) {
+    return 'pro_monthly';
+  }
+}
+
+async function createStripeCheckoutSession({ env, request, user, priceId }) {
   const origin = siteOrigin(request, env);
   const successUrl = `${origin}/payment-success.html?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/pricing.html?stripe=cancel`;
@@ -99,7 +107,6 @@ export async function onRequestPost(context) {
   const env = context.env || {};
 
   const stripeSecretKey = String(env.STRIPE_SECRET_KEY || '').trim();
-  const stripePriceId = String(env.STRIPE_PRO_MONTHLY_PRICE_ID || '').trim();
 
   if (!stripeSecretKey) {
     return jsonResponse({ error: 'Stripe is not configured yet.' }, 500);
@@ -109,12 +116,16 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: 'Stripe secret key is invalid. It should start with sk_test_ or sk_live_.' }, 500);
   }
 
+  const plan = await readRequestedPlan(context.request);
+  const priceEnvName = plan === 'pro_yearly' ? 'STRIPE_PRO_YEARLY_PRICE_ID' : 'STRIPE_PRO_MONTHLY_PRICE_ID';
+  const stripePriceId = String(env[priceEnvName] || '').trim();
+
   if (!stripePriceId) {
-    return jsonResponse({ error: 'Stripe Pro monthly price ID is not configured. Add STRIPE_PRO_MONTHLY_PRICE_ID in Cloudflare and redeploy.' }, 500);
+    return jsonResponse({ error: `Stripe ${plan === 'pro_yearly' ? 'Pro yearly' : 'Pro monthly'} price ID is not configured. Add ${priceEnvName} in Cloudflare and redeploy.` }, 500);
   }
 
   if (!stripePriceId.startsWith('price_')) {
-    return jsonResponse({ error: 'Stripe Pro monthly price ID is invalid. It should start with price_.' }, 500);
+    return jsonResponse({ error: `Stripe ${plan === 'pro_yearly' ? 'Pro yearly' : 'Pro monthly'} price ID is invalid. It should start with price_.` }, 500);
   }
 
   const { user, error, status } = await getSupabaseUser(context.request, env);
@@ -122,7 +133,7 @@ export async function onRequestPost(context) {
     return jsonResponse({ error }, status);
   }
 
-  const checkout = await createStripeCheckoutSession({ env, request: context.request, user });
+  const checkout = await createStripeCheckoutSession({ env, request: context.request, user, priceId: stripePriceId });
   if (checkout.error) {
     return jsonResponse({ error: checkout.error }, checkout.status || 500);
   }

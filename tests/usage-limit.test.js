@@ -113,9 +113,9 @@ assert(
 
 assert(
   pricing.includes('Unlimited standard conversions') &&
-    pricing.includes('Unlimited conversions') &&
+    pricing.includes('Unlimited AI PDF Summary') &&
     pricing.includes('<a class="plan-button secondary-plan" href="auth.html">Create free account</a>'),
-  'Pricing page should explain unlimited free conversions, Pro plan, and send free users to auth.',
+  'Pricing page should explain unlimited free conversions, the real Pro benefits, and send free users to auth.',
 );
 
 {

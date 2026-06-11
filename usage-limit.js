@@ -314,8 +314,8 @@
     const limit = usage.limit || DEFAULT_LIMIT;
     const isGuestLimit = usage.accountType === 'guest';
     const message = isGuestLimit
-      ? 'Create a free account for 20 total conversions, or upgrade to Pro for unlimited conversions, enhanced table detection, and larger-file workflows.'
-      : 'Upgrade to Pro to keep converting without limits, use enhanced table detection, and unlock larger-file workflows.';
+      ? 'Create a free account for 20 total conversions, or upgrade to Pro for unlimited conversions, an ad-free workspace, and unlimited AI PDF Summary.'
+      : 'Upgrade to Pro to keep converting without limits, remove ads, and use AI PDF Summary without daily caps.';
     const accountLabel = isGuestLimit ? 'Log in or sign up' : 'Account';
 
     const backdrop = document.createElement('div');

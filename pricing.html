@@ -9,29 +9,149 @@
     gtag('js', new Date());
     gtag('config', 'G-MWPYMT3Q6H');
   </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7281685131923147"
-     crossorigin="anonymous"></script>
+<script src="ads.js?v=ads-20260611a"></script>
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - EverythingConvert</title>
     <!-- SEO:START -->
-    <meta name="description" content="Choose EverythingConvert plans for free conversions, Pro unlimited conversions, saved history, enhanced PDF table detection, and larger file workflows.">
+    <meta name="description" content="Free unlimited file conversions, Pro for an ad-free workspace with unlimited AI PDF Summary, and one-time AI tools from $1.99.">
     <link rel="canonical" href="https://www.everythingconvert.com/pricing.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="EverythingConvert">
     <meta property="og:title" content="Pricing - EverythingConvert">
-    <meta property="og:description" content="Choose EverythingConvert plans for free conversions, Pro unlimited conversions, saved history, enhanced PDF table detection, and larger file workflows.">
+    <meta property="og:description" content="Free unlimited file conversions, Pro for an ad-free workspace with unlimited AI PDF Summary, and one-time AI tools from $1.99.">
     <meta property="og:url" content="https://www.everythingconvert.com/pricing.html">
     <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Pricing - EverythingConvert">
-    <meta name="twitter:description" content="Choose EverythingConvert plans for free conversions, Pro unlimited conversions, saved history, enhanced PDF table detection, and larger file workflows.">
+    <meta name="twitter:description" content="Free unlimited file conversions, Pro for an ad-free workspace with unlimited AI PDF Summary, and one-time AI tools from $1.99.">
     <!-- SEO:END -->
     <link rel="stylesheet" href="styles.css?v=ui-20260603a">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .billing-toggle-row {
+            display: flex;
+            justify-content: center;
+            margin: 0 0 1.5rem;
+        }
+
+        .billing-toggle {
+            display: inline-flex;
+            gap: .25rem;
+            padding: .3rem;
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .9);
+            box-shadow: 0 10px 26px rgba(15, 23, 42, .06);
+        }
+
+        .billing-option {
+            border: 0;
+            border-radius: 999px;
+            padding: .6rem 1.3rem;
+            background: transparent;
+            color: #475569;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+        }
+
+        .billing-option.active {
+            color: #fff;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            box-shadow: 0 10px 24px rgba(37, 99, 235, .25);
+        }
+
+        .save-chip {
+            font-size: .72rem;
+            font-weight: 900;
+            padding: .18rem .5rem;
+            border-radius: 999px;
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .billing-option.active .save-chip {
+            color: #fff;
+            background: rgba(255, 255, 255, .22);
+        }
+
+        .team-note {
+            margin: 1.5rem auto 0;
+            text-align: center;
+            color: #64748b;
+            font-size: .95rem;
+        }
+
+        .team-note a {
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        .plan-compare {
+            margin-top: 3rem;
+        }
+
+        .compare-table {
+            max-width: 860px;
+            margin: 1.5rem auto 0;
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .92);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, .07);
+            overflow: hidden;
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr 1fr;
+            align-items: center;
+            gap: 1rem;
+            padding: .95rem 1.25rem;
+            border-top: 1px solid rgba(226, 232, 240, .8);
+            font-size: .95rem;
+        }
+
+        .compare-row:first-child {
+            border-top: 0;
+            background: rgba(248, 250, 252, .9);
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .compare-row > div:first-child {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .compare-row > div:not(:first-child) {
+            color: #475569;
+            text-align: center;
+        }
+
+        .compare-row .compare-yes {
+            color: #16794d;
+            font-weight: 800;
+        }
+
+        .compare-row .compare-muted {
+            color: #94a3b8;
+        }
+
+        @media (max-width: 640px) {
+            .compare-row {
+                grid-template-columns: 1.1fr .9fr .9fr;
+                font-size: .84rem;
+                padding: .8rem .9rem;
+            }
+        }
+    </style>
 </head>
 <body class="premium-subpage pricing-page">
     <div class="background-elements">
@@ -59,9 +179,16 @@
     <main class="pricing-main">
         <section class="pricing-hero">
             <div class="subpage-kicker"><i class="fa-solid fa-bolt"></i> Convert more for less</div>
-            <h1>Simple plans for faster file work.</h1>
-            <p>All standard file conversions are free and unlimited. Upgrade to Pro for no ads, batch processing, larger file limits, saved conversion history, and priority access to new tools.</p>
+            <h1>Free conversions, <span>Pro comfort</span>, and AI when you need it.</h1>
+            <p>All standard file conversions stay free and unlimited. Upgrade to Pro for an ad-free workspace with unlimited AI PDF Summary, or use selected AI tools as one-time purchases when you need full-quality results.</p>
         </section>
+
+        <div class="billing-toggle-row">
+            <div class="billing-toggle" role="group" aria-label="Billing period">
+                <button type="button" class="billing-option active" id="billingMonthly" data-billing="monthly">Monthly</button>
+                <button type="button" class="billing-option" id="billingYearly" data-billing="yearly">Yearly <span class="save-chip">Save 42%</span></button>
+            </div>
+        </div>
 
         <section class="pricing-grid" aria-label="EverythingConvert pricing plans">
             <article class="pricing-card">
@@ -69,14 +196,14 @@
                 <div>
                     <h2>Free</h2>
                     <p class="price">$0</p>
-                    <p class="price-note">Try the tools first</p>
+                    <p class="price-note">No account needed for conversions</p>
                 </div>
                 <a class="plan-button secondary-plan" href="auth.html">Create free account</a>
                 <ul>
                     <li><i class="fa-regular fa-circle-check"></i>Unlimited standard conversions</li>
                     <li><i class="fa-regular fa-circle-check"></i>PDF, image, video, and data tools</li>
-                    <li><i class="fa-regular fa-circle-check"></i>AI PDF Summary — 10 free per day</li>
-                    <li><i class="fa-regular fa-circle-check"></i>All browser-based tools</li>
+                    <li><i class="fa-regular fa-circle-check"></i>AI PDF Summary — 10 free per day with an account</li>
+                    <li><i class="fa-regular fa-circle-check"></i>AI tool previews before payment</li>
                     <li><i class="fa-regular fa-circle-check"></i>Ad-supported</li>
                 </ul>
             </article>
@@ -86,55 +213,156 @@
                 <div class="plan-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
                 <div>
                     <h2>Pro</h2>
-                    <p class="price">$6.99<span>/month</span></p>
-                    <p class="price-note">Cancel any time</p>
+                    <p class="price" id="proPrice">$6.99<span>/month</span></p>
+                    <p class="price-note" id="proPriceNote">Cancel any time</p>
                 </div>
                 <button class="plan-button" type="button" id="proCheckoutButton" data-stripe-checkout>
                     <i class="fa-solid fa-lock-open"></i>
                     <span>Upgrade to Pro</span>
                 </button>
                 <ul>
-                    <li><i class="fa-regular fa-circle-check"></i>Unlimited conversions</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Everything in Free, plus:</li>
                     <li><i class="fa-regular fa-circle-check"></i>Unlimited AI PDF Summary</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Enhanced PDF table detection</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Larger file workflows</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Pro conversion history</li>
                     <li><i class="fa-regular fa-circle-check"></i>No ads</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Priority feature access</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Pro conversion history (My Conversions)</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Priority access to new features</li>
                 </ul>
             </article>
 
             <article class="pricing-card">
-                <div class="plan-icon"><i class="fa-regular fa-calendar-check"></i></div>
+                <div class="plan-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                 <div>
-                    <h2>Yearly Pro</h2>
-                    <p class="price">$59<span>/year</span></p>
-                    <p class="price-note">About $4.92 per month</p>
+                    <h2>AI Pay-as-you-go</h2>
+                    <p class="price">$1.99<span>+ /result</span></p>
+                    <p class="price-note">No subscription needed</p>
                 </div>
-                <a class="plan-button secondary-plan" href="contact.html">Ask about yearly</a>
+                <a class="plan-button secondary-plan" href="#aiPricingTitle">See AI tool pricing</a>
                 <ul>
-                    <li><i class="fa-regular fa-circle-check"></i>Everything in Pro</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Lower monthly cost</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Saved conversion activity</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Best for regular users</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Background Remover — $1.99</li>
+                    <li><i class="fa-regular fa-circle-check"></i>AI Transcription — $2.99</li>
+                    <li><i class="fa-regular fa-circle-check"></i>ID / Passport Photo — $2.99</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Free preview before every payment</li>
                 </ul>
             </article>
+        </section>
 
-            <article class="pricing-card">
-                <div class="plan-icon"><i class="fa-solid fa-code"></i></div>
-                <div>
-                    <h2>Business</h2>
-                    <p class="price">$14.99<span>/month</span></p>
-                    <p class="price-note">For heavier file work</p>
+        <p class="team-note">Need team features or higher volumes? <a href="contact.html">Contact us</a> — we are shaping a Business plan with early users.</p>
+
+        <section class="plan-compare" aria-labelledby="planCompareTitle">
+            <div class="pricing-section-heading compact-heading">
+                <div class="subpage-kicker"><i class="fa-solid fa-table-list"></i> Compare plans</div>
+                <h2 id="planCompareTitle">Free vs Pro at a glance.</h2>
+            </div>
+            <div class="compare-table" role="table" aria-label="Free and Pro plan comparison">
+                <div class="compare-row" role="row">
+                    <div role="columnheader">Feature</div>
+                    <div role="columnheader">Free</div>
+                    <div role="columnheader">Pro</div>
                 </div>
-                <a class="plan-button secondary-plan" href="contact.html">Contact us</a>
-                <ul>
-                    <li><i class="fa-regular fa-circle-check"></i>Everything in Pro</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Higher file-size target</li>
-                    <li><i class="fa-regular fa-circle-check"></i>For teams and heavier workflows</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Priority support option</li>
-                </ul>
-            </article>
+                <div class="compare-row" role="row">
+                    <div role="cell">Standard conversions</div>
+                    <div role="cell" class="compare-yes">Unlimited</div>
+                    <div role="cell" class="compare-yes">Unlimited</div>
+                </div>
+                <div class="compare-row" role="row">
+                    <div role="cell">AI PDF Summary</div>
+                    <div role="cell">3/day guests · 10/day accounts</div>
+                    <div role="cell" class="compare-yes">Unlimited</div>
+                </div>
+                <div class="compare-row" role="row">
+                    <div role="cell">Ads</div>
+                    <div role="cell">Shown</div>
+                    <div role="cell" class="compare-yes">Removed</div>
+                </div>
+                <div class="compare-row" role="row">
+                    <div role="cell">Conversion history</div>
+                    <div role="cell" class="compare-muted">—</div>
+                    <div role="cell" class="compare-yes">Included</div>
+                </div>
+                <div class="compare-row" role="row">
+                    <div role="cell">One-time AI tools (transcription, images)</div>
+                    <div role="cell">Pay per result</div>
+                    <div role="cell">Pay per result</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ai-pricing-section" aria-labelledby="aiPricingTitle">
+            <div class="pricing-section-heading">
+                <div class="subpage-kicker"><i class="fa-solid fa-wand-magic-sparkles"></i> AI tools</div>
+                <h2 id="aiPricingTitle">AI tools, paid only when you need the final result.</h2>
+                <p>Preview first, then pay only for full transcripts, HD images, or print-ready photo files. This keeps standard conversion tools free while covering higher AI processing costs.</p>
+            </div>
+
+            <div class="ai-pricing-table" role="table" aria-label="One-time AI tool pricing">
+                <div class="ai-pricing-row ai-pricing-head" role="row">
+                    <div role="columnheader">AI tool</div>
+                    <div role="columnheader">Free preview</div>
+                    <div role="columnheader">Paid result</div>
+                </div>
+                <a class="ai-pricing-row" role="row" href="ai tools/transcription/index.html">
+                    <div role="cell">
+                        <strong>AI Transcription</strong>
+                        <span>Audio and video speech-to-text</span>
+                    </div>
+                    <div role="cell">First 60 seconds</div>
+                    <div role="cell">$2.99 full transcript + SRT</div>
+                </a>
+                <a class="ai-pricing-row" role="row" href="ai tools/background-remover/index.html">
+                    <div role="cell">
+                        <strong>Background Remover</strong>
+                        <span>Cut out image backgrounds</span>
+                    </div>
+                    <div role="cell">Low-res preview</div>
+                    <div role="cell">$1.99 HD transparent PNG</div>
+                </a>
+                <a class="ai-pricing-row" role="row" href="ai tools/id-photo/index.html">
+                    <div role="cell">
+                        <strong>ID / Passport Photo</strong>
+                        <span>Document photo and print sheet</span>
+                    </div>
+                    <div role="cell">Low-res preview</div>
+                    <div role="cell">$2.99 HD photo + print sheet</div>
+                </a>
+                <a class="ai-pricing-row included-ai-row" role="row" href="ai tools/pdf-summary/index.html">
+                    <div role="cell">
+                        <strong>AI PDF Summary</strong>
+                        <span>Summaries for long PDF documents</span>
+                    </div>
+                    <div role="cell">Guest/account daily limit</div>
+                    <div role="cell">Included unlimited in Pro</div>
+                </a>
+            </div>
+
+            <div class="ai-pricing-disclaimer">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>Pro includes unlimited AI PDF Summary; some AI tools remain one-time purchases because they use separate high-cost processing for full-quality output.</p>
+            </div>
+        </section>
+
+        <section class="pricing-faq" aria-labelledby="pricingFaqTitle">
+            <div class="pricing-section-heading compact-heading">
+                <div class="subpage-kicker"><i class="fa-regular fa-circle-question"></i> Billing clarity</div>
+                <h2 id="pricingFaqTitle">What each price covers.</h2>
+            </div>
+            <div class="faq-grid">
+                <article>
+                    <h3>Are standard conversions free?</h3>
+                    <p>Yes. PDF, image, media, ebook, data, and developer conversions remain free and unlimited for normal use.</p>
+                </article>
+                <article>
+                    <h3>Does Pro include every AI tool?</h3>
+                    <p>No. Pro includes unlimited AI PDF Summary and Pro workspace benefits. Full-quality results from selected AI tools are priced separately.</p>
+                </article>
+                <article>
+                    <h3>Do I pay before seeing anything?</h3>
+                    <p>No. The one-time AI tools provide a preview first, then Stripe checkout unlocks the final result.</p>
+                </article>
+                <article>
+                    <h3>Monthly or yearly Pro — what is the difference?</h3>
+                    <p>Both unlock the same Pro benefits. Yearly Pro costs $49 — about $4.08 per month, saving roughly 42% compared to paying monthly.</p>
+                </article>
+            </div>
         </section>
 
         <section class="pricing-note">
@@ -221,6 +449,30 @@
             const status = document.getElementById('billingStatus');
             if (!button || !status) return;
 
+            const proPrice = document.getElementById('proPrice');
+            const proPriceNote = document.getElementById('proPriceNote');
+            const billingButtons = document.querySelectorAll('.billing-option');
+            let billing = 'monthly';
+
+            function applyBilling(next) {
+                billing = next === 'yearly' ? 'yearly' : 'monthly';
+                billingButtons.forEach((option) => {
+                    option.classList.toggle('active', option.dataset.billing === billing);
+                });
+                if (proPrice) {
+                    proPrice.innerHTML = billing === 'yearly' ? '$49<span>/year</span>' : '$6.99<span>/month</span>';
+                }
+                if (proPriceNote) {
+                    proPriceNote.textContent = billing === 'yearly'
+                        ? 'About $4.08 per month — save 42%'
+                        : 'Cancel any time';
+                }
+            }
+
+            billingButtons.forEach((option) => {
+                option.addEventListener('click', () => applyBilling(option.dataset.billing));
+            });
+
             function setButtonLoading(isLoading) {
                 button.disabled = isLoading;
                 const label = button.querySelector('span');
@@ -302,7 +554,7 @@
 
                 if (!session || !session.access_token) {
                     setStatus('Redirecting to login before opening Stripe...');
-                    window.location.href = `auth.html?next=${encodeURIComponent('pricing.html?checkout=pro')}`;
+                    window.location.href = `auth.html?next=${encodeURIComponent('pricing.html?checkout=pro&billing=' + billing)}`;
                     return;
                 }
 
@@ -314,7 +566,7 @@
                             Authorization: `Bearer ${session.access_token}`,
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ plan: 'pro_monthly' }),
+                        body: JSON.stringify({ plan: billing === 'yearly' ? 'pro_yearly' : 'pro_monthly' }),
                     });
                     const payload = await response.json();
 
@@ -333,6 +585,10 @@
             }
 
             button.addEventListener('click', startCheckout);
+
+            if (params.get('billing') === 'yearly') {
+                applyBilling('yearly');
+            }
 
             if (params.get('checkout') === 'pro') {
                 startCheckout();

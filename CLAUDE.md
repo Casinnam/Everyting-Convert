@@ -90,6 +90,8 @@ Required for backend functions:
 | `SUPABASE_ANON_KEY` | Public anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Admin key (backend only) |
 | `STRIPE_SECRET_KEY` | Stripe API key |
+| `STRIPE_PRO_MONTHLY_PRICE_ID` | Stripe price for Pro monthly ($6.99/mo) |
+| `STRIPE_PRO_YEARLY_PRICE_ID` | Stripe price for Pro yearly ($49/yr) |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
 | `USAGE_IDENTITY_SALT` | Salt for hashing user IPs |
 
