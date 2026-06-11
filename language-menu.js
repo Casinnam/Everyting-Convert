@@ -222,6 +222,25 @@
     }
   }
 
+  // First-visit fallback: use the browser/OS language when it matches a
+  // supported language. Not persisted on purpose — the visitor keeps
+  // following their device language until they pick one manually, and a
+  // manual pick (saveLanguage) always wins on later visits.
+  function getBrowserLanguage() {
+    try {
+      const candidates = Array.isArray(navigator.languages) && navigator.languages.length
+        ? navigator.languages
+        : [navigator.language];
+      for (const candidate of candidates) {
+        const code = String(candidate || '').slice(0, 2).toLowerCase();
+        if (supported(code)) return code;
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  }
+
   function getSavedLanguage() {
     const urlLanguage = getUrlLanguage();
     if (urlLanguage) {
@@ -229,10 +248,12 @@
       return urlLanguage;
     }
     try {
-      return localStorage.getItem('everything_convert_language') || 'en';
+      const saved = localStorage.getItem('everything_convert_language');
+      if (saved) return saved;
     } catch (error) {
       return 'en';
     }
+    return getBrowserLanguage() || 'en';
   }
 
   function withLanguageParam(href, language) {
