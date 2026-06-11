@@ -434,6 +434,9 @@
               <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>QR Code Generator</span></a>
               <a href="${prefix}json to csv/json-to-csv.html"><span class="tool-emoji dev">{ }</span><span>JSON to CSV</span></a>
               <a href="${prefix}csv converter/csv-converter.html"><span class="tool-emoji excel">CSV</span><span>CSV Converter</span></a>
+              <a href="${prefix}json formatter/json-formatter.html"><span class="tool-emoji dev">JSON</span><span>JSON Formatter</span></a>
+              <a href="${prefix}base64 encode decode/base64-encode-decode.html"><span class="tool-emoji dev">64</span><span>Base64 Encode / Decode</span></a>
+              <a href="${prefix}url encoder decoder/url-encoder-decoder.html"><span class="tool-emoji dev">URL</span><span>URL Encoder / Decoder</span></a>
               <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">AI</span><span>Audio to Text</span></a>
               <a href="${prefix}contact.html"><span class="tool-emoji lock">&#9993;</span><span>Contact</span></a>
             </div>
@@ -501,9 +504,9 @@
             </div>
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-solid fa-code"></i> Developer Utilities</div>
-              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji dev">JSON</span><span>JSON Formatter</span></a>
-              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji dev">64</span><span>Base64 Encode / Decode</span></a>
-              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji dev">URL</span><span>URL Encoder / Decoder</span></a>
+              <a href="${prefix}json formatter/json-formatter.html"><span class="tool-emoji dev">JSON</span><span>JSON Formatter</span></a>
+              <a href="${prefix}base64 encode decode/base64-encode-decode.html"><span class="tool-emoji dev">64</span><span>Base64 Encode / Decode</span></a>
+              <a href="${prefix}url encoder decoder/url-encoder-decoder.html"><span class="tool-emoji dev">URL</span><span>URL Encoder / Decoder</span></a>
             </div>
           </div>
         </div>
