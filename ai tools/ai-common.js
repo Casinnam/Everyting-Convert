@@ -180,23 +180,4 @@
     applyAll(language);
   });
 
-  document.addEventListener('click', (event) => {
-    const toggle = event.target.closest('.site-footer .language-toggle');
-    if (toggle) {
-      const menu = toggle.closest('.language-menu');
-      menu?.classList.toggle('open');
-      return;
-    }
-    const button = event.target.closest('.site-footer [data-language]');
-    if (button) {
-      try {
-        localStorage.setItem('everything_convert_language', button.dataset.language);
-      } catch (error) {
-        // Ignore storage failures.
-      }
-      window.dispatchEvent(new CustomEvent('everything-language-change', { detail: { language: button.dataset.language } }));
-      applyAll(button.dataset.language);
-      button.closest('.language-menu')?.classList.remove('open');
-    }
-  });
 })();

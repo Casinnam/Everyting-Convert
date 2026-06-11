@@ -333,6 +333,16 @@
     if (newsletter) newsletter.placeholder = text('footerEmail', language);
     const copyright = footer.querySelector('.footer-bottom p');
     if (copyright) copyright.textContent = text('copyright', language);
+
+    // AI pages: translate footer-legal-row links (About, Donate, Privacy, Terms, Security, Contact)
+    const legalLinks = footer.querySelectorAll('.footer-legal-row a');
+    if (legalLinks.length) {
+      const legalKeys = ['aboutUs', 'donate', 'privacy', 'terms', 'security', 'contact'];
+      legalLinks.forEach((link, index) => {
+        const key = legalKeys[index];
+        if (key && t[key]) link.textContent = text(key, language);
+      });
+    }
   }
 
   function applyAuth(language) {
