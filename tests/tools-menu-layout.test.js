@@ -47,6 +47,9 @@ assert(
     menu.includes('PDF to EPUB</span>') &&
     menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Media</button>') &&
     menu.includes('Image Tools') &&
+    menu.includes('Image Compressor</span>') &&
+    menu.includes('Social Media Resizer</span>') &&
+    menu.includes('Favicon Generator</span>') &&
     menu.includes('Audio Converter</span>') &&
     menu.includes('<button class="tools-toggle" type="button" aria-expanded="false">Developer</button>') &&
     menu.includes('QR Code</span>') &&
@@ -63,13 +66,13 @@ assert(
 
 assert(
   !menu.includes('Image Resizer</span></a>\n            </div>\n            </div>') &&
-    menu.includes('Image Resizer</span></a>\n            </div>\n            <div class="tools-group">'),
-  'Media dropdown should keep image and video groups as sibling columns, not nested or prematurely closed.',
+    menu.includes('Favicon Generator</span></a>\n            </div>\n            <div class="tools-group">'),
+  'Media dropdown should keep the expanded image tool list and video group as sibling columns, not nested or prematurely closed.',
 );
 
 assert(
-  mediaPage.includes('tools-menu.js?v=nav-20260611dev') &&
-    pdfWordPage.includes('tools-menu.js?v=nav-20260611dev'),
+  mediaPage.includes('tools-menu.js?v=nav-20260611img') &&
+    pdfWordPage.includes('tools-menu.js?v=nav-20260611img'),
   'Tool pages should use the latest tools menu cache-busting version.',
 );
 

@@ -419,6 +419,10 @@
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=png-svg"><span class="tool-emoji image">SVG</span><span>PNG to SVG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=svg"><span class="tool-emoji image">&#9671;</span><span>SVG Converter</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=compress"><span class="tool-emoji image">&#128230;</span><span>Image Compressor</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=resize"><span class="tool-emoji image">&#8596;</span><span>Image Resizer</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=social"><span class="tool-emoji image">#</span><span>Social Media Resizer</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=favicon"><span class="tool-emoji image">&#11088;</span><span>Favicon Generator</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>
@@ -481,8 +485,12 @@
               <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
-              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji image">&#128247;</span><span>Image Compressor</span></a>
-              <a class="tool-disabled" href="${prefix}index.html#tool-browser"><span class="tool-emoji image">&#8596;</span><span>Image Resizer</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=compress"><span class="tool-emoji image">&#128230;</span><span>Image Compressor</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=resize"><span class="tool-emoji image">&#8596;</span><span>Image Resizer</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=social"><span class="tool-emoji image">#</span><span>Social Media Resizer</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=crop"><span class="tool-emoji image">&#9986;</span><span>Image Cropper</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=metadata"><span class="tool-emoji image">&#128737;</span><span>Metadata Remover</span></a>
+              <a href="${prefix}image tools/image-tools.html?mode=favicon"><span class="tool-emoji image">&#11088;</span><span>Favicon Generator</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-regular fa-circle-play"></i> Video & Audio</div>

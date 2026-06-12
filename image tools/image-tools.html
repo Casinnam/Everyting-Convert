@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MWPYMT3Q6H"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-MWPYMT3Q6H');
+  </script>
+  <script src="../ads.js?v=ads-20260611a"></script>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="usage-limit" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Tools - EverythingConvert</title>
+  <meta name="description" content="Compress, resize, crop, clean metadata, create favicons, and prepare social media images online in your browser.">
+  <link rel="canonical" href="https://www.everythingconvert.com/image%20tools/image-tools.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EverythingConvert">
+  <meta property="og:title" content="Image Tools - EverythingConvert">
+  <meta property="og:description" content="Compress, resize, crop, clean metadata, create favicons, and prepare social media images online in your browser.">
+  <meta property="og:url" content="https://www.everythingconvert.com/image%20tools/image-tools.html">
+  <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Image Tools - EverythingConvert">
+  <meta name="twitter:description" content="Browser-based image compression, resizing, cropping, metadata removal, favicon generation, and social media resizing.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../tool-page-redesign.css?v=20260602a">
+  <style>
+    body.ec-tool-page {
+      background:
+        radial-gradient(circle at 12% 12%, rgba(6, 182, 212, .18), transparent 28rem),
+        radial-gradient(circle at 88% 10%, rgba(124, 58, 237, .2), transparent 30rem),
+        linear-gradient(135deg, #f8fbff 0%, #f6f2ff 55%, #eefcff 100%) !important;
+    }
+    .image-tools-shell {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 3rem 0 2rem;
+    }
+    .image-tools-hero {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+    .image-tools-hero .tool-mark {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto 1rem;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 1.7rem;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 24px 50px rgba(37, 99, 235, .22);
+    }
+    .image-tools-hero h1 {
+      margin: .3rem 0 .7rem;
+      font-size: clamp(2.45rem, 6vw, 4.4rem);
+      line-height: 1;
+    }
+    .image-tools-hero h1 span {
+      color: #2563eb;
+    }
+    .image-tools-hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: #64748b;
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+    .tool-card {
+      display: grid;
+      gap: 1.25rem;
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 24px;
+      padding: clamp(1rem, 3vw, 1.6rem);
+      box-shadow: 0 28px 70px rgba(15, 23, 42, .1);
+    }
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: .7rem;
+    }
+    .mode-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      border: 1.5px solid #dbe6f3;
+      background: #fff;
+      color: #475569;
+      border-radius: 14px;
+      padding: .85rem .75rem;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .mode-btn:hover,
+    .mode-btn.active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 18px 36px rgba(37, 99, 235, .22);
+      transform: translateY(-1px);
+    }
+    .workbench {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .85fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .82);
+      padding: 1.1rem;
+    }
+    .drop-zone {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      gap: .65rem;
+      border: 2px dashed #cbd5e1;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #f8fbff, #f7f3ff);
+      cursor: pointer;
+      padding: 1.5rem;
+    }
+    .drop-zone.dragover,
+    .drop-zone:hover {
+      border-color: #2563eb;
+      background: linear-gradient(135deg, #eff6ff, #f3e8ff);
+    }
+    .drop-zone i {
+      width: 4rem;
+      height: 4rem;
+      display: grid;
+      place-items: center;
+      margin: 0 auto .35rem;
+      border-radius: 20px;
+      color: #fff;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+    }
+    .drop-zone strong {
+      color: #0f172a;
+      font-size: 1.1rem;
+    }
+    .drop-zone span {
+      color: #64748b;
+      line-height: 1.55;
+    }
+    input[type="file"] {
+      display: none !important;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .85rem;
+      margin-top: 1rem;
+    }
+    .controls label,
+    .full-control {
+      display: grid;
+      gap: .35rem;
+      color: #475569;
+      font-size: .88rem;
+      font-weight: 800;
+    }
+    .controls input,
+    .controls select,
+    .full-control input,
+    .full-control select {
+      width: 100%;
+      min-height: 2.85rem;
+      border: 1.5px solid #dbe6f3;
+      border-radius: 12px;
+      padding: .72rem .85rem;
+      color: #0f172a;
+      background: #fff;
+      font: inherit;
+      font-weight: 750;
+    }
+    .controls input[type="range"] {
+      padding: 0;
+      min-height: auto;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      margin-top: .85rem;
+      color: #475569;
+      font-weight: 800;
+    }
+    .check-row input {
+      width: 1rem;
+      height: 1rem;
+      accent-color: #2563eb;
+    }
+    .primary-btn {
+      width: 100%;
+      min-height: 3.15rem;
+      border: 0;
+      border-radius: 14px;
+      margin-top: 1rem;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 20px 44px rgba(37, 99, 235, .24);
+      font: inherit;
+      font-weight: 950;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .primary-btn:hover {
+      transform: translateY(-1px);
+    }
+    .primary-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .preview-panel h2,
+    .panel h2 {
+      margin: 0 0 .8rem;
+      color: #0f172a;
+      font-size: 1rem;
+    }
+    .preview-canvas-wrap {
+      display: grid;
+      place-items: center;
+      min-height: 300px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      background:
+        linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f1f5f9 75%),
+        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+      background-size: 22px 22px;
+      background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+      overflow: hidden;
+    }
+    #previewCanvas {
+      display: block;
+      max-width: 100%;
+      max-height: 520px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, .12);
+    }
+    .file-list {
+      display: grid;
+      gap: .6rem;
+      margin-top: .85rem;
+    }
+    .file-pill {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: .7rem;
+      align-items: center;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: .55rem;
+      background: #fff;
+    }
+    .file-pill img {
+      width: 56px;
+      height: 46px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+    .file-pill strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #0f172a;
+      font-size: .9rem;
+    }
+    .file-pill span {
+      color: #64748b;
+      font-size: .78rem;
+    }
+    .result-list {
+      display: grid;
+      gap: .7rem;
+      margin-top: 1rem;
+    }
+    .result-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      border: 1px solid #dbe6f3;
+      border-radius: 14px;
+      padding: .75rem .85rem;
+      background: #fff;
+    }
+    .result-item div {
+      min-width: 0;
+    }
+    .result-item strong {
+      display: block;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .result-item span {
+      color: #64748b;
+      font-size: .82rem;
+    }
+    .result-item a {
+      flex: 0 0 auto;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      padding: .62rem .85rem;
+      border-radius: 10px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+    .status {
+      min-height: 1.4rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin-top: .85rem;
+    }
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+    .guide-card {
+      border: 1px solid #dbe6f3;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .88);
+      padding: 1.05rem;
+    }
+    .guide-card i {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: #2563eb;
+      background: #eaf2ff;
+      margin-bottom: .8rem;
+    }
+    .guide-card h3 {
+      margin: 0 0 .45rem;
+      color: #0f172a;
+    }
+    .guide-card p {
+      margin: 0;
+      color: #64748b;
+      line-height: 1.65;
+    }
+    @media (max-width: 900px) {
+      .workbench,
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 620px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+      .image-tools-shell {
+        width: min(100% - 1rem, 1120px);
+      }
+      .tool-card {
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+<body class="ec-tool-page">
+<header>
+  <a class="logo" href="../index.html">
+    <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
+    <span>EverythingConvert</span>
+  </a>
+  <nav class="top-nav"><a href="../index.html">Home</a><a href="../pricing.html">Pricing</a></nav>
+</header>
+
+<main class="image-tools-shell">
+  <section class="image-tools-hero">
+    <div class="tool-mark"><i class="fa-regular fa-images"></i></div>
+    <div class="eyebrow" data-i18n="eyebrow">Image workspace</div>
+    <h1><span data-i18n="heroAccent">Image</span> <span data-i18n="heroTitle">Tools</span></h1>
+    <p data-i18n="heroText">Compress, resize, crop, remove metadata, create favicons, and prepare social media images directly in your browser.</p>
+  </section>
+
+  <section class="tool-card">
+    <div class="mode-grid" id="modeGrid"></div>
+    <div class="workbench">
+      <div class="panel">
+        <h2 id="modeTitle">Image Compressor</h2>
+        <p class="status" id="modeDescription">Reduce image file size while keeping a clean visual result.</p>
+        <div class="drop-zone" id="dropZone">
+          <div>
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <strong data-i18n="dropTitle">Click or drop images here</strong>
+            <span data-i18n="dropHint">Choose up to 10 JPG, PNG, WEBP, or SVG images.</span>
+          </div>
+          <input id="fileInput" type="file" accept="image/*,.svg,.jpg,.jpeg,.png,.webp" multiple>
+        </div>
+        <div class="file-list" id="fileList"></div>
+
+        <div class="controls" id="controls">
+          <label data-control="quality"><span data-i18n="quality">Quality</span><input id="qualityInput" type="range" min="40" max="100" value="82"></label>
+          <label data-control="format"><span data-i18n="format">Output format</span><select id="formatInput"><option value="image/jpeg">JPG</option><option value="image/webp">WEBP</option><option value="image/png">PNG</option></select></label>
+          <label data-control="width"><span data-i18n="width">Width</span><input id="widthInput" type="number" min="1" placeholder="1280"></label>
+          <label data-control="height"><span data-i18n="height">Height</span><input id="heightInput" type="number" min="1" placeholder="720"></label>
+          <label data-control="preset"><span data-i18n="preset">Preset</span><select id="presetInput"></select></label>
+          <label data-control="cropRatio"><span data-i18n="cropRatio">Crop ratio</span><select id="cropRatioInput"></select></label>
+          <label data-control="background"><span data-i18n="background">Background</span><input id="backgroundInput" type="color" value="#ffffff"></label>
+          <label data-control="faviconSize"><span data-i18n="faviconSizes">Favicon sizes</span><select id="faviconSizeInput"><option value="all">All common sizes</option><option value="32">32 x 32</option><option value="180">180 x 180</option><option value="512">512 x 512</option></select></label>
+        </div>
+        <label class="check-row" data-control="keepRatio"><input id="keepRatioInput" type="checkbox" checked><span data-i18n="keepRatio">Keep original aspect ratio</span></label>
+        <label class="check-row" data-control="coverFit"><input id="coverFitInput" type="checkbox" checked><span data-i18n="coverFit">Fill the target size and crop edges if needed</span></label>
+        <button class="primary-btn" id="processBtn" disabled><span data-i18n="process">Process images</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <div class="status" id="status" data-i18n="noFile">No image selected.</div>
+      </div>
+
+      <aside class="panel preview-panel">
+        <h2 data-i18n="preview">Preview</h2>
+        <div class="preview-canvas-wrap">
+          <canvas id="previewCanvas" width="640" height="420" aria-label="Image preview"></canvas>
+        </div>
+        <div class="result-list" id="resultList"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="guide-grid">
+    <article class="guide-card">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h3 data-i18n="guidePrivateTitle">Private browser processing</h3>
+      <p data-i18n="guidePrivateText">Your images are processed on your device. They are not uploaded to our server for these tools.</p>
+    </article>
+    <article class="guide-card">
+      <i class="fa-solid fa-layer-group"></i>
+      <h3 data-i18n="guideBatchTitle">Batch-friendly</h3>
+      <p data-i18n="guideBatchText">Select up to 10 images at once for compression, resizing, metadata cleaning, or social media exports.</p>
+    </article>
+    <article class="guide-card">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <h3 data-i18n="guideUseTitle">Use the right format</h3>
+      <p data-i18n="guideUseText">Use JPG for photos, PNG for transparency, WEBP for web speed, and favicon sizes for browser tabs.</p>
+    </article>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-group">
+      <h2><img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28"> EverythingConvert</h2>
+      <a href="../index.html#tools">All tools</a>
+      <a href="../auth.html">Account</a>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-regular fa-image"></i> Image</h2>
+      <a href="../image converter/image-converter.html">Image Converter</a>
+      <a href="../image tools/image-tools.html?mode=compress">Image Compressor</a>
+      <a href="../image tools/image-tools.html?mode=resize">Image Resizer</a>
+      <a href="../image tools/image-tools.html?mode=social">Social Media Resizer</a>
+      <a href="../image tools/image-tools.html?mode=favicon">Favicon Generator</a>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-solid fa-file-export"></i> Documents</h2>
+      <a href="../pdf to word/pdf-to-word.html">PDF to Word</a>
+      <a href="../pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+      <a href="../pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
+      <a href="../ai tools/pdf-summary/index.html">PDF Summary</a>
+    </div>
+    <div class="footer-group">
+      <h2><i class="fa-solid fa-code"></i> Developer</h2>
+      <a href="../qr code generator/qr-code-generator.html">QR Code Generator</a>
+      <a href="../json to csv/json-to-csv.html">JSON to CSV</a>
+      <a href="../csv converter/csv-converter.html">CSV Converter</a>
+    </div>
+  </div>
+  <div class="footer-legal-row" style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:1rem 0 1.25rem;border-top:1px solid rgba(47,38,18,.12);">
+    <a style="color:inherit;text-decoration:none;font-weight:700;" href="../about.html">About Us</a>
+    <a style="color:inherit;text-decoration:none;font-weight:700;" href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a>
+    <a style="color:inherit;text-decoration:none;font-weight:700;" href="../privacy.html">Privacy</a>
+    <a style="color:inherit;text-decoration:none;font-weight:700;" href="../terms.html">Terms</a>
+    <a style="color:inherit;text-decoration:none;font-weight:700;" href="../security.html">Security and Compliance</a>
+    <a style="color:inherit;text-decoration:none;font-weight:700;" href="../contact.html">Contact</a>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28"><span>EverythingConvert</span></div>
+    <p>&copy; EverythingConvert.com All rights reserved (2026)</p>
+    <div class="language-menu">
+      <button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button>
+      <div class="language-dropdown">
+        <button type="button" data-language="en">English</button>
+        <button type="button" data-language="ko">?쒓뎅??/button>
+        <button type="button" data-language="de">Deutsch</button>
+        <button type="button" data-language="es">Espa챰ol</button>
+        <button type="button" data-language="fr">Fran챌ais</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase-config.js"></script>
+<script src="../auth.js?v=auth-20260528b"></script>
+<script src="../tools-menu.js?v=nav-20260611img"></script>
+<script src="../language-menu.js?v=lang-20260611a"></script>
+<script src="../header-language.js?v=headerlang-20260608a"></script>
+<script>
+  const translations = {
+    en: {
+      eyebrow: 'Image workspace', heroAccent: 'Image', heroTitle: 'Tools',
+      heroText: 'Compress, resize, crop, remove metadata, create favicons, and prepare social media images directly in your browser.',
+      dropTitle: 'Click or drop images here', dropHint: 'Choose up to 10 JPG, PNG, WEBP, or SVG images.',
+      quality: 'Quality', format: 'Output format', width: 'Width', height: 'Height', preset: 'Preset', cropRatio: 'Crop ratio', background: 'Background', faviconSizes: 'Favicon sizes',
+      keepRatio: 'Keep original aspect ratio', coverFit: 'Fill the target size and crop edges if needed', process: 'Process images', noFile: 'No image selected.', preview: 'Preview',
+      guidePrivateTitle: 'Private browser processing', guidePrivateText: 'Your images are processed on your device. They are not uploaded to our server for these tools.',
+      guideBatchTitle: 'Batch-friendly', guideBatchText: 'Select up to 10 images at once for compression, resizing, metadata cleaning, or social media exports.',
+      guideUseTitle: 'Use the right format', guideUseText: 'Use JPG for photos, PNG for transparency, WEBP for web speed, and favicon sizes for browser tabs.',
+      download: 'Download', selected: 'image selected', selectedPlural: 'images selected', firstTen: 'Only the first 10 images will be used.', processing: 'Processing', complete: 'Ready to download.', chooseImages: 'Please choose image files.',
+      allSizes: 'All common sizes'
+    },
+    ko: {
+      eyebrow: '이미지 작업 공간', heroAccent: '이미지', heroTitle: '도구',
+      heroText: '이미지 압축, 크기 조정, 자르기, 메타데이터 제거, 파비콘 생성, 소셜 미디어 규격 맞춤을 브라우저에서 바로 처리하세요.',
+      dropTitle: '이미지를 클릭하거나 여기에 끌어다 놓으세요', dropHint: 'JPG, PNG, WEBP, SVG 이미지를 최대 10개까지 선택하세요.',
+      quality: '품질', format: '출력 형식', width: '너비', height: '높이', preset: '프리셋', cropRatio: '자르기 비율', background: '배경색', faviconSizes: '파비콘 크기',
+      keepRatio: '원본 비율 유지', coverFit: '목표 크기를 채우고 필요한 부분은 자르기', process: '이미지 처리하기', noFile: '선택된 이미지가 없습니다.', preview: '미리보기',
+      guidePrivateTitle: '브라우저에서 안전하게 처리', guidePrivateText: '이 도구들은 이미지를 사용자의 기기에서 처리하며 서버로 업로드하지 않습니다.',
+      guideBatchTitle: '여러 장 처리 가능', guideBatchText: '압축, 크기 조정, 메타데이터 제거, 소셜 미디어 내보내기를 한 번에 최대 10장까지 처리할 수 있습니다.',
+      guideUseTitle: '용도에 맞는 형식 사용', guideUseText: '사진은 JPG, 투명 배경은 PNG, 웹 속도는 WEBP, 브라우저 탭 아이콘은 파비콘 크기를 사용하세요.',
+      download: '다운로드', selected: '개 이미지 선택됨', selectedPlural: '개 이미지 선택됨', firstTen: '처음 10개 이미지만 사용합니다.', processing: '처리 중', complete: '다운로드할 수 있습니다.', chooseImages: '이미지 파일을 선택해 주세요.',
+      allSizes: '일반 크기 전체'
+    },
+    de: {
+      eyebrow: 'Bild-Arbeitsbereich', heroAccent: 'Bild', heroTitle: 'Tools',
+      heroText: 'Komprimieren, skalieren, zuschneiden, Metadaten entfernen, Favicons erstellen und Social-Media-Bilder direkt im Browser vorbereiten.',
+      dropTitle: 'Bilder anklicken oder hier ablegen', dropHint: 'Wahlen Sie bis zu 10 JPG-, PNG-, WEBP- oder SVG-Bilder.',
+      quality: 'Qualitat', format: 'Ausgabeformat', width: 'Breite', height: 'Hohe', preset: 'Voreinstellung', cropRatio: 'Zuschnittverhaltnis', background: 'Hintergrund', faviconSizes: 'Favicon-Grossen',
+      keepRatio: 'Originales Seitenverhaltnis beibehalten', coverFit: 'Zielgrosse fullen und Rander bei Bedarf zuschneiden', process: 'Bilder verarbeiten', noFile: 'Kein Bild ausgewahlt.', preview: 'Vorschau',
+      guidePrivateTitle: 'Private Verarbeitung im Browser', guidePrivateText: 'Ihre Bilder werden auf Ihrem Gerat verarbeitet und fur diese Tools nicht auf unseren Server hochgeladen.',
+      guideBatchTitle: 'Fur Stapel geeignet', guideBatchText: 'Wahlen Sie bis zu 10 Bilder gleichzeitig fur Komprimierung, Grossenanderung, Metadatenbereinigung oder Social-Media-Export.',
+      guideUseTitle: 'Das richtige Format nutzen', guideUseText: 'JPG fur Fotos, PNG fur Transparenz, WEBP fur Webgeschwindigkeit und Favicon-Grossen fur Browser-Tabs.',
+      download: 'Herunterladen', selected: 'Bild ausgewahlt', selectedPlural: 'Bilder ausgewahlt', firstTen: 'Nur die ersten 10 Bilder werden verwendet.', processing: 'Verarbeitung', complete: 'Bereit zum Download.', chooseImages: 'Bitte Bilddateien auswahlen.',
+      allSizes: 'Alle gangigen Grossen'
+    },
+    es: {
+      eyebrow: 'Espacio de imagenes', heroAccent: 'Herramientas', heroTitle: 'de imagen',
+      heroText: 'Comprime, redimensiona, recorta, elimina metadatos, crea favicons y prepara imagenes para redes sociales directamente en tu navegador.',
+      dropTitle: 'Haz clic o suelta imagenes aqui', dropHint: 'Elige hasta 10 imagenes JPG, PNG, WEBP o SVG.',
+      quality: 'Calidad', format: 'Formato de salida', width: 'Ancho', height: 'Alto', preset: 'Preajuste', cropRatio: 'Proporcion de recorte', background: 'Fondo', faviconSizes: 'Tamanos de favicon',
+      keepRatio: 'Mantener la proporcion original', coverFit: 'Llenar el tamano objetivo y recortar bordes si hace falta', process: 'Procesar imagenes', noFile: 'No hay imagen seleccionada.', preview: 'Vista previa',
+      guidePrivateTitle: 'Procesamiento privado en el navegador', guidePrivateText: 'Tus imagenes se procesan en tu dispositivo. No se suben a nuestro servidor para estas herramientas.',
+      guideBatchTitle: 'Compatible con lotes', guideBatchText: 'Selecciona hasta 10 imagenes para comprimir, redimensionar, limpiar metadatos o exportar a redes sociales.',
+      guideUseTitle: 'Usa el formato correcto', guideUseText: 'Usa JPG para fotos, PNG para transparencia, WEBP para velocidad web y tamanos favicon para pestanas.',
+      download: 'Descargar', selected: 'imagen seleccionada', selectedPlural: 'imagenes seleccionadas', firstTen: 'Solo se usaran las primeras 10 imagenes.', processing: 'Procesando', complete: 'Listo para descargar.', chooseImages: 'Elige archivos de imagen.',
+      allSizes: 'Todos los tamanos comunes'
+    },
+    fr: {
+      eyebrow: 'Espace image', heroAccent: 'Outils', heroTitle: 'image',
+      heroText: 'Compressez, redimensionnez, recadrez, supprimez les metadonnees, creez des favicons et preparez des images sociales dans votre navigateur.',
+      dropTitle: 'Cliquez ou deposez des images ici', dropHint: 'Choisissez jusqu a 10 images JPG, PNG, WEBP ou SVG.',
+      quality: 'Qualite', format: 'Format de sortie', width: 'Largeur', height: 'Hauteur', preset: 'Prereglage', cropRatio: 'Ratio de recadrage', background: 'Fond', faviconSizes: 'Tailles favicon',
+      keepRatio: 'Conserver le ratio original', coverFit: 'Remplir la taille cible et recadrer si necessaire', process: 'Traiter les images', noFile: 'Aucune image selectionnee.', preview: 'Apercu',
+      guidePrivateTitle: 'Traitement prive dans le navigateur', guidePrivateText: 'Vos images sont traitees sur votre appareil. Elles ne sont pas envoyees a notre serveur pour ces outils.',
+      guideBatchTitle: 'Adapte aux lots', guideBatchText: 'Selectionnez jusqu a 10 images pour compresser, redimensionner, nettoyer les metadonnees ou exporter pour les reseaux sociaux.',
+      guideUseTitle: 'Utilisez le bon format', guideUseText: 'JPG pour les photos, PNG pour la transparence, WEBP pour la vitesse web et les tailles favicon pour les onglets.',
+      download: 'Telecharger', selected: 'image selectionnee', selectedPlural: 'images selectionnees', firstTen: 'Seules les 10 premieres images seront utilisees.', processing: 'Traitement', complete: 'Pret a telecharger.', chooseImages: 'Veuillez choisir des images.',
+      allSizes: 'Toutes les tailles courantes'
+    }
+  };
+  const languageLabels = {
+    en: 'English',
+    ko: '한국어',
+    de: 'Deutsch',
+    es: 'Espanol',
+    fr: 'Francais'
+  };
+
+  const modeData = {
+    compress: { icon: 'fa-compress', title: 'Image Compressor', desc: 'Reduce image file size while keeping a clean visual result.', controls: ['quality', 'format'] },
+    resize: { icon: 'fa-up-right-and-down-left-from-center', title: 'Image Resizer', desc: 'Resize images by pixel width and height.', controls: ['width', 'height', 'keepRatio', 'format'] },
+    social: { icon: 'fa-hashtag', title: 'Social Media Image Resizer', desc: 'Export images to YouTube, Instagram, TikTok, Facebook, X, and LinkedIn sizes.', controls: ['preset', 'coverFit', 'background', 'format'] },
+    crop: { icon: 'fa-crop-simple', title: 'Image Cropper', desc: 'Center-crop images to common ratios for profile, post, and cover images.', controls: ['cropRatio', 'background', 'format'] },
+    metadata: { icon: 'fa-user-shield', title: 'Image Metadata Remover', desc: 'Create a clean copy without embedded EXIF metadata.', controls: ['format'] },
+    favicon: { icon: 'fa-star', title: 'Favicon Generator', desc: 'Generate common browser icon sizes from one image.', controls: ['faviconSize'] }
+  };
+
+  const modeTranslations = {
+    ko: {
+      compress: ['이미지 압축기', '화질을 적절히 유지하면서 이미지 파일 용량을 줄입니다.'],
+      resize: ['이미지 크기 조정', '픽셀 너비와 높이를 기준으로 이미지 크기를 바꿉니다.'],
+      social: ['소셜 미디어 이미지 리사이저', 'YouTube, Instagram, TikTok, Facebook, X, LinkedIn 규격으로 이미지를 내보냅니다.'],
+      crop: ['이미지 자르기', '프로필, 게시물, 커버 이미지에 맞는 일반 비율로 가운데 기준 자르기를 합니다.'],
+      metadata: ['이미지 메타데이터 제거', 'EXIF 메타데이터가 빠진 깨끗한 이미지 복사본을 만듭니다.'],
+      favicon: ['파비콘 생성기', '하나의 이미지로 브라우저 아이콘에 필요한 여러 크기를 만듭니다.']
+    },
+    de: {
+      compress: ['Bildkompressor', 'Reduziert die Dateigrosse bei sauberer Bildwirkung.'],
+      resize: ['Bildgrosse andern', 'Andert Bilder nach Pixelbreite und Hohe.'],
+      social: ['Social-Media-Bildgrossen', 'Exportiert Bilder fur YouTube, Instagram, TikTok, Facebook, X und LinkedIn.'],
+      crop: ['Bild zuschneiden', 'Zentrierter Zuschnitt auf gangige Formate.'],
+      metadata: ['Metadaten entfernen', 'Erstellt eine saubere Kopie ohne eingebettete EXIF-Daten.'],
+      favicon: ['Favicon Generator', 'Erstellt gangige Browser-Icon-Grossen aus einem Bild.']
+    },
+    es: {
+      compress: ['Compresor de imagenes', 'Reduce el tamano manteniendo un resultado limpio.'],
+      resize: ['Redimensionar imagen', 'Cambia el ancho y alto en pixeles.'],
+      social: ['Redimensionador social', 'Exporta imagenes para YouTube, Instagram, TikTok, Facebook, X y LinkedIn.'],
+      crop: ['Recortar imagen', 'Recorte centrado a proporciones comunes.'],
+      metadata: ['Eliminar metadatos', 'Crea una copia limpia sin datos EXIF incrustados.'],
+      favicon: ['Generador de favicon', 'Crea tamanos comunes de iconos desde una imagen.']
+    },
+    fr: {
+      compress: ['Compresseur d image', 'Reduit la taille du fichier avec un rendu propre.'],
+      resize: ['Redimensionner l image', 'Change la largeur et la hauteur en pixels.'],
+      social: ['Redimensionnement social', 'Exporte pour YouTube, Instagram, TikTok, Facebook, X et LinkedIn.'],
+      crop: ['Recadrer l image', 'Recadrage centre aux ratios courants.'],
+      metadata: ['Supprimer les metadonnees', 'Cree une copie propre sans donnees EXIF integrees.'],
+      favicon: ['Generateur de favicon', 'Cree les tailles d icones courantes depuis une image.']
+    }
+  };
+
+  const presets = [
+    ['youtube', 'YouTube Thumbnail', 1280, 720],
+    ['instagram-post', 'Instagram Post', 1080, 1080],
+    ['instagram-story', 'Instagram Story', 1080, 1920],
+    ['tiktok-cover', 'TikTok Cover', 1080, 1920],
+    ['facebook-cover', 'Facebook Cover', 1640, 624],
+    ['x-header', 'X / Twitter Header', 1500, 500],
+    ['linkedin-banner', 'LinkedIn Banner', 1584, 396],
+  ];
+
+  const ratios = [
+    ['1:1', '1:1 Square', 1, 1],
+    ['16:9', '16:9 Landscape', 16, 9],
+    ['9:16', '9:16 Portrait', 9, 16],
+    ['4:3', '4:3 Standard', 4, 3],
+    ['3:2', '3:2 Photo', 3, 2],
+  ];
+
+  let mode = 'compress';
+  let files = [];
+  let objectUrls = [];
+  const els = {
+    modeGrid: document.getElementById('modeGrid'),
+    modeTitle: document.getElementById('modeTitle'),
+    modeDescription: document.getElementById('modeDescription'),
+    dropZone: document.getElementById('dropZone'),
+    fileInput: document.getElementById('fileInput'),
+    fileList: document.getElementById('fileList'),
+    resultList: document.getElementById('resultList'),
+    processBtn: document.getElementById('processBtn'),
+    status: document.getElementById('status'),
+    canvas: document.getElementById('previewCanvas'),
+    quality: document.getElementById('qualityInput'),
+    format: document.getElementById('formatInput'),
+    width: document.getElementById('widthInput'),
+    height: document.getElementById('heightInput'),
+    preset: document.getElementById('presetInput'),
+    cropRatio: document.getElementById('cropRatioInput'),
+    background: document.getElementById('backgroundInput'),
+    faviconSize: document.getElementById('faviconSizeInput'),
+    keepRatio: document.getElementById('keepRatioInput'),
+    coverFit: document.getElementById('coverFitInput'),
+  };
+  const ctx = els.canvas.getContext('2d');
+
+  function lang() {
+    try {
+      const urlLang = new URLSearchParams(location.search).get('lang');
+      if (translations[urlLang]) return urlLang;
+      const saved = localStorage.getItem('everything_convert_language');
+      if (translations[saved]) return saved;
+    } catch (error) {}
+    return document.documentElement.lang || 'en';
+  }
+
+  function tr(key) {
+    const language = translations[lang()] ? lang() : 'en';
+    return translations[language][key] || translations.en[key] || key;
+  }
+
+  function modeText(key) {
+    const language = lang();
+    if (language !== 'en' && modeTranslations[language] && modeTranslations[language][key]) {
+      return { title: modeTranslations[language][key][0], desc: modeTranslations[language][key][1] };
+    }
+    return { title: modeData[key].title, desc: modeData[key].desc };
+  }
+
+  function applyLanguage() {
+    document.documentElement.lang = lang();
+    document.querySelectorAll('[data-i18n]').forEach((node) => {
+      node.textContent = tr(node.dataset.i18n);
+    });
+    document.querySelectorAll('[data-language-current]').forEach((node) => {
+      node.textContent = languageLabels[lang()] || languageLabels.en;
+    });
+    const all = els.faviconSize.querySelector('option[value="all"]');
+    if (all) all.textContent = tr('allSizes');
+    updateMode(mode);
+    if (!files.length) els.status.textContent = tr('noFile');
+  }
+
+  function initSelects() {
+    els.preset.innerHTML = presets.map((item) => `<option value="${item[0]}">${item[1]} - ${item[2]} x ${item[3]}</option>`).join('');
+    els.cropRatio.innerHTML = ratios.map((item) => `<option value="${item[0]}">${item[1]}</option>`).join('');
+  }
+
+  function buildModeButtons() {
+    els.modeGrid.innerHTML = Object.keys(modeData).map((key) => {
+      const text = modeText(key);
+      return `<button class="mode-btn" type="button" data-mode="${key}"><i class="fa-solid ${modeData[key].icon}"></i><span>${text.title}</span></button>`;
+    }).join('');
+  }
+
+  function setControls() {
+    const active = new Set(modeData[mode].controls);
+    document.querySelectorAll('[data-control]').forEach((node) => {
+      node.style.display = active.has(node.dataset.control) ? '' : 'none';
+    });
+  }
+
+  function updateMode(nextMode) {
+    mode = modeData[nextMode] ? nextMode : 'compress';
+    buildModeButtons();
+    els.modeGrid.querySelectorAll('[data-mode]').forEach((button) => {
+      button.classList.toggle('active', button.dataset.mode === mode);
+    });
+    const text = modeText(mode);
+    els.modeTitle.textContent = text.title;
+    els.modeDescription.textContent = text.desc;
+    setControls();
+    drawPreview();
+  }
+
+  function clearObjectUrls() {
+    objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    objectUrls = [];
+  }
+
+  function formatBytes(bytes) {
+    if (!bytes) return '0 KB';
+    if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  function cleanName(file, suffix, ext) {
+    const base = file.name.replace(/\.[^.]+$/, '') || 'image';
+    return `${base}-${suffix}.${ext}`;
+  }
+
+  function extFor(mime) {
+    if (mime === 'image/jpeg') return 'jpg';
+    if (mime === 'image/webp') return 'webp';
+    return 'png';
+  }
+
+  function selectFiles(fileList) {
+    const picked = Array.from(fileList || []).filter((file) => file.type.startsWith('image/') || /\.svg$/i.test(file.name)).slice(0, 10);
+    files = picked;
+    clearObjectUrls();
+    els.fileList.innerHTML = '';
+    picked.forEach((file) => {
+      const url = URL.createObjectURL(file);
+      objectUrls.push(url);
+      const item = document.createElement('div');
+      item.className = 'file-pill';
+      item.innerHTML = `<img src="${url}" alt=""><div><strong title="${file.name.replace(/"/g, '&quot;')}">${file.name}</strong><span>${formatBytes(file.size)}</span></div>`;
+      els.fileList.appendChild(item);
+    });
+    els.processBtn.disabled = picked.length === 0;
+    if (!picked.length) {
+      els.status.textContent = tr('chooseImages');
+    } else {
+      els.status.textContent = `${picked.length} ${picked.length === 1 ? tr('selected') : tr('selectedPlural')}${Array.from(fileList || []).length > 10 ? ` ${tr('firstTen')}` : ''}`;
+    }
+    drawPreview();
+  }
+
+  function loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const image = new Image();
+      image.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(image);
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Image could not be loaded by this browser.'));
+      };
+      image.src = url;
+    });
+  }
+
+  function selectedPreset() {
+    return presets.find((item) => item[0] === els.preset.value) || presets[0];
+  }
+
+  function selectedRatio() {
+    return ratios.find((item) => item[0] === els.cropRatio.value) || ratios[0];
+  }
+
+  function outputSize(image) {
+    if (mode === 'social') {
+      const p = selectedPreset();
+      return { width: p[2], height: p[3] };
+    }
+    if (mode === 'crop') {
+      const r = selectedRatio();
+      const side = Math.min(image.naturalWidth / r[2], image.naturalHeight / r[3]);
+      return { width: Math.round(side * r[2]), height: Math.round(side * r[3]), cropOnly: true };
+    }
+    if (mode === 'favicon') return { width: 512, height: 512 };
+    if (mode === 'resize') {
+      const keep = els.keepRatio.checked;
+      let width = parseInt(els.width.value, 10) || image.naturalWidth;
+      let height = parseInt(els.height.value, 10) || image.naturalHeight;
+      if (keep && els.width.value && !els.height.value) height = Math.round(width * image.naturalHeight / image.naturalWidth);
+      if (keep && els.height.value && !els.width.value) width = Math.round(height * image.naturalWidth / image.naturalHeight);
+      return { width, height };
+    }
+    return { width: image.naturalWidth, height: image.naturalHeight };
+  }
+
+  function drawToCanvas(image, size, targetCanvas, options = {}) {
+    const canvas = targetCanvas || document.createElement('canvas');
+    const targetWidth = Math.max(1, Math.round(size.width));
+    const targetHeight = Math.max(1, Math.round(size.height));
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const c = canvas.getContext('2d');
+    c.clearRect(0, 0, targetWidth, targetHeight);
+    c.fillStyle = options.background || '#ffffff';
+    c.fillRect(0, 0, targetWidth, targetHeight);
+
+    let sx = 0, sy = 0, sw = image.naturalWidth, sh = image.naturalHeight;
+    let dx = 0, dy = 0, dw = targetWidth, dh = targetHeight;
+    const useCover = options.cover || size.cropOnly || mode === 'crop' || mode === 'favicon';
+    if (useCover) {
+      const sourceRatio = image.naturalWidth / image.naturalHeight;
+      const targetRatio = targetWidth / targetHeight;
+      if (sourceRatio > targetRatio) {
+        sw = image.naturalHeight * targetRatio;
+        sx = (image.naturalWidth - sw) / 2;
+      } else {
+        sh = image.naturalWidth / targetRatio;
+        sy = (image.naturalHeight - sh) / 2;
+      }
+    } else {
+      const scale = Math.min(targetWidth / image.naturalWidth, targetHeight / image.naturalHeight);
+      dw = Math.round(image.naturalWidth * scale);
+      dh = Math.round(image.naturalHeight * scale);
+      dx = Math.round((targetWidth - dw) / 2);
+      dy = Math.round((targetHeight - dh) / 2);
+    }
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = 'high';
+    c.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+    return canvas;
+  }
+
+  async function drawPreview() {
+    ctx.clearRect(0, 0, els.canvas.width, els.canvas.height);
+    ctx.fillStyle = '#eef2ff';
+    ctx.fillRect(0, 0, els.canvas.width, els.canvas.height);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '700 18px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    if (!files[0]) {
+      ctx.fillText(tr('noFile'), els.canvas.width / 2, els.canvas.height / 2);
+      return;
+    }
+    try {
+      const image = await loadImage(files[0]);
+      const size = outputSize(image);
+      const ratio = size.width / size.height;
+      let previewWidth = Math.min(els.canvas.width, 640);
+      let previewHeight = Math.round(previewWidth / ratio);
+      if (previewHeight > 420) {
+        previewHeight = 420;
+        previewWidth = Math.round(previewHeight * ratio);
+      }
+      els.canvas.width = previewWidth;
+      els.canvas.height = previewHeight;
+      drawToCanvas(image, { width: previewWidth, height: previewHeight }, els.canvas, { cover: mode !== 'resize' && mode !== 'compress' && mode !== 'metadata', background: els.background.value });
+    } catch (error) {
+      ctx.fillText(error.message, els.canvas.width / 2, els.canvas.height / 2);
+    }
+  }
+
+  function canvasToBlob(canvas, mime, quality) {
+    return new Promise((resolve) => canvas.toBlob(resolve, mime, quality));
+  }
+
+  function addResult(name, blob) {
+    const url = URL.createObjectURL(blob);
+    objectUrls.push(url);
+    const item = document.createElement('div');
+    item.className = 'result-item';
+    item.innerHTML = `<div><strong>${name}</strong><span>${formatBytes(blob.size)}</span></div><a href="${url}" download="${name}">${tr('download')}</a>`;
+    els.resultList.appendChild(item);
+  }
+
+  async function processFile(file) {
+    const image = await loadImage(file);
+    const mime = mode === 'favicon' ? 'image/png' : els.format.value;
+    const quality = Math.max(.4, Math.min(1, Number(els.quality.value) / 100));
+    const ext = extFor(mime);
+
+    if (mode === 'favicon') {
+      const sizes = els.faviconSize.value === 'all' ? [16, 32, 48, 180, 192, 512] : [Number(els.faviconSize.value)];
+      for (const size of sizes) {
+        const canvas = drawToCanvas(image, { width: size, height: size }, null, { cover: true, background: '#ffffff' });
+        const blob = await canvasToBlob(canvas, 'image/png', .95);
+        addResult(cleanName(file, `favicon-${size}x${size}`, 'png'), blob);
+      }
+      return;
+    }
+
+    let size = outputSize(image);
+    if (mode === 'metadata' || mode === 'compress') size = { width: image.naturalWidth, height: image.naturalHeight };
+    const canvas = drawToCanvas(image, size, null, {
+      cover: mode === 'crop' || mode === 'social' && els.coverFit.checked,
+      background: els.background.value
+    });
+    const blob = await canvasToBlob(canvas, mime, quality);
+    const suffix = mode === 'metadata' ? 'metadata-clean' : mode;
+    addResult(cleanName(file, suffix, ext), blob);
+  }
+
+  async function processImages() {
+    if (!files.length) return;
+    els.processBtn.disabled = true;
+    els.resultList.innerHTML = '';
+    try {
+      for (let i = 0; i < files.length; i += 1) {
+        els.status.textContent = `${tr('processing')} ${i + 1}/${files.length}: ${files[i].name}`;
+        await processFile(files[i]);
+        await new Promise((resolve) => setTimeout(resolve, 80));
+      }
+      els.status.textContent = tr('complete');
+    } catch (error) {
+      els.status.textContent = error.message || 'Image processing failed.';
+    } finally {
+      els.processBtn.disabled = files.length === 0;
+    }
+  }
+
+  els.modeGrid.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-mode]');
+    if (!button) return;
+    updateMode(button.dataset.mode);
+  });
+  els.dropZone.addEventListener('click', () => els.fileInput.click());
+  els.dropZone.addEventListener('dragover', (event) => { event.preventDefault(); els.dropZone.classList.add('dragover'); });
+  els.dropZone.addEventListener('dragleave', () => els.dropZone.classList.remove('dragover'));
+  els.dropZone.addEventListener('drop', (event) => {
+    event.preventDefault();
+    els.dropZone.classList.remove('dragover');
+    selectFiles(event.dataTransfer.files);
+  });
+  els.fileInput.addEventListener('change', () => selectFiles(els.fileInput.files));
+  els.processBtn.addEventListener('click', processImages);
+  [els.quality, els.format, els.width, els.height, els.preset, els.cropRatio, els.background, els.faviconSize, els.keepRatio, els.coverFit].forEach((input) => {
+    input.addEventListener('input', drawPreview);
+    input.addEventListener('change', drawPreview);
+  });
+  window.addEventListener('beforeunload', clearObjectUrls);
+  window.addEventListener('everything-language-change', applyLanguage);
+
+  initSelects();
+  const initialMode = new URLSearchParams(location.search).get('mode') || 'compress';
+  updateMode(initialMode);
+  applyLanguage();
+</script>
+</body>
+</html>
