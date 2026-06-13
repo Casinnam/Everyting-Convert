@@ -25,6 +25,30 @@ requiredPages.forEach((page) => {
   });
 });
 
+// 1b. Terms and Security must include the substantive clauses that a real
+//     legal page needs, in every language (keyed by section numbers since the
+//     headings are localized). This guards against regressing back to the
+//     thin earlier version.
+const requiredSectionNumbers = {
+  'terms.html': ['9.', '13.', '14.', '15.', '18.'], // refunds, warranty disclaimer, liability cap, indemnification, governing law
+  'security.html': ['7.', '8.', '10.', '11.'],       // retention/deletion, sub-processors, privacy rights, breach notice
+};
+Object.entries(requiredSectionNumbers).forEach(([page, numbers]) => {
+  requiredLangs.forEach((lang) => {
+    const body = pages[page].content[lang];
+    numbers.forEach((n) => {
+      assert(
+        body.includes('>' + n + ' ') || body.includes('>' + n),
+        `${page} (${lang}) should contain numbered clause ${n}.`,
+      );
+    });
+    assert(
+      body.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).length > 350,
+      `${page} (${lang}) should be a substantial legal document, not a stub.`,
+    );
+  });
+});
+
 // 2. Footer/nav labels must be translated in all 5 languages.
 ['about', 'privacy', 'terms', 'security', 'contact', 'copyright'].forEach((key) => {
   requiredLangs.forEach((lang) => {
