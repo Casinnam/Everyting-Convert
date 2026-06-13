@@ -250,6 +250,10 @@
     const params = new URLSearchParams(window.location.search);
     const urlLang = params.get('lang');
     if (supported(urlLang)) return urlLang;
+    if (window.EverythingConvertLanguage && typeof window.EverythingConvertLanguage.get === 'function') {
+      const shared = window.EverythingConvertLanguage.get();
+      if (supported(shared)) return shared;
+    }
     try {
       const saved = localStorage.getItem('everything_convert_language');
       if (supported(saved)) return saved;
@@ -257,6 +261,16 @@
       // Ignore storage errors.
     }
     return 'en';
+  }
+
+  function pageKey() {
+    let file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    file = file.split('?')[0].split('#')[0];
+    if (!file) file = 'index.html';
+    // Clean-URL hosting may drop the .html extension (/about -> about).
+    if (pages[file]) return file;
+    if (pages[file + '.html']) return file + '.html';
+    return file;
   }
 
   function setFooterAndNav(lang) {
@@ -284,41 +298,42 @@
     if (copyright) copyright.textContent = nav.copyright[lang] || nav.copyright.en;
     const current = document.querySelector('[data-language-current]');
     if (current) current.textContent = labels[lang];
-    const dropdown = document.querySelector('.language-dropdown');
-    if (dropdown) {
-      dropdown.innerHTML = Object.entries(labels).map(([code, label]) => `<button type="button" data-language="${code}">${label}</button>`).join('');
-      dropdown.querySelectorAll('[data-language]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const nextLang = button.getAttribute('data-language');
-          try {
-            localStorage.setItem('everything_convert_language', nextLang);
-            localStorage.setItem('everything_convert_language_initialized', '1');
-          } catch (error) {
-            // Ignore storage errors.
-          }
-          const url = new URL(window.location.href);
-          url.searchParams.set('lang', nextLang);
-          window.location.href = url.toString();
-        });
-      });
-    }
+    // The footer language dropdown is owned by language-menu.js, which handles
+    // the [data-language] clicks (saving the choice and dispatching
+    // everything-language-change). We only react to that event below — no
+    // reload, no duplicate handlers.
   }
 
-  function render() {
-    const file = window.location.pathname.split('/').pop() || 'index.html';
-    const page = pages[file];
+  let lastRendered = null;
+
+  function render(forcedLang) {
+    const page = pages[pageKey()];
     if (!page) return;
-    const lang = currentLang();
+    const lang = supported(forcedLang) ? forcedLang : currentLang();
     document.documentElement.lang = lang;
     document.title = page.title[lang] || page.title.en;
     const main = document.querySelector('main');
-    if (main) main.innerHTML = page.content[lang] || page.content.en;
+    if (main && lastRendered !== lang) {
+      main.innerHTML = page.content[lang] || page.content.en;
+      lastRendered = lang;
+    }
     setFooterAndNav(lang);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
-  } else {
+  function init() {
     render();
+    // Re-apply after the shared language system settles (it schedules its own
+    // [0,100,500] ms passes) so browser-detected languages also take effect.
+    [0, 120, 500].forEach((delay) => window.setTimeout(() => render(), delay));
+    window.addEventListener('everything-language-change', (event) => {
+      const lang = event && event.detail && event.detail.language;
+      render(supported(lang) ? lang : undefined);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();
