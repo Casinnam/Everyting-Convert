@@ -41,19 +41,6 @@
       '#processBtn': { en: '✨ Remove background (free preview)', ko: '✨ 배경 제거 (무료 미리보기)', de: '✨ Hintergrund entfernen (Vorschau)', es: '✨ Eliminar fondo (vista previa)', fr: '✨ Supprimer l\'arrière-plan (aperçu)' },
       '.faq h2': common.faq,
     },
-    'id-photo': {
-      '.page-hero h1': { en: 'ID / Passport Photo Maker', ko: '증명사진 / 여권사진 만들기', de: 'Passfoto-Generator', es: 'Creador de foto de identidad', fr: 'Créateur de photo d\'identité' },
-      '.page-hero .subtitle': {
-        en: 'Regulation-compliant ID photos made by AI. Background removal, crop, and resize — no face retouching.',
-        ko: 'AI로 배경 제거, 자르기, 크기 조정을 처리합니다. 얼굴 보정은 하지 않습니다.',
-        de: 'ID-Fotos per KI: Hintergrund entfernen, zuschneiden und skalieren, ohne Gesichtsretusche.',
-        es: 'Fotos de identidad con IA: fondo, recorte y tamaño, sin retoque facial.',
-        fr: 'Photos d\'identité avec IA : fond, recadrage et taille, sans retouche du visage.',
-      },
-      '#processBtn': { en: '👤 Create ID photo (free preview)', ko: '👤 증명사진 만들기 (무료 미리보기)', de: '👤 Passfoto erstellen (Vorschau)', es: '👤 Crear foto (vista previa)', fr: '👤 Créer la photo (aperçu)' },
-      '.specs-table h2': { en: 'Supported specifications', ko: '지원 규격', de: 'Unterstützte Vorgaben', es: 'Especificaciones compatibles', fr: 'Formats pris en charge' },
-      '.faq h2': common.faq,
-    },
   };
 
   /* ── data-i18n translations (new system) ── */
@@ -222,48 +209,6 @@
       fr: 'L\'aperçu gratuit est en basse résolution (400 px de large). Le téléchargement HD correspond au résultat en pleine résolution de votre image d\'origine.',
     },
 
-    /* ─── ID Photo ─── */
-    idBadge: { en: 'AI TOOL • PAY-AS-YOU-GO', ko: 'AI 도구 • 단건 결제', de: 'KI-Tool • Einmalzahlung', es: 'Herramienta IA • Pago por uso', fr: 'Outil IA • Paiement à l\'usage' },
-    idDrop: { en: 'Drop your portrait photo here', ko: '인물 사진을 여기에 놓으세요', de: 'Porträtfoto hier ablegen', es: 'Suelta tu foto de retrato aquí', fr: 'Déposez votre photo de portrait ici' },
-    idPrivacy: {
-      en: 'Your photo is processed on our secure server and automatically deleted within 24 hours. It is never used for training or shared with third parties.',
-      ko: '사진은 보안 서버에서 처리되며 24시간 이내에 자동 삭제됩니다. 학습에 사용하거나 제3자와 공유하지 않습니다.',
-      de: 'Ihr Foto wird auf unserem sicheren Server verarbeitet und innerhalb von 24 Stunden automatisch gelöscht. Es wird nie für Training verwendet oder an Dritte weitergegeben.',
-      es: 'Tu foto se procesa en nuestro servidor seguro y se elimina automáticamente en 24 horas. Nunca se usa para entrenamiento ni se comparte con terceros.',
-      fr: 'Votre photo est traitée sur notre serveur sécurisé et supprimée automatiquement sous 24 heures. Elle n\'est jamais utilisée pour l\'entraînement ni partagée avec des tiers.',
-    },
-    idSpecNote: {
-      en: 'Always confirm final specifications with the issuing authority before printing.',
-      ko: '인쇄 전에 발급 기관에서 최종 규격을 꼭 확인하세요.',
-      de: 'Bestätigen Sie die endgültigen Vorgaben vor dem Druck immer bei der ausstellenden Behörde.',
-      es: 'Confirma siempre las especificaciones finales con la autoridad emisora antes de imprimir.',
-      fr: 'Confirmez toujours les spécifications finales auprès de l\'autorité émettrice avant l\'impression.',
-    },
-    idFaq1Q: { en: 'Is the face retouched?', ko: '얼굴을 보정하나요?', de: 'Wird das Gesicht retuschiert?', es: '¿Se retoca el rostro?', fr: 'Le visage est-il retouché ?' },
-    idFaq1A: {
-      en: 'No. Only background removal, cropping, and resizing are applied. No skin smoothing, whitening, or face reshaping.',
-      ko: '아니요. 배경 교체, 크롭, 규격 리사이즈만 처리합니다. 피부 보정, 미백, 얼굴형 변형은 일절 없습니다.',
-      de: 'Nein. Es werden nur Hintergrundentfernung, Zuschnitt und Größenanpassung angewendet. Keine Hautglättung, Aufhellung oder Gesichtsveränderung.',
-      es: 'No. Solo se aplican eliminación de fondo, recorte y cambio de tamaño. Sin suavizado de piel, blanqueamiento ni remodelación facial.',
-      fr: 'Non. Seuls la suppression de l\'arrière-plan, le recadrage et le redimensionnement sont appliqués. Aucun lissage de peau, blanchiment ou remodelage du visage.',
-    },
-    idFaq2Q: { en: 'What photos work best?', ko: '어떤 사진이 가장 잘 작동하나요?', de: 'Welche Fotos funktionieren am besten?', es: '¿Qué fotos funcionan mejor?', fr: 'Quelles photos fonctionnent le mieux ?' },
-    idFaq2A: {
-      en: 'Clear portraits with good lighting and a plain background. Side angles, low light, and blurry photos may give poor results.',
-      ko: '밝고 균일한 배경에서 정면을 촬영한 선명한 사진이 가장 정확합니다. 측면, 어두운 조명, 흐릿한 사진은 결과가 나쁠 수 있습니다.',
-      de: 'Klare Porträts mit guter Beleuchtung und einfarbigem Hintergrund. Seitliche Winkel, schwaches Licht und unscharfe Fotos können schlechte Ergebnisse liefern.',
-      es: 'Retratos claros con buena iluminación y fondo liso. Ángulos laterales, poca luz y fotos borrosas pueden dar malos resultados.',
-      fr: 'Des portraits nets avec un bon éclairage et un fond uni. Les angles de côté, la faible lumière et les photos floues peuvent donner de mauvais résultats.',
-    },
-    idFaq3Q: { en: 'What is the print sheet?', ko: '인쇄용 시트가 무엇인가요?', de: 'Was ist der Druckbogen?', es: '¿Qué es la hoja de impresión?', fr: 'Qu\'est-ce que la planche d\'impression ?' },
-    idFaq3A: {
-      en: 'A print-ready JPEG with multiple copies of your ID photo arranged on a single page, ready to take to a pharmacy or print shop.',
-      ko: '증명사진 여러 장을 한 페이지에 배치한 인쇄용 JPEG입니다. 사진관이나 인쇄소에 바로 가져갈 수 있습니다.',
-      de: 'Ein druckfertiges JPEG mit mehreren Kopien Ihres Passfotos auf einer Seite, bereit für die Apotheke oder den Copyshop.',
-      es: 'Un JPEG listo para imprimir con varias copias de tu foto de identidad en una sola página, listo para llevar a una farmacia o imprenta.',
-      fr: 'Un JPEG prêt à imprimer avec plusieurs copies de votre photo d\'identité sur une seule page, à apporter en pharmacie ou chez un imprimeur.',
-    },
-
     /* ─── Transcription ─── */
     trBadge: { en: 'AI TOOL • PAY-AS-YOU-GO', ko: 'AI 도구 • 단건 결제', de: 'KI-Tool • Einmalzahlung', es: 'Herramienta IA • Pago por uso', fr: 'Outil IA • Paiement à l\'usage' },
     trHeroDesc: {
@@ -331,7 +276,6 @@
     if (path.includes('/pdf-summary/')) return 'pdf-summary';
     if (path.includes('/transcription/')) return 'transcription';
     if (path.includes('/background-remover/')) return 'background-remover';
-    if (path.includes('/id-photo/')) return 'id-photo';
     return '';
   }
 

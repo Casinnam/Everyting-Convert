@@ -52,11 +52,6 @@ const PRICES: Record<string, { amount: number; label: string; description: strin
     label: 'Background Removal',
     description: 'High-resolution transparent PNG',
   },
-  'id-photo': {
-    amount: 299,
-    label: 'ID / Passport Photo',
-    description: 'Regulation photo + print sheet',
-  },
 };
 
 Deno.serve(async (req: Request) => {

@@ -524,7 +524,6 @@
             <div class="tools-subgroup-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Roadmap</div>
             <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
             <a href="${prefix}ai tools/background-remover/index.html"><span class="tool-emoji ai">&#128247;</span><span>Background Remover</span></a>
-            <a href="${prefix}ai tools/id-photo/index.html"><span class="tool-emoji ai">&#128100;</span><span>ID / Passport Photo</span></a>
             <a href="${prefix}ai tools/pdf-summary/index.html"><span class="tool-emoji ai">PDF</span><span>PDF Summary</span></a>
             <a class="tool-disabled" href="#"><span class="tool-emoji ai">OCR</span><span>Smart OCR (Coming Soon)</span></a>
           </div>

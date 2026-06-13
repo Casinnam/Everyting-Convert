@@ -89,8 +89,6 @@ Set secrets (replace the `...` values with your actual keys):
 ```
 supabase secrets set OPENAI_API_KEY=sk-...
 supabase secrets set REMOVEBG_API_KEY=...
-supabase secrets set IDPHOTO_API_KEY=...
-supabase secrets set IDPHOTO_API_SECRET=...
 supabase secrets set STRIPE_SECRET_KEY=sk_live_...
 supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
 supabase secrets set USAGE_IDENTITY_SALT=any-long-random-string
@@ -112,7 +110,6 @@ From the project root (where `supabase/` folder is):
 ```
 supabase functions deploy ai-transcribe
 supabase functions deploy ai-remove-bg
-supabase functions deploy ai-id-photo
 supabase functions deploy ai-checkout
 supabase functions deploy ai-webhook
 supabase functions deploy ai-pdf-summary --no-verify-jwt
@@ -147,10 +144,9 @@ Verify deployment in the Supabase Dashboard → Edge Functions.
 
 ---
 
-## Step 6 — Get the background removal and ID photo API keys
+## Step 6 — Get the background removal API key
 
-`ai-remove-bg` uses the **remove.bg** API, and `ai-id-photo` uses the **idphoto.ai** API.
-They are separate services with separate keys.
+`ai-remove-bg` uses the **remove.bg** API.
 
 **remove.bg (background removal):**
 
@@ -161,40 +157,9 @@ They are separate services with separate keys.
    supabase secrets set REMOVEBG_API_KEY=your-key-here
    ```
 
-**idphoto.ai (ID / passport photos):**
-
-1. Go to **https://www.idphoto.ai** and sign up for an API account
-2. Copy your API key and secret from the dashboard
-3. Run:
-   ```
-   supabase secrets set IDPHOTO_API_KEY=your-key-here
-   supabase secrets set IDPHOTO_API_SECRET=your-secret-here
-   ```
-
 > **IMPORTANT**: `ai-remove-bg` calls `https://api.remove.bg/v1.0/removebg` with the
-> `X-Api-Key` header and needs only `REMOVEBG_API_KEY`. Before deploying `ai-id-photo`,
-> check the current idphoto.ai documentation at https://www.idphoto.ai/api-docs to
-> verify the endpoint URL, request parameter names, response format (base64 vs URL),
-> and auth headers. The Edge Function code is in `supabase/functions/ai-remove-bg/index.ts`
-> and `supabase/functions/ai-id-photo/index.ts`.
-
----
-
-## Step 7 — Verify idphoto.ai preset IDs
-
-In `supabase/functions/ai-id-photo/index.ts`, the `PHOTO_SPECS` object maps spec keys
-to idphoto.ai preset IDs:
-
-```typescript
-const PHOTO_SPECS = {
-  'kr-35x45': { label: '한국 증명사진 3.5×4.5cm', preset: 'kr_id' },
-  'passport':  { label: '국제 여권 35×45mm',       preset: 'intl_passport' },
-  'us-visa':   { label: '미국 비자 51×51mm',        preset: 'us_visa' },
-  'cn-visa':   { label: '중국 비자 33×48mm',        preset: 'cn_visa' },
-};
-```
-
-Check idphoto.ai docs for the actual preset ID strings and update this object.
+> `X-Api-Key` header and needs only `REMOVEBG_API_KEY`. The Edge Function code is in
+> `supabase/functions/ai-remove-bg/index.ts`.
 
 ---
 
@@ -235,15 +200,9 @@ Edge Functions → Schedule, or use the Supabase Management API.
 2. Upload a JPEG photo → should see low-res preview
 3. Click pay → Stripe checkout → complete → HD PNG download appears
 
-### Test ID photo (Phase 3 — requires idphoto.ai key)
-1. Go to `/ai tools/id-photo/index.html`
-2. Select a spec and background color
-3. Upload a portrait photo → should see preview
-4. Click pay → Stripe checkout → complete → photo + sheet downloads appear
-
 ### Security checks
 - Open browser DevTools → Network tab
-- Confirm `OPENAI_API_KEY`, `REMOVEBG_API_KEY`, `IDPHOTO_API_KEY`, `STRIPE_SECRET_KEY` never appear
+- Confirm `OPENAI_API_KEY`, `REMOVEBG_API_KEY`, `STRIPE_SECRET_KEY` never appear
   in any network response
 - Confirm full-quality files are not returned before payment
 
@@ -255,7 +214,6 @@ Edge Functions → Schedule, or use the Supabase Management API.
 |---|---|---|
 | Transcription | First 60 seconds | $2.99 — full transcript + SRT |
 | Background Remover | Low-res preview | $1.99 — HD transparent PNG |
-| ID / Passport Photo | Low-res preview | $2.99 — HD photo + print sheet |
 | PDF Summary | Guest 3/day, account 10/day | Pro subscription — unlimited |
 
 To change per-job prices, edit `supabase/functions/ai-checkout/index.ts` → the `PRICES` object.
@@ -272,7 +230,7 @@ To change the PDF Summary daily limits, edit the `LIMITS` constant in
 ```
 Browser page
   └─ POST multipart/form-data ──→ Supabase Edge Function
-                                      └─ OpenAI Whisper / remove.bg / idphoto.ai API
+                                      └─ OpenAI Whisper / remove.bg API
                                       └─ Stores results in Supabase Storage (private)
                                       └─ Creates ai_jobs row in DB
   ←── Returns: job_id + preview data

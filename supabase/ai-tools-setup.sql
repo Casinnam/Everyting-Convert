@@ -4,7 +4,7 @@
 create table if not exists public.ai_jobs (
   id            uuid        primary key default gen_random_uuid(),
   user_id       uuid        references auth.users(id) on delete set null,
-  tool          text        not null check (tool in ('transcription', 'remove-bg', 'id-photo')),
+  tool          text        not null check (tool in ('transcription', 'remove-bg')),
   status        text        not null default 'processing'
                             check (status in ('processing', 'preview_ready', 'paid', 'complete', 'failed', 'expired')),
   stripe_session_id text,

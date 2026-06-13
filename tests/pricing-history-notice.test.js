@@ -38,9 +38,13 @@ assert(
 
 assert(
   pricing.includes('$2.99 full transcript + SRT')
-    && pricing.includes('$1.99 HD transparent PNG')
-    && pricing.includes('$2.99 HD photo + print sheet'),
+    && pricing.includes('$1.99 HD transparent PNG'),
   'Pricing page should show the current one-time AI tool prices.',
+);
+
+assert(
+  !pricing.includes('ID / Passport Photo') && !pricing.includes('id-photo'),
+  'Pricing page should no longer reference the removed ID / Passport Photo tool.',
 );
 
 assert(
