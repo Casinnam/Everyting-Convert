@@ -1,9 +1,7 @@
 // Supabase Edge Function: ai-checkout
-// Creates a Stripe Checkout session for a single AI job.
-// The job must already exist (created during preview) and be in 'preview_ready' status.
-//
-// POST body (JSON):
-//   { job_id: string, success_url: string, cancel_url: string }
+// Creates a Stripe Checkout session for either:
+//   (a) a single AI job   — body: { job_id, success_url, cancel_url }
+//   (b) a credit pack      — body: { pack, success_url, cancel_url } + Bearer JWT
 //
 // Required secrets:
 //   STRIPE_SECRET_KEY
@@ -40,6 +38,25 @@ async function dbGetJob(jobId: string): Promise<Record<string, unknown>> {
   return rows[0] as Record<string, unknown>;
 }
 
+// Resolve the logged-in user from the Bearer JWT (required for pack purchases
+// so the webhook knows whose balance to credit).
+async function getUserId(req: Request): Promise<string | null> {
+  const header = req.headers.get('authorization') ?? '';
+  const token = header.replace(/^Bearer\s+/i, '').trim();
+  if (!token || !token.startsWith('eyJ')) return null;
+  const { url, key } = supa();
+  try {
+    const res = await fetch(`${url}/auth/v1/user`, {
+      headers: { apikey: key, Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    const user = await res.json();
+    return user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
 // Pricing per tool (in cents USD)
 const PRICES: Record<string, { amount: number; label: string; description: string }> = {
   'transcription': {
@@ -54,6 +71,27 @@ const PRICES: Record<string, { amount: number; label: string; description: strin
   },
 };
 
+// Credit packs (amount in cents USD → credits granted)
+const PACKS: Record<string, { amount: number; credits: number; label: string }> = {
+  starter: { amount: 299, credits: 30, label: 'Starter Pack — 30 AI credits' },
+  standard: { amount: 699, credits: 100, label: 'Standard Pack — 100 AI credits' },
+  power: { amount: 1499, credits: 250, label: 'Power Pack — 250 AI credits' },
+  business: { amount: 2999, credits: 600, label: 'Business Pack — 600 AI credits' },
+};
+
+async function createStripeSession(stripeKey: string, params: URLSearchParams) {
+  const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${stripeKey}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: params.toString(),
+  });
+  const session = await res.json();
+  return { ok: res.ok, session };
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
@@ -61,12 +99,50 @@ Deno.serve(async (req: Request) => {
   const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
   if (!stripeKey) return json({ error: 'Payment service not configured.' }, 500);
 
-  let body: { job_id?: string; success_url?: string; cancel_url?: string };
+  let body: { job_id?: string; pack?: string; success_url?: string; cancel_url?: string };
   try { body = await req.json(); }
   catch { return json({ error: 'Invalid JSON body.' }, 400); }
 
-  const { job_id: jobId, success_url: successUrl, cancel_url: cancelUrl } = body;
+  const { job_id: jobId, pack: packKey, success_url: successUrl, cancel_url: cancelUrl } = body;
 
+  // ── Credit pack purchase ──
+  if (packKey) {
+    if (!successUrl || !cancelUrl) {
+      return json({ error: 'success_url and cancel_url are required.' }, 400);
+    }
+    const pack = PACKS[packKey];
+    if (!pack) return json({ error: 'Unknown credit pack.' }, 400);
+
+    const userId = await getUserId(req);
+    if (!userId) return json({ error: 'Please log in to buy credits.' }, 401);
+
+    const successWithParams = new URL(successUrl);
+    successWithParams.searchParams.set('session_id', '{CHECKOUT_SESSION_ID}');
+    successWithParams.searchParams.set('credits', String(pack.credits));
+
+    const params = new URLSearchParams({
+      'payment_method_types[]': 'card',
+      'line_items[0][price_data][currency]': 'usd',
+      'line_items[0][price_data][unit_amount]': String(pack.amount),
+      'line_items[0][price_data][product_data][name]': pack.label,
+      'line_items[0][quantity]': '1',
+      'mode': 'payment',
+      'success_url': successWithParams.toString(),
+      'cancel_url': cancelUrl,
+      'metadata[kind]': 'credit_pack',
+      'metadata[pack]': packKey,
+      'metadata[credits]': String(pack.credits),
+      'metadata[user_id]': userId,
+    });
+
+    const { ok, session } = await createStripeSession(stripeKey, params);
+    if (!ok || !session.url) {
+      return json({ error: `Failed to create checkout session: ${session.error?.message ?? 'unknown'}` }, 502);
+    }
+    return json({ checkout_url: session.url, session_id: session.id });
+  }
+
+  // ── Single AI job purchase ──
   if (!jobId || !successUrl || !cancelUrl) {
     return json({ error: 'job_id, success_url, and cancel_url are required.' }, 400);
   }
@@ -106,18 +182,8 @@ Deno.serve(async (req: Request) => {
     'metadata[tool]': tool,
   });
 
-  const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${stripeKey}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: params.toString(),
-  });
-
-  const session = await stripeRes.json();
-
-  if (!stripeRes.ok || !session.url) {
+  const { ok, session } = await createStripeSession(stripeKey, params);
+  if (!ok || !session.url) {
     return json({ error: `Failed to create checkout session: ${session.error?.message ?? 'unknown'}` }, 502);
   }
 

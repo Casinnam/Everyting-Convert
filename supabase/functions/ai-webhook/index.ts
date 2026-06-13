@@ -39,6 +39,26 @@ async function dbUpdateJobBySession(sessionId: string, jobId: string): Promise<v
   });
 }
 
+// Credit a user's balance for a purchased pack. Idempotent on the Stripe
+// session id (grant_ai_credits uses ON CONFLICT (ref) DO NOTHING), so webhook
+// retries never double-grant.
+async function grantCreditPack(userId: string, credits: number, sessionId: string): Promise<void> {
+  const { url, key } = supa();
+  await fetch(`${url}/rest/v1/rpc/grant_ai_credits`, {
+    method: 'POST',
+    headers: {
+      apikey: key, Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      p_user_id: userId,
+      p_amount: credits,
+      p_kind: 'pack',
+      p_ref: `pack:${sessionId}`,
+    }),
+  });
+}
+
 // Stripe webhook signature verification (HMAC-SHA256)
 async function verifyStripeSignature(
   payload: string,
@@ -100,10 +120,17 @@ Deno.serve(async (req: Request) => {
     const paymentStatus = session.payment_status as string;
     const sessionId = session.id as string;
     const metadata = session.metadata as Record<string, string> | null;
-    const jobId = metadata?.job_id;
 
-    if (paymentStatus === 'paid' && jobId && sessionId) {
-      await dbUpdateJobBySession(sessionId, jobId);
+    if (paymentStatus === 'paid' && sessionId) {
+      if (metadata?.kind === 'credit_pack') {
+        const userId = metadata.user_id;
+        const credits = parseInt(metadata.credits ?? '0', 10);
+        if (userId && credits > 0) {
+          await grantCreditPack(userId, credits, sessionId);
+        }
+      } else if (metadata?.job_id) {
+        await dbUpdateJobBySession(sessionId, metadata.job_id);
+      }
     }
   }
 
