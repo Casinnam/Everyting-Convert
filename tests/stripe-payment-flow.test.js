@@ -50,6 +50,13 @@ assert(
 );
 
 assert(
+  confirmSource.includes('function isProSubscriptionCheckout') &&
+    confirmSource.includes("metadata.kind === 'credit_pack'") &&
+    confirmSource.includes("session.mode === 'subscription'"),
+  'The confirmation endpoint should only upgrade real Pro subscriptions, never credit packs or AI jobs.',
+);
+
+assert(
   successPage.includes('/api/confirm-checkout-session'),
   'The payment success page should call the confirmation endpoint.',
 );

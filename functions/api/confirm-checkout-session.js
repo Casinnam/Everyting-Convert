@@ -43,6 +43,17 @@ async function getSupabaseUser(request, env) {
   return { user: await response.json() };
 }
 
+// Only a real Pro subscription checkout may upgrade the plan. Credit-pack and
+// per-job AI purchases are one-time payments that must never grant Pro, even if
+// this endpoint is somehow reached with their session id.
+function isProSubscriptionCheckout(session) {
+  const metadata = session && session.metadata ? session.metadata : {};
+  if (metadata.kind === 'credit_pack' || metadata.job_id || metadata.tool) {
+    return false;
+  }
+  return session && session.mode === 'subscription' && Boolean(session.subscription);
+}
+
 async function getStripeSession(env, sessionId) {
   const response = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
     headers: {
@@ -126,6 +137,12 @@ export async function onRequestPost(context) {
 
     if (!paid) {
       return jsonResponse({ pending: true, message: 'Stripe has not marked this checkout as paid yet.' }, 202);
+    }
+
+    // A paid credit pack / AI job is a valid purchase but is NOT a Pro upgrade.
+    // Acknowledge it without touching the plan so credit buyers stay non-Pro.
+    if (!isProSubscriptionCheckout(session)) {
+      return jsonResponse({ confirmed: true, plan: null, kind: 'one_time' });
     }
 
     await updateSupabasePlan(env, user, 'pro');
