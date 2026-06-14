@@ -25,6 +25,53 @@ const HISTORY_SELECT = [
   'completed_at',
 ].join(',');
 
+// Friendly labels for AI credit-spend ledger entries so they read like
+// conversions in the history list instead of raw tool slugs.
+const CREDIT_TOOL_NAMES = {
+  'remove-bg': 'Background Remover',
+  transcription: 'Audio / Video Transcription',
+  'smart-ocr': 'Smart OCR',
+  'qr-premium': 'Premium QR Code',
+  'pdf-summary-extra': 'PDF Summary',
+  'pdf-summary': 'PDF Summary',
+};
+
+function creditToolName(tool) {
+  const key = String(tool || '').trim();
+  return CREDIT_TOOL_NAMES[key] || (key ? key.replace(/[-_]/g, ' ') : 'AI tool');
+}
+
+// Normalize an ai_credit_entries spend row into the same shape the history
+// list renders. Spend amounts are stored negative; show the magnitude.
+function mapCreditEntryToRow(entry) {
+  const credits = Math.abs(Number(entry.amount) || 0);
+  const when = entry.created_at || null;
+  return {
+    id: `credit:${entry.ref || when || Math.random()}`,
+    tool_id: entry.tool || 'ai',
+    tool_name: creditToolName(entry.tool),
+    source_filename: null,
+    output_filename: null,
+    source_size: null,
+    output_size: null,
+    status: 'completed',
+    error_message: null,
+    metadata: { kind: 'ai_credit', credits },
+    created_at: when,
+    completed_at: when,
+  };
+}
+
+function mergeHistory(historyRows, creditRows, limit = 50) {
+  const combined = [...(historyRows || []), ...(creditRows || [])];
+  combined.sort((a, b) => {
+    const at = new Date(a.completed_at || a.created_at || 0).getTime();
+    const bt = new Date(b.completed_at || b.created_at || 0).getTime();
+    return bt - at;
+  });
+  return combined.slice(0, limit);
+}
+
 function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
     status,
@@ -195,12 +242,26 @@ export async function onRequestGet(context) {
     const access = await requireHistoryAccess(context.request, context.env || {});
     if (access.error) return jsonResponse({ error: access.error }, access.status);
 
-    const rows = await supabaseRest(
+    const userId = encodeURIComponent(access.user.id);
+
+    // Conversion records written by the converter tools, plus AI activity
+    // reconstructed from the credit ledger (AI Edge Functions don't write to
+    // conversion_history, but every credit spend is logged per user). Fetch
+    // both, then merge by recency so My Conversions shows the full picture.
+    const historyPromise = supabaseRest(
       context.env || {},
-      `conversion_history?user_id=eq.${encodeURIComponent(access.user.id)}&select=${HISTORY_SELECT}&order=created_at.desc&limit=50`,
+      `conversion_history?user_id=eq.${userId}&select=${HISTORY_SELECT}&order=created_at.desc&limit=50`,
     );
 
-    return jsonResponse({ history: rows || [] });
+    const creditPromise = supabaseRest(
+      context.env || {},
+      `ai_credit_entries?user_id=eq.${userId}&kind=eq.spend&select=tool,amount,ref,created_at&order=created_at.desc&limit=50`,
+    ).catch(() => []);
+
+    const [rows, creditRows] = await Promise.all([historyPromise, creditPromise]);
+    const credits = (creditRows || []).map(mapCreditEntryToRow);
+
+    return jsonResponse({ history: mergeHistory(rows || [], credits, 50) });
   } catch (error) {
     return jsonResponse({ error: error.message || 'Could not load conversion history.' }, 500);
   }

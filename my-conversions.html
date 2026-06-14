@@ -349,10 +349,22 @@
                 }).format(new Date(value));
             }
 
+            function isCreditRow(row) {
+                return row && row.metadata && row.metadata.kind === 'ai_credit';
+            }
+
             function fileSummary(row) {
+                if (isCreditRow(row)) {
+                    const credits = Number(row.metadata.credits) || 0;
+                    return credits ? `${credits} credit${credits === 1 ? '' : 's'} used` : 'AI tool used';
+                }
                 const source = row.source_filename || 'Source file';
                 const output = row.output_filename || 'Result not stored';
                 return `${source} -> ${output}`;
+            }
+
+            function rowIcon(row) {
+                return isCreditRow(row) ? 'fa-solid fa-wand-magic-sparkles' : 'fa-solid fa-file-arrow-up';
             }
 
             function renderRows(rows) {
@@ -369,7 +381,7 @@
                 historyList.innerHTML = rows.map((row) => `
                     <article class="history-row">
                         <div class="history-tool">
-                            <i class="fa-solid fa-file-arrow-up"></i>
+                            <i class="${escapeText(rowIcon(row))}"></i>
                             <span>${escapeText(row.tool_name || row.tool_id || 'Conversion')}</span>
                         </div>
                         <div class="history-files">${escapeText(fileSummary(row))}</div>

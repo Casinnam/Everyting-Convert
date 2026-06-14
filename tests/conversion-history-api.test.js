@@ -30,6 +30,23 @@ assert(
   'Conversion history API should insert user-owned conversion_history rows.',
 );
 
+const myConversions = fs.readFileSync(path.join(root, 'my-conversions.html'), 'utf8');
+
+assert(
+  api.includes('ai_credit_entries') && api.includes('kind=eq.spend') && api.includes('mergeHistory'),
+  'Conversion history API should merge AI credit-ledger spends into the history list.',
+);
+
+assert(
+  api.includes('mapCreditEntryToRow') && api.includes("kind: 'ai_credit'"),
+  'Conversion history API should normalize credit entries into history rows tagged as ai_credit.',
+);
+
+assert(
+  myConversions.includes("kind === 'ai_credit'") && myConversions.includes('credit'),
+  'My Conversions page should render AI credit usage rows.',
+);
+
 assert(
   helper.includes('window.EverythingConvertHistory') &&
     helper.includes('recordConversion') &&
