@@ -36,4 +36,14 @@ assert(
   'pricing.html should explain what credits unlock.',
 );
 
+// Account page shows the user's own balance so they can check it any time.
+const auth = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
+assert(
+  auth.includes('ai-credits.js?v=') &&
+    auth.includes('id="accountCredits"') &&
+    auth.includes('loadAccountCredits') &&
+    auth.includes('pricing.html#credit-packs'),
+  'auth.html account panel should display the credit balance and link to buy more.',
+);
+
 console.log('ai credits client tests passed');

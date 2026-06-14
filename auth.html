@@ -423,6 +423,7 @@
                 <div class="account-card">
                     <div>Display name: <strong id="accountName">-</strong></div>
                     <div>Membership level: <strong id="accountPlan" data-no-i18n>-</strong></div>
+                    <div>AI credits: <strong id="accountCredits" data-no-i18n>-</strong> <a href="pricing.html#credit-packs" style="font-weight:700;color:#2563eb;text-decoration:none;margin-left:.4rem;">Buy more</a></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
                             <label for="accountUsername">Change User ID</label>
@@ -537,6 +538,7 @@
     <script src="auth.js?v=auth-20260528b"></script>
     <script src="tools-menu.js?v=nav-20260613a"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
+    <script src="ai-credits.js?v=credits-20260613b"></script>
     <script>
         let mode = 'login';
 
@@ -557,7 +559,22 @@
         const rememberedEmails = document.getElementById('rememberedEmails');
         const accountName = document.getElementById('accountName');
         const accountPlan = document.getElementById('accountPlan');
+        const accountCredits = document.getElementById('accountCredits');
         const accountHint = document.getElementById('accountHint');
+
+        let creditsLoaded = false;
+        async function loadAccountCredits() {
+            if (!accountCredits) return;
+            const credits = window.EverythingConvertCredits;
+            if (!credits) return;
+            const balance = await credits.getBalance();
+            if (balance === null) {
+                if (!creditsLoaded) accountCredits.textContent = '-';
+                return;
+            }
+            creditsLoaded = true;
+            accountCredits.textContent = String(balance);
+        }
         const accountUsername = document.getElementById('accountUsername');
         const usernameForm = document.getElementById('usernameForm');
         const usernameSaveBtn = document.getElementById('usernameSaveBtn');
@@ -917,6 +934,7 @@
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
             accountPlan.textContent = auth.formatPlan() || '';
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
+            loadAccountCredits();
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             if (!profilePlan) {
                 accountHint.dataset.i18nKey = 'accountLoadingHint';
