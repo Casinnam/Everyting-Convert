@@ -17,6 +17,12 @@ body.json-csv-page {
         linear-gradient(180deg, #f8fbff 0%, #ffffff 48%, #fffaf0 100%);
 }
 
+.json-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
 .json-header .logo {
     text-decoration: none;
     white-space: nowrap;

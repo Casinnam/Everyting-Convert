@@ -97,6 +97,15 @@ function userIdFromSession(session) {
   );
 }
 
+function isProSubscriptionCheckout(session) {
+  const metadata = session && session.metadata ? session.metadata : {};
+  if (metadata.kind === 'credit_pack' || metadata.job_id || metadata.tool) {
+    return false;
+  }
+
+  return session && session.mode === 'subscription' && Boolean(session.subscription);
+}
+
 export async function onRequestPost(context) {
   const env = context.env || {};
   if (!env.STRIPE_WEBHOOK_SECRET) {
@@ -121,7 +130,9 @@ export async function onRequestPost(context) {
   try {
     if (event.type === 'checkout.session.completed') {
       const session = event.data && event.data.object ? event.data.object : {};
-      await updateSupabasePlan(env, userIdFromSession(session), 'pro');
+      if (isProSubscriptionCheckout(session)) {
+        await updateSupabasePlan(env, userIdFromSession(session), 'pro');
+      }
     }
 
     if (event.type === 'customer.subscription.deleted') {

@@ -16,6 +16,7 @@ Object.keys(pages).forEach((rel) => {
   const html = fs.readFileSync(path.join(root, rel), 'utf8');
   assert(html.includes('ai-credits.js?v='), `${rel} should load ai-credits.js.`);
   assert(html.includes('id="creditBtn"'), `${rel} should render a credit button in the paywall.`);
+  assert(html.includes('credit-policy-note'), `${rel} should explain AI credit usage before payment.`);
   assert(
     html.includes('credits.redeem(') && html.includes('setupCreditOption'),
     `${rel} should redeem with credits and set up the credit option on preview.`,
@@ -37,6 +38,17 @@ const tr = fs.readFileSync(path.join(root, 'ai tools/transcription/index.html'),
 assert(
   tr.includes('Math.max(5, Math.ceil((currentDuration || 0) / 60))'),
   'transcription should price credits at 1 per minute, minimum 5.',
+);
+
+assert(
+  tr.includes('txtUrl = data.txt_url') && tr.includes('srtUrl = data.srt_url'),
+  'transcription should store paid result URLs for the TXT and SRT download buttons.',
+);
+
+const pdfSummary = fs.readFileSync(path.join(root, 'ai tools/pdf-summary/index.html'), 'utf8');
+assert(
+  pdfSummary.includes('credit-policy-note') && pdfSummary.includes('extra summaries after the free limit use 1 AI credit'),
+  'PDF Summary should explain that credits are only used after the daily free limit.',
 );
 
 console.log('ai tool credit UI tests passed');

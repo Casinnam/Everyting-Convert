@@ -155,7 +155,9 @@
     logoUrl: null,
     frame: 'none',
     frameColor: '#2563eb',
-    frameText: 'SCAN ME'
+    frameText: 'SCAN ME',
+    premiumUnlocked: false,
+    premiumRef: ''
   };
 
   const quickTabs = document.getElementById('quickTypeTabs');
@@ -567,18 +569,43 @@
     else await downloadPng();
   }
 
-  function selectFormat(format) {
-    if (format === 'svg' || format === 'pdf') {
-      let isPro = false;
-      if (window.EverythingConvertAuth) {
-        if (typeof window.EverythingConvertAuth.isPro === 'function') isPro = window.EverythingConvertAuth.isPro();
-        if (!isPro && typeof window.EverythingConvertAuth.cachedAuthSnapshot === 'function') {
-          const cache = window.EverythingConvertAuth.cachedAuthSnapshot();
-          if (cache && cache.plan === 'pro') isPro = true;
-        }
-      }
-      if (!isPro) return;
+  function premiumRef() {
+    if (!state.premiumRef) {
+      const id = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : String(Date.now());
+      state.premiumRef = 'qr-premium:' + id;
     }
+    return state.premiumRef;
+  }
+
+  async function ensurePremiumUnlocked() {
+    if (state.premiumUnlocked) return true;
+    const credits = window.EverythingConvertCredits;
+    if (!credits || typeof credits.spend !== 'function') {
+      status.textContent = 'Credit service is still loading. Try again in a moment.';
+      return false;
+    }
+    status.textContent = 'Unlocking premium QR features with 5 credits...';
+    const result = await credits.spend('qr-premium', premiumRef());
+    if (!result.ok) {
+      if (result.code === 'login_required') {
+        window.location.href = '../auth.html?next=' + encodeURIComponent('qr code generator/qr-code-generator.html');
+        return false;
+      }
+      if (result.code === 'insufficient_credits') {
+        status.textContent = 'Not enough AI credits. Buy credits from Pricing to unlock logo, frame, SVG, and PDF QR exports.';
+      } else {
+        status.textContent = result.error || 'Could not unlock premium QR features.';
+      }
+      return false;
+    }
+    state.premiumUnlocked = true;
+    status.textContent = 'Premium QR features unlocked. 5 credits used. Balance: ' + result.balance + '.';
+    applyProFeatures();
+    return true;
+  }
+
+  async function selectFormat(format) {
+    if ((format === 'svg' || format === 'pdf') && !(await ensurePremiumUnlocked())) return;
     state.format = format;
     document.querySelectorAll('.qr-format-row button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.format === format);
@@ -589,7 +616,8 @@
     else downloadBtn.innerHTML = 'Download PNG <i class="fa-solid fa-download"></i>';
   }
 
-  function switchDesignTab(tabId) {
+  async function switchDesignTab(tabId) {
+    if ((tabId === 'logo' || tabId === 'frame') && !(await ensurePremiumUnlocked())) return;
     document.querySelectorAll('.qr-design-tabs button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tab === tabId);
     });
@@ -602,31 +630,12 @@
   }
 
   function applyProFeatures() {
-    let isPro = false;
-    if (window.EverythingConvertAuth) {
-      if (typeof window.EverythingConvertAuth.isPro === 'function') {
-        isPro = window.EverythingConvertAuth.isPro();
-      }
-      if (!isPro && typeof window.EverythingConvertAuth.cachedAuthSnapshot === 'function') {
-        const cache = window.EverythingConvertAuth.cachedAuthSnapshot();
-        if (cache && cache.plan === 'pro') isPro = true;
-      }
-    }
-    
     document.querySelectorAll('.qr-format-row button[data-format="svg"], .qr-format-row button[data-format="pdf"]').forEach(btn => {
-      if (isPro) btn.removeAttribute('disabled');
-      else {
-        btn.setAttribute('disabled', 'true');
-        if (state.format === btn.dataset.format) selectFormat('png');
-      }
+      btn.removeAttribute('disabled');
     });
 
     document.querySelectorAll('.qr-design-tabs button[data-tab="logo"], .qr-design-tabs button[data-tab="frame"]').forEach(btn => {
-      if (isPro) btn.removeAttribute('disabled');
-      else {
-        btn.setAttribute('disabled', 'true');
-        if (btn.classList.contains('active')) switchDesignTab('color');
-      }
+      btn.removeAttribute('disabled');
     });
   }
 
@@ -656,9 +665,7 @@
     });
 
     document.querySelectorAll('.qr-design-tabs button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!btn.hasAttribute('disabled')) switchDesignTab(btn.dataset.tab);
-      });
+      btn.addEventListener('click', () => switchDesignTab(btn.dataset.tab));
     });
 
     const logoInput = document.getElementById('logoUploadInput');

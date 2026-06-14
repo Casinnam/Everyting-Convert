@@ -25,13 +25,15 @@ assert(
 // Spend must be atomic (advisory lock), deny when short, and service-role only.
 assert(
   sql.includes('function public.record_ai_credit_spend') &&
+    sql.includes('p_ref text default null') &&
     sql.includes('pg_advisory_xact_lock') &&
+    sql.includes('and ref = p_ref') &&
     sql.includes('return query select current_balance, false;') &&
-    sql.includes('grant execute on function public.record_ai_credit_spend(uuid, integer, text) to service_role'),
-  'record_ai_credit_spend should lock per user, deny when balance is short, and be service-role only.',
+    sql.includes('grant execute on function public.record_ai_credit_spend(uuid, integer, text, text) to service_role'),
+  'record_ai_credit_spend should lock per user, be idempotent by ref, deny when balance is short, and be service-role only.',
 );
 assert(
-  sql.includes('revoke execute on function public.record_ai_credit_spend(uuid, integer, text) from authenticated'),
+  sql.includes('revoke execute on function public.record_ai_credit_spend(uuid, integer, text, text) from authenticated'),
   'record_ai_credit_spend must not be callable directly by the browser.',
 );
 

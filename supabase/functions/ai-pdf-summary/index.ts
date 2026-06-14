@@ -96,6 +96,28 @@ async function recordUsage(identity: string, limit: number): Promise<{ remaining
   return { remaining: Number(row?.remaining ?? 0), allowed: Boolean(row?.allowed) };
 }
 
+async function spendCredits(userId: string, ref: string): Promise<{ balance: number; allowed: boolean }> {
+  const { url, key } = supa();
+  const res = await fetch(`${url}/rest/v1/rpc/record_ai_credit_spend`, {
+    method: 'POST',
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      p_user_id: userId,
+      p_cost: 1,
+      p_tool: 'pdf-summary-extra',
+      p_ref: ref,
+    }),
+  });
+  const rows = await res.json();
+  if (!res.ok) throw new Error(`record_ai_credit_spend failed: ${JSON.stringify(rows)}`);
+  const row = Array.isArray(rows) ? rows[0] : rows;
+  return { balance: Number(row?.balance ?? 0), allowed: Boolean(row?.allowed) };
+}
+
 function languageName(code: string): string {
   const clean = String(code || 'en').toLowerCase();
   if (clean.startsWith('ko')) return 'Korean';
@@ -127,13 +149,15 @@ Deno.serve(async (req: Request) => {
     const openAIKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIKey) return json({ error: 'PDF summary service is not configured.' }, 500);
 
-    let body: { text?: string; file_name?: string; language?: string };
+    let body: { text?: string; file_name?: string; language?: string; use_credit?: boolean; credit_ref?: string };
     try { body = await req.json(); }
     catch { return json({ error: 'Invalid JSON body.' }, 400); }
 
     const fileName = String(body.file_name || 'PDF document').slice(0, 160);
     const text = String(body.text || '').replace(/\s+/g, ' ').trim().slice(0, 16000);
     const outputLanguage = languageName(String(body.language || 'en'));
+    const wantsCredit = body.use_credit === true;
+    const cleanCreditRef = String(body.credit_ref || '').replace(/[^a-zA-Z0-9:_-]/g, '').slice(0, 160);
 
     if (text.length < 80) {
       return json({ error: 'Not enough readable text was found in this PDF. OCR may be required.' }, 400);
@@ -143,6 +167,7 @@ Deno.serve(async (req: Request) => {
     const user = await getUser(req);
     const isUnlimited = !!user && (user.plan === 'pro' || user.role === 'admin');
     let usage: { remaining: number; limit: number } | null = null;
+    let pendingCreditRef: string | null = null;
 
     if (!isUnlimited) {
       const identity = user
@@ -160,15 +185,22 @@ Deno.serve(async (req: Request) => {
       }
 
       if (!result.allowed) {
-        return json({
-          error: 'Daily free limit reached.',
-          code: 'limit_reached',
-          remaining: 0,
-          limit,
-          logged_in: !!user,
-        }, 429);
+        if (user && wantsCredit) {
+          pendingCreditRef = cleanCreditRef || `pdf-summary-extra:${user.id}:${crypto.randomUUID()}`;
+        } else {
+          return json({
+            error: 'Daily free limit reached.',
+            code: 'limit_reached',
+            remaining: 0,
+            limit,
+            logged_in: !!user,
+            credit_supported: !!user,
+            credit_cost: 1,
+          }, 429);
+        }
+      } else {
+        usage = { remaining: result.remaining, limit };
       }
-      usage = { remaining: result.remaining, limit };
     }
 
     const model = Deno.env.get('OPENAI_SUMMARY_MODEL') || 'gpt-4o-mini';
@@ -220,13 +252,26 @@ ${text}
     }
 
     const content = aiData?.choices?.[0]?.message?.content;
-    if (!content) return json({ summary: fallbackSummary(text, fileName), usage, warning: 'Fallback summary used.' });
+    let summary: Record<string, unknown>;
+    let warning: string | undefined;
 
     try {
-      return json({ summary: JSON.parse(content), usage });
+      summary = content ? JSON.parse(content) : fallbackSummary(text, fileName);
     } catch {
-      return json({ summary: fallbackSummary(text, fileName), usage, warning: 'Fallback summary used.' });
+      summary = fallbackSummary(text, fileName);
+      warning = 'Fallback summary used.';
     }
+
+    let credit: { cost: number; balance: number } | null = null;
+    if (user && pendingCreditRef) {
+      const spend = await spendCredits(user.id, pendingCreditRef);
+      if (!spend.allowed) {
+        return json({ error: 'Not enough credits.', code: 'insufficient_credits', cost: 1, balance: spend.balance }, 402);
+      }
+      credit = { cost: 1, balance: spend.balance };
+    }
+
+    return json({ summary, usage, credit, warning });
   } catch (error) {
     console.error('[ai-pdf-summary]', error);
     return json({ error: 'Internal server error.' }, 500);

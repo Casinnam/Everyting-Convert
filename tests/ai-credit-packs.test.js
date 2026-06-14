@@ -34,8 +34,11 @@ assert(
   webhook.includes('grant_ai_credits') &&
     webhook.includes('`pack:${sessionId}`') &&
     webhook.includes("metadata?.kind === 'credit_pack'") &&
-    webhook.includes('dbUpdateJobBySession'),
-  'ai-webhook should grant credits for credit_pack sessions (idempotent on session id) and still mark tool jobs paid.',
+    webhook.includes('dbUpdateJobBySession') &&
+    webhook.includes('Webhook processing failed. Stripe should retry') &&
+    webhook.includes('return json({ error:') &&
+    webhook.includes('500'),
+  'ai-webhook should grant credits for credit_pack sessions, mark tool jobs paid, and return 500 so Stripe retries when persistence fails.',
 );
 
 console.log('ai credit packs tests passed');

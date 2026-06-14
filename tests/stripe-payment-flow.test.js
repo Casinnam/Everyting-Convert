@@ -6,6 +6,7 @@ const root = path.join(__dirname, '..');
 const checkoutSource = fs.readFileSync(path.join(root, 'functions', 'api', 'create-checkout-session.js'), 'utf8');
 const confirmSource = fs.readFileSync(path.join(root, 'functions', 'api', 'confirm-checkout-session.js'), 'utf8');
 const envCheckSource = fs.readFileSync(path.join(root, 'functions', 'api', 'env-check.js'), 'utf8');
+const webhookSource = fs.readFileSync(path.join(root, 'functions', 'api', 'stripe-webhook.js'), 'utf8');
 const successPage = fs.readFileSync(path.join(root, 'payment-success.html'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
 const pricingPage = fs.readFileSync(path.join(root, 'pricing.html'), 'utf8');
@@ -96,6 +97,14 @@ assert(
 assert(
   pricingPage.includes('function resolveCheckoutSession') && pricingPage.includes('client.auth.getSession()'),
   'Pricing checkout should not redirect to login before directly checking the Supabase session.',
+);
+
+assert(
+  webhookSource.includes('function isProSubscriptionCheckout') &&
+    webhookSource.includes("metadata.kind === 'credit_pack'") &&
+    webhookSource.includes('metadata.job_id') &&
+    webhookSource.includes("session.mode === 'subscription'"),
+  'The Pro subscription webhook should ignore AI credit packs and one-time AI jobs.',
 );
 
 console.log('stripe payment flow tests passed');

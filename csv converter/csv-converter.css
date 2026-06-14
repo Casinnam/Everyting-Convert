@@ -17,6 +17,12 @@ body.csv-converter-page {
         linear-gradient(180deg, #f8fdf8 0%, #ffffff 48%, #f0fdf4 100%);
 }
 
+.csv-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
 .csv-header .logo {
     text-decoration: none;
     white-space: nowrap;

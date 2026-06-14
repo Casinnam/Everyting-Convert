@@ -29,7 +29,7 @@ function supa() {
 
 async function dbUpdateJobBySession(sessionId: string, jobId: string): Promise<void> {
   const { url, key } = supa();
-  await fetch(`${url}/rest/v1/ai_jobs?id=eq.${jobId}`, {
+  const res = await fetch(`${url}/rest/v1/ai_jobs?id=eq.${jobId}`, {
     method: 'PATCH',
     headers: {
       apikey: key, Authorization: `Bearer ${key}`,
@@ -37,6 +37,10 @@ async function dbUpdateJobBySession(sessionId: string, jobId: string): Promise<v
     },
     body: JSON.stringify({ status: 'paid', stripe_session_id: sessionId }),
   });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`dbUpdateJobBySession failed: ${text}`);
+  }
 }
 
 // Credit a user's balance for a purchased pack. Idempotent on the Stripe
@@ -44,7 +48,7 @@ async function dbUpdateJobBySession(sessionId: string, jobId: string): Promise<v
 // retries never double-grant.
 async function grantCreditPack(userId: string, credits: number, sessionId: string): Promise<void> {
   const { url, key } = supa();
-  await fetch(`${url}/rest/v1/rpc/grant_ai_credits`, {
+  const res = await fetch(`${url}/rest/v1/rpc/grant_ai_credits`, {
     method: 'POST',
     headers: {
       apikey: key, Authorization: `Bearer ${key}`,
@@ -57,6 +61,10 @@ async function grantCreditPack(userId: string, credits: number, sessionId: strin
       p_ref: `pack:${sessionId}`,
     }),
   });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`grantCreditPack failed: ${text}`);
+  }
 }
 
 // Stripe webhook signature verification (HMAC-SHA256)
@@ -114,26 +122,31 @@ Deno.serve(async (req: Request) => {
   try { event = JSON.parse(payload); }
   catch { return json({ error: 'Invalid JSON.' }, 400); }
 
-  // Only handle completed checkout sessions
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const paymentStatus = session.payment_status as string;
-    const sessionId = session.id as string;
-    const metadata = session.metadata as Record<string, string> | null;
+  try {
+    // Only handle completed checkout sessions
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      const paymentStatus = session.payment_status as string;
+      const sessionId = session.id as string;
+      const metadata = session.metadata as Record<string, string> | null;
 
-    if (paymentStatus === 'paid' && sessionId) {
-      if (metadata?.kind === 'credit_pack') {
-        const userId = metadata.user_id;
-        const credits = parseInt(metadata.credits ?? '0', 10);
-        if (userId && credits > 0) {
+      if (paymentStatus === 'paid' && sessionId) {
+        if (metadata?.kind === 'credit_pack') {
+          const userId = metadata.user_id;
+          const credits = parseInt(metadata.credits ?? '0', 10);
+          if (!userId || credits <= 0) {
+            throw new Error('Credit pack session is missing user_id or credits metadata.');
+          }
           await grantCreditPack(userId, credits, sessionId);
+        } else if (metadata?.job_id) {
+          await dbUpdateJobBySession(sessionId, metadata.job_id);
         }
-      } else if (metadata?.job_id) {
-        await dbUpdateJobBySession(sessionId, metadata.job_id);
       }
     }
+  } catch (error) {
+    console.error('[ai-webhook] delivery failed', error);
+    return json({ error: 'Webhook processing failed. Stripe should retry.' }, 500);
   }
 
-  // Always return 200 so Stripe doesn't retry
   return json({ received: true });
 });

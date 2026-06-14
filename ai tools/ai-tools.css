@@ -100,6 +100,31 @@ body {
   color: var(--ai-primary) !important;
 }
 
+.credit-policy-note {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  max-width: 760px;
+  margin: 1rem auto 0;
+  padding: .8rem 1rem;
+  border: 1px solid rgba(37, 99, 235, .16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .76);
+  color: #475569;
+  box-shadow: 0 12px 32px rgba(37, 99, 235, .08);
+  line-height: 1.55;
+  font-size: .92rem;
+}
+
+.credit-policy-note strong {
+  color: #1d4ed8;
+}
+
+.credit-policy-note i {
+  color: #7c3aed;
+  margin-top: .12rem;
+}
+
 main {
   max-width: 1040px !important;
   padding-top: 0 !important;

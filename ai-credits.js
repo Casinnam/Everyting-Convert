@@ -88,6 +88,28 @@
     }
   }
 
+  // Direct credit spend for non-job tools (e.g. premium QR). Idempotent on ref.
+  async function spend(tool, ref) {
+    const token = await resolveToken();
+    if (!token) return { ok: false, code: 'login_required', error: 'Please log in.' };
+    try {
+      const res = await fetch(`${FUNC_BASE}/ai-spend-credit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(ANON ? { apikey: ANON } : {}),
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ tool, ref }),
+      });
+      let data = {};
+      try { data = await res.json(); } catch (error) { data = {}; }
+      return { status: res.status, ok: res.ok && !!data.ok, ...data };
+    } catch (error) {
+      return { ok: false, code: 'network', error: 'Network error. Please try again.' };
+    }
+  }
+
   // Start Stripe checkout for a credit pack. Redirects to login first if needed.
   async function buyPack(packKey) {
     if (!PACKS[packKey]) return;
@@ -122,5 +144,5 @@
     }
   }
 
-  window.EverythingConvertCredits = { getBalance, redeem, buyPack, isLoggedIn, PACKS };
+  window.EverythingConvertCredits = { getBalance, redeem, spend, buyPack, isLoggedIn, PACKS };
 })();

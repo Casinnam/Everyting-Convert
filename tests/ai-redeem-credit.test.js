@@ -22,10 +22,12 @@ assert(
 // Spends atomically and only unlocks the job when the spend is allowed.
 assert(
   fn.includes('record_ai_credit_spend') &&
+    fn.includes('p_ref') &&
+    fn.includes('`job:${jobId}`') &&
     fn.includes('insufficient_credits') &&
     fn.includes('402') &&
     fn.includes("status: 'paid'"),
-  'ai-redeem-credit should spend via RPC, return 402 on insufficient credits, and mark the job paid on success.',
+  'ai-redeem-credit should spend idempotently via RPC, return 402 on insufficient credits, and mark the job paid on success.',
 );
 
 // Idempotent: an already-paid job is not charged again.
