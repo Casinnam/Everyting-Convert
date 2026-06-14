@@ -1,0 +1,439 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MWPYMT3Q6H"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MWPYMT3Q6H');</script>
+  <script src="../../ads.js?v=ads-20260611a"></script>
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="usage-limit" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart OCR - Image & PDF to Text - EverythingConvert</title>
+  <meta name="description" content="Extract text from images and PDFs with AI. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout Markdown, tables to CSV, translation, summary, and searchable PDF.">
+  <link rel="canonical" href="https://www.everythingconvert.com/ai%20tools/smart-ocr/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EverythingConvert">
+  <meta property="og:title" content="Smart OCR - Image & PDF to Text - EverythingConvert">
+  <meta property="og:description" content="AI OCR for images and PDFs. Free on-device preview, or GPT-4o Smart OCR with tables, translation, and searchable PDF.">
+  <meta property="og:url" content="https://www.everythingconvert.com/ai%20tools/smart-ocr/index.html">
+  <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{--bg:#f8fbff;--surface:#fff;--surface2:#eff6ff;--accent2:#2563eb;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--ai-purple:#7c3aed;--ai-purple-light:#ede9fe}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 60%,#7c3aed 100%);color:#fff;padding:3rem 1.5rem 2.5rem;text-align:center}
+    .page-hero .badge{display:inline-block;background:rgba(124,58,237,.25);border:1px solid rgba(167,139,250,.4);color:#c4b5fd;font-size:.75rem;font-weight:600;letter-spacing:.06em;padding:.25rem .75rem;border-radius:999px;margin-bottom:1rem}
+    .page-hero h1{font-size:clamp(1.75rem,4vw,2.75rem);font-weight:900;margin-bottom:.75rem}
+    .page-hero p{color:#cbd5e1;font-size:1.05rem;max-width:600px;margin:0 auto}
+    main{max-width:840px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+    .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:2rem;margin-bottom:1.5rem}
+    .upload-zone{border:2px dashed #cbd5e1;border-radius:.75rem;padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:#fafbff}
+    .upload-zone:hover,.upload-zone.drag-over{border-color:var(--ai-purple);background:var(--ai-purple-light)}
+    .upload-zone .icon{font-size:2.5rem;margin-bottom:.75rem}
+    .upload-zone h3{font-size:1.05rem;font-weight:600;margin-bottom:.35rem}
+    .upload-zone p{color:var(--muted);font-size:.875rem}
+    .upload-zone input[type=file]{display:none}
+    .file-info{display:none;align-items:center;gap:1rem;padding:1rem;background:var(--surface2);border-radius:.5rem;margin-top:1rem}
+    .file-info.visible{display:flex}
+    .file-info .file-name{font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .file-info .file-size{color:var(--muted);font-size:.85rem;white-space:nowrap}
+    .file-info .remove-btn{background:none;border:0;cursor:pointer;color:var(--muted);font-size:1.2rem}
+    .action-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.25rem}
+    @media(max-width:560px){.action-row{grid-template-columns:1fr}}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.2rem;border-radius:.6rem;font-size:1rem;font-weight:700;cursor:pointer;border:0;transition:opacity .2s,transform .1s;width:100%}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn:not(:disabled):hover{opacity:.9}
+    .btn-free{background:#0f172a;color:#fff}
+    .btn-smart{background:linear-gradient(135deg,var(--accent2),var(--ai-purple));color:#fff}
+    .btn-credit{background:var(--accent2);color:#fff}
+    .btn-soft{background:#fff;color:#1e293b;border:1px solid var(--border)}
+    .action-card{border:1px solid var(--border);border-radius:.75rem;padding:1rem;text-align:left}
+    .action-card h4{font-size:.95rem;margin-bottom:.3rem}
+    .action-card p{color:var(--muted);font-size:.82rem;line-height:1.5;margin-bottom:.75rem;min-height:2.5rem}
+    .quality-note{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.25rem}
+    @media(max-width:560px){.quality-note{grid-template-columns:1fr}}
+    .quality-note .q{border:1px solid var(--border);border-radius:.6rem;padding:.85rem 1rem;font-size:.82rem;line-height:1.55;color:var(--muted);background:#fafbff}
+    .quality-note .q strong{display:block;color:var(--text);margin-bottom:.25rem}
+    .quality-note .q.smart{border-color:rgba(124,58,237,.35);background:var(--ai-purple-light)}
+    .progress-bar-wrap{display:none;background:#e2e8f0;border-radius:999px;height:6px;margin-top:1.25rem;overflow:hidden}
+    .progress-bar-wrap.visible{display:block}
+    .progress-bar{height:100%;background:var(--ai-purple);border-radius:999px;width:0;transition:width .3s}
+    .status-msg{display:none;margin-top:1rem;padding:.75rem 1rem;border-radius:.5rem;font-size:.9rem}
+    .status-msg.visible{display:block}
+    .status-msg.info{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+    .status-msg.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+    .status-msg.success{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+    .paywall{display:none;background:linear-gradient(135deg,#1e1b4b,#3730a3);color:#fff;border-radius:.75rem;padding:1.5rem;text-align:center;margin-top:1.25rem}
+    .paywall.visible{display:block}
+    .paywall h3{font-size:1.15rem;margin-bottom:.5rem}
+    .paywall p{color:#c7d2fe;font-size:.9rem;margin-bottom:1rem}
+    .paywall .credit-hint{margin-top:.6rem;font-size:.85rem;color:#c7d2fe}
+    .result{display:none;margin-top:1.5rem}
+    .result.visible{display:block}
+    .tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem}
+    .tabs button{border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:999px;padding:.4rem .9rem;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer}
+    .tabs button.active{color:#fff;background:var(--ai-purple);border-color:transparent}
+    .out-box{border:1px solid var(--border);border-radius:.75rem;padding:1.1rem;max-height:420px;overflow:auto;background:var(--surface2);white-space:pre-wrap;font-size:.9rem;line-height:1.7;font-family:ui-monospace,Menlo,Consolas,monospace}
+    .downloads{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+    .downloads .btn{width:auto}
+    .enhance-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.75rem}
+    .enhance-row .btn{width:auto}
+    .info-box{background:var(--surface2);border-left:3px solid var(--ai-purple);padding:.875rem 1rem;border-radius:0 .5rem .5rem 0;font-size:.85rem;color:var(--muted);margin-top:1.5rem}
+    .info-box strong{color:var(--text)}
+    .faq{margin-top:2.5rem}
+    .faq h2{font-size:1.2rem;font-weight:700;margin-bottom:1rem}
+    .faq details{border:1px solid var(--border);border-radius:.6rem;padding:.85rem 1rem;margin-bottom:.6rem;background:#fff}
+    .faq summary{font-weight:600;cursor:pointer}
+    .faq p{color:var(--muted);font-size:.9rem;line-height:1.6;margin-top:.5rem}
+    footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.85rem}
+  </style>
+</head>
+<body>
+<header id="ec-header-inject"></header>
+
+<div class="page-hero">
+  <div class="badge">AI TOOL · OCR</div>
+  <h1>Smart OCR</h1>
+  <p>Turn images and PDFs into text. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout, tables, translation, summary, and a searchable PDF.</p>
+</div>
+
+<main>
+  <div class="tool-card">
+    <label id="uploadZone" class="upload-zone">
+      <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,application/pdf,.png,.jpg,.jpeg,.webp,.pdf">
+      <div class="icon">&#128196;</div>
+      <h3>Drop an image or PDF here</h3>
+      <p>PNG, JPG, WebP, or PDF · up to 30 pages with Smart OCR</p>
+    </label>
+
+    <div id="fileInfo" class="file-info">
+      <span id="fileName" class="file-name"></span>
+      <span id="fileSize" class="file-size"></span>
+      <button id="removeFile" class="remove-btn" title="Remove">&#10005;</button>
+    </div>
+
+    <div id="actionRow" class="action-row" style="display:none">
+      <div class="action-card">
+        <h4>Quick OCR — Free</h4>
+        <p>On-device (Tesseract). First page only. Best for clear printed text. Your file never leaves your browser.</p>
+        <button id="freeBtn" class="btn btn-free" type="button">Run free OCR (1 page)</button>
+      </div>
+      <div class="action-card">
+        <h4>Smart OCR — GPT-4o</h4>
+        <p id="smartDesc">Higher accuracy, layout, tables, handwriting & many languages. Up to 30 pages.</p>
+        <button id="smartBtn" class="btn btn-smart" type="button">Smart OCR</button>
+      </div>
+    </div>
+
+    <div class="quality-note">
+      <div class="q"><strong>Free (on-device)</strong>Good for clean, printed pages. One page at a time. No tables or layout, weaker on Korean, handwriting, low quality scans, or photos. Nothing is uploaded.</div>
+      <div class="q smart"><strong>Smart OCR (GPT-4o)</strong>Much higher accuracy. Keeps layout (Markdown), extracts tables to CSV, reads handwriting and many languages, up to 30 pages. 2 credits per page. Pages are sent securely for processing.</div>
+    </div>
+
+    <div id="progressWrap" class="progress-bar-wrap"><div id="progressBar" class="progress-bar"></div></div>
+    <div id="statusMsg" class="status-msg"></div>
+
+    <div id="paywall" class="paywall">
+      <h3>&#128274; Smart OCR ready</h3>
+      <p id="paywallText">Unlock full-document Smart OCR for all pages.</p>
+      <button id="creditBtn" class="btn btn-credit" type="button" style="display:none"></button>
+      <p id="creditHint" class="credit-hint"></p>
+    </div>
+
+    <div id="result" class="result">
+      <div class="tabs">
+        <button data-tab="markdown" class="active" type="button">Markdown</button>
+        <button data-tab="text" type="button">Plain text</button>
+        <button data-tab="tables" type="button">Tables</button>
+      </div>
+      <div id="outBox" class="out-box"></div>
+      <div class="downloads">
+        <button id="dlTxt" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> .txt</button>
+        <button id="dlMd" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> .md</button>
+        <button id="dlCsv" class="btn btn-soft" type="button" style="display:none"><i class="fa-solid fa-download"></i> tables .csv</button>
+        <button id="dlPdf" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> searchable PDF</button>
+      </div>
+      <div id="enhanceRow" class="enhance-row" style="display:none">
+        <button id="translateBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-language"></i> Translate</button>
+        <button id="summarizeBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Summarize</button>
+      </div>
+    </div>
+
+    <div class="info-box"><strong>Privacy:</strong> Free OCR runs entirely in your browser — nothing is uploaded. Smart OCR sends page images to a secure server for processing and does not store them after the result is returned.</div>
+  </div>
+
+  <div class="faq">
+    <h2>Smart OCR FAQ</h2>
+    <details><summary>What is the difference between Free and Smart OCR?</summary><p>Free OCR runs on your device for one page and works best on clean printed text, with no layout or tables. Smart OCR uses GPT-4o for much higher accuracy, keeps layout as Markdown, extracts tables, reads handwriting and many languages, and handles up to 30 pages.</p></details>
+    <details><summary>How much does Smart OCR cost?</summary><p>2 credits per page. New accounts get 10 free credits, and you can buy credit packs on the pricing page. The free on-device OCR costs nothing.</p></details>
+    <details><summary>Can it read Korean and handwriting?</summary><p>Smart OCR (GPT-4o) handles Korean, mixed languages, and handwriting well. The free on-device option is weaker on those — use Smart OCR for best results.</p></details>
+    <details><summary>What is a searchable PDF?</summary><p>A PDF that keeps the original page images but adds a hidden text layer, so you can select and search the text. Smart OCR can export one.</p></details>
+  </div>
+</main>
+
+<footer><p>&copy; 2026 EverythingConvert &nbsp;|&nbsp; <a href="../../privacy.html">Privacy</a> &nbsp;|&nbsp; <a href="../../contact.html">Contact</a></p></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../supabase-config.js"></script>
+<script src="../../auth.js?v=auth-20260610a"></script>
+<script src="../../tools-menu.js?v=nav-20260613b"></script>
+<script src="../../language-menu.js?v=lang-20260611a"></script>
+<script src="../../header-language.js?v=headerlang-20260608a"></script>
+<script src="../ai-common.js?v=ai-common-20260613a"></script>
+<script src="../../ai-credits.js?v=credits-20260613b"></script>
+<script>
+(function () {
+  const FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
+  const ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
+  const MAX_PAGES = 30;
+  if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const $ = (id) => document.getElementById(id);
+  const fileInput = $('fileInput'), uploadZone = $('uploadZone'), fileInfo = $('fileInfo'),
+    fileNameEl = $('fileName'), fileSizeEl = $('fileSize'), removeFile = $('removeFile'),
+    actionRow = $('actionRow'), freeBtn = $('freeBtn'), smartBtn = $('smartBtn'), smartDesc = $('smartDesc'),
+    progressWrap = $('progressWrap'), progressBar = $('progressBar'), statusMsg = $('statusMsg'),
+    paywall = $('paywall'), paywallText = $('paywallText'), creditBtn = $('creditBtn'), creditHint = $('creditHint'),
+    result = $('result'), outBox = $('outBox'), enhanceRow = $('enhanceRow');
+
+  const credits = window.EverythingConvertCredits;
+  let pageImages = [];           // array of JPEG data URLs
+  let totalPages = 0;            // pages we will process (<= MAX_PAGES)
+  let currentJobId = null, jobPages = 0;
+  let assembled = { markdown: '', text: '', tables: [] };
+  let activeTab = 'markdown';
+
+  function setStatus(m, t){ statusMsg.textContent = m||''; statusMsg.className = 'status-msg' + (m?(' visible '+(t||'info')):''); }
+  function setProgress(p){ progressWrap.classList.toggle('visible', p>=0 && p<100); progressBar.style.width = Math.max(0,Math.min(100,p))+'%'; }
+  function fmtSize(b){ return b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB'; }
+  function creditCost(){ return totalPages * 2; }
+
+  async function rasterize(file) {
+    pageImages = [];
+    if (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) {
+      const buf = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+      const n = Math.min(pdf.numPages, MAX_PAGES);
+      for (let i = 1; i <= n; i++) {
+        const page = await pdf.getPage(i);
+        const scale = Math.min(2, 1600 / page.getViewport({ scale: 1 }).width);
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width; canvas.height = viewport.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        pageImages.push(canvas.toDataURL('image/jpeg', 0.82));
+      }
+      return { pages: pdf.numPages, capped: pdf.numPages > MAX_PAGES };
+    }
+    // image
+    const dataUrl = await new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file); });
+    pageImages.push(dataUrl);
+    return { pages: 1, capped: false };
+  }
+
+  async function handleFile(file) {
+    if (!file) return;
+    const ok = /image\/(png|jpe?g|webp)/.test(file.type) || file.type === 'application/pdf' || /\.(png|jpe?g|webp|pdf)$/i.test(file.name);
+    if (!ok) { setStatus('Please choose an image (PNG, JPG, WebP) or a PDF.', 'error'); return; }
+    if (file.size > 25 * 1048576) { setStatus('File too large. Maximum size is 25 MB.', 'error'); return; }
+    resetOutputs();
+    fileNameEl.textContent = file.name; fileSizeEl.textContent = fmtSize(file.size);
+    fileInfo.classList.add('visible');
+    setStatus('Reading file…', 'info'); setProgress(10);
+    try {
+      const info = await rasterize(file);
+      totalPages = Math.min(info.pages, MAX_PAGES);
+      setProgress(-1); setStatus('');
+      smartDesc.textContent = `Higher accuracy, layout, tables, handwriting & many languages. ${totalPages} page${totalPages>1?'s':''} · ${creditCost()} credits.` + (info.capped ? ` (file has ${info.pages} pages; first ${MAX_PAGES} will be processed)` : '');
+      smartBtn.textContent = `Smart OCR — ${creditCost()} credits`;
+      actionRow.style.display = '';
+    } catch (e) {
+      setProgress(-1); setStatus('Could not read this file. It may be encrypted or damaged.', 'error');
+    }
+  }
+
+  function resetOutputs() {
+    currentJobId = null; jobPages = 0; assembled = { markdown:'', text:'', tables:[] };
+    paywall.classList.remove('visible'); result.classList.remove('visible');
+    enhanceRow.style.display = 'none'; actionRow.style.display = 'none'; setProgress(-1); setStatus('');
+  }
+
+  // ── FREE: on-device Tesseract, page 1 only ──
+  freeBtn.addEventListener('click', async () => {
+    if (!pageImages.length) return;
+    freeBtn.disabled = true; smartBtn.disabled = true;
+    setStatus('Running on-device OCR… (first run downloads the language data)', 'info'); setProgress(5);
+    try {
+      const worker = await Tesseract.createWorker('eng+kor', 1, { logger: m => { if (m.status==='recognizing text') setProgress(10 + m.progress*85); } });
+      const { data } = await worker.recognize(pageImages[0]);
+      await worker.terminate();
+      assembled = { markdown: data.text || '', text: data.text || '', tables: [] };
+      showResult(false);
+      setProgress(-1);
+      setStatus('Free OCR complete (1 page). For tables, layout, handwriting, or more pages, use Smart OCR.', 'success');
+    } catch (e) {
+      setProgress(-1); setStatus('On-device OCR failed. Try Smart OCR instead.', 'error');
+    } finally { freeBtn.disabled = false; smartBtn.disabled = false; }
+  });
+
+  // ── SMART: GPT-4o preview -> credits -> full ──
+  smartBtn.addEventListener('click', async () => {
+    if (!pageImages.length) return;
+    smartBtn.disabled = true; freeBtn.disabled = true;
+    setStatus('Creating a Smart OCR preview…', 'info'); setProgress(8);
+    try {
+      const res = await fetch(`${FUNC}/ai-ocr`, {
+        method:'POST', headers:{ 'Content-Type':'application/json', ...(ANON?{apikey:ANON}:{}) },
+        body: JSON.stringify({ mode:'preview', image: pageImages[0], pages: totalPages }),
+      });
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok) { setStatus(data.error || 'Smart OCR preview failed.', 'error'); setProgress(-1); smartBtn.disabled=false; freeBtn.disabled=false; return; }
+      currentJobId = data.job_id; jobPages = data.pages || totalPages;
+      // show the page-1 preview immediately
+      assembled = { markdown: (data.preview&&data.preview.markdown)||'', text: (data.preview&&data.preview.plain_text)||'', tables: (data.preview&&data.preview.tables)||[] };
+      showResult(false); // preview only, no enhance/downloads-as-final yet
+      setProgress(-1); setStatus('Preview ready (page 1). Unlock all pages below.', 'info');
+      paywallText.textContent = `Unlock Smart OCR for all ${jobPages} page${jobPages>1?'s':''} — ${jobPages*2} credits.`;
+      paywall.classList.add('visible');
+      setupCreditOption();
+    } catch (e) {
+      setStatus('Network error. Please try again.', 'error'); setProgress(-1); smartBtn.disabled=false; freeBtn.disabled=false;
+    }
+  });
+
+  async function setupCreditOption() {
+    const cost = jobPages * 2;
+    if (!credits || !credits.isLoggedIn()) {
+      creditBtn.style.display=''; creditBtn.disabled=false;
+      creditBtn.textContent = `🪙 Log in to use credits (${cost})`;
+      creditBtn.onclick = () => { window.location.href = '../../auth.html?next=' + encodeURIComponent(window.location.pathname); };
+      creditHint.textContent=''; return;
+    }
+    const balance = await credits.getBalance();
+    creditBtn.style.display='';
+    if (balance !== null && balance >= cost) {
+      creditBtn.disabled=false; creditBtn.textContent = `🪙 Use ${cost} credits (you have ${balance})`;
+      creditHint.textContent=''; creditBtn.onclick = runFull;
+    } else {
+      creditBtn.disabled=true; creditBtn.textContent = `🪙 Need ${cost} credits (you have ${balance===null?0:balance})`;
+      creditHint.innerHTML = 'Not enough credits. <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline">Buy more credits</a>.';
+      creditBtn.onclick=null;
+    }
+  }
+
+  async function runFull() {
+    creditBtn.disabled = true; creditBtn.textContent = 'Using credits…';
+    const redeem = await credits.redeem(currentJobId);
+    if (!redeem.ok) {
+      if (redeem.code === 'insufficient_credits') { setupCreditOption(); return; }
+      setStatus(redeem.error || 'Could not use credits.', 'error'); setupCreditOption(); return;
+    }
+    paywall.classList.remove('visible');
+    setStatus('Reading all pages with Smart OCR…', 'info');
+    const pages = [];
+    for (let i = 0; i < jobPages; i++) {
+      setProgress((i / jobPages) * 100);
+      try {
+        const res = await fetch(`${FUNC}/ai-ocr`, {
+          method:'POST', headers:{ 'Content-Type':'application/json', ...(ANON?{apikey:ANON}:{}) },
+          body: JSON.stringify({ mode:'full', job_id: currentJobId, page_index: i, image: pageImages[i] }),
+        });
+        const data = await res.json().catch(()=>({}));
+        if (!res.ok) { setStatus(`Page ${i+1} failed: ${data.error||'error'}`, 'error'); }
+        pages.push((data.result) || { markdown:'', plain_text:'', tables:[] });
+      } catch { pages.push({ markdown:'', plain_text:'', tables:[] }); }
+    }
+    setProgress(-1);
+    assembled = {
+      markdown: pages.map((p,i)=> (jobPages>1?`\n\n<!-- Page ${i+1} -->\n\n`:'') + (p.markdown||'')).join('').trim(),
+      text: pages.map(p=>p.plain_text||'').join('\n\n').trim(),
+      tables: pages.flatMap(p=>Array.isArray(p.tables)?p.tables:[]),
+    };
+    showResult(true);
+    setStatus('Smart OCR complete.', 'success');
+  }
+
+  function showResult(isPaid) {
+    renderTab();
+    $('dlCsv').style.display = (assembled.tables && assembled.tables.length) ? '' : 'none';
+    enhanceRow.style.display = isPaid ? '' : 'none';
+    result.classList.add('visible');
+  }
+
+  function renderTab() {
+    if (activeTab === 'text') outBox.textContent = assembled.text || '(no text)';
+    else if (activeTab === 'tables') outBox.textContent = (assembled.tables||[]).map(t => t.map(r=>r.join('\t')).join('\n')).join('\n\n') || '(no tables detected)';
+    else outBox.textContent = assembled.markdown || '(no text)';
+  }
+  document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+    activeTab = b.dataset.tab;
+    document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active', x===b));
+    renderTab();
+  }));
+
+  // ── downloads ──
+  function download(name, content, type){ const blob=new Blob([content],{type:type||'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
+  function tablesToCsv(tables){ return tables.map(t => t.map(r => r.map(c => '"'+String(c==null?'':c).replace(/"/g,'""')+'"').join(',')).join('\n')).join('\n\n'); }
+  $('dlTxt').addEventListener('click', ()=> download('ocr.txt', assembled.text || assembled.markdown));
+  $('dlMd').addEventListener('click', ()=> download('ocr.md', assembled.markdown || assembled.text));
+  $('dlCsv').addEventListener('click', ()=> download('ocr-tables.csv', '﻿'+tablesToCsv(assembled.tables), 'text/csv;charset=utf-8'));
+  $('dlPdf').addEventListener('click', buildSearchablePdf);
+
+  async function buildSearchablePdf() {
+    if (!window.PDFLib) { setStatus('PDF library not loaded.', 'error'); return; }
+    setStatus('Building searchable PDF…', 'info');
+    try {
+      const { PDFDocument, StandardFonts, rgb } = PDFLib;
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      const textByPage = assembled.text.split(/\n\n<!-- Page \d+ -->\n\n|\n\n/);
+      for (let i = 0; i < pageImages.length; i++) {
+        const isPng = pageImages[i].startsWith('data:image/png');
+        const img = isPng ? await doc.embedPng(pageImages[i]) : await doc.embedJpg(pageImages[i]);
+        const page = doc.addPage([img.width, img.height]);
+        page.drawImage(img, { x:0, y:0, width:img.width, height:img.height });
+        const layer = (textByPage[i] || (i===0?assembled.text:'')).slice(0, 6000);
+        if (layer) page.drawText(layer, { x:6, y:img.height-14, size:8, font, color:rgb(0,0,0), opacity:0, lineHeight:9, maxWidth:img.width-12 });
+      }
+      const bytes = await doc.save();
+      download('searchable.pdf', bytes, 'application/pdf');
+      setStatus('Searchable PDF downloaded.', 'success');
+    } catch (e) { setStatus('Could not build the PDF.', 'error'); }
+  }
+
+  // ── enhance (paid only) ──
+  function siteLang(){ try { return localStorage.getItem('everything_convert_language') || 'en'; } catch { return 'en'; } }
+  const LANG_NAME = { en:'English', ko:'Korean', de:'German', es:'Spanish', fr:'French' };
+  async function enhance(action) {
+    const langName = LANG_NAME[siteLang()] || 'English';
+    setStatus(action==='translate'?`Translating to ${langName}…`:'Summarizing…', 'info');
+    try {
+      const res = await fetch(`${FUNC}/ai-ocr`, {
+        method:'POST', headers:{ 'Content-Type':'application/json', ...(ANON?{apikey:ANON}:{}) },
+        body: JSON.stringify({ mode:'enhance', job_id: currentJobId, action, text: assembled.text || assembled.markdown, language: langName }),
+      });
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok) { setStatus(data.error || 'Processing failed.', 'error'); return; }
+      if (action === 'translate') { assembled.markdown = (data.result&&data.result.markdown) || assembled.markdown; assembled.text = assembled.markdown; activeTab='markdown'; document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active', x.dataset.tab==='markdown')); renderTab(); setStatus(`Translated to ${langName}.`, 'success'); }
+      else { const s=data.result||{}; outBox.textContent = (s.summary||'') + (Array.isArray(s.key_points)&&s.key_points.length?('\n\n• '+s.key_points.join('\n• ')):''); setStatus('Summary ready.', 'success'); }
+    } catch { setStatus('Network error.', 'error'); }
+  }
+  $('translateBtn').addEventListener('click', ()=>enhance('translate'));
+  $('summarizeBtn').addEventListener('click', ()=>enhance('summarize'));
+
+  // ── file pickers ──
+  fileInput.addEventListener('change', () => handleFile(fileInput.files && fileInput.files[0]));
+  ['dragover','dragenter'].forEach(ev=>uploadZone.addEventListener(ev, e=>{e.preventDefault();uploadZone.classList.add('drag-over');}));
+  ['dragleave','drop'].forEach(ev=>uploadZone.addEventListener(ev, e=>{e.preventDefault();uploadZone.classList.remove('drag-over');}));
+  uploadZone.addEventListener('drop', e=>{ const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) handleFile(f); });
+  removeFile.addEventListener('click', (e)=>{ e.preventDefault(); fileInput.value=''; fileInfo.classList.remove('visible'); pageImages=[]; resetOutputs(); });
+})();
+</script>
+</body>
+</html>

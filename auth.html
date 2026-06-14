@@ -536,9 +536,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=auth-20260522d"></script>
     <script src="auth.js?v=auth-20260528b"></script>
-    <script src="tools-menu.js?v=nav-20260613a"></script>
+    <script src="tools-menu.js?v=nav-20260613b"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
-    <script src="ai-credits.js?v=credits-20260613b"></script>
+    <script src="ai-credits.js?v=credits-20260613c"></script>
     <script>
         let mode = 'login';
 
@@ -563,6 +563,21 @@
         const accountHint = document.getElementById('accountHint');
 
         let creditsLoaded = false;
+        function currentMembershipLabel(balance) {
+            const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
+            const role = state.profile && state.profile.role ? state.profile.role : '';
+            const isAdminRole = role === 'admin';
+            const isProPlan = profilePlan === 'pro';
+            let label = '';
+
+            if (isProPlan) label = 'Pro';
+            else if (typeof balance === 'number' && balance > 0) label = 'Credit user';
+            else if (profilePlan) label = 'Free';
+
+            if (isAdminRole) label = label ? `${label} | Admin` : 'Admin';
+            return label;
+        }
+
         async function loadAccountCredits() {
             if (!accountCredits) return;
             const credits = window.EverythingConvertCredits;
@@ -574,6 +589,9 @@
             }
             creditsLoaded = true;
             accountCredits.textContent = String(balance);
+            const membership = currentMembershipLabel(balance);
+            if (membership) accountPlan.textContent = membership;
+            return balance;
         }
         const accountUsername = document.getElementById('accountUsername');
         const usernameForm = document.getElementById('usernameForm');
@@ -932,7 +950,7 @@
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = name;
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
-            accountPlan.textContent = auth.formatPlan() || '';
+            accountPlan.textContent = currentMembershipLabel() || auth.formatPlan() || '';
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
             loadAccountCredits();
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';

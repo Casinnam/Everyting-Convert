@@ -544,6 +544,10 @@
   <h1><span>PDF</span> Summary</h1>
   <p data-i18n="psHeroDesc">Upload a text-based PDF, keep the original document visible on the left, and create a simple AI outline on the right.</p>
   <p class="translate-highlight" data-i18n="psTranslateNote"><i class="fa-solid fa-language"></i> Select your language at the bottom of the page before generating a summary. The AI will summarize and translate any PDF into your chosen language automatically.</p>
+  <div class="credit-policy-note">
+    <i class="fa-solid fa-coins"></i>
+    <span><strong>Credit use:</strong> guests get 3 free summaries per day, free accounts get 10 per day, and extra summaries after the free limit use 1 AI credit each. Pro/Admin accounts are unlimited.</span>
+  </div>
 </div>
 
 <main>
@@ -593,6 +597,7 @@
           <p id="limitMessage"></p>
           <div class="limit-actions">
             <a id="limitLoginBtn" class="btn btn-soft" href="../../auth.html">Log in</a>
+            <button id="limitCreditBtn" class="btn btn-soft" type="button" style="display:none;">Use 1 credit</button>
             <a class="btn btn-primary" href="../../pricing.html">Try Pro</a>
           </div>
         </div>
@@ -652,7 +657,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../supabase-config.js"></script>
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260613a"></script>
+<script src="../../tools-menu.js?v=nav-20260613b"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
 <script src="../ai-common.js?v=ai-common-20260613a"></script>
@@ -678,6 +683,7 @@
   const limitCard = document.getElementById('limitCard');
   const limitMessage = document.getElementById('limitMessage');
   const limitLoginBtn = document.getElementById('limitLoginBtn');
+  const limitCreditBtn = document.getElementById('limitCreditBtn');
 
   function currentLang() {
     const fromUrl = new URLSearchParams(window.location.search).get('lang');
@@ -715,6 +721,7 @@
   };
 
   const loginLabels = { en: 'Log in', ko: '로그인', de: 'Anmelden', es: 'Iniciar sesión', fr: 'Connexion' };
+  const creditLabels = { en: 'Use 1 credit', ko: '1크레딧 사용', de: '1 Credit nutzen', es: 'Usar 1 crédito', fr: 'Utiliser 1 crédit' };
 
   const remainingText = {
     en: (n) => `${n} free ${n === 1 ? 'summary' : 'summaries'} left today.`,
@@ -726,6 +733,7 @@
 
   function hideLimitCard() {
     limitCard.classList.remove('visible');
+    limitCreditBtn.style.display = 'none';
   }
 
   function showLimitCard(loggedIn) {
@@ -734,6 +742,8 @@
     limitMessage.textContent = pool[lang] || pool.en;
     limitLoginBtn.textContent = loginLabels[lang] || loginLabels.en;
     limitLoginBtn.style.display = loggedIn ? 'none' : '';
+    limitCreditBtn.textContent = creditLabels[lang] || creditLabels.en;
+    limitCreditBtn.style.display = loggedIn ? '' : 'none';
     limitCard.classList.add('visible');
   }
 
@@ -741,6 +751,7 @@
   let extractedText = '';
   let pdfObjectUrl = '';
   let summaryTextForDownload = '';
+  let summaryCreditRef = '';
 
   if (window.pdfjsLib) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -796,6 +807,7 @@
     selectedFile = file;
     extractedText = '';
     summaryTextForDownload = '';
+    summaryCreditRef = '';
     summaryCard.classList.remove('visible');
     summaryCard.innerHTML = '';
     summaryEmpty.style.display = 'grid';
@@ -894,15 +906,20 @@
 
   changeFileBtn.addEventListener('click', () => fileInput.click());
 
-  summarizeBtn.addEventListener('click', async () => {
+  async function submitSummary(useCredit) {
     if (!selectedFile || !extractedText) return;
     summarizeBtn.disabled = true;
+    limitCreditBtn.disabled = true;
     downloadSummaryBtn.disabled = true;
     hideLimitCard();
-    setStatus('Generating a simple AI summary...', 'info');
+    setStatus(useCredit ? 'Using 1 credit and generating a simple AI summary...' : 'Generating a simple AI summary...', 'info');
 
     try {
       const lang = currentLang();
+      if (useCredit && !summaryCreditRef) {
+        const id = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : String(Date.now());
+        summaryCreditRef = 'pdf-summary-extra:' + id;
+      }
       // Send the user's access token when logged in so the server can apply
       // the account limit (10/day) or Pro unlimited instead of the guest limit.
       const auth = window.EverythingConvertAuth;
@@ -919,6 +936,8 @@
           file_name: selectedFile.name,
           text: extractedText,
           language: lang,
+          use_credit: Boolean(useCredit),
+          credit_ref: useCredit ? summaryCreditRef : undefined,
         }),
       });
       const raw = await response.text();
@@ -927,6 +946,11 @@
       if (response.status === 429 && data.code === 'limit_reached') {
         showLimitCard(Boolean(data.logged_in));
         clearStatus();
+        summarizeBtn.disabled = false;
+        return;
+      }
+      if (response.status === 402 && data.code === 'insufficient_credits') {
+        setStatus('Not enough AI credits. Please buy credits from the Pricing page and try again.', 'error');
         summarizeBtn.disabled = false;
         return;
       }
@@ -941,13 +965,20 @@
         const fmt = remainingText[lang] || remainingText.en;
         doneMsg += ' ' + fmt(data.usage.remaining);
       }
+      if (data.credit && typeof data.credit.balance === 'number') {
+        doneMsg += ' 1 credit used. Balance: ' + data.credit.balance + '.';
+      }
       setStatus(doneMsg, 'success');
     } catch (error) {
       setStatus('Network error while generating the summary. Please try again.', 'error');
     } finally {
       summarizeBtn.disabled = false;
+      limitCreditBtn.disabled = false;
     }
-  });
+  }
+
+  summarizeBtn.addEventListener('click', () => submitSummary(false));
+  limitCreditBtn.addEventListener('click', () => submitSummary(true));
 
   downloadSummaryBtn.addEventListener('click', () => {
     if (!summaryTextForDownload) return;

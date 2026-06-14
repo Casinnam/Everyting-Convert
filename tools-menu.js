@@ -471,7 +471,7 @@
               <div class="tools-subgroup-title"><i class="fa-solid fa-book"></i> Office & Ebooks</div>
               <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
               <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
-              <a class="tool-disabled" href="#"><span class="tool-emoji ai">OCR</span><span>Smart OCR (Coming Soon)</span></a>
+              <a href="${prefix}ai tools/smart-ocr/index.html"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
             </div>
           </div>
         </div>
@@ -525,7 +525,7 @@
             <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
             <a href="${prefix}ai tools/background-remover/index.html"><span class="tool-emoji ai">&#128247;</span><span>Background Remover</span></a>
             <a href="${prefix}ai tools/pdf-summary/index.html"><span class="tool-emoji ai">PDF</span><span>PDF Summary</span></a>
-            <a class="tool-disabled" href="#"><span class="tool-emoji ai">OCR</span><span>Smart OCR (Coming Soon)</span></a>
+            <a href="${prefix}ai tools/smart-ocr/index.html"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>

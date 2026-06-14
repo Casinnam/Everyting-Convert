@@ -306,6 +306,10 @@
     <span>&#127908;</span>
     <span><strong>First 60 seconds free.</strong> Full file: $2.99 per job.</span>
   </div>
+  <div class="credit-policy-note">
+    <i class="fa-solid fa-coins"></i>
+    <span><strong>Credit use:</strong> full transcripts cost 1 AI credit per started minute, with a 5-credit minimum. The first 60-second preview does not spend credits.</span>
+  </div>
 </div>
 
 <main>
@@ -394,11 +398,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../supabase-config.js"></script>
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260613a"></script>
+<script src="../../tools-menu.js?v=nav-20260613b"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
 <script src="../ai-common.js?v=ai-common-20260613a"></script>
-<script src="../../ai-credits.js?v=credits-20260613b"></script>
+<script src="../../ai-credits.js?v=credits-20260613c"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
@@ -451,8 +455,10 @@
       setStatus(data.error || 'Could not retrieve results. Please contact support.', 'error');
       return false;
     }
-    downloadTxt.href = data.txt_url;
-    downloadSrt.href = data.srt_url;
+    txtUrl = data.txt_url;
+    srtUrl = data.srt_url;
+    downloadTxt.href = txtUrl;
+    downloadSrt.href = srtUrl;
     downloadSection.classList.add('visible');
     paywallBanner.classList.remove('visible');
     setStatus('Download ready! Links expire in 1 hour.', 'success');
@@ -549,6 +555,8 @@
     selectedFile = file;
     fileNameEl.textContent = file.name;
     fileSizeEl.textContent = formatSize(file.size);
+    txtUrl = null;
+    srtUrl = null;
     fileInfo.classList.add('visible');
     transcribeBtn.disabled = false;
     previewResult.classList.remove('visible');
@@ -559,6 +567,10 @@
 
   function clearFile() {
     selectedFile = null;
+    currentJobId = null;
+    currentDuration = 0;
+    txtUrl = null;
+    srtUrl = null;
     fileInput.value = '';
     fileInfo.classList.remove('visible');
     transcribeBtn.disabled = true;
