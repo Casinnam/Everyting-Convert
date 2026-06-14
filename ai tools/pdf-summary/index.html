@@ -439,6 +439,20 @@
       font-size: .92rem;
     }
 
+    .guide-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      margin-top: .85rem;
+      color: #2563eb;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .guide-link::after {
+      content: "->";
+    }
+
     .summary-info {
       margin-top: 1rem;
       display: grid;
@@ -611,8 +625,9 @@
       <p data-i18n="psGuide1Desc">Invoices, reports, contracts, statements, and text-based PDFs can usually be summarized quickly.</p>
     </article>
     <article class="guide-card">
-      <strong data-i18n="psGuide2Title">OCR comes later</strong>
-      <p data-i18n="psGuide2Desc">Scanned PDFs are image files inside a PDF wrapper. They need OCR before AI summary can understand the text.</p>
+      <strong data-i18n="psGuide2Title">Use Smart OCR for scanned PDFs</strong>
+      <p data-i18n="psGuide2Desc">Scanned PDFs are image files inside a PDF wrapper. Open Smart OCR first to extract readable text before summarizing.</p>
+      <a class="guide-link" href="../smart-ocr/index.html" data-i18n="psSmartOcrLink">Go to Smart OCR</a>
     </article>
     <article class="guide-card">
       <strong data-i18n="psGuide3Title">Always verify details</strong>

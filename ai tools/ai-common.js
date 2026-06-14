@@ -297,6 +297,30 @@
     if (element && value) element.textContent = value;
   }
 
+  Object.assign(i18n, {
+    psGuide2Title: {
+      en: 'Use Smart OCR for scanned PDFs',
+      ko: '스캔 PDF는 Smart OCR 사용',
+      de: 'Smart OCR fuer gescannte PDFs',
+      es: 'Usa Smart OCR para PDF escaneados',
+      fr: 'Utilisez Smart OCR pour les PDF scannes',
+    },
+    psGuide2Desc: {
+      en: 'Scanned PDFs are image files inside a PDF wrapper. Open Smart OCR first to extract readable text before summarizing.',
+      ko: '스캔된 PDF는 이미지 파일입니다. 요약하기 전에 Smart OCR에서 먼저 읽을 수 있는 텍스트를 추출하세요.',
+      de: 'Gescannte PDFs sind Bilddateien. Oeffnen Sie zuerst Smart OCR, um lesbaren Text vor der Zusammenfassung zu extrahieren.',
+      es: 'Los PDF escaneados son imagenes. Abre Smart OCR primero para extraer texto legible antes de resumir.',
+      fr: 'Les PDF scannes sont des images. Ouvrez d abord Smart OCR pour extraire le texte lisible avant le resume.',
+    },
+    psSmartOcrLink: {
+      en: 'Go to Smart OCR',
+      ko: 'Smart OCR로 이동',
+      de: 'Zu Smart OCR',
+      es: 'Ir a Smart OCR',
+      fr: 'Aller a Smart OCR',
+    },
+  });
+
   function applyI18nAttributes(language) {
     document.querySelectorAll('[data-i18n]').forEach((element) => {
       const key = element.dataset.i18n;
