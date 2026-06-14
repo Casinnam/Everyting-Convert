@@ -538,7 +538,7 @@
     <script src="auth.js?v=auth-20260528b"></script>
     <script src="tools-menu.js?v=nav-20260613b"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
-    <script src="ai-credits.js?v=credits-20260613c"></script>
+    <script src="ai-credits.js?v=credits-20260613d"></script>
     <script>
         let mode = 'login';
 
@@ -582,16 +582,20 @@
             if (!accountCredits) return;
             const credits = window.EverythingConvertCredits;
             if (!credits) return;
-            const balance = await credits.getBalance();
-            if (balance === null) {
-                if (!creditsLoaded) accountCredits.textContent = '-';
-                return;
+            // The auth session can attach a moment after render, so retry a few
+            // times until the balance resolves instead of leaving it at "-".
+            const delays = [0, 600, 1500, 3000];
+            for (let i = 0; i < delays.length; i += 1) {
+                if (delays[i]) await new Promise((r) => window.setTimeout(r, delays[i]));
+                const balance = await credits.getBalance();
+                if (balance === null) continue;
+                creditsLoaded = true;
+                accountCredits.textContent = String(balance);
+                const membership = currentMembershipLabel(balance);
+                if (membership) accountPlan.textContent = membership;
+                return balance;
             }
-            creditsLoaded = true;
-            accountCredits.textContent = String(balance);
-            const membership = currentMembershipLabel(balance);
-            if (membership) accountPlan.textContent = membership;
-            return balance;
+            if (!creditsLoaded) accountCredits.textContent = '-';
         }
         const accountUsername = document.getElementById('accountUsername');
         const usernameForm = document.getElementById('usernameForm');

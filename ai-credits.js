@@ -50,15 +50,26 @@
   }
 
   // Returns the user's credit balance (number), or null when logged out / on error.
+  // Calls the ai_credit_balance RPC over REST with the explicitly resolved user
+  // token (same reliable pattern as redeem/spend). client.rpc() did not always
+  // attach the session, so the balance never loaded.
   async function getBalance() {
-    const s = authState();
-    const client = s && s.client;
-    if (!client) return null;
     const token = await resolveToken();
     if (!token) return null;
+    const cfg = window.EVERYTHING_CONVERT_SUPABASE || {};
+    if (!cfg.url) return null;
     try {
-      const { data, error } = await client.rpc('ai_credit_balance');
-      if (error) return null;
+      const res = await fetch(`${cfg.url}/rest/v1/rpc/ai_credit_balance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(ANON ? { apikey: ANON } : {}),
+          Authorization: `Bearer ${token}`,
+        },
+        body: '{}',
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
       return Number(data) || 0;
     } catch (error) {
       return null;
