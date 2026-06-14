@@ -56,10 +56,13 @@ grant execute on function public.ai_credit_balance() to authenticated;
 -- Service-role only (called by the ai-redeem-credit edge function).
 -- Returns the new balance and whether the spend was allowed.
 -- ─────────────────────────────────────────────────────────────
+drop function if exists public.record_ai_credit_spend(uuid, integer, text);
+
 create or replace function public.record_ai_credit_spend(
   p_user_id uuid,
   p_cost integer,
-  p_tool text default null
+  p_tool text default null,
+  p_ref text default null
 )
 returns table (balance integer, allowed boolean)
 language plpgsql
@@ -68,6 +71,7 @@ set search_path = public
 as $$
 declare
   current_balance integer;
+  existing_spend integer;
 begin
   if p_cost is null or p_cost <= 0 then
     raise exception 'Spend cost must be a positive integer.';
@@ -75,6 +79,26 @@ begin
 
   -- Serialize concurrent spends for this user so the balance check is atomic.
   perform pg_advisory_xact_lock(hashtext(p_user_id::text));
+
+  if p_ref is not null then
+    select amount
+    into existing_spend
+    from public.ai_credit_entries
+    where user_id = p_user_id
+      and kind = 'spend'
+      and ref = p_ref;
+
+    if found then
+      select coalesce(sum(amount), 0)
+      into current_balance
+      from public.ai_credit_entries
+      where user_id = p_user_id
+        and (expires_at is null or expires_at > now());
+
+      return query select current_balance, true;
+      return;
+    end if;
+  end if;
 
   select coalesce(sum(amount), 0)
   into current_balance
@@ -87,17 +111,17 @@ begin
     return;
   end if;
 
-  insert into public.ai_credit_entries (user_id, amount, kind, tool)
-  values (p_user_id, -p_cost, 'spend', p_tool);
+  insert into public.ai_credit_entries (user_id, amount, kind, tool, ref)
+  values (p_user_id, -p_cost, 'spend', p_tool, p_ref);
 
   return query select current_balance - p_cost, true;
 end;
 $$;
 
-revoke execute on function public.record_ai_credit_spend(uuid, integer, text) from public;
-revoke execute on function public.record_ai_credit_spend(uuid, integer, text) from anon;
-revoke execute on function public.record_ai_credit_spend(uuid, integer, text) from authenticated;
-grant execute on function public.record_ai_credit_spend(uuid, integer, text) to service_role;
+revoke execute on function public.record_ai_credit_spend(uuid, integer, text, text) from public;
+revoke execute on function public.record_ai_credit_spend(uuid, integer, text, text) from anon;
+revoke execute on function public.record_ai_credit_spend(uuid, integer, text, text) from authenticated;
+grant execute on function public.record_ai_credit_spend(uuid, integer, text, text) to service_role;
 
 -- ─────────────────────────────────────────────────────────────
 -- Grant: add credits (purchased pack, refund, admin adjustment).
