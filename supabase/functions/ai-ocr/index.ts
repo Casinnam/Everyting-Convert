@@ -115,26 +115,16 @@ Deno.serve(async (req: Request) => {
 
     const mode = String(body.mode || 'preview');
 
-    // ── PREVIEW: OCR page 1, create the job, return the sample + cost ──
+    // ── PREVIEW: create the job and return page count + cost only.
+    // We intentionally do NOT OCR here: for a 1-page document the OCR result
+    // *is* the whole document, so returning it would give the paid result away
+    // for free. The free on-device Tesseract path is the quality teaser; the
+    // GPT-4o result is delivered only after payment (full mode).
     if (mode === 'preview') {
-      if (!isDataImage(body.image)) return json({ error: 'A page image is required.' }, 400);
-      const pages = Math.min(MAX_PAGES, Math.max(1, Number(body.pages) || 1));
-
-      let result: Record<string, unknown>;
-      try { result = await ocrImage(body.image as string); }
-      catch (e) {
-        if ((e as Error).message === 'not_configured') return json({ error: 'OCR service is not configured.' }, 500);
-        return json({ error: 'OCR failed. Please try again.' }, 502);
-      }
-
+      const requested = Number(body.pages) || 1;
+      const pages = Math.min(MAX_PAGES, Math.max(1, requested));
       const jobId = await dbInsertJob(pages);
-      return json({
-        job_id: jobId,
-        pages,
-        cost: pages * 2,
-        capped: (Number(body.pages) || 1) > MAX_PAGES,
-        preview: result,
-      });
+      return json({ job_id: jobId, pages, cost: pages * 2, capped: requested > MAX_PAGES });
     }
 
     // ── FULL: OCR one page of a paid job ──

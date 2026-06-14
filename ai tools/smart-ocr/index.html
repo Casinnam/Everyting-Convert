@@ -128,6 +128,11 @@
       </div>
     </div>
 
+    <p class="credit-policy-note" style="margin-top:1rem;font-size:.85rem;color:var(--muted);line-height:1.55">
+      <i class="fa-solid fa-coins" style="color:var(--ai-purple)"></i>
+      Smart OCR uses <strong>2 credits per page</strong>. Credits are deducted only when you unlock the full result — the free on-device OCR never uses credits. New accounts get 10 free credits; buy more on the <a href="../../pricing.html#credit-packs">pricing page</a>.
+    </p>
+
     <div class="quality-note">
       <div class="q"><strong>Free (on-device)</strong>Good for clean, printed pages. One page at a time. No tables or layout, weaker on Korean, handwriting, low quality scans, or photos. Nothing is uploaded.</div>
       <div class="q smart"><strong>Smart OCR (GPT-4o)</strong>Much higher accuracy. Keeps layout (Markdown), extracts tables to CSV, reads handwriting and many languages, up to 30 pages. 2 credits per page. Pages are sent securely for processing.</div>
@@ -293,13 +298,13 @@
         body: JSON.stringify({ mode:'preview', image: pageImages[0], pages: totalPages }),
       });
       const data = await res.json().catch(()=>({}));
-      if (!res.ok) { setStatus(data.error || 'Smart OCR preview failed.', 'error'); setProgress(-1); smartBtn.disabled=false; freeBtn.disabled=false; return; }
+      if (!res.ok) { setStatus(data.error || 'Smart OCR could not start.', 'error'); setProgress(-1); smartBtn.disabled=false; freeBtn.disabled=false; return; }
       currentJobId = data.job_id; jobPages = data.pages || totalPages;
-      // show the page-1 preview immediately
-      assembled = { markdown: (data.preview&&data.preview.markdown)||'', text: (data.preview&&data.preview.plain_text)||'', tables: (data.preview&&data.preview.tables)||[] };
-      showResult(false); // preview only, no enhance/downloads-as-final yet
-      setProgress(-1); setStatus('Preview ready (page 1). Unlock all pages below.', 'info');
-      paywallText.textContent = `Unlock Smart OCR for all ${jobPages} page${jobPages>1?'s':''} — ${jobPages*2} credits.`;
+      // No free content preview: credits are spent before the GPT-4o result is
+      // shown. The free Tesseract path above is the quality teaser.
+      result.classList.remove('visible');
+      setProgress(-1); setStatus('');
+      paywallText.textContent = `Smart OCR will read ${jobPages} page${jobPages>1?'s':''} with GPT-4o — ${jobPages*2} credits will be used.`;
       paywall.classList.add('visible');
       setupCreditOption();
     } catch (e) {
