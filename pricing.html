@@ -151,6 +151,73 @@
                 padding: .8rem .9rem;
             }
         }
+
+        .credit-packs { margin-top: clamp(2.4rem, 5vw, 4rem); }
+
+        .credit-balance {
+            display: none;
+            width: fit-content;
+            margin: 0 auto 1.5rem;
+            padding: .55rem 1.1rem;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, .09);
+            border: 1px solid rgba(37, 99, 235, .2);
+            color: #1e3a8a;
+            font-weight: 800;
+        }
+
+        .credit-balance.visible { display: block; }
+
+        .credit-pack-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .credit-pack-card {
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+            padding: 1.4rem 1.2rem;
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .92);
+            box-shadow: 0 14px 34px rgba(15, 23, 42, .06);
+            text-align: center;
+        }
+
+        .credit-pack-card h3 { margin: 0; font-size: 1.05rem; }
+        .credit-pack-card .pack-credits { font-size: 1.9rem; font-weight: 900; color: #0f172a; line-height: 1.1; }
+        .credit-pack-card .pack-credits span { font-size: .9rem; font-weight: 700; color: #64748b; }
+        .credit-pack-card .pack-price { color: #475569; font-weight: 800; }
+        .credit-pack-card .pack-unit { color: #94a3b8; font-size: .82rem; margin-bottom: .4rem; }
+
+        .credit-pack-card button {
+            margin-top: auto;
+            border: 0;
+            border-radius: 12px;
+            padding: .7rem 1rem;
+            font: inherit;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            cursor: pointer;
+        }
+
+        .credit-pack-card button:hover { opacity: .92; }
+
+        .credit-use-note {
+            margin: 1.25rem auto 0;
+            width: min(840px, 100%);
+            color: #64748b;
+            font-size: .92rem;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 860px) { .credit-pack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 460px) { .credit-pack-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="premium-subpage pricing-page">
@@ -331,6 +398,49 @@
             </div>
         </section>
 
+        <section class="credit-packs" id="credit-packs" aria-labelledby="creditPacksTitle">
+            <div class="pricing-section-heading">
+                <div class="subpage-kicker"><i class="fa-solid fa-coins"></i> AI credits</div>
+                <h2 id="creditPacksTitle">Buy AI credits and pay your way.</h2>
+                <p>Credits are an easy way to pay for AI tools without a subscription. New accounts get 10 free credits. Credits never expire.</p>
+            </div>
+
+            <div class="credit-balance" id="creditBalance"></div>
+
+            <div class="credit-pack-grid">
+                <div class="credit-pack-card">
+                    <h3>Starter</h3>
+                    <div class="pack-credits">30<span> credits</span></div>
+                    <div class="pack-price">$2.99</div>
+                    <div class="pack-unit">$0.10 / credit</div>
+                    <button type="button" data-buy-pack="starter">Buy Starter</button>
+                </div>
+                <div class="credit-pack-card">
+                    <h3>Standard</h3>
+                    <div class="pack-credits">100<span> credits</span></div>
+                    <div class="pack-price">$6.99</div>
+                    <div class="pack-unit">$0.07 / credit</div>
+                    <button type="button" data-buy-pack="standard">Buy Standard</button>
+                </div>
+                <div class="credit-pack-card">
+                    <h3>Power</h3>
+                    <div class="pack-credits">250<span> credits</span></div>
+                    <div class="pack-price">$14.99</div>
+                    <div class="pack-unit">$0.06 / credit</div>
+                    <button type="button" data-buy-pack="power">Buy Power</button>
+                </div>
+                <div class="credit-pack-card">
+                    <h3>Business</h3>
+                    <div class="pack-credits">600<span> credits</span></div>
+                    <div class="pack-price">$29.99</div>
+                    <div class="pack-unit">$0.05 / credit</div>
+                    <button type="button" data-buy-pack="business">Buy Business</button>
+                </div>
+            </div>
+
+            <p class="credit-use-note">What credits unlock: <strong>Background Remover</strong> 25 credits per HD image · <strong>AI Transcription</strong> 1 credit per minute (minimum 5). More tools will accept credits soon.</p>
+        </section>
+
         <section class="pricing-faq" aria-labelledby="pricingFaqTitle">
             <div class="pricing-section-heading compact-heading">
                 <div class="subpage-kicker"><i class="fa-regular fa-circle-question"></i> Billing clarity</div>
@@ -432,9 +542,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="auth.js?v=auth-20260528b"></script>
-    <script src="tools-menu.js?v=nav-20260611img"></script>
+    <script src="tools-menu.js?v=nav-20260613a"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
     <script src="pricing-language.js?v=pricelang-20260613a"></script>
+    <script src="ai-credits.js?v=credits-20260613a"></script>
     <script>
         (function () {
             const button = document.getElementById('proCheckoutButton');
@@ -585,6 +696,45 @@
             if (params.get('checkout') === 'pro') {
                 startCheckout();
             }
+        })();
+    </script>
+    <script>
+        (function () {
+            const balanceEl = document.getElementById('creditBalance');
+            const credits = window.EverythingConvertCredits;
+            if (!credits) return;
+
+            async function refreshBalance() {
+                const balance = await credits.getBalance();
+                if (balance === null) {
+                    if (balanceEl) balanceEl.classList.remove('visible');
+                    return;
+                }
+                if (balanceEl) {
+                    balanceEl.textContent = `You have ${balance} AI credit${balance === 1 ? '' : 's'}.`;
+                    balanceEl.classList.add('visible');
+                }
+            }
+
+            document.querySelectorAll('[data-buy-pack]').forEach((button) => {
+                button.addEventListener('click', () => credits.buyPack(button.dataset.buyPack));
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('credits') === 'success') {
+                // The webhook may take a moment; poll the balance a few times.
+                [600, 2000, 4000].forEach((delay) => window.setTimeout(refreshBalance, delay));
+            }
+
+            // Balance needs the auth session; wait for it, then poll once.
+            const startedAt = Date.now();
+            const timer = window.setInterval(() => {
+                const ready = window.EverythingConvertAuth && window.EverythingConvertAuth.state && window.EverythingConvertAuth.state.ready;
+                if (ready || Date.now() - startedAt > 6000) {
+                    window.clearInterval(timer);
+                    refreshBalance();
+                }
+            }, 150);
         })();
     </script>
 </body>
