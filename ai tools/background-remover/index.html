@@ -227,10 +227,12 @@
 
       <div id="paywallBanner" class="paywall-banner">
         <h3>&#128274;&nbsp; High-resolution result ready</h3>
-        <p>Pay once to download the full-resolution transparent PNG with no quality reduction.</p>
+        <p>Use AI credits, or pay once to download the full-resolution transparent PNG with no quality reduction.</p>
+        <button id="creditBtn" class="btn" type="button" style="display:none;background:#2563eb;color:#fff;width:100%;margin-bottom:.6rem;"></button>
         <button id="payBtn" class="btn btn-pay">
           &#128179;&nbsp; Download HD PNG &mdash; $1.99
         </button>
+        <p id="creditHint" style="margin-top:.6rem;font-size:.85rem;color:#c7d2fe;"></p>
       </div>
 
       <div id="downloadSection" class="download-section">
@@ -269,10 +271,11 @@
 </footer>
 
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260611img"></script>
+<script src="../../tools-menu.js?v=nav-20260613a"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
 <script src="../ai-common.js?v=ai-common-20260613a"></script>
+<script src="../../ai-credits.js?v=credits-20260613a"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
@@ -291,11 +294,76 @@
   const previewImg    = document.getElementById('previewImg');
   const paywallBanner = document.getElementById('paywallBanner');
   const payBtn        = document.getElementById('payBtn');
+  const creditBtn     = document.getElementById('creditBtn');
+  const creditHint    = document.getElementById('creditHint');
   const downloadSection = document.getElementById('downloadSection');
   const downloadPng   = document.getElementById('downloadPng');
 
   let selectedFile = null;
   let currentJobId = null;
+
+  const credits = window.EverythingConvertCredits;
+  const CREDIT_COST = 25; // background removal = 25 credits
+
+  async function fetchFull(jobId, sessionId) {
+    const form = new FormData();
+    form.append('mode', 'full');
+    form.append('job_id', jobId);
+    if (sessionId) form.append('session_id', sessionId);
+    const res = await fetch(`${SUPABASE_FUNC_BASE}/ai-remove-bg`, { method: 'POST', body: form });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setStatus(data.error || 'Could not retrieve results. Please contact support.', 'error');
+      return false;
+    }
+    downloadPng.href = data.hd_url;
+    downloadSection.classList.add('visible');
+    paywallBanner.classList.remove('visible');
+    setStatus('Download ready! Link expires in 1 hour.', 'success');
+    return true;
+  }
+
+  async function setupCreditOption() {
+    if (!credits || !creditBtn) return;
+    if (!credits.isLoggedIn()) {
+      creditBtn.style.display = '';
+      creditBtn.disabled = false;
+      creditBtn.textContent = `🪙 Log in to use credits (${CREDIT_COST} credits)`;
+      creditBtn.onclick = () => { window.location.href = '../../auth.html?next=' + encodeURIComponent(window.location.pathname); };
+      creditHint.textContent = '';
+      return;
+    }
+    const balance = await credits.getBalance();
+    if (balance === null) { creditBtn.style.display = 'none'; return; }
+    creditBtn.style.display = '';
+    if (balance >= CREDIT_COST) {
+      creditBtn.disabled = false;
+      creditBtn.textContent = `🪙 Use ${CREDIT_COST} credits (you have ${balance})`;
+      creditHint.textContent = '';
+      creditBtn.onclick = redeemWithCredits;
+    } else {
+      creditBtn.disabled = true;
+      creditBtn.textContent = `🪙 Need ${CREDIT_COST} credits (you have ${balance})`;
+      creditHint.innerHTML = 'Not enough credits. <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline;">Buy more credits</a>.';
+      creditBtn.onclick = null;
+    }
+  }
+
+  async function redeemWithCredits() {
+    if (!currentJobId) return;
+    creditBtn.disabled = true;
+    creditBtn.textContent = 'Using credits…';
+    const result = await credits.redeem(currentJobId);
+    if (result.ok) { await fetchFull(currentJobId); return; }
+    if (result.code === 'insufficient_credits') {
+      creditBtn.disabled = true;
+      creditBtn.textContent = `🪙 Need ${result.cost} credits (you have ${result.balance})`;
+      creditHint.innerHTML = 'Not enough credits. <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline;">Buy more credits</a>.';
+      return;
+    }
+    setStatus(result.error || 'Could not use credits. Please try again.', 'error');
+    setupCreditOption();
+  }
 
   function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -375,6 +443,7 @@
       previewImg.src = data.preview_url;
       previewResult.classList.add('visible');
       paywallBanner.classList.add('visible');
+      setupCreditOption();
       clearStatus();
       processBtn.disabled = false;
     } catch {
@@ -424,26 +493,11 @@
 
     currentJobId = jobId;
     setStatus('Payment confirmed. Fetching your HD image…', 'info');
-
-    const form = new FormData();
-    form.append('mode', 'full');
-    form.append('job_id', jobId);
-    if (sessionId) form.append('session_id', sessionId);
+    previewResult.classList.add('visible');
 
     try {
-      const res = await fetch(`${SUPABASE_FUNC_BASE}/ai-remove-bg`, { method: 'POST', body: form });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setStatus(data.error || 'Could not retrieve results. Please contact support.', 'error');
-        return;
-      }
-
-      downloadPng.href = data.hd_url;
-      downloadSection.classList.add('visible');
-      paywallBanner.classList.remove('visible');
-      setStatus('Download ready! Link expires in 1 hour.', 'success');
-      window.history.replaceState({}, '', window.location.pathname);
+      const ok = await fetchFull(jobId, sessionId);
+      if (ok) window.history.replaceState({}, '', window.location.pathname);
     } catch {
       setStatus('Network error. Please contact support if your payment went through.', 'error');
     }

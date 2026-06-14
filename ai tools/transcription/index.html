@@ -342,10 +342,12 @@
 
       <div id="paywallBanner" class="paywall-banner">
         <h3>&#128274;&nbsp; Full transcript ready</h3>
-        <p>Pay once to download the complete text and SRT subtitle file.</p>
+        <p>Use AI credits, or pay once to download the complete text and SRT subtitle file.</p>
+        <button id="creditBtn" class="btn" type="button" style="display:none;background:#2563eb;color:#fff;width:100%;margin-bottom:.6rem;"></button>
         <button id="payBtn" class="btn btn-pay">
           &#128179;&nbsp; Get full transcript &amp; SRT &mdash; $2.99
         </button>
+        <p id="creditHint" style="margin-top:.6rem;font-size:.85rem;color:#c7d2fe;"></p>
       </div>
 
       <div id="downloadSection" class="download-section">
@@ -390,10 +392,11 @@
 </footer>
 
 <script src="../../auth.js?v=auth-20260610a"></script>
-<script src="../../tools-menu.js?v=nav-20260611img"></script>
+<script src="../../tools-menu.js?v=nav-20260613a"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
 <script src="../ai-common.js?v=ai-common-20260613a"></script>
+<script src="../../ai-credits.js?v=credits-20260613a"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
@@ -412,14 +415,94 @@
   const durationLabel= document.getElementById('durationLabel');
   const paywallBanner= document.getElementById('paywallBanner');
   const payBtn       = document.getElementById('payBtn');
+  const creditBtn    = document.getElementById('creditBtn');
+  const creditHint   = document.getElementById('creditHint');
   const downloadSection = document.getElementById('downloadSection');
   const downloadTxt  = document.getElementById('downloadTxt');
   const downloadSrt  = document.getElementById('downloadSrt');
 
   let selectedFile = null;
   let currentJobId = null;
+  let currentDuration = 0;
   let txtUrl = null;
   let srtUrl = null;
+
+  const credits = window.EverythingConvertCredits;
+
+  function creditCost() {
+    return Math.max(5, Math.ceil((currentDuration || 0) / 60));
+  }
+
+  // Fetch the paid result for a job whose status is already 'paid'
+  // (after Stripe redirect or after a credit redemption).
+  async function fetchFull(jobId, sessionId) {
+    previewResult.classList.add('visible');
+    const form = new FormData();
+    form.append('mode', 'full');
+    form.append('job_id', jobId);
+    if (sessionId) form.append('session_id', sessionId);
+    const res = await fetch(`${SUPABASE_FUNC_BASE}/ai-transcribe`, { method: 'POST', body: form });
+    const rawText = await res.text();
+    let data;
+    try { data = JSON.parse(rawText); } catch { data = { error: 'Server error: ' + rawText.slice(0, 200) }; }
+    if (!res.ok) {
+      setStatus(data.error || 'Could not retrieve results. Please contact support.', 'error');
+      return false;
+    }
+    downloadTxt.href = data.txt_url;
+    downloadSrt.href = data.srt_url;
+    downloadSection.classList.add('visible');
+    paywallBanner.classList.remove('visible');
+    setStatus('Download ready! Links expire in 1 hour.', 'success');
+    return true;
+  }
+
+  // Show the "Use N credits" option in the paywall when possible.
+  async function setupCreditOption() {
+    if (!credits || !creditBtn) return;
+    const cost = creditCost();
+    if (!credits.isLoggedIn()) {
+      creditBtn.style.display = '';
+      creditBtn.disabled = false;
+      creditBtn.textContent = `🪙 Log in to use credits (${cost} credits)`;
+      creditBtn.onclick = () => { window.location.href = '../../auth.html?next=' + encodeURIComponent(window.location.pathname); };
+      creditHint.textContent = '';
+      return;
+    }
+    const balance = await credits.getBalance();
+    if (balance === null) { creditBtn.style.display = 'none'; return; }
+    creditBtn.style.display = '';
+    if (balance >= cost) {
+      creditBtn.disabled = false;
+      creditBtn.textContent = `🪙 Use ${cost} credits (you have ${balance})`;
+      creditHint.textContent = '';
+      creditBtn.onclick = redeemWithCredits;
+    } else {
+      creditBtn.disabled = true;
+      creditBtn.textContent = `🪙 Need ${cost} credits (you have ${balance})`;
+      creditHint.innerHTML = 'Not enough credits. <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline;">Buy more credits</a>.';
+      creditBtn.onclick = null;
+    }
+  }
+
+  async function redeemWithCredits() {
+    if (!currentJobId) return;
+    creditBtn.disabled = true;
+    creditBtn.textContent = 'Using credits…';
+    const result = await credits.redeem(currentJobId);
+    if (result.ok) {
+      await fetchFull(currentJobId);
+      return;
+    }
+    if (result.code === 'insufficient_credits') {
+      creditBtn.disabled = true;
+      creditBtn.textContent = `🪙 Need ${result.cost} credits (you have ${result.balance})`;
+      creditHint.innerHTML = 'Not enough credits. <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline;">Buy more credits</a>.';
+      return;
+    }
+    setStatus(result.error || 'Could not use credits. Please try again.', 'error');
+    setupCreditOption();
+  }
 
   async function triggerDownload(url, filename) {
     try {
@@ -521,6 +604,7 @@
       }
 
       currentJobId = data.job_id;
+      currentDuration = data.total_duration || 0;
       progressWrap.classList.remove('visible');
       clearStatus();
 
@@ -536,6 +620,7 @@
         setStatus('Transcription complete. Download your files below.', 'success');
       } else {
         paywallBanner.classList.add('visible');
+        setupCreditOption();
       }
 
       transcribeBtn.disabled = false;
@@ -588,31 +673,10 @@
 
     currentJobId = jobId;
     setStatus('Payment confirmed. Fetching your full transcript…', 'info');
-    previewResult.classList.add('visible');
-
-    const form = new FormData();
-    form.append('mode', 'full');
-    form.append('job_id', jobId);
-    if (sessionId) form.append('session_id', sessionId);
 
     try {
-      const res = await fetch(`${SUPABASE_FUNC_BASE}/ai-transcribe`, { method: 'POST', body: form });
-      let data;
-      const rawText = await res.text();
-      try { data = JSON.parse(rawText); } catch { data = { error: 'Server error: ' + rawText.slice(0, 200) }; }
-
-      if (!res.ok) {
-        setStatus(data.error || 'Could not retrieve results. Please contact support.', 'error');
-        return;
-      }
-
-      downloadTxt.href = data.txt_url;
-      downloadSrt.href = data.srt_url;
-      downloadSection.classList.add('visible');
-      paywallBanner.classList.remove('visible');
-      setStatus('Download ready! Links expire in 1 hour.', 'success');
-
-      window.history.replaceState({}, '', window.location.pathname);
+      const ok = await fetchFull(jobId, sessionId);
+      if (ok) window.history.replaceState({}, '', window.location.pathname);
     } catch (err) {
       setStatus('Error: ' + (err instanceof Error ? err.message : String(err)), 'error');
     }
