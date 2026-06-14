@@ -1,10 +1,32 @@
 # Cloudflare Pages response headers.
-# HTML must always be revalidated so deploys (pricing logic, scripts, etc.)
-# reach returning visitors immediately instead of being served from a stale
-# browser cache. Versioned JS/CSS (?v=...) keep their default long caching.
+#
+# HTML pages must always be revalidated so deploys reach returning visitors
+# instead of being served from a stale browser cache. Cloudflare serves pages
+# at clean URLs (e.g. /auth, /pricing) — a "/*.html" rule would miss those —
+# so the default rule below revalidates everything, and the more-specific
+# extension rules restore long caching for versioned static assets (which are
+# cache-busted with ?v=...).
 
-/
+/*
   Cache-Control: public, max-age=0, must-revalidate
 
-/*.html
-  Cache-Control: public, max-age=0, must-revalidate
+/*.js
+  Cache-Control: public, max-age=86400
+
+/*.css
+  Cache-Control: public, max-age=86400
+
+/*.svg
+  Cache-Control: public, max-age=604800
+
+/*.png
+  Cache-Control: public, max-age=604800
+
+/*.jpg
+  Cache-Control: public, max-age=604800
+
+/*.webp
+  Cache-Control: public, max-age=604800
+
+/*.woff2
+  Cache-Control: public, max-age=604800
