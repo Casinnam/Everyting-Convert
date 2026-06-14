@@ -20,7 +20,10 @@
 }
 
 html {
-    overflow-x: hidden;
+    /* clip (not hidden) prevents horizontal scroll WITHOUT turning html/body
+       into a scroll container, which would break `position: sticky` on the
+       header. See styles.css body rule below. */
+    overflow-x: clip;
 }
 
 body {
@@ -31,7 +34,9 @@ body {
         linear-gradient(180deg, #f8fbff 0%, #ffffff 46%, #f8fbff 100%);
     color: var(--text-main);
     min-height: 100vh;
-    overflow-x: hidden;
+    /* clip, not hidden: keeps the sticky header working (hidden makes body a
+       scroll container and breaks position: sticky on its children). */
+    overflow-x: clip;
     position: relative;
 }
 
