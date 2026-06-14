@@ -297,22 +297,66 @@
             </article>
 
             <article class="pricing-card">
-                <div class="plan-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div class="plan-icon"><i class="fa-solid fa-coins"></i></div>
                 <div>
-                    <h2>AI Pay-as-you-go</h2>
-                    <p class="price">$1.99<span>+ /result</span></p>
-                    <p class="price-note">No subscription needed</p>
+                    <h2>AI Credits</h2>
+                    <p class="price">$2.99<span>+ /pack</span></p>
+                    <p class="price-note">No subscription · pay as you go</p>
                 </div>
-                <a class="plan-button secondary-plan" href="#aiPricingTitle">See AI tool pricing</a>
+                <a class="plan-button secondary-plan" href="#credit-packs">Buy AI credits</a>
                 <ul>
-                    <li><i class="fa-regular fa-circle-check"></i>Background Remover — $1.99</li>
-                    <li><i class="fa-regular fa-circle-check"></i>AI Transcription — $2.99</li>
-                    <li><i class="fa-regular fa-circle-check"></i>Free preview before every payment</li>
+                    <li><i class="fa-regular fa-circle-check"></i>10 free credits on signup</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Background Remover — 25 credits</li>
+                    <li><i class="fa-regular fa-circle-check"></i>AI Transcription — 1 credit / minute</li>
+                    <li><i class="fa-regular fa-circle-check"></i>Credits never expire</li>
                 </ul>
             </article>
         </section>
 
         <p class="team-note">Need team features or higher volumes? <a href="contact.html">Contact us</a> — we are shaping a Business plan with early users.</p>
+
+        <section class="credit-packs" id="credit-packs" aria-labelledby="creditPacksTitle">
+            <div class="pricing-section-heading">
+                <div class="subpage-kicker"><i class="fa-solid fa-coins"></i> AI credits</div>
+                <h2 id="creditPacksTitle">Buy AI credits and pay your way.</h2>
+                <p>Credits are an easy way to pay for AI tools without a subscription. New accounts get 10 free credits. Credits never expire.</p>
+            </div>
+
+            <div class="credit-balance" id="creditBalance"></div>
+
+            <div class="credit-pack-grid">
+                <div class="credit-pack-card">
+                    <h3>Starter</h3>
+                    <div class="pack-credits">30<span> credits</span></div>
+                    <div class="pack-price">$2.99</div>
+                    <div class="pack-unit">$0.10 / credit</div>
+                    <button type="button" data-buy-pack="starter">Buy Starter</button>
+                </div>
+                <div class="credit-pack-card">
+                    <h3>Standard</h3>
+                    <div class="pack-credits">100<span> credits</span></div>
+                    <div class="pack-price">$6.99</div>
+                    <div class="pack-unit">$0.07 / credit</div>
+                    <button type="button" data-buy-pack="standard">Buy Standard</button>
+                </div>
+                <div class="credit-pack-card">
+                    <h3>Power</h3>
+                    <div class="pack-credits">250<span> credits</span></div>
+                    <div class="pack-price">$14.99</div>
+                    <div class="pack-unit">$0.06 / credit</div>
+                    <button type="button" data-buy-pack="power">Buy Power</button>
+                </div>
+                <div class="credit-pack-card">
+                    <h3>Business</h3>
+                    <div class="pack-credits">600<span> credits</span></div>
+                    <div class="pack-price">$29.99</div>
+                    <div class="pack-unit">$0.05 / credit</div>
+                    <button type="button" data-buy-pack="business">Buy Business</button>
+                </div>
+            </div>
+
+            <p class="credit-use-note">What credits unlock: <strong>Background Remover</strong> 25 credits per HD image · <strong>AI Transcription</strong> 1 credit per minute (minimum 5). More tools will accept credits soon.</p>
+        </section>
 
         <section class="plan-compare" aria-labelledby="planCompareTitle">
             <div class="pricing-section-heading compact-heading">
@@ -396,49 +440,6 @@
                 <i class="fa-solid fa-circle-info"></i>
                 <p>Pro includes unlimited AI PDF Summary; some AI tools remain one-time purchases because they use separate high-cost processing for full-quality output.</p>
             </div>
-        </section>
-
-        <section class="credit-packs" id="credit-packs" aria-labelledby="creditPacksTitle">
-            <div class="pricing-section-heading">
-                <div class="subpage-kicker"><i class="fa-solid fa-coins"></i> AI credits</div>
-                <h2 id="creditPacksTitle">Buy AI credits and pay your way.</h2>
-                <p>Credits are an easy way to pay for AI tools without a subscription. New accounts get 10 free credits. Credits never expire.</p>
-            </div>
-
-            <div class="credit-balance" id="creditBalance"></div>
-
-            <div class="credit-pack-grid">
-                <div class="credit-pack-card">
-                    <h3>Starter</h3>
-                    <div class="pack-credits">30<span> credits</span></div>
-                    <div class="pack-price">$2.99</div>
-                    <div class="pack-unit">$0.10 / credit</div>
-                    <button type="button" data-buy-pack="starter">Buy Starter</button>
-                </div>
-                <div class="credit-pack-card">
-                    <h3>Standard</h3>
-                    <div class="pack-credits">100<span> credits</span></div>
-                    <div class="pack-price">$6.99</div>
-                    <div class="pack-unit">$0.07 / credit</div>
-                    <button type="button" data-buy-pack="standard">Buy Standard</button>
-                </div>
-                <div class="credit-pack-card">
-                    <h3>Power</h3>
-                    <div class="pack-credits">250<span> credits</span></div>
-                    <div class="pack-price">$14.99</div>
-                    <div class="pack-unit">$0.06 / credit</div>
-                    <button type="button" data-buy-pack="power">Buy Power</button>
-                </div>
-                <div class="credit-pack-card">
-                    <h3>Business</h3>
-                    <div class="pack-credits">600<span> credits</span></div>
-                    <div class="pack-price">$29.99</div>
-                    <div class="pack-unit">$0.05 / credit</div>
-                    <button type="button" data-buy-pack="business">Buy Business</button>
-                </div>
-            </div>
-
-            <p class="credit-use-note">What credits unlock: <strong>Background Remover</strong> 25 credits per HD image · <strong>AI Transcription</strong> 1 credit per minute (minimum 5). More tools will accept credits soon.</p>
         </section>
 
         <section class="pricing-faq" aria-labelledby="pricingFaqTitle">
@@ -544,7 +545,7 @@
     <script src="auth.js?v=auth-20260528b"></script>
     <script src="tools-menu.js?v=nav-20260613a"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
-    <script src="pricing-language.js?v=pricelang-20260613a"></script>
+    <script src="pricing-language.js?v=pricelang-20260613b"></script>
     <script src="ai-credits.js?v=credits-20260613b"></script>
     <script>
         (function () {
