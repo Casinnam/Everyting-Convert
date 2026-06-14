@@ -90,6 +90,125 @@
     .faq p{color:var(--muted);font-size:.9rem;line-height:1.6;margin-top:.5rem}
     footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.85rem}
   </style>
+  <link rel="stylesheet" href="../ai-tools.css?v=ai-tools-20260614a">
+  <style>
+    .page-hero h1 {
+      letter-spacing: 0;
+    }
+
+    .page-hero h1::before {
+      content: "AI";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.25rem;
+      height: 3.25rem;
+      margin-right: .85rem;
+      border-radius: 18px;
+      vertical-align: .18em;
+      font-size: 1rem;
+      line-height: 1;
+      color: #fff;
+      background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+      box-shadow: 0 18px 42px rgba(79, 70, 229, .24);
+    }
+
+    .tool-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(125, 211, 252, .16), transparent 18rem),
+        radial-gradient(circle at 92% 4%, rgba(124, 58, 237, .12), transparent 18rem);
+    }
+
+    .tool-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-card {
+      border: 1px solid rgba(148, 163, 184, .24) !important;
+      border-radius: 20px !important;
+      padding: 1.15rem !important;
+      background: rgba(255, 255, 255, .82);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, .06);
+    }
+
+    .action-card h4 {
+      color: var(--ai-ink);
+      font-size: 1rem;
+    }
+
+    .btn-free,
+    .btn-credit {
+      background: #0f172a !important;
+      color: #fff !important;
+    }
+
+    .btn-smart {
+      background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary)) !important;
+      color: #fff !important;
+    }
+
+    .quality-note .q {
+      border-radius: 18px !important;
+      background: rgba(255, 255, 255, .78) !important;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, .05);
+    }
+
+    .quality-note .q.smart {
+      background: linear-gradient(135deg, rgba(237, 233, 254, .95), rgba(239, 246, 255, .9)) !important;
+    }
+
+    .paywall {
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255, 255, 255, .18), transparent 12rem),
+        linear-gradient(135deg, #2563eb, #7c3aed) !important;
+      border-radius: 22px !important;
+      box-shadow: 0 18px 44px rgba(79, 70, 229, .25);
+    }
+
+    .paywall p,
+    .paywall .credit-hint {
+      color: rgba(255, 255, 255, .82) !important;
+    }
+
+    .out-box {
+      background: rgba(239, 246, 255, .68) !important;
+      border-color: rgba(37, 99, 235, .14) !important;
+      border-radius: 20px !important;
+    }
+
+    .tabs button.active {
+      background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary)) !important;
+    }
+
+    .faq {
+      width: min(100%, 960px);
+      margin-inline: auto;
+    }
+
+    .faq details {
+      background: rgba(255, 255, 255, .86) !important;
+    }
+
+    @media (max-width: 720px) {
+      .page-hero h1::before {
+        width: 2.75rem;
+        height: 2.75rem;
+        margin-right: .5rem;
+        border-radius: 15px;
+        font-size: .85rem;
+      }
+    }
+  </style>
 </head>
 <body>
 <header id="ec-header-inject"></header>
