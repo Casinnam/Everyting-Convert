@@ -453,6 +453,10 @@
       content: "->";
     }
 
+    .faq-item .guide-link {
+      margin-top: .65rem;
+    }
+
     .summary-info {
       margin-top: 1rem;
       display: grid;
@@ -625,9 +629,9 @@
       <p data-i18n="psGuide1Desc">Invoices, reports, contracts, statements, and text-based PDFs can usually be summarized quickly.</p>
     </article>
     <article class="guide-card">
-      <strong data-i18n="psGuide2Title">Use Smart OCR for scanned PDFs</strong>
-      <p data-i18n="psGuide2Desc">Scanned PDFs are image files inside a PDF wrapper. Open Smart OCR first to extract readable text before summarizing.</p>
-      <a class="guide-link" href="../smart-ocr/index.html" data-i18n="psSmartOcrLink">Go to Smart OCR</a>
+      <strong data-i18n="psGuide2Title">Scanned PDF? Open Smart OCR first</strong>
+      <p data-i18n="psGuide2Desc">Image-only PDFs need OCR before AI can read them. Use Smart OCR to extract clean text first, then return here for a stronger summary.</p>
+      <a class="guide-link" href="../smart-ocr/index.html" data-i18n="psSmartOcrLink">Open Smart OCR</a>
     </article>
     <article class="guide-card">
       <strong data-i18n="psGuide3Title">Always verify details</strong>
@@ -650,7 +654,8 @@
       <h2 data-i18n="psFaqTitle">PDF Summary FAQ</h2>
       <div class="faq-item">
         <strong data-i18n="psFaq1Q">Can it summarize scanned PDFs?</strong>
-        <p data-i18n="psFaq1A">Not in this first version. Scanned documents need OCR before the text can be summarized. Smart OCR can be added later as a separate AI tool.</p>
+        <p data-i18n="psFaq1A">Yes, but scan-based PDFs should go through Smart OCR first. Smart OCR turns image pages into readable text, so PDF Summary can produce cleaner key points and suggested questions.</p>
+        <a class="guide-link" href="../smart-ocr/index.html" data-i18n="psSmartOcrLink">Open Smart OCR</a>
       </div>
       <div class="faq-item">
         <strong data-i18n="psFaq2Q">Does this replace legal, tax, or medical advice?</strong>
@@ -675,7 +680,7 @@
 <script src="../../tools-menu.js?v=nav-20260613b"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
-<script src="../ai-common.js?v=ai-common-20260613a"></script>
+<script src="../ai-common.js?v=ai-common-20260614a"></script>
 <script>
 (function () {
   const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
