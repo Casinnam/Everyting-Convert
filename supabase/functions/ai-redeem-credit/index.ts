@@ -62,7 +62,7 @@ async function dbGetJob(jobId: string): Promise<Record<string, unknown> | null> 
 
 async function dbMarkPaid(jobId: string, userId: string): Promise<void> {
   const { url, key } = supa();
-  await fetch(`${url}/rest/v1/ai_jobs?id=eq.${jobId}`, {
+  const res = await fetch(`${url}/rest/v1/ai_jobs?id=eq.${jobId}`, {
     method: 'PATCH',
     headers: {
       apikey: key, Authorization: `Bearer ${key}`,
@@ -70,14 +70,18 @@ async function dbMarkPaid(jobId: string, userId: string): Promise<void> {
     },
     body: JSON.stringify({ status: 'paid', user_id: userId }),
   });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`dbMarkPaid failed: ${text}`);
+  }
 }
 
-async function spendCredits(userId: string, cost: number, tool: string): Promise<{ balance: number; allowed: boolean }> {
+async function spendCredits(userId: string, cost: number, tool: string, ref: string): Promise<{ balance: number; allowed: boolean }> {
   const { url, key } = supa();
   const res = await fetch(`${url}/rest/v1/rpc/record_ai_credit_spend`, {
     method: 'POST',
     headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ p_user_id: userId, p_cost: cost, p_tool: tool }),
+    body: JSON.stringify({ p_user_id: userId, p_cost: cost, p_tool: tool, p_ref: ref }),
   });
   const rows = await res.json();
   if (!res.ok) throw new Error(`record_ai_credit_spend failed: ${JSON.stringify(rows)}`);
@@ -94,6 +98,11 @@ function creditCost(job: Record<string, unknown>): number {
     const seconds = Number(preview.total_duration ?? 0);
     const minutes = Math.ceil(seconds / 60);
     return Math.max(5, minutes);
+  }
+  if (tool === 'smart-ocr') {
+    const preview = (job.preview_data ?? {}) as Record<string, unknown>;
+    const pages = Math.min(30, Math.max(1, Number(preview.pages ?? 1)));
+    return pages * 2; // 2 credits per page
   }
   return 0; // unknown / non-credit tool
 }
@@ -129,7 +138,7 @@ Deno.serve(async (req: Request) => {
 
     let result: { balance: number; allowed: boolean };
     try {
-      result = await spendCredits(userId, cost, job.tool as string);
+      result = await spendCredits(userId, cost, job.tool as string, `job:${jobId}`);
     } catch (error) {
       console.error('[ai-redeem-credit] spend failed', error);
       return json({ error: 'Credit service is temporarily unavailable. Please try again.' }, 503);
@@ -139,7 +148,12 @@ Deno.serve(async (req: Request) => {
       return json({ error: 'Not enough credits.', code: 'insufficient_credits', cost, balance: result.balance }, 402);
     }
 
-    await dbMarkPaid(jobId, userId);
+    try {
+      await dbMarkPaid(jobId, userId);
+    } catch (error) {
+      console.error('[ai-redeem-credit] mark paid failed', error);
+      return json({ error: 'Credit was reserved, but unlock failed. Please try again; you will not be charged twice.' }, 503);
+    }
 
     return json({ ok: true, cost, balance: result.balance });
   } catch (error) {
