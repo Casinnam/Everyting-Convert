@@ -545,7 +545,7 @@
     <script src="tools-menu.js?v=nav-20260613a"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
     <script src="pricing-language.js?v=pricelang-20260613a"></script>
-    <script src="ai-credits.js?v=credits-20260613a"></script>
+    <script src="ai-credits.js?v=credits-20260613b"></script>
     <script>
         (function () {
             const button = document.getElementById('proCheckoutButton');
@@ -717,7 +717,18 @@
             }
 
             document.querySelectorAll('[data-buy-pack]').forEach((button) => {
-                button.addEventListener('click', () => credits.buyPack(button.dataset.buyPack));
+                button.addEventListener('click', async () => {
+                    const original = button.textContent;
+                    button.disabled = true;
+                    button.textContent = 'Opening checkout…';
+                    try {
+                        await credits.buyPack(button.dataset.buyPack);
+                    } finally {
+                        // If buyPack redirected we never get here; restore on failure.
+                        button.disabled = false;
+                        button.textContent = original;
+                    }
+                });
             });
 
             const params = new URLSearchParams(window.location.search);

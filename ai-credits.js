@@ -26,11 +26,36 @@
     return !!accessToken();
   }
 
+  // The auth session is sometimes only inside the Supabase client and not yet
+  // mirrored onto auth.state.session. Fall back to client.auth.getSession()
+  // so a logged-in user is never wrongly treated as logged out.
+  async function resolveToken() {
+    const sync = accessToken();
+    if (sync) return sync;
+    const s = authState();
+    const client = s && s.client;
+    if (client && client.auth && typeof client.auth.getSession === 'function') {
+      try {
+        const result = await client.auth.getSession();
+        const session = result && result.data ? result.data.session : null;
+        if (session && session.access_token) {
+          if (s) { s.session = session; s.user = session.user || s.user; }
+          return session.access_token;
+        }
+      } catch (error) {
+        return '';
+      }
+    }
+    return '';
+  }
+
   // Returns the user's credit balance (number), or null when logged out / on error.
   async function getBalance() {
     const s = authState();
     const client = s && s.client;
-    if (!client || !isLoggedIn()) return null;
+    if (!client) return null;
+    const token = await resolveToken();
+    if (!token) return null;
     try {
       const { data, error } = await client.rpc('ai_credit_balance');
       if (error) return null;
@@ -43,7 +68,7 @@
   // Pay for a previewed job with credits. Resolves to
   // { ok, status, cost, balance, code, error }.
   async function redeem(jobId) {
-    const token = accessToken();
+    const token = await resolveToken();
     if (!token) return { ok: false, code: 'login_required', error: 'Please log in.' };
     try {
       const res = await fetch(`${FUNC_BASE}/ai-redeem-credit`, {
@@ -66,8 +91,8 @@
   // Start Stripe checkout for a credit pack. Redirects to login first if needed.
   async function buyPack(packKey) {
     if (!PACKS[packKey]) return;
-    const token = accessToken();
     const origin = window.location.origin;
+    const token = await resolveToken();
     if (!token) {
       window.location.href = 'auth.html?next=' + encodeURIComponent('pricing.html#credit-packs');
       return;
