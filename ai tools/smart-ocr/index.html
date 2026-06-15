@@ -281,6 +281,22 @@
         <button id="dlPdf" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> searchable PDF</button>
       </div>
       <div id="enhanceRow" class="enhance-row" style="display:none">
+        <select id="translateLang" class="btn btn-soft" style="width:auto;cursor:pointer;">
+          <option value="English">English</option>
+          <option value="Korean">한국어 (Korean)</option>
+          <option value="Japanese">日本語 (Japanese)</option>
+          <option value="Chinese (Simplified)">中文 (Chinese)</option>
+          <option value="Spanish">Español (Spanish)</option>
+          <option value="German">Deutsch (German)</option>
+          <option value="French">Français (French)</option>
+          <option value="Portuguese">Português (Portuguese)</option>
+          <option value="Vietnamese">Tiếng Việt (Vietnamese)</option>
+          <option value="Indonesian">Indonesia (Indonesian)</option>
+          <option value="Russian">Русский (Russian)</option>
+          <option value="Arabic">العربية (Arabic)</option>
+          <option value="Hindi">हिन्दी (Hindi)</option>
+          <option value="Thai">ไทย (Thai)</option>
+        </select>
         <button id="translateBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-language"></i> Translate</button>
         <button id="summarizeBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Summarize</button>
       </div>
@@ -487,6 +503,12 @@
     renderTab();
     $('dlCsv').style.display = (assembled.tables && assembled.tables.length) ? '' : 'none';
     enhanceRow.style.display = isPaid ? '' : 'none';
+    // Preselect the translate target to the site language for convenience.
+    const sel = $('translateLang');
+    if (sel) {
+      const want = LANG_NAME[siteLang()];
+      if (want && Array.from(sel.options).some(o => o.value === want)) sel.value = want;
+    }
     result.classList.add('visible');
   }
 
@@ -535,7 +557,9 @@
   function siteLang(){ try { return localStorage.getItem('everything_convert_language') || 'en'; } catch { return 'en'; } }
   const LANG_NAME = { en:'English', ko:'Korean', de:'German', es:'Spanish', fr:'French' };
   async function enhance(action) {
-    const langName = LANG_NAME[siteLang()] || 'English';
+    const langName = action === 'translate'
+      ? (($('translateLang') && $('translateLang').value) || 'English')
+      : (LANG_NAME[siteLang()] || 'English');
     setStatus(action==='translate'?`Translating to ${langName}…`:'Summarizing…', 'info');
     try {
       const res = await fetch(`${FUNC}/ai-ocr`, {
