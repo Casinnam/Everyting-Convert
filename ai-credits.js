@@ -26,6 +26,12 @@
     return !!accessToken();
   }
 
+  function track(name, params) {
+    if (window.EverythingConvertAnalytics && window.EverythingConvertAnalytics.track) {
+      window.EverythingConvertAnalytics.track(name, params || {});
+    }
+  }
+
   // The auth session is sometimes only inside the Supabase client and not yet
   // mirrored onto auth.state.session. Fall back to client.auth.getSession()
   // so a logged-in user is never wrongly treated as logged out.
@@ -81,6 +87,7 @@
   async function redeem(jobId) {
     const token = await resolveToken();
     if (!token) return { ok: false, code: 'login_required', error: 'Please log in.' };
+    track('ai_credit_redeem_start', { job_id: jobId || '' });
     try {
       const res = await fetch(`${FUNC_BASE}/ai-redeem-credit`, {
         method: 'POST',
@@ -93,8 +100,15 @@
       });
       let data = {};
       try { data = await res.json(); } catch (error) { data = {}; }
+      track(res.ok && data.ok ? 'ai_credit_redeem_success' : 'ai_credit_redeem_error', {
+        job_id: jobId || '',
+        status: res.status,
+        code: data.code || '',
+        cost: data.cost || 0,
+      });
       return { status: res.status, ok: res.ok && !!data.ok, ...data };
     } catch (error) {
+      track('ai_credit_redeem_error', { job_id: jobId || '', code: 'network' });
       return { ok: false, code: 'network', error: 'Network error. Please try again.' };
     }
   }
@@ -103,6 +117,7 @@
   async function spend(tool, ref) {
     const token = await resolveToken();
     if (!token) return { ok: false, code: 'login_required', error: 'Please log in.' };
+    track('ai_credit_spend_start', { tool: tool || '', ref: ref || '' });
     try {
       const res = await fetch(`${FUNC_BASE}/ai-spend-credit`, {
         method: 'POST',
@@ -115,8 +130,15 @@
       });
       let data = {};
       try { data = await res.json(); } catch (error) { data = {}; }
+      track(res.ok && data.ok ? 'ai_credit_spend_success' : 'ai_credit_spend_error', {
+        tool: tool || '',
+        status: res.status,
+        code: data.code || '',
+        cost: data.cost || 0,
+      });
       return { status: res.status, ok: res.ok && !!data.ok, ...data };
     } catch (error) {
+      track('ai_credit_spend_error', { tool: tool || '', code: 'network' });
       return { ok: false, code: 'network', error: 'Network error. Please try again.' };
     }
   }
@@ -124,6 +146,11 @@
   // Start Stripe checkout for a credit pack. Redirects to login first if needed.
   async function buyPack(packKey) {
     if (!PACKS[packKey]) return;
+    track('begin_checkout', {
+      checkout_type: 'ai_credit_pack',
+      credit_pack: packKey,
+      credits: PACKS[packKey].credits,
+    });
     const origin = window.location.origin;
     const token = await resolveToken();
     if (!token) {

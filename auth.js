@@ -20,6 +20,12 @@
   let signingOut = false;
   let refreshPromise = null;
 
+  function trackAuthEvent(name, params) {
+    if (window.EverythingConvertAnalytics && window.EverythingConvertAnalytics.track) {
+      window.EverythingConvertAnalytics.track(name, params || {});
+    }
+  }
+
   function initClient() {
     if (missingConfig || !window.supabase) return null;
     if (!state.client) {
@@ -375,6 +381,7 @@
   async function signUp(email, password, username) {
     const client = initClient();
     if (!client) throw new Error('Supabase 설정이 필요합니다.');
+    trackAuthEvent('sign_up_start', { method: 'email' });
     const emailRedirectTo = getAuthRedirectUrl();
     const { data, error } = await client.auth.signUp({
       email,
@@ -387,6 +394,7 @@
       },
     });
     if (error) throw error;
+    trackAuthEvent('sign_up', { method: 'email' });
     return data;
   }
 
@@ -409,6 +417,7 @@
   async function signIn(email, password) {
     const client = initClient();
     if (!client) throw new Error('Supabase 설정이 필요합니다.');
+    trackAuthEvent('login_start', { method: 'email' });
     const { data, error } = await withTimeout(
       client.auth.signInWithPassword({ email, password }),
       '로그인',
@@ -426,12 +435,14 @@
       console.warn('Could not refresh profile after login:', profileError.message);
     }
     renderAuthWidgets();
+    trackAuthEvent('login', { method: 'email' });
     return data;
   }
 
   async function signInWithGoogle() {
     const client = initClient();
     if (!client) throw new Error('Supabase 설정이 필요합니다.');
+    trackAuthEvent('login_start', { method: 'google' });
     const redirectTo = getAuthRedirectUrl();
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'google',
@@ -460,6 +471,7 @@
       state.ready = true;
       clearAuthIdentityCache();
       renderAuthWidgets();
+      trackAuthEvent('logout', {});
     } finally {
       signingOut = false;
     }

@@ -15,8 +15,10 @@ assert(
   ads.includes('everything_convert_auth_identity_snapshot') &&
     ads.includes("cached.plan === 'pro'") &&
     ads.includes("cached.role === 'admin'") &&
+    ads.includes('everything_convert_cookie_consent_v1') &&
+    ads.includes('hasAdConsent') &&
     ads.includes('pagead2.googlesyndication.com'),
-  'ads.js should read the auth identity snapshot and skip AdSense for pro/admin users.',
+  'ads.js should read auth and cookie consent state, then skip AdSense for pro/admin users or visitors without ad consent.',
 );
 
 const htmlFiles = [];

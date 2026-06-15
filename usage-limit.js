@@ -468,7 +468,19 @@
 
       const allowed = await guardConversion();
       if (!allowed) {
+        if (window.EverythingConvertAnalytics && window.EverythingConvertAnalytics.track) {
+          window.EverythingConvertAnalytics.track('conversion_blocked', {
+            tool_id: document.body.getAttribute('data-tool-id') || document.title || 'unknown',
+            reason: 'usage_limit',
+          });
+        }
         return;
+      }
+
+      if (window.EverythingConvertAnalytics && window.EverythingConvertAnalytics.track) {
+        window.EverythingConvertAnalytics.track('conversion_allowed', {
+          tool_id: document.body.getAttribute('data-tool-id') || document.title || 'unknown',
+        });
       }
 
       button.dataset.usageBypass = '1';
