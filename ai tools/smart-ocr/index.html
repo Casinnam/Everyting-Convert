@@ -214,9 +214,9 @@
 <header id="ec-header-inject"></header>
 
 <div class="page-hero">
-  <div class="badge">AI TOOL · OCR</div>
+  <div class="badge" data-i18n="ocBadge">AI TOOL · OCR</div>
   <h1>Smart OCR</h1>
-  <p>Turn images and PDFs into text. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout, tables, translation, summary, and a searchable PDF.</p>
+  <p data-i18n="ocHeroDesc">Turn images and PDFs into text. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout, tables, translation, summary, and a searchable PDF.</p>
 </div>
 
 <main>
@@ -224,8 +224,8 @@
     <label id="uploadZone" class="upload-zone">
       <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,application/pdf,.png,.jpg,.jpeg,.webp,.pdf">
       <div class="icon">&#128196;</div>
-      <h3>Drop an image or PDF here</h3>
-      <p>PNG, JPG, WebP, or PDF · up to 30 pages with Smart OCR</p>
+      <h3 data-i18n="ocDrop">Drop an image or PDF here</h3>
+      <p data-i18n="ocFormats">PNG, JPG, WebP, or PDF · up to 30 pages with Smart OCR</p>
     </label>
 
     <div id="fileInfo" class="file-info">
@@ -236,49 +236,50 @@
 
     <div id="actionRow" class="action-row" style="display:none">
       <div class="action-card">
-        <h4>Quick OCR — Free</h4>
-        <p>On-device (Tesseract). First page only. Best for clear printed text. Your file never leaves your browser.</p>
-        <button id="freeBtn" class="btn btn-free" type="button">Run free OCR (1 page)</button>
+        <h4 data-i18n="ocFreeTitle">Quick OCR — Free</h4>
+        <p data-i18n="ocFreeDesc">On-device (Tesseract). First page only. Best for clear printed text. Your file never leaves your browser.</p>
+        <button id="freeBtn" class="btn btn-free" type="button" data-i18n="ocFreeBtn">Run free OCR (1 page)</button>
       </div>
       <div class="action-card">
-        <h4>Smart OCR — GPT-4o</h4>
-        <p id="smartDesc">Higher accuracy, layout, tables, handwriting & many languages. Up to 30 pages.</p>
-        <button id="smartBtn" class="btn btn-smart" type="button">Smart OCR</button>
+        <h4 data-i18n="ocSmartTitle">Smart OCR — GPT-4o</h4>
+        <p id="smartDesc" data-i18n="ocSmartDesc">Higher accuracy, layout, tables, handwriting &amp; many languages. Up to 30 pages.</p>
+        <button id="smartBtn" class="btn btn-smart" type="button" data-i18n="ocSmartBtn">Smart OCR</button>
       </div>
     </div>
 
     <p class="credit-policy-note" style="margin-top:1rem;font-size:.85rem;color:var(--muted);line-height:1.55">
       <i class="fa-solid fa-coins" style="color:var(--ai-purple)"></i>
-      Smart OCR uses <strong>2 credits per page</strong>. Credits are deducted only when you unlock the full result — the free on-device OCR never uses credits. New accounts get 10 free credits; buy more on the <a href="../../pricing.html#credit-packs">pricing page</a>.
+      <span data-i18n="ocCreditNote">Smart OCR uses 2 credits per page. Credits are deducted only when you unlock the full result — the free on-device OCR never uses credits. New accounts get 10 free credits.</span>
+      <a href="../../pricing.html#credit-packs" data-i18n="ocCreditLink">Buy credit packs</a>
     </p>
 
     <div class="quality-note">
-      <div class="q"><strong>Free (on-device)</strong>Good for clean, printed pages. One page at a time. No tables or layout, weaker on Korean, handwriting, low quality scans, or photos. Nothing is uploaded.</div>
-      <div class="q smart"><strong>Smart OCR (GPT-4o)</strong>Much higher accuracy. Keeps layout (Markdown), extracts tables to CSV, reads handwriting and many languages, up to 30 pages. 2 credits per page. Pages are sent securely for processing.</div>
+      <div class="q"><strong data-i18n="ocFreeQLabel">Free (on-device)</strong><span data-i18n="ocFreeQText">Good for clean, printed pages. One page at a time. No tables or layout, weaker on Korean, handwriting, low quality scans, or photos. Nothing is uploaded.</span></div>
+      <div class="q smart"><strong data-i18n="ocSmartQLabel">Smart OCR (GPT-4o)</strong><span data-i18n="ocSmartQText">Much higher accuracy. Keeps layout (Markdown), extracts tables to CSV, reads handwriting and many languages, up to 30 pages. 2 credits per page. Pages are sent securely for processing.</span></div>
     </div>
 
     <div id="progressWrap" class="progress-bar-wrap"><div id="progressBar" class="progress-bar"></div></div>
     <div id="statusMsg" class="status-msg"></div>
 
     <div id="paywall" class="paywall">
-      <h3>&#128274; Smart OCR ready</h3>
-      <p id="paywallText">Unlock full-document Smart OCR for all pages.</p>
+      <h3 data-i18n="ocPaywallTitle">&#128274; Smart OCR ready</h3>
+      <p id="paywallText" data-i18n="ocPaywallText">Unlock full-document Smart OCR for all pages.</p>
       <button id="creditBtn" class="btn btn-credit" type="button" style="display:none"></button>
       <p id="creditHint" class="credit-hint"></p>
     </div>
 
     <div id="result" class="result">
       <div class="tabs">
-        <button data-tab="markdown" class="active" type="button">Markdown</button>
-        <button data-tab="text" type="button">Plain text</button>
-        <button data-tab="tables" type="button">Tables</button>
+        <button data-tab="markdown" class="active" type="button" data-i18n="ocTabMd">Markdown</button>
+        <button data-tab="text" type="button" data-i18n="ocTabText">Plain text</button>
+        <button data-tab="tables" type="button" data-i18n="ocTabTables">Tables</button>
       </div>
       <div id="outBox" class="out-box"></div>
       <div class="downloads">
         <button id="dlTxt" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> .txt</button>
         <button id="dlMd" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> .md</button>
-        <button id="dlCsv" class="btn btn-soft" type="button" style="display:none"><i class="fa-solid fa-download"></i> tables .csv</button>
-        <button id="dlPdf" class="btn btn-soft" type="button"><i class="fa-solid fa-download"></i> searchable PDF</button>
+        <button id="dlCsv" class="btn btn-soft" type="button" style="display:none" data-i18n="ocDlCsv"><i class="fa-solid fa-download"></i> tables .csv</button>
+        <button id="dlPdf" class="btn btn-soft" type="button" data-i18n="ocDlPdf"><i class="fa-solid fa-download"></i> searchable PDF</button>
       </div>
       <div id="enhanceRow" class="enhance-row" style="display:none">
         <select id="translateLang" class="btn btn-soft" style="width:auto;cursor:pointer;">
@@ -297,20 +298,20 @@
           <option value="Hindi">हिन्दी (Hindi)</option>
           <option value="Thai">ไทย (Thai)</option>
         </select>
-        <button id="translateBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-language"></i> Translate</button>
-        <button id="summarizeBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Summarize</button>
+        <button id="translateBtn" class="btn btn-soft" type="button" data-i18n="ocTranslateBtn"><i class="fa-solid fa-language"></i> Translate</button>
+        <button id="summarizeBtn" class="btn btn-soft" type="button" data-i18n="ocSummarizeBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Summarize</button>
       </div>
     </div>
 
-    <div class="info-box"><strong>Privacy:</strong> Free OCR runs entirely in your browser — nothing is uploaded. Smart OCR sends page images to a secure server for processing and does not store them after the result is returned.</div>
+    <div class="info-box"><strong data-i18n="ocPrivacyLabel">Privacy:</strong> <span data-i18n="ocPrivacyText">Free OCR runs entirely in your browser — nothing is uploaded. Smart OCR sends page images to a secure server for processing and does not store them after the result is returned.</span></div>
   </div>
 
   <div class="faq">
-    <h2>Smart OCR FAQ</h2>
-    <details><summary>What is the difference between Free and Smart OCR?</summary><p>Free OCR runs on your device for one page and works best on clean printed text, with no layout or tables. Smart OCR uses GPT-4o for much higher accuracy, keeps layout as Markdown, extracts tables, reads handwriting and many languages, and handles up to 30 pages.</p></details>
-    <details><summary>How much does Smart OCR cost?</summary><p>2 credits per page. New accounts get 10 free credits, and you can buy credit packs on the pricing page. The free on-device OCR costs nothing.</p></details>
-    <details><summary>Can it read Korean and handwriting?</summary><p>Smart OCR (GPT-4o) handles Korean, mixed languages, and handwriting well. The free on-device option is weaker on those — use Smart OCR for best results.</p></details>
-    <details><summary>What is a searchable PDF?</summary><p>A PDF that keeps the original page images but adds a hidden text layer, so you can select and search the text. Smart OCR can export one.</p></details>
+    <h2 data-i18n="ocFaqTitle">Smart OCR FAQ</h2>
+    <details><summary data-i18n="ocFaqQ1">What is the difference between Free and Smart OCR?</summary><p data-i18n="ocFaqA1">Free OCR runs on your device for one page and works best on clean printed text, with no layout or tables. Smart OCR uses GPT-4o for much higher accuracy, keeps layout as Markdown, extracts tables, reads handwriting and many languages, and handles up to 30 pages.</p></details>
+    <details><summary data-i18n="ocFaqQ2">How much does Smart OCR cost?</summary><p data-i18n="ocFaqA2">2 credits per page. New accounts get 10 free credits, and you can buy credit packs on the pricing page. The free on-device OCR costs nothing.</p></details>
+    <details><summary data-i18n="ocFaqQ3">Can it read Korean and handwriting?</summary><p data-i18n="ocFaqA3">Smart OCR (GPT-4o) handles Korean, mixed languages, and handwriting well. The free on-device option is weaker on those — use Smart OCR for best results.</p></details>
+    <details><summary data-i18n="ocFaqQ4">What is a searchable PDF?</summary><p data-i18n="ocFaqA4">A PDF that keeps the original page images but adds a hidden text layer, so you can select and search the text. Smart OCR can export one.</p></details>
   </div>
 </main>
 
@@ -325,13 +326,41 @@
 <script src="../../tools-menu.js?v=nav-20260614a"></script>
 <script src="../../language-menu.js?v=lang-20260611a"></script>
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
-<script src="../ai-common.js?v=ai-common-20260613a"></script>
+<script src="../ai-common.js?v=ai-common-20260614a"></script>
 <script src="../../ai-credits.js?v=credits-20260613d"></script>
 <script>
 (function () {
   const FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
   const ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
   const MAX_PAGES = 30;
+
+  // Localized templates for the dynamic strings that JS rewrites (page counts,
+  // credit costs) so they match the 5 site languages like the static text.
+  function ocLang(){ try { return localStorage.getItem('everything_convert_language') || 'en'; } catch { return 'en'; } }
+  const OCR_T = {
+    smartDesc: {
+      en: (p,c)=>`Higher accuracy, layout, tables, handwriting & many languages. ${p} page${p>1?'s':''} · ${c} credits.`,
+      ko: (p,c)=>`더 높은 정확도, 레이아웃, 표, 손글씨, 다국어 지원. ${p}페이지 · ${c}크레딧.`,
+      de: (p,c)=>`Höhere Genauigkeit, Layout, Tabellen, Handschrift und viele Sprachen. ${p} Seite${p>1?'n':''} · ${c} Credits.`,
+      es: (p,c)=>`Mayor precisión, diseño, tablas, escritura a mano y muchos idiomas. ${p} página${p>1?'s':''} · ${c} créditos.`,
+      fr: (p,c)=>`Précision accrue, mise en page, tableaux, écriture manuscrite et de nombreuses langues. ${p} page${p>1?'s':''} · ${c} crédits.`,
+    },
+    capped: {
+      en: (n,m)=>` (file has ${n} pages; first ${m} will be processed)`,
+      ko: (n,m)=>` (파일은 ${n}페이지이며, 처음 ${m}페이지만 처리됩니다)`,
+      de: (n,m)=>` (Datei hat ${n} Seiten; die ersten ${m} werden verarbeitet)`,
+      es: (n,m)=>` (el archivo tiene ${n} páginas; se procesarán las primeras ${m})`,
+      fr: (n,m)=>` (le fichier a ${n} pages ; les ${m} premières seront traitées)`,
+    },
+    smartBtn: {
+      en: (c)=>`Smart OCR — ${c} credits`,
+      ko: (c)=>`Smart OCR — ${c}크레딧`,
+      de: (c)=>`Smart OCR — ${c} Credits`,
+      es: (c)=>`Smart OCR — ${c} créditos`,
+      fr: (c)=>`Smart OCR — ${c} crédits`,
+    },
+  };
+  function ocT(group, ...args){ const g = OCR_T[group]; const fn = g && (g[ocLang()] || g.en); return fn ? fn(...args) : ''; }
   if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
   const $ = (id) => document.getElementById(id);
@@ -390,8 +419,8 @@
       const info = await rasterize(file);
       totalPages = Math.min(info.pages, MAX_PAGES);
       setProgress(-1); setStatus('');
-      smartDesc.textContent = `Higher accuracy, layout, tables, handwriting & many languages. ${totalPages} page${totalPages>1?'s':''} · ${creditCost()} credits.` + (info.capped ? ` (file has ${info.pages} pages; first ${MAX_PAGES} will be processed)` : '');
-      smartBtn.textContent = `Smart OCR — ${creditCost()} credits`;
+      smartDesc.textContent = ocT('smartDesc', totalPages, creditCost()) + (info.capped ? ocT('capped', info.pages, MAX_PAGES) : '');
+      smartBtn.textContent = ocT('smartBtn', creditCost());
       actionRow.style.display = '';
     } catch (e) {
       setProgress(-1); setStatus('Could not read this file. It may be encrypted or damaged.', 'error');
