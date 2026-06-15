@@ -188,6 +188,40 @@
         .badge.free { color: #0f172a; background: rgba(47, 38, 18, 0.08); }
         .badge.admin { color: #7c2d12; background: rgba(245, 158, 11, 0.16); }
         .badge.user { color: #3f3a2b; background: rgba(47, 38, 18, 0.06); }
+        .badge.credit { color: #5b21b6; background: rgba(124, 58, 237, 0.14); }
+
+        .credit-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.45);
+            z-index: 9500;
+            padding: 1rem;
+        }
+        .credit-modal.open { display: flex; }
+        .credit-modal-card {
+            width: min(560px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+            background: var(--card-bg, #fff);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+        .credit-modal-card h2 { margin: 0 0 0.25rem; font-size: 1.25rem; }
+        .credit-balance-big { font-size: 2rem; font-weight: 800; margin: 0.5rem 0 1rem; }
+        .credit-adjust { display: grid; grid-template-columns: 120px 1fr auto; gap: 0.5rem; align-items: end; margin-bottom: 1rem; }
+        .credit-adjust label { display: block; font-size: 0.76rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .credit-adjust input { width: 100%; padding: 0.6rem 0.7rem; border: 1px solid var(--line); border-radius: 6px; font: inherit; box-sizing: border-box; }
+        .credit-ledger { border-top: 1px solid var(--line); margin-top: 0.5rem; }
+        .credit-ledger-row { display: grid; grid-template-columns: 70px 1fr auto; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--line); font-size: 0.88rem; align-items: center; }
+        .credit-amt-pos { color: #166534; font-weight: 800; }
+        .credit-amt-neg { color: #991b1b; font-weight: 800; }
+        .credit-modal-msg { font-weight: 800; min-height: 1.2em; margin: 0.25rem 0; }
+        .credit-modal-actions { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.5rem; }
+        @media (max-width: 560px) { .credit-adjust { grid-template-columns: 1fr; } }
 
         .empty-state {
             padding: 2rem;
@@ -348,6 +382,7 @@
                         <option value="all">All plans</option>
                         <option value="free">Free only</option>
                         <option value="pro">Pro only</option>
+                        <option value="credit">Credit users</option>
                     </select>
                     <select id="roleFilter">
                         <option value="all">All roles</option>
@@ -366,6 +401,32 @@
             </section>
         </section>
     </main>
+
+    <div class="credit-modal" id="creditModal" role="dialog" aria-modal="true">
+        <div class="credit-modal-card">
+            <h2 id="creditModalTitle">Manage credits</h2>
+            <div class="admin-status" id="creditModalUser" style="font-size:0.85rem;"></div>
+            <div class="credit-balance-big"><span id="creditModalBalance">-</span> <span style="font-size:1rem;font-weight:700;color:var(--text-muted);">credits</span></div>
+            <div class="credit-adjust">
+                <div>
+                    <label for="creditAmount">Amount (+/-)</label>
+                    <input id="creditAmount" type="number" step="1" placeholder="e.g. 50 or -10">
+                </div>
+                <div>
+                    <label for="creditReason">Reason (optional)</label>
+                    <input id="creditReason" type="text" placeholder="Refund, compensation, correction…">
+                </div>
+                <button class="admin-button primary" id="creditApplyBtn" type="button">Apply</button>
+            </div>
+            <p class="credit-modal-msg" id="creditModalMsg"></p>
+            <strong style="font-size:0.85rem;color:var(--text-muted);">Ledger (latest 200)</strong>
+            <div class="credit-ledger" id="creditLedger"><div class="empty-state">Loading…</div></div>
+            <div class="credit-modal-actions">
+                <span class="db-note" style="font-size:0.78rem;">Positive grants, negative deducts. Balance can't go below 0.</span>
+                <button class="admin-button" id="creditCloseBtn" type="button">Close</button>
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer">
         <div class="footer-legal-row"><a href="about.html">About Us</a><a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security and Compliance</a><a href="contact.html">Contact</a></div>
@@ -396,6 +457,15 @@
         const adminContent = document.getElementById('adminContent');
         let loadingProfiles = false;
         let allProfiles = [];
+        let creditsById = {};
+
+        function balanceOf(profile) {
+            return profile && creditsById[profile.id] ? creditsById[profile.id] : 0;
+        }
+
+        function isCreditUser(profile) {
+            return Boolean(profile && profile.plan !== 'pro' && balanceOf(profile) > 0);
+        }
 
         function escapeHtml(value) {
             return String(value || '')
@@ -480,6 +550,7 @@
                 ['Total users', profiles.length],
                 ['Pro users', profiles.filter(profile => profile.plan === 'pro').length],
                 ['Free users', profiles.filter(profile => profile.plan !== 'pro').length],
+                ['Credit users', profiles.filter(isCreditUser).length],
                 ['Admins', profiles.filter(profile => profile.role === 'admin').length],
                 ['New today', profiles.filter(profile => isSameLocalDay(profile.created_at)).length],
                 ['New 7 days', profiles.filter(profile => profile.created_at && new Date(profile.created_at) >= sevenDaysAgo).length],
@@ -498,7 +569,8 @@
             return allProfiles.filter((profile) => {
                 const haystack = `${profile.id || ''} ${profile.email || ''} ${profile.username || ''}`.toLowerCase();
                 const matchesSearch = !search || haystack.includes(search);
-                const matchesPlan = plan === 'all' || profile.plan === plan;
+                const matchesPlan = plan === 'all'
+                    || (plan === 'credit' ? isCreditUser(profile) : profile.plan === plan);
                 const matchesRole = role === 'all' || profile.role === role;
                 return matchesSearch && matchesPlan && matchesRole;
             });
@@ -515,12 +587,15 @@
             const rows = profiles.map(profile => {
                 const plan = profile.plan || 'free';
                 const role = profile.role || 'user';
+                const balance = balanceOf(profile);
+                const creditUser = isCreditUser(profile);
                 return `
                     <tr data-user-id="${escapeHtml(profile.id)}">
                         <td><strong>${escapeHtml(profile.username || '-')}</strong><br><small>${escapeHtml(profile.id || '')}</small></td>
                         <td>${escapeHtml(profile.email || '-')}</td>
-                        <td><span class="badge ${plan === 'pro' ? 'pro' : 'free'}">${escapeHtml(plan)}</span></td>
+                        <td><span class="badge ${plan === 'pro' ? 'pro' : 'free'}">${escapeHtml(plan)}</span>${creditUser ? ' <span class="badge credit">credit</span>' : ''}</td>
                         <td><span class="badge ${role === 'admin' ? 'admin' : 'user'}">${escapeHtml(role)}</span></td>
+                        <td><strong>${balance}</strong> <button class="admin-button" data-credits type="button">Manage</button></td>
                         <td>${formatDate(profile.created_at)}</td>
                         <td>${formatDate(profile.updated_at)}</td>
                         <td>
@@ -550,6 +625,7 @@
                             <th>Email</th>
                             <th>Plan</th>
                             <th>Role</th>
+                            <th>Credits</th>
                             <th>Signed up</th>
                             <th>Updated</th>
                             <th>Change plan</th>
@@ -632,6 +708,17 @@
                 if (error) throw error;
 
                 allProfiles = data || [];
+
+                creditsById = {};
+                try {
+                    const balances = await authState.client.rpc('admin_credit_balances');
+                    if (!balances.error && Array.isArray(balances.data)) {
+                        balances.data.forEach((row) => { creditsById[row.user_id] = row.balance; });
+                    }
+                } catch (creditError) {
+                    console.warn('Could not load credit balances:', creditError.message);
+                }
+
                 adminStatus.textContent = `${EverythingConvertAuth.displayName()} | Admin | ${allProfiles.length} members`;
                 renderProfiles(filteredProfiles());
             } catch (error) {
@@ -688,6 +775,102 @@
             }
         }
 
+        // ── Credit management modal ──
+        const creditModal = document.getElementById('creditModal');
+        const creditModalTitle = document.getElementById('creditModalTitle');
+        const creditModalUser = document.getElementById('creditModalUser');
+        const creditModalBalance = document.getElementById('creditModalBalance');
+        const creditAmount = document.getElementById('creditAmount');
+        const creditReason = document.getElementById('creditReason');
+        const creditApplyBtn = document.getElementById('creditApplyBtn');
+        const creditCloseBtn = document.getElementById('creditCloseBtn');
+        const creditModalMsg = document.getElementById('creditModalMsg');
+        const creditLedger = document.getElementById('creditLedger');
+        let creditModalUserId = null;
+
+        function setCreditMsg(text, kind) {
+            creditModalMsg.textContent = text || '';
+            creditModalMsg.style.color = kind === 'err' ? '#991b1b' : (kind === 'ok' ? '#166534' : 'inherit');
+        }
+
+        function renderLedger(entries) {
+            if (!entries || !entries.length) {
+                creditLedger.innerHTML = '<div class="empty-state">No credit history yet.</div>';
+                return;
+            }
+            creditLedger.innerHTML = entries.map((e) => {
+                const amt = Number(e.amount) || 0;
+                const cls = amt >= 0 ? 'credit-amt-pos' : 'credit-amt-neg';
+                const label = [e.kind, e.note].filter(Boolean).map(escapeHtml).join(' · ');
+                return `<div class="credit-ledger-row">
+                    <span class="${cls}">${amt >= 0 ? '+' : ''}${amt}</span>
+                    <span>${label || escapeHtml(e.kind || '')}</span>
+                    <span style="color:#94a3b8;">${formatDate(e.created_at)}</span>
+                </div>`;
+            }).join('');
+        }
+
+        async function openCreditsModal(userId) {
+            const profile = allProfiles.find((p) => p.id === userId);
+            creditModalUserId = userId;
+            creditModalTitle.textContent = 'Manage credits';
+            creditModalUser.textContent = profile ? `${profile.username || ''} · ${profile.email || ''}` : userId;
+            creditModalBalance.textContent = String(creditsById[userId] || 0);
+            creditAmount.value = '';
+            creditReason.value = '';
+            setCreditMsg('');
+            creditLedger.innerHTML = '<div class="empty-state">Loading…</div>';
+            creditModal.classList.add('open');
+            try {
+                const res = await EverythingConvertAuth.state.client.rpc('admin_credit_ledger', { p_user_id: userId });
+                if (res.error) throw res.error;
+                renderLedger(res.data || []);
+            } catch (error) {
+                creditLedger.innerHTML = `<div class="empty-state">Could not load ledger: ${escapeHtml(error.message)}</div>`;
+            }
+        }
+
+        function closeCreditsModal() {
+            creditModal.classList.remove('open');
+            creditModalUserId = null;
+        }
+
+        async function applyCreditAdjust() {
+            if (!creditModalUserId) return;
+            const amount = parseInt(creditAmount.value, 10);
+            if (!Number.isInteger(amount) || amount === 0) {
+                setCreditMsg('Enter a non-zero whole number (e.g. 50 or -10).', 'err');
+                return;
+            }
+            creditApplyBtn.disabled = true;
+            setCreditMsg('Applying…');
+            try {
+                const res = await EverythingConvertAuth.state.client.rpc('admin_adjust_credits', {
+                    p_user_id: creditModalUserId,
+                    p_amount: amount,
+                    p_reason: creditReason.value.trim() || null,
+                });
+                if (res.error) throw res.error;
+                const newBalance = Number(res.data);
+                creditsById[creditModalUserId] = newBalance;
+                creditModalBalance.textContent = String(newBalance);
+                creditAmount.value = '';
+                creditReason.value = '';
+                setCreditMsg(`Done. New balance: ${newBalance}.`, 'ok');
+                const ledger = await EverythingConvertAuth.state.client.rpc('admin_credit_ledger', { p_user_id: creditModalUserId });
+                if (!ledger.error) renderLedger(ledger.data || []);
+                renderProfiles(filteredProfiles());
+            } catch (error) {
+                setCreditMsg('Failed: ' + error.message, 'err');
+            } finally {
+                creditApplyBtn.disabled = false;
+            }
+        }
+
+        creditApplyBtn.addEventListener('click', applyCreditAdjust);
+        creditCloseBtn.addEventListener('click', closeCreditsModal);
+        creditModal.addEventListener('click', (event) => { if (event.target === creditModal) closeCreditsModal(); });
+
         refreshBtn.addEventListener('click', loadProfiles);
         [searchInput, planFilter, roleFilter].forEach((control) => {
             control.addEventListener('input', () => renderProfiles(filteredProfiles()));
@@ -700,6 +883,12 @@
         });
 
         tableWrap.addEventListener('click', (event) => {
+            const creditButton = event.target.closest('[data-credits]');
+            if (creditButton) {
+                const row = creditButton.closest('tr');
+                if (row) openCreditsModal(row.dataset.userId);
+                return;
+            }
             const button = event.target.closest('[data-save-user]');
             if (!button) return;
             const row = button.closest('tr');
