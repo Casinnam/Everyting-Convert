@@ -399,6 +399,15 @@
   }
 
   async function recordSuccessfulConversion() {
+    // Fire the analytics success signal for the funnel (analytics.js listens for
+    // this). conversion_start already fires on the convert click; this records
+    // the completion so we can measure the start -> success rate.
+    try {
+      window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', {
+        detail: { tool_id: document.body.getAttribute('data-tool-id') || document.title || 'unknown' },
+      }));
+    } catch (error) { /* analytics is best-effort */ }
+
     if (isFreeToolPage()) return { skipped: true, reason: 'free-tool' };
 
     if (isProUser()) {

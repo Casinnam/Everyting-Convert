@@ -330,6 +330,7 @@
 
   /* ─── Smart OCR ─── */
   Object.assign(i18n, {
+    ocTitle: { en: 'Smart OCR', ko: 'Smart OCR', de: 'Smart OCR', es: 'Smart OCR', fr: 'Smart OCR' },
     ocBadge: { en: 'AI TOOL · OCR', ko: 'AI 도구 · OCR', de: 'KI-TOOL · OCR', es: 'HERRAMIENTA IA · OCR', fr: 'OUTIL IA · OCR' },
     ocHeroDesc: {
       en: 'Turn images and PDFs into text. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout, tables, translation, summary, and a searchable PDF.',
@@ -405,6 +406,10 @@
       es: 'El OCR gratuito se ejecuta totalmente en tu navegador: no se sube nada. Smart OCR envía las imágenes de página a un servidor seguro para procesarlas y no las almacena tras devolver el resultado.',
       fr: 'L\'OCR gratuit s\'exécute entièrement dans votre navigateur — rien n\'est téléversé. Smart OCR envoie les images de page à un serveur sécurisé pour le traitement et ne les conserve pas après le renvoi du résultat.',
     },
+    ocFooterCopy: { en: '© 2026 EverythingConvert', ko: '© 2026 EverythingConvert', de: '© 2026 EverythingConvert', es: '© 2026 EverythingConvert', fr: '© 2026 EverythingConvert' },
+    ocFooterPrivacy: { en: 'Privacy', ko: '개인정보처리방침', de: 'Datenschutz', es: 'Privacidad', fr: 'Confidentialité' },
+    ocFooterCookies: { en: 'Cookie Settings', ko: '쿠키 설정', de: 'Cookie-Einstellungen', es: 'Configuración de cookies', fr: 'Paramètres des cookies' },
+    ocFooterContact: { en: 'Contact', ko: '문의', de: 'Kontakt', es: 'Contacto', fr: 'Contact' },
     ocFaqTitle: { en: 'Smart OCR FAQ', ko: 'Smart OCR 자주 묻는 질문', de: 'Smart OCR FAQ', es: 'Preguntas frecuentes de Smart OCR', fr: 'FAQ Smart OCR' },
     ocFaqQ1: { en: 'What is the difference between Free and Smart OCR?', ko: '무료 OCR과 Smart OCR의 차이는 무엇인가요?', de: 'Was ist der Unterschied zwischen kostenlosem OCR und Smart OCR?', es: '¿Cuál es la diferencia entre el OCR gratuito y Smart OCR?', fr: 'Quelle est la différence entre l\'OCR gratuit et Smart OCR ?' },
     ocFaqA1: {
