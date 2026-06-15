@@ -25,6 +25,7 @@ assert(render.includes('rel="canonical"'), 'Post pages should set a canonical UR
 const slugFn = read('functions/blog/[slug].js');
 assert(slugFn.includes('onRequestGet') && slugFn.includes('status=eq.published'), 'Post route should fetch only published posts.');
 assert(slugFn.includes('renderPostPage') && slugFn.includes('notFoundPage'), 'Post route should render the post or a 404 page.');
+assert(slugFn.includes('decodeURIComponent(slug)'), 'Post route must decode the slug param so non-ASCII (e.g. Korean) slugs are not double-encoded.');
 
 const indexFn = read('functions/blog/index.js');
 assert(indexFn.includes('onRequestGet') && indexFn.includes('renderListPage') && indexFn.includes('status=eq.published'),

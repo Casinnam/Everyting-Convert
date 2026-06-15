@@ -16,7 +16,11 @@ const HTML_HEADERS = {
 
 export async function onRequestGet(context) {
   const origin = new URL(context.request.url).origin;
-  const slug = String(context.params.slug || '');
+  // Cloudflare passes the raw (still percent-encoded) path segment, so decode it
+  // before re-encoding for the query — otherwise non-ASCII slugs (e.g. Korean)
+  // get double-encoded and never match the stored slug.
+  let slug = String(context.params.slug || '');
+  try { slug = decodeURIComponent(slug); } catch (error) { /* keep raw if malformed */ }
   const { url, anon } = cfg(context.env || {});
 
   try {
