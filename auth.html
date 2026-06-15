@@ -565,6 +565,8 @@
 
         let creditsLoaded = false;
         function currentMembershipLabel(balance) {
+            const authApi = window.EverythingConvertAuth;
+            const state = (authApi && authApi.state) || {};
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             const role = state.profile && state.profile.role ? state.profile.role : '';
             const isAdminRole = role === 'admin';
