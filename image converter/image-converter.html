@@ -367,7 +367,7 @@
 <script src="../supabase-config.js"></script>
 <script src="../auth.js?v=auth-20260528b"></script>
 <script src="../usage-limit.js"></script>
-<script src="../tools-menu.js?v=nav-20260614a"></script>
+<script src="../tools-menu.js?v=nav-20260614b"></script>
 <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260608a"></script>
 <script src="../tool-language.js"></script>
 <script>
@@ -375,6 +375,8 @@
     generic: { label: 'Image Converter', title: 'Image Converter', description: 'Convert images between PNG, JPG, and WEBP directly in your browser.', format: 'png', accept: 'image/*,.jfif,.svg' },
     'webp-png': { label: 'WEBP to PNG', title: 'WEBP to PNG', description: 'Convert WEBP images to PNG for wider compatibility.', format: 'png', accept: '.webp,image/webp' },
     'webp-jpg': { label: 'WEBP to JPG', title: 'WEBP to JPG', description: 'Convert WEBP images to JPG for easy sharing and smaller file size.', format: 'jpeg', accept: '.webp,image/webp' },
+    'png-webp': { label: 'PNG to WEBP', title: 'PNG to WEBP', description: 'Convert PNG images to WEBP for much smaller, web-friendly files that keep transparency.', format: 'webp', accept: '.png,image/png' },
+    'jpg-webp': { label: 'JPG to WEBP', title: 'JPG to WEBP', description: 'Convert JPG/JPEG images to WEBP for smaller, faster-loading files.', format: 'webp', accept: '.jpg,.jpeg,.jfif,image/jpeg' },
     'jfif-png': { label: 'JFIF to PNG', title: 'JFIF to PNG', description: 'Convert JFIF/JPEG files to PNG.', format: 'png', accept: '.jfif,.jpg,.jpeg,image/jpeg' },
     'png-svg': { label: 'PNG to SVG', title: 'PNG to SVG', description: 'Wrap a PNG image inside an SVG file. This keeps the original raster image intact.', format: 'svg', accept: '.png,image/png' },
     'heic-jpg': { label: 'HEIC to JPG', title: 'HEIC to JPG', description: 'Convert HEIC/HEIF photos to JPG. This uses browser-side conversion when supported.', format: 'jpeg', accept: '.heic,.heif,image/heic,image/heif' },
@@ -509,7 +511,12 @@
     convertBtn.disabled = true;
     setStatus(`Converting ${selectedFiles.length} image${selectedFiles.length === 1 ? '' : 's'}...`);
     try {
-      const outputFormat = currentMode.format;
+      // Use the chosen output format. For fixed modes (e.g. JPG to WEBP) the
+      // dropdown is set to that format and disabled, so this is correct for both
+      // the generic picker and the preset modes. (Previously this read
+      // currentMode.format, so picking WEBP in the generic converter was ignored
+      // and it always exported PNG.)
+      const outputFormat = formatSelect.value || currentMode.format;
       for (let index = 0; index < selectedFiles.length; index += 1) {
         const file = selectedFiles[index];
         setStatus(`Converting ${index + 1}/${selectedFiles.length}: ${file.name}`);
@@ -521,10 +528,20 @@
         a.href = url;
         a.download = `${baseName(file)}.${extensionFor(outputFormat)}`;
         a.click();
+        const inKb = Math.max(1, Math.round(file.size / 1024));
+        const outKb = Math.max(1, Math.round(outputBlob.size / 1024));
+        setStatus(`Converted ${index + 1}/${selectedFiles.length}: ${a.download} — ${inKb} KB → ${outKb} KB`);
         setTimeout(() => URL.revokeObjectURL(url), 3000);
         await new Promise(resolve => setTimeout(resolve, 160));
       }
-      setStatus(`Download started for ${selectedFiles.length} converted image${selectedFiles.length === 1 ? '' : 's'}.`);
+      if (selectedFiles.length > 1) {
+        setStatus(`Download started for ${selectedFiles.length} converted images.`);
+      }
+      try {
+        window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', {
+          detail: { tool_id: 'image-converter', mode: currentModeKey, output_format: outputFormat, count: selectedFiles.length },
+        }));
+      } catch (error) { /* analytics is best-effort */ }
     } catch (error) {
       setStatus(error.message || 'Image conversion failed.');
     } finally {

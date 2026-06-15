@@ -416,6 +416,8 @@
               <a href="${prefix}image to pdf/image-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Image to PDF</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=jpg-webp"><span class="tool-emoji image">WebP</span><span>JPG to WEBP</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=png-webp"><span class="tool-emoji image">WebP</span><span>PNG to WEBP</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=png-svg"><span class="tool-emoji image">SVG</span><span>PNG to SVG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=svg"><span class="tool-emoji image">&#9671;</span><span>SVG Converter</span></a>
@@ -484,6 +486,8 @@
               <a href="${prefix}image to pdf/image-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Image to PDF</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-png"><span class="tool-emoji image">PNG</span><span>WEBP to PNG</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=webp-jpg"><span class="tool-emoji image">JPG</span><span>WEBP to JPG</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=jpg-webp"><span class="tool-emoji image">WebP</span><span>JPG to WEBP</span></a>
+              <a href="${prefix}image converter/image-converter.html?mode=png-webp"><span class="tool-emoji image">WebP</span><span>PNG to WEBP</span></a>
               <a href="${prefix}image converter/image-converter.html?mode=heic-jpg"><span class="tool-emoji image">HEIC</span><span>HEIC to JPG</span></a>
               <a href="${prefix}image tools/image-tools.html?mode=compress"><span class="tool-emoji image">&#128230;</span><span>Image Compressor</span></a>
               <a href="${prefix}image tools/image-tools.html?mode=resize"><span class="tool-emoji image">&#8596;</span><span>Image Resizer</span></a>
