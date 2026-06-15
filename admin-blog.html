@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Editor - EverythingConvert</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="styles.css?v=ui-20260611a">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .blog-admin { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 2rem 0 4rem; display: grid; gap: 1.25rem; }
+    .be-gate { max-width: 640px; margin: 2rem auto; text-align: center; }
+    .be-panel { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 1.4rem; }
+    .be-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 880px) { .be-grid { grid-template-columns: 1fr; } }
+    .be-field { display: grid; gap: .35rem; margin-bottom: .9rem; }
+    .be-field label { font-weight: 800; font-size: .85rem; color: var(--text-muted); }
+    .be-field input, .be-field select, .be-field textarea {
+      width: 100%; padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 8px;
+      background: rgba(255,255,255,.96); color: var(--text-main); font: inherit; outline: none; box-sizing: border-box;
+    }
+    .be-field textarea#body { min-height: 420px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92rem; line-height: 1.6; }
+    .be-row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+    .be-btn { border: 1px solid var(--line); background: rgba(255,255,255,.95); color: var(--text-main); padding: .65rem 1rem; border-radius: 8px; font: inherit; font-weight: 800; cursor: pointer; }
+    .be-btn.primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); border-color: transparent; color: #fff; }
+    .be-btn.danger { color: #b91c1c; }
+    .be-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .be-preview { border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.2rem; background: #fff; min-height: 420px; overflow: auto; }
+    .be-preview img { max-width: 100%; border-radius: 10px; }
+    .be-preview h1 { font-size: 1.8rem; }
+    .be-cover-preview { max-width: 100%; border-radius: 10px; margin-top: .4rem; display: none; }
+    .be-msg { font-weight: 800; min-height: 1.2em; }
+    .be-msg.ok { color: #15803d; } .be-msg.err { color: #b91c1c; }
+    .be-list table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    .be-list th, .be-list td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--line); }
+    .be-badge { border-radius: 999px; padding: .15rem .6rem; font-weight: 800; font-size: .76rem; }
+    .be-badge.published { background: rgba(16,185,129,.14); color: #166534; }
+    .be-badge.draft { background: rgba(47,38,18,.08); color: #57534e; }
+    .be-hint { color: var(--text-muted); font-size: .82rem; }
+  </style>
+</head>
+<body class="premium-subpage admin-page">
+  <header class="header">
+    <a class="logo" href="index.html"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>EverythingConvert</span></a>
+    <nav>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="admin.html" class="nav-link">Admin</a>
+      <a href="/blog" class="nav-link">Blog</a>
+      <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
+    </nav>
+  </header>
+
+  <main class="blog-admin">
+    <section class="hero" style="text-align:center;">
+      <h1 class="hero-title">Blog Editor</h1>
+      <p class="hero-subtitle">Write a post in Markdown. It publishes instantly at <strong>/blog</strong> — no rebuild needed.</p>
+    </section>
+
+    <section class="be-panel be-gate" id="gate">
+      <h2>Checking admin access…</h2>
+      <p class="be-hint">Verifying your login and admin role.</p>
+    </section>
+
+    <div id="editorArea" hidden>
+      <section class="be-panel">
+        <div class="be-row" style="justify-content:space-between;">
+          <strong id="editorTitle">New post</strong>
+          <button class="be-btn" id="newPostBtn" type="button"><i class="fa-solid fa-plus"></i> New post</button>
+        </div>
+      </section>
+
+      <section class="be-panel be-grid">
+        <div>
+          <div class="be-field">
+            <label for="title">Title</label>
+            <input id="title" type="text" placeholder="Post title (Korean or English — shown as written)">
+          </div>
+          <div class="be-field">
+            <label for="slug">URL slug</label>
+            <input id="slug" type="text" placeholder="auto-generated-from-title">
+            <span class="be-hint">Final URL: <span id="slugPreview">/blog/…</span></span>
+          </div>
+          <div class="be-row">
+            <div class="be-field" style="flex:1;">
+              <label for="lang">Language</label>
+              <select id="lang">
+                <option value="ko">한국어 (ko)</option>
+                <option value="en">English (en)</option>
+                <option value="de">Deutsch (de)</option>
+                <option value="es">Español (es)</option>
+                <option value="fr">Français (fr)</option>
+              </select>
+            </div>
+            <div class="be-field" style="flex:1;">
+              <label>Cover image</label>
+              <input id="coverInput" type="file" accept="image/*">
+            </div>
+          </div>
+          <img id="coverPreview" class="be-cover-preview" alt="cover preview">
+          <div class="be-field">
+            <label for="excerpt">Excerpt (SEO description — optional)</label>
+            <textarea id="excerpt" rows="2" placeholder="Short summary for search results and link previews."></textarea>
+          </div>
+          <div class="be-field">
+            <label for="body">Body (Markdown)</label>
+            <div class="be-row" style="margin-bottom:.4rem;">
+              <button class="be-btn" id="insertImageBtn" type="button"><i class="fa-regular fa-image"></i> Insert image</button>
+              <input id="bodyImageInput" type="file" accept="image/*" hidden>
+              <span class="be-hint"># Heading · **bold** · *italic* · [link](url) · - list · &gt; quote</span>
+            </div>
+            <textarea id="body" placeholder="# Write your post in Markdown"></textarea>
+          </div>
+        </div>
+        <div>
+          <label class="be-field" style="font-weight:800;font-size:.85rem;color:var(--text-muted);">Live preview</label>
+          <div class="be-preview" id="preview"></div>
+        </div>
+      </section>
+
+      <section class="be-panel">
+        <div class="be-row" style="justify-content:space-between;">
+          <div class="be-row">
+            <button class="be-btn" id="saveDraftBtn" type="button"><i class="fa-regular fa-floppy-disk"></i> Save draft</button>
+            <button class="be-btn primary" id="publishBtn" type="button"><i class="fa-solid fa-rocket"></i> Publish</button>
+            <button class="be-btn" id="unpublishBtn" type="button" hidden><i class="fa-solid fa-eye-slash"></i> Unpublish</button>
+            <a class="be-btn" id="viewLiveBtn" target="_blank" rel="noopener" hidden><i class="fa-solid fa-up-right-from-square"></i> View live</a>
+          </div>
+          <button class="be-btn danger" id="deleteBtn" type="button" hidden><i class="fa-regular fa-trash-can"></i> Delete</button>
+        </div>
+        <p class="be-msg" id="msg"></p>
+      </section>
+
+      <section class="be-panel be-list">
+        <div class="be-row" style="justify-content:space-between;margin-bottom:.6rem;">
+          <strong>All posts</strong>
+          <button class="be-btn" id="refreshListBtn" type="button"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </div>
+        <div id="postList"><p class="be-hint">Loading…</p></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <div class="footer-logo"><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"><span>EverythingConvert</span></div>
+      <p>&copy; EverythingConvert.com All rights reserved (2026)</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js?v=auth-20260528b"></script>
+  <script src="tools-menu.js?v=nav-20260614a"></script>
+  <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
+  <script>
+  (function () {
+    const $ = (id) => document.getElementById(id);
+    const gate = $('gate');
+    const editorArea = $('editorArea');
+    const els = {
+      title: $('title'), slug: $('slug'), slugPreview: $('slugPreview'), lang: $('lang'),
+      excerpt: $('excerpt'), body: $('body'), preview: $('preview'), msg: $('msg'),
+      coverInput: $('coverInput'), coverPreview: $('coverPreview'),
+      bodyImageInput: $('bodyImageInput'), postList: $('postList'), editorTitle: $('editorTitle'),
+      unpublishBtn: $('unpublishBtn'), deleteBtn: $('deleteBtn'), viewLiveBtn: $('viewLiveBtn'),
+    };
+
+    let client = null;
+    let editingId = null;       // null = creating new
+    let editingPost = null;
+    let slugTouched = false;
+
+    function setMsg(text, kind) {
+      els.msg.textContent = text || '';
+      els.msg.className = 'be-msg' + (kind ? ' ' + kind : '');
+    }
+
+    function slugify(value) {
+      return String(value || '').trim().toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 80);
+    }
+
+    function renderPreview() {
+      const md = els.body.value || '';
+      const raw = window.marked ? window.marked.parse(md) : md;
+      els.preview.innerHTML = window.DOMPurify ? window.DOMPurify.sanitize(raw) : raw;
+    }
+
+    function refreshSlugPreview() {
+      const s = els.slug.value || slugify(els.title.value);
+      els.slugPreview.textContent = '/blog/' + (s || '…');
+    }
+
+    function resetForm() {
+      editingId = null; editingPost = null; slugTouched = false;
+      els.title.value = ''; els.slug.value = ''; els.excerpt.value = '';
+      els.body.value = ''; els.lang.value = 'ko'; els.coverInput.value = '';
+      els.coverPreview.style.display = 'none'; els.coverPreview.dataset.url = '';
+      els.editorTitle.textContent = 'New post';
+      els.unpublishBtn.hidden = true; els.deleteBtn.hidden = true; els.viewLiveBtn.hidden = true;
+      setMsg(''); renderPreview(); refreshSlugPreview();
+    }
+
+    function loadIntoForm(post) {
+      editingId = post.id; editingPost = post; slugTouched = true;
+      els.title.value = post.title || '';
+      els.slug.value = post.slug || '';
+      els.excerpt.value = post.excerpt || '';
+      els.body.value = post.body || '';
+      els.lang.value = post.lang || 'ko';
+      els.coverPreview.dataset.url = post.cover_image || '';
+      if (post.cover_image) { els.coverPreview.src = post.cover_image; els.coverPreview.style.display = 'block'; }
+      else { els.coverPreview.style.display = 'none'; }
+      els.editorTitle.textContent = 'Editing: ' + (post.title || post.slug);
+      els.unpublishBtn.hidden = post.status !== 'published';
+      els.deleteBtn.hidden = false;
+      els.viewLiveBtn.hidden = post.status !== 'published';
+      els.viewLiveBtn.href = '/blog/' + encodeURIComponent(post.slug);
+      setMsg(''); renderPreview(); refreshSlugPreview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function uploadImage(file) {
+      const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const path = Date.now() + '-' + Math.random().toString(36).slice(2, 7) + '-' + safe;
+      const up = await client.storage.from('blog-images').upload(path, file, { cacheControl: '31536000', upsert: false });
+      if (up.error) throw up.error;
+      return client.storage.from('blog-images').getPublicUrl(path).data.publicUrl;
+    }
+
+    async function handleCover() {
+      const file = els.coverInput.files[0];
+      if (!file) return;
+      setMsg('Uploading cover…');
+      try {
+        const url = await uploadImage(file);
+        els.coverPreview.src = url; els.coverPreview.style.display = 'block'; els.coverPreview.dataset.url = url;
+        setMsg('Cover uploaded.', 'ok');
+      } catch (e) { setMsg('Cover upload failed: ' + e.message, 'err'); }
+    }
+
+    async function handleBodyImage() {
+      const file = els.bodyImageInput.files[0];
+      if (!file) return;
+      setMsg('Uploading image…');
+      try {
+        const url = await uploadImage(file);
+        const alt = window.prompt('Image description (alt text for SEO):', file.name.replace(/\.[^.]+$/, '')) || '';
+        const md = '\n![' + alt + '](' + url + ')\n';
+        const ta = els.body; const pos = ta.selectionStart || ta.value.length;
+        ta.value = ta.value.slice(0, pos) + md + ta.value.slice(pos);
+        renderPreview();
+        setMsg('Image inserted.', 'ok');
+      } catch (e) { setMsg('Image upload failed: ' + e.message, 'err'); }
+      els.bodyImageInput.value = '';
+    }
+
+    function collect(status) {
+      const slug = (els.slug.value && slugify(els.slug.value)) || slugify(els.title.value);
+      return {
+        slug,
+        title: els.title.value.trim(),
+        excerpt: els.excerpt.value.trim(),
+        body: els.body.value,
+        cover_image: els.coverPreview.dataset.url || '',
+        lang: els.lang.value,
+        status,
+      };
+    }
+
+    async function save(status) {
+      const payload = collect(status);
+      if (!payload.title) { setMsg('Please add a title.', 'err'); return; }
+      if (!payload.slug) { setMsg('Please add a title or slug.', 'err'); return; }
+      setMsg(status === 'published' ? 'Publishing…' : 'Saving…');
+
+      try {
+        let result;
+        if (editingId) {
+          const patch = { ...payload };
+          if (status === 'published' && editingPost && !editingPost.published_at) {
+            patch.published_at = new Date().toISOString();
+          }
+          result = await client.from('blog_posts').update(patch).eq('id', editingId).select().single();
+        } else {
+          const insert = { ...payload, author_id: (window.EverythingConvertAuth.state.user || {}).id || null };
+          if (status === 'published') insert.published_at = new Date().toISOString();
+          result = await client.from('blog_posts').insert(insert).select().single();
+        }
+        if (result.error) throw result.error;
+        loadIntoForm(result.data);
+        setMsg(status === 'published' ? 'Published! Live at /blog/' + result.data.slug : 'Draft saved.', 'ok');
+        loadPosts();
+      } catch (e) {
+        const dup = /duplicate key|unique/i.test(e.message || '');
+        setMsg((dup ? 'That slug is already used — change the slug. ' : 'Save failed: ') + e.message, 'err');
+      }
+    }
+
+    async function unpublish() {
+      if (!editingId) return;
+      setMsg('Unpublishing…');
+      try {
+        const r = await client.from('blog_posts').update({ status: 'draft' }).eq('id', editingId).select().single();
+        if (r.error) throw r.error;
+        loadIntoForm(r.data); setMsg('Moved to draft.', 'ok'); loadPosts();
+      } catch (e) { setMsg('Failed: ' + e.message, 'err'); }
+    }
+
+    async function removePost() {
+      if (!editingId) return;
+      if (!window.confirm('Delete this post permanently?')) return;
+      setMsg('Deleting…');
+      try {
+        const r = await client.from('blog_posts').delete().eq('id', editingId);
+        if (r.error) throw r.error;
+        resetForm(); setMsg('Post deleted.', 'ok'); loadPosts();
+      } catch (e) { setMsg('Delete failed: ' + e.message, 'err'); }
+    }
+
+    async function loadPosts() {
+      try {
+        const r = await client.from('blog_posts')
+          .select('id,slug,title,status,lang,published_at,updated_at')
+          .order('updated_at', { ascending: false });
+        if (r.error) throw r.error;
+        const rows = r.data || [];
+        if (!rows.length) { els.postList.innerHTML = '<p class="be-hint">No posts yet.</p>'; return; }
+        els.postList.innerHTML = '<table><thead><tr><th>Title</th><th>Status</th><th>Lang</th><th>Updated</th><th></th></tr></thead><tbody>'
+          + rows.map((p) => '<tr>'
+            + '<td><strong>' + escapeHtml(p.title || p.slug) + '</strong><br><small class="be-hint">/blog/' + escapeHtml(p.slug) + '</small></td>'
+            + '<td><span class="be-badge ' + (p.status === 'published' ? 'published' : 'draft') + '">' + p.status + '</span></td>'
+            + '<td>' + escapeHtml(p.lang || '') + '</td>'
+            + '<td class="be-hint">' + new Date(p.updated_at).toLocaleDateString() + '</td>'
+            + '<td><button class="be-btn" data-edit="' + p.id + '">Edit</button></td>'
+            + '</tr>').join('')
+          + '</tbody></table>';
+      } catch (e) { els.postList.innerHTML = '<p class="be-msg err">Could not load posts: ' + escapeHtml(e.message) + '</p>'; }
+    }
+
+    function escapeHtml(v) {
+      return String(v || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function showGate(title, msg, action) {
+      editorArea.hidden = true; gate.hidden = false;
+      gate.innerHTML = '<h2>' + escapeHtml(title) + '</h2><p class="be-hint">' + escapeHtml(msg) + '</p>' + (action || '');
+    }
+
+    async function init() {
+      const auth = window.EverythingConvertAuth;
+      if (!auth) { showGate('Loading…', 'Auth is still loading. Refresh in a moment.'); return; }
+      await auth.refresh();
+      const state = auth.state;
+      if (!state.user) {
+        showGate('Login required', 'Sign in with an admin account to write posts.',
+          '<p><a class="be-btn primary" href="auth.html?next=admin-blog.html">Go to login</a></p>');
+        return;
+      }
+      if (!auth.isAdmin()) {
+        showGate('Admin only', 'This account is not an admin, so it cannot write blog posts.',
+          '<p><a class="be-btn" href="index.html">Back to home</a></p>');
+        return;
+      }
+      client = state.client;
+      gate.hidden = true; editorArea.hidden = false;
+      resetForm();
+      loadPosts();
+    }
+
+    // Events
+    els.title.addEventListener('input', () => { if (!slugTouched) els.slug.value = slugify(els.title.value); refreshSlugPreview(); });
+    els.slug.addEventListener('input', () => { slugTouched = true; els.slug.value = els.slug.value; refreshSlugPreview(); });
+    els.body.addEventListener('input', renderPreview);
+    els.coverInput.addEventListener('change', handleCover);
+    $('insertImageBtn').addEventListener('click', () => els.bodyImageInput.click());
+    els.bodyImageInput.addEventListener('change', handleBodyImage);
+    $('saveDraftBtn').addEventListener('click', () => save('draft'));
+    $('publishBtn').addEventListener('click', () => save('published'));
+    els.unpublishBtn.addEventListener('click', unpublish);
+    els.deleteBtn.addEventListener('click', removePost);
+    $('newPostBtn').addEventListener('click', resetForm);
+    $('refreshListBtn').addEventListener('click', loadPosts);
+    els.postList.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-edit]');
+      if (!btn) return;
+      client.from('blog_posts').select('*').eq('id', btn.dataset.edit).single()
+        .then((r) => { if (r.error) throw r.error; loadIntoForm(r.data); })
+        .catch((err) => setMsg('Could not open post: ' + err.message, 'err'));
+    });
+
+    window.addEventListener('everything-auth-change', () => {
+      const s = window.EverythingConvertAuth && window.EverythingConvertAuth.state;
+      if (s && s.ready && s.user && !client) init();
+    });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  })();
+  </script>
+</body>
+</html>

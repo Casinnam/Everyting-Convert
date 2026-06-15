@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /admin-blog.html
 Disallow: /auth.html
 Disallow: /my-conversions.html
 Disallow: /payment-success.html
@@ -10,3 +11,4 @@ Disallow: /everything%20convert/
 Disallow: /node_modules/
 
 Sitemap: https://www.everythingconvert.com/sitemap.xml
+Sitemap: https://www.everythingconvert.com/blog-sitemap.xml

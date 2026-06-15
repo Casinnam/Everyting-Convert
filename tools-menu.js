@@ -561,6 +561,25 @@
     grid.dataset.ecHeaderToolsBound = 'true';
   }
 
+  // Add a "Blog" link to the footer legal row on every page. The blog lives at
+  // the clean URL /blog (Cloudflare Function) and is intentionally kept out of
+  // the top navigation — footer only.
+  function injectFooterBlogLink() {
+    document.querySelectorAll('.footer-legal-row').forEach((row) => {
+      if (row.querySelector('a[href="/blog"], a[href$="/blog"]')) return;
+      const link = document.createElement('a');
+      link.href = '/blog';
+      link.textContent = 'Blog';
+      const existing = row.querySelector('a');
+      if (existing) {
+        existing.getAttributeNames().forEach((name) => {
+          if (name !== 'href') link.setAttribute(name, existing.getAttribute(name));
+        });
+      }
+      row.appendChild(link);
+    });
+  }
+
   function closeAll(except) {
     document.querySelectorAll('.tools-menu.open').forEach((menu) => {
       if (menu === except) return;
@@ -638,4 +657,5 @@
   injectHeaderStyles();
   if (normalizeHeader()) syncAuthHeaderState();
   bindHomeHeaderTools();
+  injectFooterBlogLink();
 })();
