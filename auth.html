@@ -440,6 +440,7 @@
                     <a class="account-link secondary" href="my-conversions.html">My Conversions</a>
                     <a class="account-link secondary" href="pricing.html">Upgrade</a>
                     <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">Admin page</a>
+                    <a class="account-link secondary" href="admin-blog.html" id="blogLink" style="display:none;">Write Blog</a>
                 </div>
             </div>
             <div class="auth-status-card">
@@ -602,6 +603,7 @@
         const usernameSaveBtn = document.getElementById('usernameSaveBtn');
         const usernameMessage = document.getElementById('usernameMessage');
         const adminLink = document.getElementById('adminLink');
+        const blogLink = document.getElementById('blogLink');
         const checkoutResumePanel = document.getElementById('checkoutResumePanel');
         const checkoutResumeText = document.getElementById('checkoutResumeText');
         const continueCheckoutBtn = document.getElementById('continueCheckoutBtn');
@@ -888,6 +890,7 @@
             const cachedRole = cached.role === 'admin' ? 'Admin' : '';
             accountPlan.textContent = cachedRole ? `${cachedPlan || 'Free'} | ${cachedRole}` : cachedPlan;
             adminLink.style.display = 'none';
+            blogLink.style.display = 'none';
             accountHint.dataset.i18nKey = cachedPlan ? 'proMemberHint' : 'accountLoadingHint';
             accountHint.textContent = cachedPlan
                 ? 'You are a Pro member. Enhanced table detection is available.'
@@ -923,6 +926,7 @@
             setI18nText(usernameSaveBtn, 'saveUserId', 'Save User ID');
             setI18nText(document.querySelector('.account-link'), 'goTools', 'Go to tools');
             setI18nText(adminLink, 'adminPage', 'Admin page');
+            setI18nText(blogLink, 'writeBlog', 'Write Blog');
 
             const statusLabel = document.querySelector('.auth-status-card div');
             if (statusLabel && statusLabel.firstChild) {
@@ -956,6 +960,7 @@
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
             accountPlan.textContent = currentMembershipLabel() || auth.formatPlan() || '';
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
+            blogLink.style.display = auth.isAdmin() ? '' : 'none';
             loadAccountCredits();
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             if (!profilePlan) {
