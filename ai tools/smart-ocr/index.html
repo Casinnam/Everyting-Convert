@@ -214,7 +214,7 @@
 
 <div class="page-hero">
   <div class="badge" data-i18n="ocBadge">AI TOOL · OCR</div>
-  <h1>Smart OCR</h1>
+  <h1 data-i18n="ocTitle">Smart OCR</h1>
   <p data-i18n="ocHeroDesc">Turn images and PDFs into text. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout, tables, translation, summary, and a searchable PDF.</p>
 </div>
 
@@ -314,7 +314,7 @@
   </div>
 </main>
 
-<footer><p>&copy; 2026 EverythingConvert &nbsp;|&nbsp; <a href="../../privacy.html">Privacy</a> &nbsp;|&nbsp; <a href="#cookie-settings">Cookie Settings</a><a href="../../contact.html">Contact</a></p></footer>
+<footer><p><span data-i18n="ocFooterCopy">&copy; 2026 EverythingConvert</span> &nbsp;|&nbsp; <a href="../../privacy.html" data-i18n="ocFooterPrivacy">Privacy</a> &nbsp;|&nbsp; <a href="#cookie-settings" data-i18n="ocFooterCookies">Cookie Settings</a> &nbsp;|&nbsp; <a href="../../contact.html" data-i18n="ocFooterContact">Contact</a></p></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -327,6 +327,317 @@
 <script src="../../header-language.js?v=headerlang-20260608a"></script>
 <script src="../ai-common.js?v=ai-common-20260614a"></script>
 <script src="../../ai-credits.js?v=credits-20260613d"></script>
+<script>
+(function () {
+  const I18N = {
+    en: {
+      ocBadge: 'AI TOOL · OCR',
+      ocTitle: 'Smart OCR',
+      ocHeroDesc: 'Turn images and PDFs into text. Free on-device OCR for one page, or Smart OCR with GPT-4o for up to 30 pages — layout, tables, translation, summary, and a searchable PDF.',
+      ocDrop: 'Drop an image or PDF here',
+      ocFormats: 'PNG, JPG, WebP, or PDF · up to 30 pages with Smart OCR',
+      ocFreeTitle: 'Quick OCR — Free',
+      ocFreeDesc: 'On-device (Tesseract). First page only. Best for clear printed text. Your file never leaves your browser.',
+      ocFreeBtn: 'Run free OCR (1 page)',
+      ocSmartTitle: 'Smart OCR — GPT-4o',
+      ocSmartDesc: 'Higher accuracy, layout, tables, handwriting & many languages. Up to 30 pages.',
+      ocSmartBtn: 'Smart OCR',
+      ocCreditNote: 'Smart OCR uses 2 credits per page. Credits are deducted only when you unlock the full result — the free on-device OCR never uses credits. New accounts get 10 free credits.',
+      ocCreditLink: 'Buy credit packs',
+      ocFreeQLabel: 'Free (on-device)',
+      ocFreeQText: 'Good for clean, printed pages. One page at a time. No tables or layout, weaker on Korean, handwriting, low quality scans, or photos. Nothing is uploaded.',
+      ocSmartQLabel: 'Smart OCR (GPT-4o)',
+      ocSmartQText: 'Much higher accuracy. Keeps layout (Markdown), extracts tables to CSV, reads handwriting and many languages, up to 30 pages. 2 credits per page. Pages are sent securely for processing.',
+      ocPaywallTitle: '🔒 Smart OCR ready',
+      ocPaywallText: 'Unlock full-document Smart OCR for all pages.',
+      ocTabMd: 'Markdown',
+      ocTabText: 'Plain text',
+      ocTabTables: 'Tables',
+      ocDlCsv: 'tables .csv',
+      ocDlPdf: 'searchable PDF',
+      ocTranslateBtn: 'Translate',
+      ocSummarizeBtn: 'Summarize',
+      ocPrivacyLabel: 'Privacy:',
+      ocPrivacyText: 'Free OCR runs entirely in your browser — nothing is uploaded. Smart OCR sends page images to a secure server for processing and does not store them after the result is returned.',
+      ocFaqTitle: 'Smart OCR FAQ',
+      ocFaqQ1: 'What is the difference between Free and Smart OCR?',
+      ocFaqA1: 'Free OCR runs on your device for one page and works best on clean printed text, with no layout or tables. Smart OCR uses GPT-4o for much higher accuracy, keeps layout as Markdown, extracts tables, reads handwriting and many languages, and handles up to 30 pages.',
+      ocFaqQ2: 'How much does Smart OCR cost?',
+      ocFaqA2: '2 credits per page. New accounts get 10 free credits, and you can buy credit packs on the pricing page. The free on-device OCR costs nothing.',
+      ocFaqQ3: 'Can it read Korean and handwriting?',
+      ocFaqA3: 'Smart OCR (GPT-4o) handles Korean, mixed languages, and handwriting well. The free on-device option is weaker on those — use Smart OCR for best results.',
+      ocFaqQ4: 'What is a searchable PDF?',
+      ocFaqA4: 'A PDF that keeps the original page images but adds a hidden text layer, so you can select and search the text. Smart OCR can export one.',
+      ocFooterCopy: '© 2026 EverythingConvert',
+      ocFooterPrivacy: 'Privacy',
+      ocFooterCookies: 'Cookie Settings',
+      ocFooterContact: 'Contact',
+    },
+    ko: {
+      ocBadge: 'AI 도구 · OCR',
+      ocTitle: 'Smart OCR',
+      ocHeroDesc: '이미지와 PDF를 텍스트로 바꾸세요. 1페이지는 무료 브라우저 OCR로 처리하고, Smart OCR은 GPT-4o로 최대 30페이지까지 레이아웃, 표, 번역, 요약, 검색 가능한 PDF를 지원합니다.',
+      ocDrop: '이미지 또는 PDF를 여기에 놓으세요',
+      ocFormats: 'PNG, JPG, WebP, PDF 지원 · Smart OCR은 최대 30페이지',
+      ocFreeTitle: '빠른 OCR — 무료',
+      ocFreeDesc: '브라우저 안에서 실행되는 Tesseract OCR입니다. 첫 페이지만 처리하며 선명한 인쇄 문서에 적합합니다. 파일은 업로드되지 않습니다.',
+      ocFreeBtn: '무료 OCR 실행 (1페이지)',
+      ocSmartTitle: 'Smart OCR — GPT-4o',
+      ocSmartDesc: '더 높은 정확도, 레이아웃 유지, 표 추출, 손글씨와 다국어 인식. 최대 30페이지.',
+      ocSmartBtn: 'Smart OCR 실행',
+      ocCreditNote: 'Smart OCR은 페이지당 2크레딧을 사용합니다. 전체 결과를 열 때만 크레딧이 차감되며, 무료 브라우저 OCR은 크레딧을 사용하지 않습니다. 신규 가입자는 10크레딧을 받습니다.',
+      ocCreditLink: '크레딧 팩 구매',
+      ocFreeQLabel: '무료 OCR (브라우저 처리)',
+      ocFreeQText: '선명한 인쇄 문서에 적합합니다. 한 번에 1페이지만 처리하고, 표나 레이아웃 보존은 약합니다. 한국어, 손글씨, 저화질 스캔, 사진 문서에는 정확도가 낮을 수 있습니다. 업로드는 없습니다.',
+      ocSmartQLabel: 'Smart OCR (GPT-4o)',
+      ocSmartQText: '정확도가 훨씬 높고 Markdown 레이아웃을 유지합니다. 표를 CSV로 추출하고 손글씨와 여러 언어를 읽을 수 있으며 최대 30페이지를 처리합니다. 페이지당 2크레딧이 필요하고, 처리를 위해 페이지 이미지가 안전하게 전송됩니다.',
+      ocPaywallTitle: '🔒 Smart OCR 준비 완료',
+      ocPaywallText: '모든 페이지의 전체 Smart OCR 결과를 열어보세요.',
+      ocTabMd: 'Markdown',
+      ocTabText: '일반 텍스트',
+      ocTabTables: '표',
+      ocDlCsv: '표 .csv',
+      ocDlPdf: '검색 가능한 PDF',
+      ocTranslateBtn: '번역',
+      ocSummarizeBtn: '요약',
+      ocPrivacyLabel: '개인정보:',
+      ocPrivacyText: '무료 OCR은 브라우저 안에서만 실행되므로 파일이 업로드되지 않습니다. Smart OCR은 처리를 위해 페이지 이미지를 보안 서버로 전송하며, 결과 반환 후 저장하지 않습니다.',
+      ocFaqTitle: 'Smart OCR 자주 묻는 질문',
+      ocFaqQ1: '무료 OCR과 Smart OCR은 무엇이 다른가요?',
+      ocFaqA1: '무료 OCR은 내 기기에서 1페이지를 처리하며 선명한 인쇄 텍스트에 적합합니다. 레이아웃과 표 처리는 약합니다. Smart OCR은 GPT-4o를 사용해 더 높은 정확도를 제공하고, Markdown 레이아웃 유지, 표 추출, 손글씨와 다국어 인식, 최대 30페이지 처리를 지원합니다.',
+      ocFaqQ2: 'Smart OCR 비용은 얼마인가요?',
+      ocFaqA2: '페이지당 2크레딧입니다. 신규 계정은 10크레딧을 받고, 가격 페이지에서 크레딧 팩을 구매할 수 있습니다. 무료 브라우저 OCR은 비용이 없습니다.',
+      ocFaqQ3: '한국어와 손글씨도 읽을 수 있나요?',
+      ocFaqA3: 'Smart OCR(GPT-4o)은 한국어, 혼합 언어, 손글씨 인식에 강합니다. 무료 브라우저 OCR은 이 부분이 약하므로 정확한 결과가 필요하면 Smart OCR을 사용하세요.',
+      ocFaqQ4: '검색 가능한 PDF란 무엇인가요?',
+      ocFaqA4: '원본 페이지 이미지는 유지하면서 숨겨진 텍스트 레이어를 추가한 PDF입니다. 문서 안의 글자를 선택하거나 검색할 수 있으며 Smart OCR에서 내보낼 수 있습니다.',
+      ocFooterCopy: '© 2026 EverythingConvert',
+      ocFooterPrivacy: '개인정보처리방침',
+      ocFooterCookies: '쿠키 설정',
+      ocFooterContact: '문의하기',
+    },
+    de: {
+      ocBadge: 'AI-TOOL · OCR',
+      ocTitle: 'Smart OCR',
+      ocHeroDesc: 'Wandeln Sie Bilder und PDFs in Text um. Kostenloses OCR im Browser für eine Seite oder Smart OCR mit GPT-4o für bis zu 30 Seiten mit Layout, Tabellen, Übersetzung, Zusammenfassung und durchsuchbarem PDF.',
+      ocDrop: 'Bild oder PDF hier ablegen',
+      ocFormats: 'PNG, JPG, WebP oder PDF · bis zu 30 Seiten mit Smart OCR',
+      ocFreeTitle: 'Schnelles OCR — kostenlos',
+      ocFreeDesc: 'Läuft direkt im Browser mit Tesseract. Nur die erste Seite. Ideal für klare Drucktexte. Ihre Datei verlässt den Browser nicht.',
+      ocFreeBtn: 'Kostenloses OCR ausführen (1 Seite)',
+      ocSmartTitle: 'Smart OCR — GPT-4o',
+      ocSmartDesc: 'Höhere Genauigkeit, Layout, Tabellen, Handschrift und viele Sprachen. Bis zu 30 Seiten.',
+      ocSmartBtn: 'Smart OCR',
+      ocCreditNote: 'Smart OCR verwendet 2 Credits pro Seite. Credits werden nur beim Freischalten des vollständigen Ergebnisses abgezogen. Kostenloses OCR im Browser nutzt keine Credits. Neue Konten erhalten 10 Gratis-Credits.',
+      ocCreditLink: 'Credit-Pakete kaufen',
+      ocFreeQLabel: 'Kostenlos (im Browser)',
+      ocFreeQText: 'Gut für klare gedruckte Seiten. Eine Seite pro Durchlauf. Keine Tabellen oder Layouts, schwächer bei Koreanisch, Handschrift, schlechten Scans oder Fotos. Es wird nichts hochgeladen.',
+      ocSmartQLabel: 'Smart OCR (GPT-4o)',
+      ocSmartQText: 'Deutlich höhere Genauigkeit. Behält Layout als Markdown, extrahiert Tabellen als CSV, liest Handschrift und viele Sprachen, bis zu 30 Seiten. 2 Credits pro Seite. Seiten werden sicher verarbeitet.',
+      ocPaywallTitle: '🔒 Smart OCR bereit',
+      ocPaywallText: 'Vollständiges Smart-OCR-Ergebnis für alle Seiten freischalten.',
+      ocTabMd: 'Markdown',
+      ocTabText: 'Klartext',
+      ocTabTables: 'Tabellen',
+      ocDlCsv: 'Tabellen .csv',
+      ocDlPdf: 'durchsuchbares PDF',
+      ocTranslateBtn: 'Übersetzen',
+      ocSummarizeBtn: 'Zusammenfassen',
+      ocPrivacyLabel: 'Datenschutz:',
+      ocPrivacyText: 'Kostenloses OCR läuft komplett im Browser. Smart OCR sendet Seitenbilder sicher zur Verarbeitung und speichert sie nach der Rückgabe des Ergebnisses nicht.',
+      ocFaqTitle: 'Smart OCR FAQ',
+      ocFaqQ1: 'Was ist der Unterschied zwischen kostenlosem OCR und Smart OCR?',
+      ocFaqA1: 'Kostenloses OCR läuft auf Ihrem Gerät für eine Seite und eignet sich für klare Drucktexte. Smart OCR nutzt GPT-4o für höhere Genauigkeit, Markdown-Layout, Tabellen, Handschrift, viele Sprachen und bis zu 30 Seiten.',
+      ocFaqQ2: 'Was kostet Smart OCR?',
+      ocFaqA2: '2 Credits pro Seite. Neue Konten erhalten 10 Gratis-Credits. Credit-Pakete gibt es auf der Preisseite. Das kostenlose OCR kostet nichts.',
+      ocFaqQ3: 'Kann es Koreanisch und Handschrift lesen?',
+      ocFaqA3: 'Smart OCR (GPT-4o) verarbeitet Koreanisch, gemischte Sprachen und Handschrift gut. Die kostenlose Browser-Option ist dabei schwächer.',
+      ocFaqQ4: 'Was ist ein durchsuchbares PDF?',
+      ocFaqA4: 'Ein PDF mit den Originalseitenbildern und einer versteckten Textebene, sodass Text ausgewählt und gesucht werden kann.',
+      ocFooterCopy: '© 2026 EverythingConvert',
+      ocFooterPrivacy: 'Datenschutz',
+      ocFooterCookies: 'Cookie-Einstellungen',
+      ocFooterContact: 'Kontakt',
+    },
+    es: {
+      ocBadge: 'HERRAMIENTA IA · OCR',
+      ocTitle: 'Smart OCR',
+      ocHeroDesc: 'Convierte imágenes y PDF en texto. OCR gratuito en el navegador para una página, o Smart OCR con GPT-4o para hasta 30 páginas con diseño, tablas, traducción, resumen y PDF con búsqueda.',
+      ocDrop: 'Suelta una imagen o PDF aquí',
+      ocFormats: 'PNG, JPG, WebP o PDF · hasta 30 páginas con Smart OCR',
+      ocFreeTitle: 'OCR rápido — gratis',
+      ocFreeDesc: 'Se ejecuta en tu navegador con Tesseract. Solo la primera página. Ideal para texto impreso claro. Tu archivo no sale del navegador.',
+      ocFreeBtn: 'Ejecutar OCR gratis (1 página)',
+      ocSmartTitle: 'Smart OCR — GPT-4o',
+      ocSmartDesc: 'Más precisión, diseño, tablas, escritura a mano y muchos idiomas. Hasta 30 páginas.',
+      ocSmartBtn: 'Smart OCR',
+      ocCreditNote: 'Smart OCR usa 2 créditos por página. Los créditos solo se descuentan al desbloquear el resultado completo. El OCR gratuito no usa créditos. Las cuentas nuevas reciben 10 créditos gratis.',
+      ocCreditLink: 'Comprar paquetes de créditos',
+      ocFreeQLabel: 'Gratis (en el navegador)',
+      ocFreeQText: 'Bueno para páginas impresas claras. Una página por vez. Sin tablas ni diseño, más débil con coreano, escritura a mano, escaneos de baja calidad o fotos. No se sube nada.',
+      ocSmartQLabel: 'Smart OCR (GPT-4o)',
+      ocSmartQText: 'Mucho más preciso. Conserva el diseño en Markdown, extrae tablas a CSV, lee escritura a mano y muchos idiomas, hasta 30 páginas. 2 créditos por página. Las páginas se procesan de forma segura.',
+      ocPaywallTitle: '🔒 Smart OCR listo',
+      ocPaywallText: 'Desbloquea Smart OCR para todo el documento.',
+      ocTabMd: 'Markdown',
+      ocTabText: 'Texto plano',
+      ocTabTables: 'Tablas',
+      ocDlCsv: 'tablas .csv',
+      ocDlPdf: 'PDF con búsqueda',
+      ocTranslateBtn: 'Traducir',
+      ocSummarizeBtn: 'Resumir',
+      ocPrivacyLabel: 'Privacidad:',
+      ocPrivacyText: 'El OCR gratuito se ejecuta por completo en tu navegador. Smart OCR envía imágenes de páginas a un servidor seguro y no las almacena después de devolver el resultado.',
+      ocFaqTitle: 'Preguntas frecuentes de Smart OCR',
+      ocFaqQ1: '¿Cuál es la diferencia entre OCR gratis y Smart OCR?',
+      ocFaqA1: 'El OCR gratis funciona en tu dispositivo para una página y es mejor para texto impreso claro. Smart OCR usa GPT-4o para más precisión, diseño Markdown, tablas, escritura a mano, muchos idiomas y hasta 30 páginas.',
+      ocFaqQ2: '¿Cuánto cuesta Smart OCR?',
+      ocFaqA2: '2 créditos por página. Las cuentas nuevas reciben 10 créditos gratis y puedes comprar paquetes en la página de precios. El OCR gratuito no cuesta nada.',
+      ocFaqQ3: '¿Puede leer coreano y escritura a mano?',
+      ocFaqA3: 'Smart OCR (GPT-4o) maneja bien coreano, idiomas mezclados y escritura a mano. La opción gratuita es más débil en esos casos.',
+      ocFaqQ4: '¿Qué es un PDF con búsqueda?',
+      ocFaqA4: 'Un PDF que mantiene las imágenes originales y añade una capa de texto oculta para seleccionar y buscar texto.',
+      ocFooterCopy: '© 2026 EverythingConvert',
+      ocFooterPrivacy: 'Privacidad',
+      ocFooterCookies: 'Configuración de cookies',
+      ocFooterContact: 'Contacto',
+    },
+    fr: {
+      ocBadge: 'OUTIL IA · OCR',
+      ocTitle: 'Smart OCR',
+      ocHeroDesc: 'Transformez images et PDF en texte. OCR gratuit dans le navigateur pour une page, ou Smart OCR avec GPT-4o jusqu’à 30 pages avec mise en page, tableaux, traduction, résumé et PDF consultable.',
+      ocDrop: 'Déposez une image ou un PDF ici',
+      ocFormats: 'PNG, JPG, WebP ou PDF · jusqu’à 30 pages avec Smart OCR',
+      ocFreeTitle: 'OCR rapide — gratuit',
+      ocFreeDesc: 'Exécuté dans le navigateur avec Tesseract. Première page seulement. Idéal pour le texte imprimé clair. Votre fichier ne quitte pas le navigateur.',
+      ocFreeBtn: 'Lancer l’OCR gratuit (1 page)',
+      ocSmartTitle: 'Smart OCR — GPT-4o',
+      ocSmartDesc: 'Meilleure précision, mise en page, tableaux, écriture manuscrite et nombreuses langues. Jusqu’à 30 pages.',
+      ocSmartBtn: 'Smart OCR',
+      ocCreditNote: 'Smart OCR utilise 2 crédits par page. Les crédits ne sont déduits que lorsque le résultat complet est débloqué. L’OCR gratuit n’utilise aucun crédit. Les nouveaux comptes reçoivent 10 crédits gratuits.',
+      ocCreditLink: 'Acheter des packs de crédits',
+      ocFreeQLabel: 'Gratuit (navigateur)',
+      ocFreeQText: 'Adapté aux pages imprimées nettes. Une page à la fois. Pas de tableaux ni de mise en page, moins performant pour le coréen, l’écriture manuscrite, les scans faibles ou les photos. Rien n’est téléversé.',
+      ocSmartQLabel: 'Smart OCR (GPT-4o)',
+      ocSmartQText: 'Beaucoup plus précis. Conserve la mise en page en Markdown, extrait les tableaux en CSV, lit l’écriture manuscrite et de nombreuses langues, jusqu’à 30 pages. 2 crédits par page. Les pages sont traitées de façon sécurisée.',
+      ocPaywallTitle: '🔒 Smart OCR prêt',
+      ocPaywallText: 'Débloquez Smart OCR pour toutes les pages du document.',
+      ocTabMd: 'Markdown',
+      ocTabText: 'Texte brut',
+      ocTabTables: 'Tableaux',
+      ocDlCsv: 'tableaux .csv',
+      ocDlPdf: 'PDF consultable',
+      ocTranslateBtn: 'Traduire',
+      ocSummarizeBtn: 'Résumer',
+      ocPrivacyLabel: 'Confidentialité :',
+      ocPrivacyText: 'L’OCR gratuit fonctionne entièrement dans votre navigateur. Smart OCR envoie les images des pages à un serveur sécurisé pour traitement et ne les conserve pas après le résultat.',
+      ocFaqTitle: 'FAQ Smart OCR',
+      ocFaqQ1: 'Quelle est la différence entre OCR gratuit et Smart OCR ?',
+      ocFaqA1: 'L’OCR gratuit fonctionne sur votre appareil pour une page et convient au texte imprimé clair. Smart OCR utilise GPT-4o pour une meilleure précision, la mise en page Markdown, les tableaux, l’écriture manuscrite, de nombreuses langues et jusqu’à 30 pages.',
+      ocFaqQ2: 'Combien coûte Smart OCR ?',
+      ocFaqA2: '2 crédits par page. Les nouveaux comptes reçoivent 10 crédits gratuits et vous pouvez acheter des packs sur la page des tarifs. L’OCR gratuit ne coûte rien.',
+      ocFaqQ3: 'Peut-il lire le coréen et l’écriture manuscrite ?',
+      ocFaqA3: 'Smart OCR (GPT-4o) gère bien le coréen, les langues mélangées et l’écriture manuscrite. L’option gratuite est plus faible dans ces cas.',
+      ocFaqQ4: 'Qu’est-ce qu’un PDF consultable ?',
+      ocFaqA4: 'Un PDF qui conserve les images originales tout en ajoutant une couche de texte cachée pour sélectionner et rechercher le texte.',
+      ocFooterCopy: '© 2026 EverythingConvert',
+      ocFooterPrivacy: 'Confidentialité',
+      ocFooterCookies: 'Paramètres des cookies',
+      ocFooterContact: 'Contact',
+    },
+  };
+
+  const MSG = {
+    invalidFile: {
+      en: 'Please choose an image (PNG, JPG, WebP) or a PDF.',
+      ko: '이미지(PNG, JPG, WebP) 또는 PDF 파일을 선택하세요.',
+      de: 'Bitte wählen Sie ein Bild (PNG, JPG, WebP) oder ein PDF.',
+      es: 'Elige una imagen (PNG, JPG, WebP) o un PDF.',
+      fr: 'Choisissez une image (PNG, JPG, WebP) ou un PDF.',
+    },
+    tooLarge: {
+      en: 'File too large. Maximum size is 25 MB.',
+      ko: '파일이 너무 큽니다. 최대 크기는 25MB입니다.',
+      de: 'Datei zu groß. Maximale Größe: 25 MB.',
+      es: 'El archivo es demasiado grande. Máximo 25 MB.',
+      fr: 'Fichier trop volumineux. Taille maximale : 25 Mo.',
+    },
+    reading: { en: 'Reading file…', ko: '파일을 읽는 중...', de: 'Datei wird gelesen...', es: 'Leyendo archivo...', fr: 'Lecture du fichier...' },
+    readFail: {
+      en: 'Could not read this file. It may be encrypted or damaged.',
+      ko: '이 파일을 읽을 수 없습니다. 암호화되었거나 손상되었을 수 있습니다.',
+      de: 'Diese Datei konnte nicht gelesen werden. Sie ist möglicherweise verschlüsselt oder beschädigt.',
+      es: 'No se pudo leer este archivo. Puede estar cifrado o dañado.',
+      fr: 'Impossible de lire ce fichier. Il est peut-être chiffré ou endommagé.',
+    },
+    freeRunning: {
+      en: 'Running on-device OCR… (first run downloads the language data)',
+      ko: '브라우저 OCR 실행 중... (첫 실행 시 언어 데이터를 다운로드합니다)',
+      de: 'OCR auf dem Gerät läuft... (beim ersten Start werden Sprachdaten geladen)',
+      es: 'Ejecutando OCR en el dispositivo... (la primera vez descarga datos de idioma)',
+      fr: 'OCR local en cours... (le premier lancement télécharge les données de langue)',
+    },
+    freeDone: {
+      en: 'Free OCR complete (1 page). For tables, layout, handwriting, or more pages, use Smart OCR.',
+      ko: '무료 OCR 완료(1페이지). 표, 레이아웃, 손글씨 또는 여러 페이지는 Smart OCR을 사용하세요.',
+      de: 'Kostenloses OCR abgeschlossen (1 Seite). Für Tabellen, Layout, Handschrift oder mehr Seiten nutzen Sie Smart OCR.',
+      es: 'OCR gratuito completado (1 página). Para tablas, diseño, escritura a mano o más páginas usa Smart OCR.',
+      fr: 'OCR gratuit terminé (1 page). Pour tableaux, mise en page, écriture manuscrite ou plusieurs pages, utilisez Smart OCR.',
+    },
+    freeFail: {
+      en: 'On-device OCR failed. Try Smart OCR instead.',
+      ko: '브라우저 OCR에 실패했습니다. Smart OCR을 사용해 보세요.',
+      de: 'OCR auf dem Gerät fehlgeschlagen. Versuchen Sie Smart OCR.',
+      es: 'Falló el OCR local. Prueba Smart OCR.',
+      fr: 'L’OCR local a échoué. Essayez Smart OCR.',
+    },
+    preview: { en: 'Creating a Smart OCR preview…', ko: 'Smart OCR 준비 중...', de: 'Smart-OCR-Vorschau wird erstellt...', es: 'Creando vista previa de Smart OCR...', fr: 'Préparation de Smart OCR...' },
+    network: { en: 'Network error. Please try again.', ko: '네트워크 오류입니다. 다시 시도해 주세요.', de: 'Netzwerkfehler. Bitte erneut versuchen.', es: 'Error de red. Inténtalo de nuevo.', fr: 'Erreur réseau. Veuillez réessayer.' },
+    fullRunning: { en: 'Reading all pages with Smart OCR…', ko: 'Smart OCR로 모든 페이지를 읽는 중...', de: 'Alle Seiten werden mit Smart OCR gelesen...', es: 'Leyendo todas las páginas con Smart OCR...', fr: 'Lecture de toutes les pages avec Smart OCR...' },
+    complete: { en: 'Smart OCR complete.', ko: 'Smart OCR 완료.', de: 'Smart OCR abgeschlossen.', es: 'Smart OCR completado.', fr: 'Smart OCR terminé.' },
+    useCredits: { en: 'Using credits…', ko: '크레딧 사용 중...', de: 'Credits werden verwendet...', es: 'Usando créditos...', fr: 'Utilisation des crédits...' },
+    pdfBuild: { en: 'Building searchable PDF…', ko: '검색 가능한 PDF를 만드는 중...', de: 'Durchsuchbares PDF wird erstellt...', es: 'Creando PDF con búsqueda...', fr: 'Création du PDF consultable...' },
+    pdfDone: { en: 'Searchable PDF downloaded.', ko: '검색 가능한 PDF가 다운로드되었습니다.', de: 'Durchsuchbares PDF heruntergeladen.', es: 'PDF con búsqueda descargado.', fr: 'PDF consultable téléchargé.' },
+    pdfFail: { en: 'Could not build the PDF.', ko: 'PDF를 만들 수 없습니다.', de: 'PDF konnte nicht erstellt werden.', es: 'No se pudo crear el PDF.', fr: 'Impossible de créer le PDF.' },
+    summaryReady: { en: 'Summary ready.', ko: '요약이 준비되었습니다.', de: 'Zusammenfassung bereit.', es: 'Resumen listo.', fr: 'Résumé prêt.' },
+  };
+
+  function currentLang() {
+    try { return localStorage.getItem('everything_convert_language') || document.documentElement.lang || 'en'; }
+    catch { return 'en'; }
+  }
+  function pick(group, key, fallback) {
+    const lang = currentLang();
+    return (group[lang] && group[lang][key]) || (group.en && group.en[key]) || fallback || key;
+  }
+  function setElementText(el, value) {
+    const icon = el.querySelector(':scope > i');
+    if (icon) {
+      const copy = icon.cloneNode(true);
+      el.textContent = '';
+      el.appendChild(copy);
+      el.appendChild(document.createTextNode(' ' + value));
+      return;
+    }
+    el.textContent = value;
+  }
+  function apply() {
+    document.querySelectorAll('[data-i18n^="oc"]').forEach((el) => {
+      const value = pick(I18N, el.dataset.i18n, el.textContent);
+      setElementText(el, value);
+    });
+  }
+  function msg(key) {
+    const lang = currentLang();
+    return (MSG[key] && (MSG[key][lang] || MSG[key].en)) || key;
+  }
+
+  window.SmartOCRI18n = { apply, text: (key) => pick(I18N, key), msg, lang: currentLang };
+  window.addEventListener('everything-language-change', apply);
+  document.addEventListener('DOMContentLoaded', apply);
+  apply();
+})();
+</script>
 <script>
 (function () {
   const FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
@@ -360,6 +671,7 @@
     },
   };
   function ocT(group, ...args){ const g = OCR_T[group]; const fn = g && (g[ocLang()] || g.en); return fn ? fn(...args) : ''; }
+  function ocMsg(key){ return (window.SmartOCRI18n && window.SmartOCRI18n.msg(key)) || key; }
   if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
   const $ = (id) => document.getElementById(id);
@@ -408,12 +720,12 @@
   async function handleFile(file) {
     if (!file) return;
     const ok = /image\/(png|jpe?g|webp)/.test(file.type) || file.type === 'application/pdf' || /\.(png|jpe?g|webp|pdf)$/i.test(file.name);
-    if (!ok) { setStatus('Please choose an image (PNG, JPG, WebP) or a PDF.', 'error'); return; }
-    if (file.size > 25 * 1048576) { setStatus('File too large. Maximum size is 25 MB.', 'error'); return; }
+    if (!ok) { setStatus(ocMsg('invalidFile'), 'error'); return; }
+    if (file.size > 25 * 1048576) { setStatus(ocMsg('tooLarge'), 'error'); return; }
     resetOutputs();
     fileNameEl.textContent = file.name; fileSizeEl.textContent = fmtSize(file.size);
     fileInfo.classList.add('visible');
-    setStatus('Reading file…', 'info'); setProgress(10);
+    setStatus(ocMsg('reading'), 'info'); setProgress(10);
     try {
       const info = await rasterize(file);
       totalPages = Math.min(info.pages, MAX_PAGES);
@@ -422,7 +734,7 @@
       smartBtn.textContent = ocT('smartBtn', creditCost());
       actionRow.style.display = '';
     } catch (e) {
-      setProgress(-1); setStatus('Could not read this file. It may be encrypted or damaged.', 'error');
+      setProgress(-1); setStatus(ocMsg('readFail'), 'error');
     }
   }
 
@@ -436,7 +748,7 @@
   freeBtn.addEventListener('click', async () => {
     if (!pageImages.length) return;
     freeBtn.disabled = true; smartBtn.disabled = true;
-    setStatus('Running on-device OCR… (first run downloads the language data)', 'info'); setProgress(5);
+    setStatus(ocMsg('freeRunning'), 'info'); setProgress(5);
     try {
       const worker = await Tesseract.createWorker('eng+kor', 1, { logger: m => { if (m.status==='recognizing text') setProgress(10 + m.progress*85); } });
       const { data } = await worker.recognize(pageImages[0]);
@@ -444,9 +756,9 @@
       assembled = { markdown: data.text || '', text: data.text || '', tables: [] };
       showResult(false);
       setProgress(-1);
-      setStatus('Free OCR complete (1 page). For tables, layout, handwriting, or more pages, use Smart OCR.', 'success');
+      setStatus(ocMsg('freeDone'), 'success');
     } catch (e) {
-      setProgress(-1); setStatus('On-device OCR failed. Try Smart OCR instead.', 'error');
+      setProgress(-1); setStatus(ocMsg('freeFail'), 'error');
     } finally { freeBtn.disabled = false; smartBtn.disabled = false; }
   });
 
@@ -454,7 +766,7 @@
   smartBtn.addEventListener('click', async () => {
     if (!pageImages.length) return;
     smartBtn.disabled = true; freeBtn.disabled = true;
-    setStatus('Creating a Smart OCR preview…', 'info'); setProgress(8);
+    setStatus(ocMsg('preview'), 'info'); setProgress(8);
     try {
       const res = await fetch(`${FUNC}/ai-ocr`, {
         method:'POST', headers:{ 'Content-Type':'application/json', ...(ANON?{apikey:ANON}:{}) },
@@ -467,11 +779,19 @@
       // shown. The free Tesseract path above is the quality teaser.
       result.classList.remove('visible');
       setProgress(-1); setStatus('');
-      paywallText.textContent = `Smart OCR will read ${jobPages} page${jobPages>1?'s':''} with GPT-4o — ${jobPages*2} credits will be used.`;
+      const lang = ocLang();
+      const paywallLines = {
+        en: `Smart OCR will read ${jobPages} page${jobPages>1?'s':''} with GPT-4o — ${jobPages*2} credits will be used.`,
+        ko: `Smart OCR이 GPT-4o로 ${jobPages}페이지를 읽습니다 — ${jobPages*2}크레딧이 사용됩니다.`,
+        de: `Smart OCR liest ${jobPages} Seite${jobPages>1?'n':''} mit GPT-4o — ${jobPages*2} Credits werden verwendet.`,
+        es: `Smart OCR leerá ${jobPages} página${jobPages>1?'s':''} con GPT-4o — se usarán ${jobPages*2} créditos.`,
+        fr: `Smart OCR lira ${jobPages} page${jobPages>1?'s':''} avec GPT-4o — ${jobPages*2} crédits seront utilisés.`,
+      };
+      paywallText.textContent = paywallLines[lang] || paywallLines.en;
       paywall.classList.add('visible');
       setupCreditOption();
     } catch (e) {
-      setStatus('Network error. Please try again.', 'error'); setProgress(-1); smartBtn.disabled=false; freeBtn.disabled=false;
+      setStatus(ocMsg('network'), 'error'); setProgress(-1); smartBtn.disabled=false; freeBtn.disabled=false;
     }
   });
 
@@ -479,31 +799,66 @@
     const cost = jobPages * 2;
     if (!credits || !credits.isLoggedIn()) {
       creditBtn.style.display=''; creditBtn.disabled=false;
-      creditBtn.textContent = `🪙 Log in to use credits (${cost})`;
+      const lang = ocLang();
+      creditBtn.textContent = ({
+        en: `🪙 Log in to use credits (${cost})`,
+        ko: `🪙 로그인하고 크레딧 사용 (${cost})`,
+        de: `🪙 Anmelden und Credits nutzen (${cost})`,
+        es: `🪙 Inicia sesión para usar créditos (${cost})`,
+        fr: `🪙 Connectez-vous pour utiliser les crédits (${cost})`,
+      }[lang] || `🪙 Log in to use credits (${cost})`);
       creditBtn.onclick = () => { window.location.href = '../../auth.html?next=' + encodeURIComponent(window.location.pathname); };
       creditHint.textContent=''; return;
     }
     const balance = await credits.getBalance();
     creditBtn.style.display='';
     if (balance !== null && balance >= cost) {
-      creditBtn.disabled=false; creditBtn.textContent = `🪙 Use ${cost} credits (you have ${balance})`;
+      const lang = ocLang();
+      creditBtn.disabled=false; creditBtn.textContent = ({
+        en: `🪙 Use ${cost} credits (you have ${balance})`,
+        ko: `🪙 ${cost}크레딧 사용 (보유 ${balance})`,
+        de: `🪙 ${cost} Credits verwenden (${balance} verfügbar)`,
+        es: `🪙 Usar ${cost} créditos (tienes ${balance})`,
+        fr: `🪙 Utiliser ${cost} crédits (vous avez ${balance})`,
+      }[lang] || `🪙 Use ${cost} credits (you have ${balance})`);
       creditHint.textContent=''; creditBtn.onclick = runFull;
     } else {
-      creditBtn.disabled=true; creditBtn.textContent = `🪙 Need ${cost} credits (you have ${balance===null?0:balance})`;
-      creditHint.innerHTML = 'Not enough credits. <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline">Buy more credits</a>.';
+      const lang = ocLang();
+      creditBtn.disabled=true; creditBtn.textContent = ({
+        en: `🪙 Need ${cost} credits (you have ${balance===null?0:balance})`,
+        ko: `🪙 ${cost}크레딧 필요 (보유 ${balance===null?0:balance})`,
+        de: `🪙 ${cost} Credits nötig (${balance===null?0:balance} verfügbar)`,
+        es: `🪙 Necesitas ${cost} créditos (tienes ${balance===null?0:balance})`,
+        fr: `🪙 ${cost} crédits requis (vous avez ${balance===null?0:balance})`,
+      }[lang] || `🪙 Need ${cost} credits (you have ${balance===null?0:balance})`);
+      const hintText = {
+        en: 'Not enough credits.',
+        ko: '크레딧이 부족합니다.',
+        de: 'Nicht genug Credits.',
+        es: 'No tienes suficientes créditos.',
+        fr: 'Crédits insuffisants.',
+      }[lang] || 'Not enough credits.';
+      const linkText = {
+        en: 'Buy more credits',
+        ko: '크레딧 더 구매하기',
+        de: 'Mehr Credits kaufen',
+        es: 'Comprar más créditos',
+        fr: 'Acheter plus de crédits',
+      }[lang] || 'Buy more credits';
+      creditHint.innerHTML = `${hintText} <a href="../../pricing.html#credit-packs" style="color:#fff;text-decoration:underline">${linkText}</a>.`;
       creditBtn.onclick=null;
     }
   }
 
   async function runFull() {
-    creditBtn.disabled = true; creditBtn.textContent = 'Using credits…';
+    creditBtn.disabled = true; creditBtn.textContent = ocMsg('useCredits');
     const redeem = await credits.redeem(currentJobId);
     if (!redeem.ok) {
       if (redeem.code === 'insufficient_credits') { setupCreditOption(); return; }
       setStatus(redeem.error || 'Could not use credits.', 'error'); setupCreditOption(); return;
     }
     paywall.classList.remove('visible');
-    setStatus('Reading all pages with Smart OCR…', 'info');
+    setStatus(ocMsg('fullRunning'), 'info');
     const pages = [];
     for (let i = 0; i < jobPages; i++) {
       setProgress((i / jobPages) * 100);
@@ -524,7 +879,7 @@
       tables: pages.flatMap(p=>Array.isArray(p.tables)?p.tables:[]),
     };
     showResult(true);
-    setStatus('Smart OCR complete.', 'success');
+    setStatus(ocMsg('complete'), 'success');
   }
 
   function showResult(isPaid) {
@@ -561,7 +916,7 @@
 
   async function buildSearchablePdf() {
     if (!window.PDFLib) { setStatus('PDF library not loaded.', 'error'); return; }
-    setStatus('Building searchable PDF…', 'info');
+    setStatus(ocMsg('pdfBuild'), 'info');
     try {
       const { PDFDocument, StandardFonts, rgb } = PDFLib;
       const doc = await PDFDocument.create();
@@ -577,8 +932,8 @@
       }
       const bytes = await doc.save();
       download('searchable.pdf', bytes, 'application/pdf');
-      setStatus('Searchable PDF downloaded.', 'success');
-    } catch (e) { setStatus('Could not build the PDF.', 'error'); }
+      setStatus(ocMsg('pdfDone'), 'success');
+    } catch (e) { setStatus(ocMsg('pdfFail'), 'error'); }
   }
 
   // ── enhance (paid only) ──
@@ -597,8 +952,8 @@
       const data = await res.json().catch(()=>({}));
       if (!res.ok) { setStatus(data.error || 'Processing failed.', 'error'); return; }
       if (action === 'translate') { assembled.markdown = (data.result&&data.result.markdown) || assembled.markdown; assembled.text = assembled.markdown; activeTab='markdown'; document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active', x.dataset.tab==='markdown')); renderTab(); setStatus(`Translated to ${langName}.`, 'success'); }
-      else { const s=data.result||{}; outBox.textContent = (s.summary||'') + (Array.isArray(s.key_points)&&s.key_points.length?('\n\n• '+s.key_points.join('\n• ')):''); setStatus('Summary ready.', 'success'); }
-    } catch { setStatus('Network error.', 'error'); }
+      else { const s=data.result||{}; outBox.textContent = (s.summary||'') + (Array.isArray(s.key_points)&&s.key_points.length?('\n\n• '+s.key_points.join('\n• ')):''); setStatus(ocMsg('summaryReady'), 'success'); }
+    } catch { setStatus(ocMsg('network'), 'error'); }
   }
   $('translateBtn').addEventListener('click', ()=>enhance('translate'));
   $('summarizeBtn').addEventListener('click', ()=>enhance('summarize'));
