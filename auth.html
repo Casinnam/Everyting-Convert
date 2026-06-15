@@ -564,9 +564,15 @@
         const accountHint = document.getElementById('accountHint');
 
         let creditsLoaded = false;
+        let lastCreditBalance = null;
         function currentMembershipLabel(balance) {
             const authApi = window.EverythingConvertAuth;
             const state = (authApi && authApi.state) || {};
+            // Fall back to the last resolved balance so the label stays
+            // "Credit user" even when called without an explicit balance
+            // (otherwise updateAccountView and loadAccountCredits disagree and
+            // the label flickers between Free/Credit user).
+            if (typeof balance !== 'number') balance = lastCreditBalance;
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             const role = state.profile && state.profile.role ? state.profile.role : '';
             const isAdminRole = role === 'admin';
@@ -593,6 +599,7 @@
                 const balance = await credits.getBalance();
                 if (balance === null) continue;
                 creditsLoaded = true;
+                lastCreditBalance = balance;
                 accountCredits.textContent = String(balance);
                 const membership = currentMembershipLabel(balance);
                 if (membership) accountPlan.textContent = membership;
