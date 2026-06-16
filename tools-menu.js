@@ -255,6 +255,25 @@
         background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
         box-shadow: 0 14px 30px rgba(37, 99, 235, .22) !important;
       }
+      /* Account avatar + dropdown */
+      .ec-unified-header .ec-user { position: relative !important; display: inline-flex !important; align-items: center !important; }
+      .ec-unified-header .ec-avatar { width: 2.5rem !important; height: 2.5rem !important; border: 0 !important; border-radius: 50% !important; cursor: pointer !important; color: #fff !important; font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important; font-weight: 800 !important; font-size: .95rem !important; letter-spacing: .02em !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, #2563eb, #7c3aed) !important; box-shadow: 0 6px 16px rgba(37, 99, 235, .28) !important; padding: 0 !important; line-height: 1 !important; }
+      .ec-unified-header .ec-avatar:hover { filter: brightness(1.05) !important; }
+      .ec-unified-header .ec-avatar.lg { width: 2.75rem !important; height: 2.75rem !important; font-size: 1.05rem !important; box-shadow: none !important; flex: 0 0 auto !important; }
+      .ec-unified-header .ec-user-menu { position: absolute !important; right: 0 !important; top: calc(100% + .6rem) !important; width: 270px !important; background: #fff !important; border: 1px solid #e2e8f0 !important; border-radius: 16px !important; box-shadow: 0 26px 64px rgba(15, 23, 42, .20) !important; padding: .5rem !important; display: none !important; z-index: 1300 !important; }
+      .ec-unified-header .ec-user.open .ec-user-menu { display: block !important; }
+      .ec-unified-header .ec-user-head { display: flex !important; align-items: center !important; gap: .7rem !important; padding: .65rem .6rem .75rem !important; border-bottom: 1px solid #eef2f7 !important; margin-bottom: .35rem !important; }
+      .ec-unified-header .ec-user-id { min-width: 0 !important; }
+      .ec-unified-header .ec-user-id strong { display: block !important; color: #0f172a !important; font-size: .95rem !important; font-weight: 800 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+      .ec-unified-header .ec-user-id span { display: block !important; color: #94a3b8 !important; font-size: .78rem !important; font-weight: 600 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+      .ec-unified-header .ec-user-rows { padding: .15rem .35rem .4rem !important; }
+      .ec-unified-header .ec-user-row { display: flex !important; align-items: center !important; justify-content: space-between !important; padding: .35rem .25rem !important; font-size: .85rem !important; color: #64748b !important; font-weight: 700 !important; }
+      .ec-unified-header .ec-user-row b { color: #0f172a !important; font-weight: 800 !important; }
+      .ec-unified-header .ec-user-links { border-top: 1px solid #eef2f7 !important; padding-top: .35rem !important; display: grid !important; }
+      .ec-unified-header .ec-user-links a { display: flex !important; align-items: center !important; gap: .65rem !important; padding: .6rem .55rem !important; border-radius: 10px !important; color: #334155 !important; font-size: .9rem !important; font-weight: 700 !important; white-space: nowrap !important; }
+      .ec-unified-header .ec-user-links a:hover { background: #f1f5f9 !important; color: #0f172a !important; }
+      .ec-unified-header .ec-user-links a i { width: 1.1rem !important; text-align: center !important; color: #7c3aed !important; }
+      .ec-unified-header .ec-user-links a[data-auth-logout] i { color: #ef4444 !important; }
       @media (max-width: 1600px) {
         .ec-unified-header .ec-header-inner {
           gap: .85rem !important;
@@ -545,10 +564,30 @@
       </nav>
       <div class="top-actions">
         <a href="${prefix}auth.html" data-auth-login style="display:none;">Login</a>
-        <a href="${prefix}auth.html" data-auth-state data-auth-account>Checking...</a>
-        <a href="#" data-auth-logout style="display:none;">Logout</a>
-        <a href="${prefix}admin.html" data-admin-only style="display:none;">Admin</a>
-        <a class="ec-try-pro" href="${prefix}pricing.html">Try Pro</a>
+        <div class="ec-user" data-auth-account style="display:none;">
+          <button class="ec-avatar" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu" data-ec-avatar><span data-auth-initials>?</span></button>
+          <div class="ec-user-menu" role="menu">
+            <div class="ec-user-head">
+              <span class="ec-avatar lg" aria-hidden="true" data-auth-initials>?</span>
+              <div class="ec-user-id">
+                <strong data-auth-name>Account</strong>
+                <span data-auth-email></span>
+              </div>
+            </div>
+            <div class="ec-user-rows">
+              <div class="ec-user-row"><span>Membership</span><b data-auth-plan>Free</b></div>
+              <div class="ec-user-row"><span>AI Credits</span><b data-auth-credits>…</b></div>
+            </div>
+            <div class="ec-user-links">
+              <a href="${prefix}auth.html" role="menuitem"><i class="fa-regular fa-user"></i> <span>Account</span></a>
+              <a href="${prefix}my-conversions.html" role="menuitem"><i class="fa-solid fa-clock-rotate-left"></i> <span>My Conversions</span></a>
+              <a href="${prefix}pricing.html#credit-packs" role="menuitem"><i class="fa-solid fa-coins"></i> <span>Buy Credits</span></a>
+              <a href="${prefix}admin.html" role="menuitem" data-admin-only style="display:none;"><i class="fa-solid fa-shield-halved"></i> <span>Admin Dashboard</span></a>
+              <a href="#" role="menuitem" data-auth-logout><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Logout</span></a>
+            </div>
+          </div>
+        </div>
+        <a class="ec-try-pro" href="${prefix}pricing.html" data-hide-pro>Try Pro</a>
       </div>
       </div>
     `;
@@ -631,7 +670,31 @@
     }
   }
 
+  function closeUserMenus(except) {
+    document.querySelectorAll('.ec-user.open').forEach((u) => {
+      if (u === except) return;
+      u.classList.remove('open');
+      const a = u.querySelector('[data-ec-avatar]');
+      if (a) a.setAttribute('aria-expanded', 'false');
+    });
+  }
+
   document.addEventListener('click', (event) => {
+    const avatarBtn = event.target.closest('[data-ec-avatar]');
+    if (avatarBtn) {
+      event.preventDefault();
+      const wrap = avatarBtn.closest('.ec-user');
+      const willOpen = !wrap.classList.contains('open');
+      closeUserMenus(wrap);
+      closeAll();
+      wrap.classList.toggle('open', willOpen);
+      avatarBtn.setAttribute('aria-expanded', String(willOpen));
+      if (willOpen && window.EverythingConvertAuth && window.EverythingConvertAuth.refreshCredits) window.EverythingConvertAuth.refreshCredits();
+      return;
+    }
+    // Clicking anywhere outside an open account menu closes it (links inside still work).
+    if (!event.target.closest('.ec-user-menu')) closeUserMenus();
+
     const disabledTool = event.target.closest('.tool-disabled');
     if (disabledTool) {
       event.preventDefault();
@@ -664,6 +727,7 @@
     if (event.key === 'Escape') {
       closeAll();
       closeMobileMenu();
+      closeUserMenus();
     }
   });
 

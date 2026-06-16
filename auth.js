@@ -105,6 +105,60 @@
     return name.length > 22 ? name.slice(0, 19) + '...' : name;
   }
 
+  // Avatar initials, e.g. "economicalhuman" -> "EC", "Jae Smith" -> "JS".
+  function initialsFrom(name) {
+    if (!name || name === 'Guest') return '?';
+    const parts = String(name).trim().split(/[\s._\-@]+/).filter(Boolean);
+    const s = parts.length >= 2
+      ? (parts[0][0] + parts[1][0])
+      : String(name).replace(/[^A-Za-z0-9가-힣]/g, '').slice(0, 2);
+    return (s || '?').toUpperCase();
+  }
+
+  // Credit balance for the account dropdown. Uses the shared helper when present,
+  // otherwise calls the ai_credit_balance RPC directly so the avatar shows credits
+  // on every page (ai-credits.js is not loaded site-wide).
+  async function fetchCreditBalance() {
+    if (window.EverythingConvertCredits && window.EverythingConvertCredits.getBalance) {
+      try { const b = await window.EverythingConvertCredits.getBalance(); if (b != null) return b; } catch (error) { /* fall through */ }
+    }
+    const token = state.session && state.session.access_token;
+    const cfg = window.EVERYTHING_CONVERT_SUPABASE || {};
+    if (!token || !cfg.url) return null;
+    try {
+      const res = await fetch(`${cfg.url}/rest/v1/rpc/ai_credit_balance`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(cfg.anonKey ? { apikey: cfg.anonKey } : {}), Authorization: `Bearer ${token}` },
+        body: '{}',
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return Number(data) || 0;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  let creditWidgetsBusy = false;
+  function refreshCredits() {
+    const els = document.querySelectorAll('[data-auth-credits]');
+    if (!els.length || !state.user || creditWidgetsBusy) return;
+    creditWidgetsBusy = true;
+    fetchCreditBalance()
+      .then((n) => { creditWidgetsBusy = false; if (n != null) els.forEach((el) => { el.textContent = String(n); }); })
+      .catch(() => { creditWidgetsBusy = false; });
+  }
+
+  // Fill the avatar + account dropdown. `info` = { name, email, plan, pro }.
+  function fillUserWidgets(info) {
+    const ini = initialsFrom(info.name);
+    document.querySelectorAll('[data-auth-initials]').forEach((el) => { el.textContent = ini; });
+    document.querySelectorAll('[data-auth-name]').forEach((el) => { el.textContent = shortName(info.name) || translateAuth('authGuest'); });
+    document.querySelectorAll('[data-auth-email]').forEach((el) => { el.textContent = info.email || ''; });
+    document.querySelectorAll('[data-auth-plan]').forEach((el) => { el.textContent = info.plan || translateAuth('authFree'); });
+    document.querySelectorAll('[data-hide-pro]').forEach((el) => { el.style.display = info.pro ? 'none' : ''; });
+  }
+
   function readAuthIdentityCache() {
     try {
       const raw = window.localStorage.getItem(identityCacheKey);
@@ -171,8 +225,10 @@
     });
 
     document.querySelectorAll('[data-admin-only]').forEach((element) => {
-      element.style.display = 'none';
+      element.style.display = cached.role === 'admin' ? '' : 'none';
     });
+
+    fillUserWidgets({ name: cached.username, email: '', plan: planLabel || translateAuth('authFree'), pro: cached.plan === 'pro' });
 
     return true;
   }
@@ -317,6 +373,14 @@
     document.querySelectorAll('[data-admin-only]').forEach((element) => {
       element.style.display = isAdmin() ? '' : 'none';
     });
+
+    if (state.user) {
+      fillUserWidgets({ name: displayName(), email: state.user.email || '', plan: formatPlan(), pro: isPro() });
+      refreshCredits();
+    } else {
+      // logged out: keep Try Pro visible
+      document.querySelectorAll('[data-hide-pro]').forEach((element) => { element.style.display = ''; });
+    }
 
     if (state.user) writeAuthIdentityCache();
     window.dispatchEvent(new CustomEvent('everything-auth-change', { detail: { ...state } }));
@@ -667,5 +731,6 @@
     cachedAuthSnapshot,
     updateUsername,
     renderAuthWidgets,
+    refreshCredits,
   };
 })();
