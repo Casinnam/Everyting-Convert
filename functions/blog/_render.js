@@ -129,6 +129,9 @@ function formatDate(value) {
 const STYLE = `
   .blog-wrap { width: min(760px, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0 4rem; }
   .blog-back { display: inline-flex; gap: .4rem; align-items: center; color: #2563eb; text-decoration: none; font-weight: 800; margin-bottom: 1.25rem; }
+  .blog-langs { display: flex; gap: .4rem; flex-wrap: wrap; margin: 0 0 1.5rem; }
+  .blog-langs a { font-size: .82rem; font-weight: 800; text-decoration: none; color: #475569; border: 1px solid #e2e8f0; border-radius: 999px; padding: .3rem .8rem; background: #fff; }
+  .blog-langs a.active { background: #2563eb; color: #fff; border-color: transparent; }
   .blog-article h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.15; color: #0f172a; margin: 0 0 .6rem; }
   .blog-meta { color: #64748b; font-weight: 700; margin-bottom: 1.5rem; }
   .blog-cover { width: 100%; border-radius: 16px; margin: 0 0 1.75rem; }
@@ -202,12 +205,28 @@ ${body}
 </html>`;
 }
 
-export function renderPostPage({ post, origin }) {
-  const canonical = `${origin}/blog/${encodeURIComponent(post.slug)}`;
+const LANG_LABEL = { en: 'English', ko: '한국어', de: 'Deutsch', es: 'Español', fr: 'Français' };
+
+export function postUrl(origin, lang, slug) {
+  return `${origin}/blog/${lang}/${encodeURIComponent(slug)}`;
+}
+
+export function renderPostPage({ post, origin, alternates }) {
+  const alts = Array.isArray(alternates) && alternates.length ? alternates : [{ lang: post.lang, slug: post.slug }];
+  const canonical = postUrl(origin, post.lang, post.slug);
   const description = post.excerpt || plainText(post.body);
   const bodyHtml = renderMarkdown(post.body);
   const dateLabel = formatDate(post.published_at || post.created_at);
   const cover = post.cover_image ? safeUrl(post.cover_image) : '';
+
+  // hreflang alternates so Google serves the right language per searcher.
+  const xDefault = alts.find((a) => a.lang === 'en') || alts.find((a) => a.lang === post.lang) || alts[0];
+  const hreflang = alts.map((a) => `<link rel="alternate" hreflang="${escapeHtml(a.lang)}" href="${escapeHtml(postUrl(origin, a.lang, a.slug))}">`).join('')
+    + `<link rel="alternate" hreflang="x-default" href="${escapeHtml(postUrl(origin, xDefault.lang, xDefault.slug))}">`;
+
+  const switcher = alts.length > 1
+    ? `<div class="blog-langs">${alts.map((a) => `<a href="${escapeHtml(postUrl(origin, a.lang, a.slug))}"${a.lang === post.lang ? ' class="active"' : ''}>${escapeHtml(LANG_LABEL[a.lang] || a.lang)}</a>`).join('')}</div>`
+    : '';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -229,14 +248,17 @@ export function renderPostPage({ post, origin }) {
 <meta property="og:title" content="${escapeHtml(post.title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${escapeHtml(canonical)}">
+<meta property="og:locale" content="${escapeHtml(post.lang || 'en')}">
 ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
 <meta name="twitter:card" content="${cover ? 'summary_large_image' : 'summary'}">
 <meta property="article:published_time" content="${escapeHtml(post.published_at || post.created_at || '')}">
+${hreflang}
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 
   const body = `
 <main class="blog-wrap">
   <a class="blog-back" href="/blog"><i class="fa-solid fa-arrow-left"></i> All posts</a>
+  ${switcher}
   <article class="blog-article">
     <h1>${escapeHtml(post.title)}</h1>
     <div class="blog-meta">${dateLabel ? escapeHtml(dateLabel) : ''}</div>
@@ -248,13 +270,13 @@ ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
   return shell({ lang: post.lang, title: `${post.title} | ${SITE_NAME} Blog`, description, canonical, head, body });
 }
 
-export function renderListPage({ posts, origin }) {
+export function renderListPage({ posts, origin, lang }) {
   const canonical = `${origin}/blog`;
   const cards = (posts || []).map((p) => {
     const cover = p.cover_image ? safeUrl(p.cover_image) : '';
     const date = formatDate(p.published_at || p.created_at);
     const excerpt = p.excerpt || plainText(p.body, 120);
-    return `<a class="blog-card" href="/blog/${encodeURIComponent(p.slug)}">
+    return `<a class="blog-card" href="${escapeHtml(postUrl(origin, p.lang, p.slug))}">
       ${cover ? `<img src="${escapeHtml(cover)}" alt="${escapeHtml(p.title)}" loading="lazy">` : ''}
       <div class="card-body">
         <h2>${escapeHtml(p.title)}</h2>
@@ -272,7 +294,7 @@ export function renderListPage({ posts, origin }) {
 </main>`;
 
   return shell({
-    lang: 'en',
+    lang: lang || 'en',
     title: `Blog | ${SITE_NAME}`,
     description: `Guides, tips, and product updates from ${SITE_NAME}.`,
     canonical, body,

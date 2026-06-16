@@ -1,5 +1,8 @@
-// GET /blog/:slug — server-rendered single blog post (published only).
-import { renderPostPage, notFoundPage } from './_render.js';
+// GET /blog/:slug — legacy single-language URL. Redirect to the language-prefixed
+// URL (/blog/:lang/:slug) so old links and the original posts keep working.
+import { notFoundPage } from './_render.js';
+
+const LANGS = ['en', 'ko', 'de', 'es', 'fr'];
 
 function cfg(env) {
   return {
@@ -9,32 +12,31 @@ function cfg(env) {
   };
 }
 
-const HTML_HEADERS = {
-  'Content-Type': 'text/html; charset=utf-8',
-  'Cache-Control': 'public, max-age=0, must-revalidate',
-};
-
 export async function onRequestGet(context) {
   const origin = new URL(context.request.url).origin;
-  // Cloudflare passes the raw (still percent-encoded) path segment, so decode it
-  // before re-encoding for the query — otherwise non-ASCII slugs (e.g. Korean)
-  // get double-encoded and never match the stored slug.
   let slug = String(context.params.slug || '');
-  try { slug = decodeURIComponent(slug); } catch (error) { /* keep raw if malformed */ }
-  const { url, anon } = cfg(context.env || {});
+  try { slug = decodeURIComponent(slug); } catch (error) { /* keep raw */ }
 
+  // /blog/<lang> (a bare language code) → the blog index.
+  if (LANGS.includes(slug.toLowerCase())) {
+    return Response.redirect(`${origin}/blog`, 302);
+  }
+
+  const { url, anon } = cfg(context.env || {});
   try {
-    const select = 'slug,title,excerpt,body,cover_image,lang,published_at,created_at,updated_at';
     const res = await fetch(
-      `${url}/rest/v1/blog_posts?slug=eq.${encodeURIComponent(slug)}&status=eq.published&select=${select}&limit=1`,
+      `${url}/rest/v1/blog_posts?slug=eq.${encodeURIComponent(slug)}&status=eq.published&select=lang,slug&order=published_at.desc&limit=1`,
       { headers: { apikey: anon, Authorization: `Bearer ${anon}` } },
     );
     const rows = res.ok ? await res.json() : [];
-    if (!rows || !rows[0]) {
-      return new Response(notFoundPage(origin), { status: 404, headers: HTML_HEADERS });
+    const post = rows && rows[0];
+    if (post) {
+      return Response.redirect(`${origin}/blog/${post.lang}/${encodeURIComponent(post.slug)}`, 301);
     }
-    return new Response(renderPostPage({ post: rows[0], origin }), { headers: HTML_HEADERS });
-  } catch (error) {
-    return new Response(notFoundPage(origin), { status: 500, headers: HTML_HEADERS });
-  }
+  } catch (error) { /* fall through to 404 */ }
+
+  return new Response(notFoundPage(origin), {
+    status: 404,
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=0, must-revalidate' },
+  });
 }
