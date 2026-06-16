@@ -48,9 +48,11 @@
     .wm-range .val { font-weight: 800; color: #0f172a; min-width: 2.5rem; text-align: right; }
     .wm-apply { width: 100%; min-height: 3rem; border: 0; border-radius: 12px; margin-top: .5rem; color: #fff; font: inherit; font-weight: 900; cursor: pointer; background: linear-gradient(135deg,#2563eb,#7c3aed); box-shadow: 0 16px 36px rgba(37,99,235,.22); }
     .wm-apply:disabled { opacity: .5; cursor: not-allowed; }
-    .wm-preview { display: grid; place-items: center; min-height: 280px; background: #f1f5f9; border-radius: 12px; overflow: hidden; }
-    .wm-preview canvas { max-width: 100%; height: auto; box-shadow: 0 8px 24px rgba(15,23,42,.15); }
-    .wm-preview .hint { color: #94a3b8; padding: 2rem; text-align: center; }
+    .wm-preview { display: flex; flex-direction: column; align-items: center; gap: 14px; min-height: 280px; max-height: 640px; overflow: auto; background: #f1f5f9; border-radius: 12px; padding: 14px; }
+    .wm-preview canvas { max-width: 100%; height: auto; box-shadow: 0 8px 24px rgba(15,23,42,.15); border-radius: 4px; }
+    .wm-page { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .wm-pagenum { font-size: 12px; color: #94a3b8; }
+    .wm-preview .hint { color: #94a3b8; padding: 2rem; text-align: center; margin: auto; }
     .wm-status { margin-top: .9rem; font-weight: 700; min-height: 1.2em; }
     .wm-status.ok { color: #15803d; } .wm-status.err { color: #b91c1c; }
     .wm-note { background: #eff6ff; border-left: 3px solid #7c3aed; padding: .8rem 1rem; border-radius: 0 8px 8px 0; color: #64748b; font-size: .85rem; margin-top: 1.25rem; line-height: 1.6; }
@@ -99,7 +101,7 @@
           <button class="rm" id="removeFile" title="Remove">&times;</button>
         </div>
         <div class="wm-preview" id="preview" style="margin-top:1rem;">
-          <div class="hint" data-ko="PDF를 올리면 1페이지 미리보기가 여기에 표시됩니다.">Upload a PDF to preview page 1 here.</div>
+          <div class="hint" data-ko="PDF를 올리면 모든 페이지 미리보기가 여기에 표시됩니다.">Upload a PDF to preview every page here.</div>
         </div>
         <div class="wm-status" id="status"></div>
       </div>
@@ -184,7 +186,8 @@
     const fileInput = $('fileInput'), dropZone = $('dropZone'), fileInfo = $('fileInfo'), fileName = $('fileName'), removeFile = $('removeFile');
     const wmText = $('wmText'), wmColor = $('wmColor'), wmLayout = $('wmLayout'), wmOpacity = $('wmOpacity'), wmSize = $('wmSize');
     const opacityVal = $('wmOpacityVal'), sizeVal = $('wmSizeVal'), applyBtn = $('applyBtn'), statusEl = $('status'), preview = $('preview');
-    let pdfBytes = null, pdfName = '', pdfjsDoc = null;
+    let pdfBytes = null, pdfName = '', pdfjsDoc = null, pageRasters = [];
+    const PREVIEW_CAP = 60; // pages rastered for preview; all pages are still watermarked on download
 
     function setStatus(t, k) { statusEl.textContent = t || ''; statusEl.className = 'wm-status' + (k ? ' ' + k : ''); }
     function opts() { return { text: wmText.value || 'WATERMARK', color: wmColor.value, opacity: +wmOpacity.value / 100, size: +wmSize.value, layout: wmLayout.value }; }
@@ -218,20 +221,48 @@
       return c;
     }
 
-    async function renderPreview() {
+    // Raster each page once (expensive). Watermark is overlaid cheaply on every
+    // option change without re-rastering — see renderPreview().
+    async function buildRasters() {
+      pageRasters = [];
       if (!pdfjsDoc) return;
-      try {
-        const page = await pdfjsDoc.getPage(1);
-        const baseScale = Math.min(2, 760 / page.getViewport({ scale: 1 }).width);
+      const total = pdfjsDoc.numPages;
+      const limit = Math.min(total, PREVIEW_CAP);
+      for (let i = 1; i <= limit; i++) {
+        const page = await pdfjsDoc.getPage(i);
+        const baseScale = Math.min(2, 620 / page.getViewport({ scale: 1 }).width);
         const viewport = page.getViewport({ scale: baseScale });
-        const canvas = document.createElement('canvas');
-        canvas.width = viewport.width; canvas.height = viewport.height;
-        const ctx = canvas.getContext('2d');
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        const wm = makeWatermarkCanvas(viewport.width / baseScale, viewport.height / baseScale, opts(), baseScale);
-        ctx.drawImage(wm, 0, 0, canvas.width, canvas.height);
-        preview.innerHTML = ''; preview.appendChild(canvas);
-      } catch (e) { /* preview is best-effort */ }
+        const rc = document.createElement('canvas');
+        rc.width = viewport.width; rc.height = viewport.height;
+        await page.render({ canvasContext: rc.getContext('2d'), viewport }).promise;
+        pageRasters.push({ rc, w: viewport.width / baseScale, h: viewport.height / baseScale, baseScale, vw: viewport.width, vh: viewport.height });
+      }
+      pageRasters.total = total;
+    }
+
+    function renderPreview() {
+      if (!pageRasters.length) return;
+      const o = opts();
+      const frag = document.createDocumentFragment();
+      const total = pageRasters.total || pageRasters.length;
+      pageRasters.forEach((p, idx) => {
+        const cv = document.createElement('canvas');
+        cv.width = p.vw; cv.height = p.vh;
+        const ctx = cv.getContext('2d');
+        ctx.drawImage(p.rc, 0, 0);
+        const wm = makeWatermarkCanvas(p.w, p.h, o, p.baseScale);
+        ctx.drawImage(wm, 0, 0, cv.width, cv.height);
+        const wrap = document.createElement('div'); wrap.className = 'wm-page';
+        const lbl = document.createElement('div'); lbl.className = 'wm-pagenum'; lbl.textContent = (idx + 1) + ' / ' + total;
+        wrap.appendChild(cv); wrap.appendChild(lbl);
+        frag.appendChild(wrap);
+      });
+      preview.innerHTML = ''; preview.appendChild(frag);
+      if (total > pageRasters.length) {
+        const more = document.createElement('div'); more.className = 'wm-pagenum';
+        more.textContent = '… +' + (total - pageRasters.length) + ' more page(s) — all pages are watermarked on download.';
+        preview.appendChild(more);
+      }
     }
 
     async function loadFile(file) {
@@ -239,8 +270,12 @@
       pdfName = file.name; pdfBytes = await file.arrayBuffer();
       fileName.textContent = file.name; fileInfo.classList.add('show'); applyBtn.disabled = false;
       setStatus('');
-      try { pdfjsDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise; renderPreview(); }
-      catch (e) { preview.innerHTML = '<div class="hint">Preview unavailable, but the watermark will still apply.</div>'; }
+      preview.innerHTML = '<div class="hint">Rendering preview…</div>';
+      try {
+        pdfjsDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise;
+        await buildRasters();
+        renderPreview();
+      } catch (e) { preview.innerHTML = '<div class="hint">Preview unavailable, but the watermark will still apply.</div>'; }
     }
 
     async function apply() {
@@ -279,7 +314,7 @@
     ['dragover', 'dragenter'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('drag'); }));
     ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('drag'); }));
     dropZone.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) loadFile(f); });
-    removeFile.addEventListener('click', (e) => { e.preventDefault(); pdfBytes = null; pdfjsDoc = null; fileInfo.classList.remove('show'); applyBtn.disabled = true; fileInput.value = ''; preview.innerHTML = '<div class="hint">Upload a PDF to preview page 1 here.</div>'; setStatus(''); });
+    removeFile.addEventListener('click', (e) => { e.preventDefault(); pdfBytes = null; pdfjsDoc = null; pageRasters = []; fileInfo.classList.remove('show'); applyBtn.disabled = true; fileInput.value = ''; preview.innerHTML = '<div class="hint">Upload a PDF to preview every page here.</div>'; setStatus(''); });
     wmOpacity.addEventListener('input', () => { opacityVal.textContent = wmOpacity.value + '%'; renderPreview(); });
     wmSize.addEventListener('input', () => { sizeVal.textContent = wmSize.value; renderPreview(); });
     [wmText, wmColor, wmLayout].forEach(el => el.addEventListener('input', renderPreview));
