@@ -121,6 +121,13 @@
         fr: 'Extrayez le texte et les tableaux d’un PDF vers Excel.',
       },
       convert: { en: 'Convert to Excel', ko: 'Excel로 변환', de: 'In Excel konvertieren', es: 'Convertir a Excel', fr: 'Convertir en Excel' },
+      modesNote: {
+        en: 'Two modes — free standard text extraction, or AI table detection (GPT-4o) that rebuilds real tables into spreadsheet cells for 2 credits per page (new accounts get 10 free credits).',
+        ko: '두 가지 모드 — 무료 표준 텍스트 추출, 또는 표를 인식해 셀 단위 Excel로 만드는 AI 표 감지(GPT-4o, 페이지당 2크레딧). 신규 계정은 10크레딧을 무료로 받습니다.',
+        de: 'Zwei Modi — kostenlose Standard-Textextraktion oder KI-Tabellenerkennung (GPT-4o), die echte Tabellen in Zellen umwandelt, für 2 Credits pro Seite (neue Konten erhalten 10 Gratis-Credits).',
+        es: 'Dos modos: extracción de texto estándar gratis o detección de tablas con IA (GPT-4o) que convierte tablas reales en celdas por 2 créditos por página (las cuentas nuevas reciben 10 créditos gratis).',
+        fr: 'Deux modes — extraction de texte standard gratuite, ou détection de tableaux par IA (GPT-4o) qui reconstitue les tableaux en cellules pour 2 crédits par page (10 crédits offerts aux nouveaux comptes).',
+      },
     },
     imagePdf: {
       category: 'image',
@@ -295,6 +302,7 @@
     setText('.eyebrow', labels[tool.category]);
     setText('.hero h1, #pageTitle, .hero-title', title);
     setText('.hero p, #pageDescription, .hero-subtitle', local(tool.description, lang));
+    if (tool.modesNote) setText('#heroModes', local(tool.modesNote, lang));
     setText('#dropTitle, .drop-zone h2, .drop-title, .drop-zone strong', labels[tool.drop] || labels.dropFile);
     setText('#dropHint, .drop-subtitle', '');
     document.querySelectorAll('.browse-btn').forEach((button) => setButtonText(button, labels.browse));
