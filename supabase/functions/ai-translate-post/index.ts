@@ -72,7 +72,9 @@ async function translateOne(srcName: string, tgtName: string, payload: { title: 
     ],
   };
   if (reasoning) {
-    body.max_completion_tokens = 16000;
+    // Headroom covers reasoning tokens + a long translation (German/Spanish run
+    // longer than English); too low and the JSON gets truncated → parse fail.
+    body.max_completion_tokens = 32000;
     body.reasoning_effort = 'low';
   } else {
     body.temperature = 0.3;
@@ -123,11 +125,17 @@ Deno.serve(async (req: Request) => {
   const errors: Record<string, string> = {};
 
   for (const tgt of targets) {
-    try {
-      translations[tgt] = await translateOne(LANG_NAME[source], LANG_NAME[tgt], src);
-    } catch (error) {
-      errors[tgt] = (error as Error).message || 'failed';
+    let lastError: unknown = null;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        translations[tgt] = await translateOne(LANG_NAME[source], LANG_NAME[tgt], src);
+        lastError = null;
+        break;
+      } catch (error) {
+        lastError = error;
+      }
     }
+    if (lastError) errors[tgt] = (lastError as Error).message || 'failed';
   }
 
   return json({ source_lang: source, translations, errors });
