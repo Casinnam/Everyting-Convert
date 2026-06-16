@@ -320,7 +320,7 @@
       if (!source || !source.title || !source.body) { setMsg(`Write the ${LANG_LABEL[src]} title and body first.`, 'err'); return; }
       const targets = LANGS.filter((l) => l !== src);
       els.translateBtn.disabled = true;
-      setMsg(`Translating from ${LANG_LABEL[src]} to ${targets.length} languages with gpt-4o-mini…`);
+      setMsg(`Translating from ${LANG_LABEL[src]} to ${targets.length} languages with AI…`);
       try {
         const tk = await token();
         const res = await fetch(`${FUNC}/ai-translate-post`, {
