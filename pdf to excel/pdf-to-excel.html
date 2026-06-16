@@ -874,8 +874,9 @@
       <div class="setting-item">
         <label>Conversion mode</label>
         <select id="conversionMode">
-          <option value="simple">Standard text extraction</option>
+          <option value="simple">Standard text extraction (free)</option>
           <option value="enhanced">Enhanced table detection (Pro)</option>
+          <option value="ai">AI table detection · GPT-4o (2 credits/page)</option>
         </select>
       </div>
       <div class="setting-item">
@@ -1118,6 +1119,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../supabase-config.js"></script>
 <script src="../auth.js?v=auth-20260528b"></script>
+<script src="../ai-credits.js?v=credits-20260613d"></script>
 <script src="../usage-limit.js"></script>
 <script src="../tools-menu.js?v=nav-20260614c"></script>
 <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260608a"></script>
@@ -1139,7 +1141,9 @@
   function updateModeNotice() {
     const notice = document.getElementById('proNotice');
     if (conversionMode.value === 'enhanced') {
-      notice.innerHTML = 'Enhanced table detection is available to Pro members. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
+      notice.innerHTML = 'Enhanced table detection (geometry-based) is available to Pro members. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
+    } else if (conversionMode.value === 'ai') {
+      notice.innerHTML = 'AI table detection reads each page with GPT-4o vision for the most accurate tables — best for scanned or complex layouts. <strong>2 credits per page</strong> (charged only when you confirm). New accounts get 10 free credits. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     } else {
       notice.innerHTML = 'Standard text extraction is available without login. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     }
@@ -1404,6 +1408,8 @@
       return;
     }
 
+    if (mode === 'ai') { await runAiConversion(pages); return; }
+
     if (mode === 'enhanced' && window.EverythingConvertAuth && !EverythingConvertAuth.requirePro('Enhanced table detection is available to Pro members.')) {
       return;
     }
@@ -1474,6 +1480,159 @@
       alert('An error occurred during conversion: ' + error.message);
       resetAll();
     }
+  }
+
+  // ── AI table detection (GPT-4o vision, credit-based) ──
+  const AI_FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
+  const AI_ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
+  const AI_MAX_PAGES = 30;
+
+  async function rasterizePage(pageNum, scale = 1.8) {
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    return canvas.toDataURL('image/jpeg', 0.82);
+  }
+
+  async function aiOcr(payload) {
+    const res = await fetch(`${AI_FUNC}/ai-ocr`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(AI_ANON ? { apikey: AI_ANON } : {}) },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  }
+
+  function tablesToRows(result) {
+    const rows = [];
+    const tables = (result && Array.isArray(result.tables)) ? result.tables : [];
+    tables.forEach((table, idx) => {
+      if (idx) rows.push([]);
+      (table || []).forEach((row) => rows.push(Array.isArray(row) ? row.map((c) => String(c == null ? '' : c)) : [String(row)]));
+    });
+    if (!rows.length) {
+      const text = (result && (result.plain_text || result.markdown)) || '';
+      String(text).split('\n').forEach((line) => { if (line.trim()) rows.push([line.trim()]); });
+    }
+    return rows.length ? rows : [['No table or text detected on this page.']];
+  }
+
+  function finalizeWorkbook(pageTables, pageCountLabel) {
+    const sheetPerPage = document.getElementById('sheetPerPage').checked;
+    workbook = XLSX.utils.book_new();
+    const allRows = [];
+    pageTables.forEach((pt) => {
+      if (sheetPerPage) {
+        const ws = XLSX.utils.aoa_to_sheet(pt.rows);
+        ws['!cols'] = autoFitColumns(pt.rows);
+        XLSX.utils.book_append_sheet(workbook, ws, safeSheetName(`Page ${pt.pageNum}`));
+      } else {
+        if (allRows.length) allRows.push([]);
+        allRows.push([`Page ${pt.pageNum}`]);
+        pt.rows.forEach((r) => allRows.push(r));
+      }
+    });
+    if (!sheetPerPage) {
+      const ws = XLSX.utils.aoa_to_sheet(allRows);
+      ws['!cols'] = autoFitColumns(allRows);
+      XLSX.utils.book_append_sheet(workbook, ws, 'PDF Tables');
+    }
+    const combinedRows = pageTables.flatMap((page, index) => (index ? [[]].concat(page.rows) : page.rows));
+    const maxColumns = Math.max(0, ...combinedRows.map((row) => row.length));
+    document.getElementById('downloadExcelBtn').onclick = () => {
+      const baseName = currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted';
+      XLSX.writeFile(workbook, `${baseName}.xlsx`);
+    };
+    document.getElementById('pageCount').textContent = pageCountLabel;
+    document.getElementById('rowCount').textContent = combinedRows.filter((row) => row.some((cell) => cell)).length;
+    document.getElementById('columnCount').textContent = maxColumns;
+    document.getElementById('sheetCount').textContent = workbook.SheetNames.length;
+    renderPreview(combinedRows);
+  }
+
+  async function runAiConversion(pages) {
+    const credits = window.EverythingConvertCredits;
+    if (!credits || !credits.isLoggedIn()) {
+      if (confirm('AI table detection needs an account (you get 10 free credits). Go to login now?')) {
+        window.location.href = '../auth.html?next=' + encodeURIComponent('pdf to excel/pdf-to-excel.html');
+      }
+      return;
+    }
+
+    const processCount = Math.min(pages.length, AI_MAX_PAGES);
+    if (pages.length > AI_MAX_PAGES && !confirm(`AI mode processes up to ${AI_MAX_PAGES} pages at a time. Only the first ${AI_MAX_PAGES} of your ${pages.length} selected pages will be converted. Continue?`)) {
+      return;
+    }
+
+    document.getElementById('convertBtn').classList.remove('visible');
+    document.getElementById('progressSection').classList.add('visible');
+    document.getElementById('resultsSection').classList.remove('visible');
+    document.getElementById('resetArea').classList.remove('visible');
+
+    try {
+      updateProgress('Preparing AI table detection…', 4);
+      const preview = await aiOcr({ mode: 'preview', pages: processCount });
+      if (!preview.ok || !preview.data.job_id) throw new Error(preview.data.error || 'Could not start AI detection.');
+      const jobId = preview.data.job_id;
+      const cost = preview.data.cost;
+
+      const balance = await credits.getBalance();
+      if (balance != null && balance < cost) {
+        resetAfterAi();
+        alert(`This needs ${cost} credits but you have ${balance}. Buy more on the pricing page.`);
+        window.location.href = '../pricing.html#credit-packs';
+        return;
+      }
+      if (!confirm(`Detect tables on ${processCount} page${processCount > 1 ? 's' : ''} with AI for ${cost} credits?` + (balance != null ? ` (Your balance: ${balance})` : ''))) {
+        resetAfterAi();
+        return;
+      }
+
+      updateProgress('Charging credits…', 8);
+      const redeem = await credits.redeem(jobId);
+      if (!redeem.ok) {
+        resetAfterAi();
+        if (redeem.code === 'insufficient_credits') { alert('Not enough credits.'); window.location.href = '../pricing.html#credit-packs'; }
+        else if (redeem.code === 'login_required') { alert('Please log in again.'); }
+        else { alert(redeem.error || 'Could not charge credits.'); }
+        return;
+      }
+
+      const pageTables = [];
+      for (let i = 0; i < processCount; i++) {
+        const pageNum = pages[i];
+        updateProgress(`AI reading page ${pageNum} (${i + 1}/${processCount})…`, Math.round(10 + (i / processCount) * 85));
+        const image = await rasterizePage(pageNum);
+        const full = await aiOcr({ mode: 'full', job_id: jobId, page_index: i, image });
+        if (!full.ok) throw new Error(full.data.error || `AI failed on page ${pageNum}.`);
+        pageTables.push({ pageNum, rows: tablesToRows(full.data.result) });
+      }
+
+      updateProgress('Building Excel file…', 96);
+      finalizeWorkbook(pageTables, processCount);
+
+      updateProgress('Done!', 100);
+      try { window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-to-excel', mode: 'ai', pages: processCount } })); } catch (e) {}
+      setTimeout(() => {
+        document.getElementById('progressSection').classList.remove('visible');
+        document.getElementById('resultsSection').classList.add('visible');
+        document.getElementById('resetArea').classList.add('visible');
+      }, 350);
+    } catch (error) {
+      console.error(error);
+      resetAfterAi();
+      alert('AI table detection error: ' + error.message);
+    }
+  }
+
+  function resetAfterAi() {
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('convertBtn').classList.add('visible');
   }
 
   function updateProgress(label, pct) {
