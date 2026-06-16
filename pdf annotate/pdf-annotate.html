@@ -56,6 +56,24 @@
     .an-edit-hit { position: absolute; cursor: text; background: rgba(37,99,235,.10); outline: 1px solid rgba(37,99,235,.35); border-radius: 3px; }
     .an-edit-hit:hover { background: rgba(37,99,235,.24); }
     .an-erase { position: absolute; pointer-events: none; }
+    /* Branded confirm modal (replaces native confirm/alert) */
+    .ec-modal-back { position: fixed; inset: 0; background: rgba(15,23,42,.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 1rem; animation: ecfade .15s ease; }
+    @keyframes ecfade { from { opacity: 0; } to { opacity: 1; } }
+    .ec-modal { background: #fff; border-radius: 20px; padding: 1.7rem 1.5rem 1.3rem; width: min(420px, 100%); box-shadow: 0 30px 80px rgba(15,23,42,.35); text-align: center; animation: ecpop .18s cubic-bezier(.2,.8,.3,1.2); }
+    @keyframes ecpop { from { transform: translateY(10px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+    .ec-modal-ic { width: 3.2rem; height: 3.2rem; margin: 0 auto 1rem; border-radius: 16px; display: grid; place-items: center; font-size: 1.4rem; color: #fff; background: linear-gradient(135deg,#2563eb,#7c3aed); }
+    .ec-modal-ic.pro { background: linear-gradient(135deg,#7c3aed,#a855f7); }
+    .ec-modal-ic.warn { background: linear-gradient(135deg,#f59e0b,#ef4444); }
+    .ec-modal-title { font-size: 1.18rem; color: #0f172a; margin: 0 0 .5rem; font-weight: 800; }
+    .ec-modal-body { color: #475569; font-size: .92rem; line-height: 1.65; margin-bottom: 1.3rem; }
+    .ec-modal-body .cost { font-weight: 800; color: #7c3aed; }
+    .ec-modal-body .bal { display: block; margin-top: .55rem; font-size: .85rem; color: #64748b; }
+    .ec-modal-actions { display: flex; gap: .6rem; justify-content: center; }
+    .ec-modal-btn { border: 0; border-radius: 11px; padding: .72rem 1.2rem; font: inherit; font-weight: 800; cursor: pointer; min-width: 6rem; transition: filter .15s; }
+    .ec-modal-btn.ghost { background: #f1f5f9; color: #475569; }
+    .ec-modal-btn.ghost:hover { background: #e2e8f0; }
+    .ec-modal-btn.primary { background: linear-gradient(135deg,#2563eb,#7c3aed); color: #fff; box-shadow: 0 10px 24px rgba(37,99,235,.25); }
+    .ec-modal-btn.primary:hover { filter: brightness(1.06); }
     .an-note { background: #eff6ff; border-left: 3px solid #7c3aed; padding: .8rem 1rem; border-radius: 0 8px 8px 0; color: #64748b; font-size: .85rem; margin-top: 1.25rem; line-height: 1.6; }
     .an-info { margin-top: 2.5rem; } .an-info h2 { font-size: 1.2rem; color: #0f172a; margin: 0 0 .8rem; }
     .an-info details { border: 1px solid #e2e8f0; border-radius: 10px; padding: .85rem 1rem; margin-bottom: .6rem; background: #fff; }
@@ -175,6 +193,34 @@
     let curCtx = null, curW = 0, curH = 0; // current page canvas (for colour sampling)
 
     function setStatus(t, k) { statusEl.textContent = t || ''; statusEl.className = 'an-status' + (k ? ' ' + k : ''); }
+    function curLang() { try { return localStorage.getItem('everything_convert_language') || 'en'; } catch (e) { return 'en'; } }
+    function L(en, ko) { return curLang() === 'ko' ? ko : en; }
+
+    // Branded confirm/alert modal → resolves true (confirm) / false (cancel).
+    function ecConfirm(opts) {
+      return new Promise((resolve) => {
+        const back = document.createElement('div'); back.className = 'ec-modal-back';
+        back.innerHTML =
+          '<div class="ec-modal" role="dialog" aria-modal="true">' +
+            '<div class="ec-modal-ic ' + (opts.tone || '') + '">' + (opts.icon || '') + '</div>' +
+            '<h3 class="ec-modal-title">' + (opts.title || '') + '</h3>' +
+            '<div class="ec-modal-body">' + (opts.html || '') + '</div>' +
+            '<div class="ec-modal-actions">' +
+              (opts.cancelText ? '<button class="ec-modal-btn ghost" data-act="cancel">' + opts.cancelText + '</button>' : '') +
+              '<button class="ec-modal-btn primary" data-act="ok">' + (opts.confirmText || 'OK') + '</button>' +
+            '</div>' +
+          '</div>';
+        function close(v) { back.remove(); document.removeEventListener('keydown', onKey); resolve(v); }
+        function onKey(e) { if (e.key === 'Escape') close(false); else if (e.key === 'Enter') close(true); }
+        back.addEventListener('click', (e) => {
+          if (e.target === back) return close(false);
+          const a = e.target.closest('[data-act]'); if (a) close(a.dataset.act === 'ok');
+        });
+        document.addEventListener('keydown', onKey);
+        document.body.appendChild(back);
+        const okb = back.querySelector('[data-act=ok]'); if (okb) okb.focus();
+      });
+    }
     function hexToRgb(hex) { const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return { r: 0, g: 0, b: 0 }; const n = parseInt(m[1], 16); return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }; }
     function rgbHex(r, g, b) { return '#' + [r, g, b].map((v) => ('0' + (v | 0).toString(16)).slice(-2)).join(''); }
 
@@ -384,30 +430,67 @@
       if (!hasEdits) return 'ok';
       const auth = window.EverythingConvertAuth;
       if (auth && typeof auth.refresh === 'function') { try { await auth.refresh(); } catch (e) {} }
-      if (auth && auth.isPro && auth.isPro()) return 'ok';
+      const crown = '<i class="fa-solid fa-crown"></i>', coins = '<i class="fa-solid fa-coins"></i>', warn = '<i class="fa-solid fa-circle-exclamation"></i>';
+
+      // Pro members: editing is free — confirm the (free) download.
+      if (auth && auth.isPro && auth.isPro()) {
+        return (await ecConfirm({
+          icon: crown, tone: 'pro',
+          title: L('Download edited PDF', '편집한 PDF 다운로드'),
+          html: L('Editing existing text is <span class="cost">free</span> for Pro members. Your edited PDF will be downloaded now.',
+                  '기존 글자 편집은 Pro 회원은 <span class="cost">무료</span>입니다. 편집한 PDF를 지금 다운로드합니다.'),
+          confirmText: L('Download', '다운로드'), cancelText: L('Cancel', '취소'),
+        })) ? 'ok' : 'stop';
+      }
+
       const credits = window.EverythingConvertCredits;
       if (!credits || !credits.isLoggedIn()) {
-        if (confirm('Editing existing PDF text needs Pro or ' + EDIT_COST + ' credits. New accounts get 10 free credits — log in now?')) {
-          window.location.href = '../auth.html?next=' + encodeURIComponent('pdf annotate/pdf-annotate.html');
-        }
+        const go = await ecConfirm({
+          icon: crown, tone: 'pro',
+          title: L('Pro feature', 'Pro 기능'),
+          html: L('Editing the existing text in a PDF is included with Pro, or costs <span class="cost">' + EDIT_COST + ' credits</span> per download. New accounts get 10 free credits.',
+                  '기존 PDF 글자 편집은 Pro 회원은 무료, 그 외에는 다운로드 1건당 <span class="cost">' + EDIT_COST + '크레딧</span>이 차감됩니다. 신규 계정은 10크레딧을 무료로 받습니다.'),
+          confirmText: L('Log in', '로그인'), cancelText: L('Cancel', '취소'),
+        });
+        if (go) window.location.href = '../auth.html?next=' + encodeURIComponent('pdf annotate/pdf-annotate.html');
         return 'stop';
       }
+
       const sig = editSignature();
       if (paidSignatures.has(sig)) return 'ok';
       const bal = await credits.getBalance();
       if (bal != null && bal < EDIT_COST) {
-        alert('Editing text costs ' + EDIT_COST + ' credits but you have ' + bal + '. Buy more on the pricing page.');
-        window.location.href = '../pricing.html#credit-packs';
+        const go = await ecConfirm({
+          icon: warn, tone: 'warn',
+          title: L('Not enough credits', '크레딧이 부족합니다'),
+          html: L('Editing text costs <span class="cost">' + EDIT_COST + ' credits</span>, but you have ' + bal + '.',
+                  '글자 편집에는 <span class="cost">' + EDIT_COST + '크레딧</span>이 필요하지만 보유 크레딧은 ' + bal + '개입니다.'),
+          confirmText: L('Get credits', '크레딧 구매'), cancelText: L('Cancel', '취소'),
+        });
+        if (go) window.location.href = '../pricing.html#credit-packs';
         return 'stop';
       }
-      if (!confirm('Spend ' + EDIT_COST + ' credits to download your edited PDF?' + (bal != null ? ' (Balance: ' + bal + ')' : ''))) return 'stop';
-      setStatus('Charging credits…');
+
+      const go = await ecConfirm({
+        icon: coins, tone: '',
+        title: L('Use credits to download', '크레딧으로 다운로드'),
+        html: L('<span class="cost">' + EDIT_COST + ' credits</span> will be deducted for this edited download.', '이 편집 다운로드에서 <span class="cost">' + EDIT_COST + '크레딧</span>이 차감됩니다.') +
+              (bal != null ? '<span class="bal">' + L('Balance: ' + bal, '보유 크레딧: ' + bal) + '</span>' : ''),
+        confirmText: L('Use ' + EDIT_COST + ' credits & download', EDIT_COST + '크레딧 쓰고 다운로드'), cancelText: L('Cancel', '취소'),
+      });
+      if (!go) return 'stop';
+
+      setStatus(L('Charging credits…', '크레딧 차감 중…'));
       const res = await credits.spend('pdf-edit-text', 'pdfedit:' + sig);
       if (!res.ok) {
-        if (res.code === 'insufficient_credits') { alert('Not enough credits.'); window.location.href = '../pricing.html#credit-packs'; }
-        else if (res.code === 'login_required') { alert('Please log in again.'); }
-        else { alert(res.error || 'Could not charge credits.'); }
         setStatus('');
+        if (res.code === 'insufficient_credits') {
+          if (await ecConfirm({ icon: warn, tone: 'warn', title: L('Not enough credits', '크레딧이 부족합니다'), html: L('Please top up to continue.', '계속하려면 크레딧을 충전해 주세요.'), confirmText: L('Get credits', '크레딧 구매'), cancelText: L('Cancel', '취소') })) window.location.href = '../pricing.html#credit-packs';
+        } else if (res.code === 'login_required') {
+          await ecConfirm({ icon: warn, tone: 'warn', title: L('Please log in again', '다시 로그인해 주세요'), html: L('Your session has expired.', '세션이 만료되었습니다.'), confirmText: L('OK', '확인') });
+        } else {
+          await ecConfirm({ icon: warn, tone: 'warn', title: L('Could not charge credits', '크레딧 차감에 실패했습니다'), html: res.error || L('Please try again.', '다시 시도해 주세요.'), confirmText: L('OK', '확인') });
+        }
         return 'stop';
       }
       paidSignatures.add(sig);
