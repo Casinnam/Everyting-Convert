@@ -12,6 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <!-- SEO:START -->
     <meta name="description" content="Convert Excel spreadsheets to PDF online with EverythingConvert.">
     <link rel="canonical" href="https://www.everythingconvert.com/excel%20to%20pdf/excel-to-pdf.html">
@@ -151,6 +152,14 @@
   .primary-btn { border:0; border-radius:8px; padding:.9rem 1.25rem; background:var(--accent); color:white; font-weight:800; cursor:pointer; }
   .primary-btn:disabled { opacity:.45; cursor:not-allowed; }
   .status { min-height:1.5rem; color:var(--muted); line-height:1.6; }
+  .pdf-render-stage { position:absolute; left:-100000px; top:0; width:1120px; background:#fff; color:#111827; font-family:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo','DM Sans',Arial,sans-serif; }
+  .pdf-render-page { width:1120px; min-height:760px; padding:28px; background:#fff; }
+  .pdf-render-title { font-size:22px; font-weight:800; margin-bottom:8px; }
+  .pdf-render-subtitle { font-size:13px; color:#475569; margin-bottom:14px; white-space:normal; }
+  .pdf-render-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:12px; line-height:1.45; }
+  .pdf-render-table th { background:#76550a; color:#fff; font-weight:800; text-align:center; }
+  .pdf-render-table th,.pdf-render-table td { border:1px solid #d6c8a8; padding:6px 7px; vertical-align:top; overflow-wrap:anywhere; word-break:break-word; }
+  .pdf-render-table tbody tr:nth-child(even) td { background:#fffbee; }
   .site-footer { width:min(1200px, calc(100% - 4rem)); margin:4rem auto 0; padding:2rem 0; border-top:1px solid var(--border); color:var(--muted); }
   .footer-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.5rem; padding-bottom:2rem; }
   .footer-group { display:grid; align-content:start; gap:.55rem; }
@@ -455,12 +464,99 @@
     const text = String(value || '').replace(/,/g, '').trim();
     return text !== '' && !Number.isNaN(Number(text));
   }
-  function convertToPdf() {
+
+  function hasCjkText(rows) {
+    return rows.some(row => row.some(cell => /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af\u3040-\u30ff\u3400-\u9fff]/.test(String(cell || ''))));
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function buildRenderedPage(table, bodyRows, pageNumber, totalChunks) {
+    const titleText = table.titleRows.join('  ');
+    const page = document.createElement('div');
+    page.className = 'pdf-render-page';
+    page.innerHTML = `
+      <div class="pdf-render-title">${escapeHtml(sheetSelect.value)}</div>
+      ${titleText ? `<div class="pdf-render-subtitle">${escapeHtml(titleText)}</div>` : ''}
+      <table class="pdf-render-table">
+        <thead><tr>${table.headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${bodyRows.map(row => `<tr>${table.headers.map((_, index) => {
+            const value = row[index] || '';
+            const align = looksNumeric(value) ? ' style="text-align:right"' : '';
+            return `<td${align}>${escapeHtml(value)}</td>`;
+          }).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+      <div style="position:absolute;right:28px;bottom:18px;color:#64748b;font-size:11px;">${pageNumber} / ${totalChunks}</div>
+    `;
+    return page;
+  }
+
+  async function convertCjkToImagePdf(table) {
+    if (!window.html2canvas) throw new Error('html2canvas is not available');
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const rowsPerPage = table.headers.length > 10 ? 18 : 24;
+    const chunks = [];
+    for (let index = 0; index < table.body.length; index += rowsPerPage) {
+      chunks.push(table.body.slice(index, index + rowsPerPage));
+    }
+    if (!chunks.length) chunks.push([]);
+
+    const stage = document.createElement('div');
+    stage.className = 'pdf-render-stage';
+    document.body.appendChild(stage);
+
+    try {
+      for (let index = 0; index < chunks.length; index += 1) {
+        stage.innerHTML = '';
+        stage.appendChild(buildRenderedPage(table, chunks[index], index + 1, chunks.length));
+        const canvas = await html2canvas(stage.firstElementChild, {
+          backgroundColor: '#ffffff',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+        });
+        const image = canvas.toDataURL('image/jpeg', 0.92);
+        if (index > 0) doc.addPage('a4', 'landscape');
+        doc.addImage(image, 'JPEG', 0, 0, pageWidth, pageHeight);
+      }
+    } finally {
+      stage.remove();
+    }
+    return doc;
+  }
+
+  async function convertToPdf() {
     if (!workbook) return;
     const rows = rowsFromSheet();
     if (!rows.length) { setStatus('The selected sheet is empty.'); return; }
     const table = splitSheetRows(rows);
     const { jsPDF } = window.jspdf;
+    const base = currentFile ? currentFile.name.replace(/\.(xlsx|xls|csv)$/i, '') : 'excel';
+
+    if (hasCjkText(rows)) {
+      try {
+        setStatus('Korean or CJK text detected. Rendering with browser fonts...');
+        const doc = await convertCjkToImagePdf(table);
+        doc.save(`${base}.pdf`);
+        setStatus('PDF download started.');
+      } catch (error) {
+        setStatus('Korean PDF rendering failed. Please try again.');
+      }
+      return;
+    }
+
     const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 24;
@@ -514,7 +610,6 @@
       doc.setFontSize(9);
       rows.slice(0, 36).forEach((row, index) => doc.text(row.join('   '), 40, 60 + index * 14));
     }
-    const base = currentFile ? currentFile.name.replace(/\.(xlsx|xls|csv)$/i, '') : 'excel';
     doc.save(`${base}.pdf`);
     setStatus('PDF download started.');
   }
@@ -529,6 +624,5 @@
 <script src="../static-i18n.js"></script>
 </body>
 </html>
-
 
 
