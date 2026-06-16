@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../analytics.js?v=analytics-20260614a"></script>
+  <script src="../ads.js?v=ads-20260611a"></script>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="usage-limit" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Text to PDF - Free Online PDF Annotator | EverythingConvert</title>
+  <meta name="description" content="Add text directly onto a PDF online — place, drag, size, and color text on any page, then download a flattened PDF. Free, private, in your browser.">
+  <link rel="canonical" href="https://www.everythingconvert.com/pdf%20annotate/pdf-annotate.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EverythingConvert">
+  <meta property="og:title" content="Add Text to PDF - Free Online PDF Annotator">
+  <meta property="og:description" content="Place text anywhere on a PDF page, drag to position, then download a baked-in PDF. Free and private in your browser.">
+  <meta property="og:url" content="https://www.everythingconvert.com/pdf%20annotate/pdf-annotate.html">
+  <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PDF Annotate (Add Text)","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://www.everythingconvert.com/pdf%20annotate/pdf-annotate.html","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Add and position text on PDF pages in your browser, then download a flattened PDF."}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../styles.css?v=ui-20260614a">
+  <style>
+    .an-main { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 2.5rem 0 4rem; }
+    .an-hero { text-align: center; margin-bottom: 1.4rem; }
+    .an-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); color: #0f172a; margin: .2rem 0 .6rem; line-height: 1.1; }
+    .an-hero p { color: #64748b; max-width: 660px; margin: 0 auto; line-height: 1.7; }
+    .an-card { background: rgba(255,255,255,.92); border: 1px solid #e2e8f0; border-radius: 18px; padding: 1.25rem; box-shadow: 0 18px 44px rgba(15,23,42,.06); }
+    .an-drop { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 2.6rem 1rem; text-align: center; cursor: pointer; background: #fafbff; }
+    .an-drop.drag, .an-drop:hover { border-color: #2563eb; background: #eff6ff; }
+    .an-drop .ic { width: 3.5rem; height: 3.5rem; margin: 0 auto .7rem; border-radius: 16px; display: grid; place-items: center; color: #fff; font-size: 1.5rem; background: linear-gradient(135deg,#2563eb,#7c3aed); }
+    .an-drop h3 { color: #0f172a; margin: 0 0 .25rem; } .an-drop p { color: #64748b; font-size: .9rem; margin: 0; }
+    .an-drop input { display: none; }
+    .an-toolbar { display: none; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1rem; padding: .6rem .8rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+    .an-toolbar.show { display: flex; }
+    .an-btn { border: 1px solid #dbe6f3; background: #fff; color: #0f172a; padding: .55rem .9rem; border-radius: 9px; font: inherit; font-weight: 800; cursor: pointer; }
+    .an-btn.primary { background: linear-gradient(135deg,#2563eb,#7c3aed); color: #fff; border-color: transparent; }
+    .an-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .an-toolbar input[type=number] { width: 4rem; padding: .5rem; border: 1px solid #dbe6f3; border-radius: 8px; font: inherit; }
+    .an-toolbar input[type=color] { width: 2.4rem; height: 2.4rem; padding: 2px; border: 1px solid #dbe6f3; border-radius: 8px; background: #fff; }
+    .an-nav { display: flex; align-items: center; gap: .6rem; margin-left: auto; font-weight: 800; color: #475569; }
+    .an-stagewrap { display: grid; place-items: center; background: #eef2f7; border-radius: 12px; padding: 1rem; overflow: auto; }
+    .an-stage { position: relative; box-shadow: 0 10px 30px rgba(15,23,42,.18); line-height: 0; }
+    .an-stage canvas { display: block; max-width: 100%; }
+    .an-overlay { position: absolute; inset: 0; }
+    .an-text { position: absolute; cursor: move; padding: 2px 4px; white-space: pre; line-height: 1.2; font-family: Inter,'Noto Sans KR',Arial,sans-serif; font-weight: 700; outline: 1px dashed transparent; min-width: 8px; }
+    .an-text.sel { outline: 1px dashed #2563eb; background: rgba(37,99,235,.06); }
+    .an-text .an-del { position: absolute; top: -12px; right: -12px; width: 22px; height: 22px; border-radius: 50%; border: 0; background: #ef4444; color: #fff; font-size: 12px; cursor: pointer; display: none; line-height: 22px; padding: 0; }
+    .an-text.sel .an-del { display: block; }
+    .an-status { margin-top: .9rem; font-weight: 700; min-height: 1.2em; }
+    .an-status.ok { color: #15803d; } .an-status.err { color: #b91c1c; }
+    .an-hint { color: #94a3b8; padding: 3rem 1rem; text-align: center; }
+    .an-note { background: #eff6ff; border-left: 3px solid #7c3aed; padding: .8rem 1rem; border-radius: 0 8px 8px 0; color: #64748b; font-size: .85rem; margin-top: 1.25rem; line-height: 1.6; }
+    .an-info { margin-top: 2.5rem; } .an-info h2 { font-size: 1.2rem; color: #0f172a; margin: 0 0 .8rem; }
+    .an-info details { border: 1px solid #e2e8f0; border-radius: 10px; padding: .85rem 1rem; margin-bottom: .6rem; background: #fff; }
+    .an-info summary { font-weight: 700; cursor: pointer; color: #0f172a; } .an-info details p { color: #64748b; margin: .5rem 0 0; line-height: 1.6; }
+  </style>
+</head>
+<body class="premium-subpage">
+  <header class="header">
+    <a class="logo" href="../index.html" aria-label="EverythingConvert home">
+      <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
+      <span>EverythingConvert</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#tool-browser">All Tools</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../auth.html" data-auth-login>Login</a>
+      <a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+      <a href="#" data-auth-logout style="display:none;">Logout</a>
+      <a href="../admin.html" data-admin-only style="display:none;">Admin</a>
+    </nav>
+  </header>
+
+  <main class="an-main">
+    <div class="an-hero hero">
+      <div class="eyebrow" style="color:#7c3aed;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;">PDF Tools</div>
+      <h1>Add Text to PDF</h1>
+      <p>Place text anywhere on a PDF, drag to position, set size and color, then download. Runs in your browser; your file is never uploaded.</p>
+    </div>
+
+    <div class="an-card">
+      <label class="an-drop" id="dropZone">
+        <input type="file" id="fileInput" accept="application/pdf,.pdf">
+        <div class="ic"><i class="fa-solid fa-font"></i></div>
+        <h3 data-ko="PDF 파일을 클릭하거나 여기에 놓으세요">Click or drop your PDF here</h3>
+        <p data-ko="브라우저에서 바로 처리됩니다 · 업로드 없음">Processed in your browser · nothing uploaded</p>
+      </label>
+
+      <div class="an-toolbar" id="toolbar">
+        <button class="an-btn primary" id="addTextBtn" type="button"><i class="fa-solid fa-plus"></i> <span data-ko="텍스트 추가">Add text</span></button>
+        <label style="font-weight:800;color:#475569;font-size:.85rem;" data-ko="크기">Size</label>
+        <input type="number" id="fontSize" min="6" max="200" value="24">
+        <input type="color" id="fontColor" value="#e11d48" title="Color">
+        <div class="an-nav">
+          <button class="an-btn" id="prevPage" type="button">&lsaquo;</button>
+          <span><span id="pageNow">1</span> / <span id="pageTotal">1</span></span>
+          <button class="an-btn" id="nextPage" type="button">&rsaquo;</button>
+          <button class="an-btn primary" id="downloadBtn" type="button"><i class="fa-solid fa-download"></i> <span data-ko="다운로드">Download</span></button>
+        </div>
+      </div>
+
+      <div class="an-stagewrap" id="stageWrap">
+        <div class="an-hint" data-ko="PDF를 올리면 여기에서 글씨를 추가할 수 있습니다.">Upload a PDF to start adding text.</div>
+      </div>
+      <div class="an-status" id="status"></div>
+      <div class="an-note" data-ko="추가한 글씨는 PDF에 영구적으로 합쳐져 새 파일로 저장됩니다. 한국어 등 모든 언어를 지원합니다. (원본의 기존 글자는 수정하지 않고, 새 글씨만 얹습니다.)">Added text is permanently merged into the PDF and saved as a new file. All languages (incl. Korean) are supported. (It overlays new text; it does not edit the PDF's existing text.)</div>
+    </div>
+
+    <div class="an-info">
+      <h2 data-ko="PDF에 글씨를 추가하는 방법">How to add text to a PDF</h2>
+      <details open><summary data-ko="1) PDF 업로드 → 2) '텍스트 추가' 후 입력·드래그 → 3) 다운로드">1) Upload a PDF → 2) click 'Add text', type &amp; drag → 3) download</summary><p data-ko="모든 작업은 브라우저에서 처리되어 파일이 업로드되지 않습니다.">Everything runs in your browser, so your file is never uploaded.</p></details>
+      <details><summary data-ko="기존 PDF의 글자도 수정되나요?">Can it edit the PDF's existing text?</summary><p data-ko="아니요. 새 글씨를 위에 얹는 방식입니다. 기존 글자 편집은 지원하지 않습니다.">No. It overlays new text; editing the original embedded text is not supported.</p></details>
+      <details><summary data-ko="한국어도 되나요?">Does Korean work?</summary><p data-ko="네. 모든 언어와 이모지를 지원합니다.">Yes — all languages and emoji are supported.</p></details>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-legal-row">
+      <a href="../about.html">About Us</a>
+      <a href="../privacy.html">Privacy</a>
+      <a href="../terms.html">Terms</a>
+      <a href="../security.html">Security and Compliance</a>
+      <a href="#cookie-settings">Cookie Settings</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="24" height="24"><span>EverythingConvert.com</span></div>
+      <p>&copy; EverythingConvert.com All rights reserved (2026)</p>
+      <div class="language-menu">
+        <button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button>
+        <div class="language-dropdown">
+          <button type="button" data-language="en">English</button>
+          <button type="button" data-language="ko">한국어</button>
+          <button type="button" data-language="de">Deutsch</button>
+          <button type="button" data-language="es">Español</button>
+          <button type="button" data-language="fr">Français</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../auth.js?v=auth-20260528b"></script>
+  <script src="../tools-menu.js?v=nav-20260614d"></script>
+  <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260608a"></script>
+  <script src="../tool-language.js?v=toollang-20260615c"></script>
+  <script>
+  (function () {
+    if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const $ = (id) => document.getElementById(id);
+    const fileInput = $('fileInput'), dropZone = $('dropZone'), toolbar = $('toolbar'), stageWrap = $('stageWrap');
+    const addTextBtn = $('addTextBtn'), fontSize = $('fontSize'), fontColor = $('fontColor');
+    const prevPage = $('prevPage'), nextPage = $('nextPage'), pageNow = $('pageNow'), pageTotal = $('pageTotal'), downloadBtn = $('downloadBtn'), statusEl = $('status');
+
+    let pdfBytes = null, pdfName = '', pdfjsDoc = null;
+    let current = 1, total = 0, renderScale = 1; // renderScale = displayPx / pagePoint
+    const annos = {};   // { pageIndex(1-based): [ {xr, yr, fontPt, color, text} ] }
+    let selected = null;
+
+    function setStatus(t, k) { statusEl.textContent = t || ''; statusEl.className = 'an-status' + (k ? ' ' + k : ''); }
+
+    async function loadFile(file) {
+      if (!file || file.type !== 'application/pdf') { setStatus('Please choose a PDF file.', 'err'); return; }
+      pdfName = file.name; pdfBytes = await file.arrayBuffer();
+      pdfjsDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise;
+      total = pdfjsDoc.numPages; current = 1; pageTotal.textContent = total;
+      Object.keys(annos).forEach(k => delete annos[k]);
+      toolbar.classList.add('show'); setStatus('');
+      await renderPage();
+    }
+
+    async function renderPage() {
+      pageNow.textContent = current; selected = null;
+      const page = await pdfjsDoc.getPage(current);
+      const pt = page.getViewport({ scale: 1 });
+      const displayW = Math.min(820, pt.width);
+      renderScale = displayW / pt.width;
+      const viewport = page.getViewport({ scale: renderScale });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width; canvas.height = viewport.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+      const stage = document.createElement('div');
+      stage.className = 'an-stage'; stage.style.width = viewport.width + 'px'; stage.style.height = viewport.height + 'px';
+      stage.appendChild(canvas);
+      const overlay = document.createElement('div'); overlay.className = 'an-overlay'; overlay.id = 'overlay';
+      stage.appendChild(overlay);
+      stageWrap.innerHTML = ''; stageWrap.appendChild(stage);
+
+      (annos[current] || []).forEach((a) => renderAnno(a, overlay));
+    }
+
+    function renderAnno(a, overlay) {
+      const el = document.createElement('div');
+      el.className = 'an-text';
+      el.textContent = a.text;
+      el.style.left = (a.xr * overlay.clientWidth) + 'px';
+      el.style.top = (a.yr * overlay.clientHeight) + 'px';
+      el.style.fontSize = (a.fontPt * renderScale) + 'px';
+      el.style.color = a.color;
+      el.__anno = a;
+      const del = document.createElement('button'); del.className = 'an-del'; del.textContent = '×';
+      del.addEventListener('click', (e) => { e.stopPropagation(); const arr = annos[current]; const i = arr.indexOf(a); if (i >= 0) arr.splice(i, 1); el.remove(); selected = null; });
+      el.appendChild(del);
+      makeInteractive(el, a, overlay);
+      overlay.appendChild(el);
+      return el;
+    }
+
+    function select(el) {
+      document.querySelectorAll('.an-text.sel').forEach(n => n.classList.remove('sel'));
+      if (el) { el.classList.add('sel'); selected = el; fontSize.value = Math.round(el.__anno.fontPt); fontColor.value = el.__anno.color; }
+      else selected = null;
+    }
+
+    function makeInteractive(el, a, overlay) {
+      let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0, moved = false;
+      el.addEventListener('pointerdown', (e) => {
+        if (e.target.classList.contains('an-del')) return;
+        select(el); dragging = true; moved = false; sx = e.clientX; sy = e.clientY;
+        ox = parseFloat(el.style.left) || 0; oy = parseFloat(el.style.top) || 0;
+        el.setPointerCapture(e.pointerId);
+      });
+      el.addEventListener('pointermove', (e) => {
+        if (!dragging) return; moved = true;
+        let nx = ox + (e.clientX - sx), ny = oy + (e.clientY - sy);
+        nx = Math.max(0, Math.min(nx, overlay.clientWidth - 10));
+        ny = Math.max(0, Math.min(ny, overlay.clientHeight - 6));
+        el.style.left = nx + 'px'; el.style.top = ny + 'px';
+        a.xr = nx / overlay.clientWidth; a.yr = ny / overlay.clientHeight;
+      });
+      el.addEventListener('pointerup', (e) => { dragging = false; el.releasePointerCapture(e.pointerId); });
+      el.addEventListener('dblclick', () => { startEdit(el, a); });
+    }
+
+    function startEdit(el, a) {
+      el.contentEditable = 'true'; el.focus();
+      const range = document.createRange(); range.selectNodeContents(el); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      const finish = () => {
+        el.contentEditable = 'false';
+        a.text = (el.textContent || '').replace(/ /g, ' ');
+        if (!a.text.trim()) { const arr = annos[current]; const i = arr.indexOf(a); if (i >= 0) arr.splice(i, 1); el.remove(); }
+        el.removeEventListener('blur', finish);
+      };
+      el.addEventListener('blur', finish);
+    }
+
+    function addText() {
+      const overlay = $('overlay'); if (!overlay) return;
+      const a = { xr: 0.25, yr: 0.4, fontPt: parseInt(fontSize.value, 10) || 24, color: fontColor.value, text: 'New text' };
+      (annos[current] = annos[current] || []).push(a);
+      const el = renderAnno(a, overlay);
+      select(el); startEdit(el, a);
+    }
+
+    async function download() {
+      if (!pdfBytes) return;
+      const hasAny = Object.values(annos).some(arr => arr && arr.length);
+      if (!hasAny) { setStatus('Add some text first.', 'err'); return; }
+      downloadBtn.disabled = true; setStatus('Building your PDF…');
+      try {
+        const doc = await PDFLib.PDFDocument.load(pdfBytes.slice(0));
+        const pages = doc.getPages();
+        const EXPORT = 3;
+        for (let p = 1; p <= total; p++) {
+          const list = annos[p]; if (!list || !list.length) continue;
+          const page = pages[p - 1]; const { width: W, height: H } = page.getSize();
+          for (const a of list) {
+            if (!a.text.trim()) continue;
+            const lines = a.text.split('\n');
+            const fpx = a.fontPt * EXPORT;
+            const measure = document.createElement('canvas').getContext('2d');
+            measure.font = `700 ${fpx}px Inter, 'Noto Sans KR', Arial, sans-serif`;
+            const wpx = Math.max(1, ...lines.map(l => measure.measureText(l || ' ').width));
+            const lineH = fpx * 1.25;
+            const hpx = Math.ceil(lineH * lines.length);
+            const c = document.createElement('canvas'); c.width = Math.ceil(wpx) + 4; c.height = hpx + 4;
+            const ctx = c.getContext('2d');
+            ctx.font = `700 ${fpx}px Inter, 'Noto Sans KR', Arial, sans-serif`;
+            ctx.fillStyle = a.color; ctx.textBaseline = 'top';
+            lines.forEach((l, i) => ctx.fillText(l, 2, 2 + i * lineH));
+            const png = await doc.embedPng(c.toDataURL('image/png'));
+            const drawW = c.width / EXPORT, drawH = c.height / EXPORT;
+            const x = a.xr * W;
+            const y = H - (a.yr * H) - drawH;
+            page.drawImage(png, { x, y, width: drawW, height: drawH });
+          }
+        }
+        const out = await doc.save();
+        const blob = new Blob([out], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob); const link = document.createElement('a');
+        link.href = url; link.download = (pdfName.replace(/\.pdf$/i, '') || 'annotated') + '-annotated.pdf'; link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        setStatus('Done — your PDF was downloaded.', 'ok');
+        try { window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-annotate' } })); } catch (e) {}
+      } catch (e) { setStatus('Could not build the PDF: ' + e.message, 'err'); }
+      finally { downloadBtn.disabled = false; }
+    }
+
+    fileInput.addEventListener('change', () => fileInput.files[0] && loadFile(fileInput.files[0]));
+    ['dragover', 'dragenter'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('drag'); }));
+    dropZone.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) loadFile(f); });
+    addTextBtn.addEventListener('click', addText);
+    fontSize.addEventListener('input', () => { if (selected) { selected.__anno.fontPt = parseInt(fontSize.value, 10) || 24; selected.style.fontSize = (selected.__anno.fontPt * renderScale) + 'px'; } });
+    fontColor.addEventListener('input', () => { if (selected) { selected.__anno.color = fontColor.value; selected.style.color = fontColor.value; } });
+    prevPage.addEventListener('click', () => { if (current > 1) { current--; renderPage(); } });
+    nextPage.addEventListener('click', () => { if (current < total) { current++; renderPage(); } });
+    downloadBtn.addEventListener('click', download);
+    stageWrap.addEventListener('pointerdown', (e) => { if (e.target.classList.contains('an-overlay') || e.target.classList.contains('an-stage') || e.target.tagName === 'CANVAS') select(null); });
+  })();
+  </script>
+  <script src="../static-i18n.js"></script>
+</body>
+</html>

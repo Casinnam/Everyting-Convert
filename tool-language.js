@@ -129,6 +129,30 @@
         fr: 'Deux modes — extraction de texte standard gratuite, ou détection de tableaux par IA qui reconstitue les tableaux en cellules pour 2 crédits par page (10 crédits offerts aux nouveaux comptes).',
       },
     },
+    pdfWatermark: {
+      category: 'pdfDocuments',
+      drop: 'dropPdf',
+      title: { en: 'Add Watermark to PDF', ko: 'PDF에 워터마크 추가', de: 'Wasserzeichen zu PDF hinzufügen', es: 'Añadir marca de agua a PDF', fr: 'Ajouter un filigrane au PDF' },
+      description: {
+        en: 'Stamp a text watermark on every page of a PDF — set color, opacity, angle, and layout. Free and private in your browser.',
+        ko: 'PDF의 모든 페이지에 텍스트 워터마크를 넣으세요 — 색상·불투명도·각도·배치 설정. 브라우저에서 무료로, 비공개로 처리됩니다.',
+        de: 'Versehen Sie jede PDF-Seite mit einem Text-Wasserzeichen – Farbe, Deckkraft, Winkel und Layout. Kostenlos und privat im Browser.',
+        es: 'Coloca una marca de agua de texto en cada página del PDF: color, opacidad, ángulo y diseño. Gratis y privado en tu navegador.',
+        fr: 'Apposez un filigrane texte sur chaque page du PDF — couleur, opacité, angle et disposition. Gratuit et privé dans votre navigateur.',
+      },
+    },
+    pdfAnnotate: {
+      category: 'pdfDocuments',
+      drop: 'dropPdf',
+      title: { en: 'Add Text to PDF', ko: 'PDF에 텍스트 추가', de: 'Text zu PDF hinzufügen', es: 'Añadir texto a PDF', fr: 'Ajouter du texte au PDF' },
+      description: {
+        en: 'Place, drag, size, and color text anywhere on a PDF, then download a flattened PDF. Free and private in your browser.',
+        ko: 'PDF 어디에나 텍스트를 놓고 드래그·크기·색상을 조절한 뒤 다운로드하세요. 브라우저에서 무료로, 비공개로 처리됩니다.',
+        de: 'Platzieren, ziehen, dimensionieren und färben Sie Text überall auf einem PDF und laden Sie es herunter. Kostenlos und privat im Browser.',
+        es: 'Coloca, arrastra, dimensiona y colorea texto en cualquier parte de un PDF y descárgalo. Gratis y privado en tu navegador.',
+        fr: 'Placez, déplacez, dimensionnez et colorez du texte n’importe où sur un PDF, puis téléchargez-le. Gratuit et privé dans votre navigateur.',
+      },
+    },
     imagePdf: {
       category: 'image',
       drop: 'dropImage',
@@ -264,6 +288,8 @@
     if (path.includes('/pdf to word/')) return 'pdfWord';
     if (path.includes('/pdf to jpg/')) return 'pdfJpg';
     if (path.includes('/pdf to excel/')) return 'pdfExcel';
+    if (path.includes('/pdf watermark/')) return 'pdfWatermark';
+    if (path.includes('/pdf annotate/')) return 'pdfAnnotate';
     if (path.includes('/image to pdf/')) return 'imagePdf';
     if (path.includes('/excel to pdf/')) return 'excelPdf';
     if (path.includes('/docx to pdf/')) return 'docxPdf';
