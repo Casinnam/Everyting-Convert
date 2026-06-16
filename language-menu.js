@@ -354,10 +354,10 @@
     showcaseSlides.forEach((slide, index) => {
       const copy = showcaseCopy[index];
       if (!copy) return;
-      const kicker = slide.querySelector('.showcase-kicker');
-      const title = slide.querySelector('.showcase-copy h2');
-      const body = slide.querySelector('.showcase-copy p');
-      const action = slide.querySelector('.showcase-action');
+      const kicker = slide.querySelector('.home-showcase-kicker');
+      const title = slide.querySelector('.home-showcase-copy h2');
+      const body = slide.querySelector('.home-showcase-copy p');
+      const action = slide.querySelector('.home-showcase-action');
       if (kicker) kicker.innerHTML = `<i class="${copy.icon}"></i> ${text(copy.kicker, language)}`;
       if (title) title.textContent = text(copy.title, language);
       if (body) body.textContent = text(copy.body, language);

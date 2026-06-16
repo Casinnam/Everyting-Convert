@@ -1378,7 +1378,7 @@ nav {
     -webkit-backdrop-filter: blur(18px);
 }
 
-.showcase-frame {
+.home-showcase-frame {
     position: relative;
     min-height: 27rem;
     overflow: hidden;
@@ -1390,7 +1390,7 @@ nav {
         rgba(255, 255, 255, 0.74);
 }
 
-.showcase-slide {
+.home-showcase-slide {
     position: absolute;
     inset: 0;
     display: grid;
@@ -1404,19 +1404,19 @@ nav {
     transition: opacity 0.42s ease, transform 0.42s ease;
 }
 
-.showcase-slide.active {
+.home-showcase-slide.active {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(0) scale(1);
 }
 
-.showcase-copy {
+.home-showcase-copy {
     display: grid;
     gap: 0.75rem;
     align-content: center;
 }
 
-.showcase-kicker {
+.home-showcase-kicker {
     width: max-content;
     display: inline-flex;
     align-items: center;
@@ -1429,21 +1429,21 @@ nav {
     font-weight: 900;
 }
 
-.showcase-copy h2 {
+.home-showcase-copy h2 {
     max-width: 25rem;
     font-size: clamp(1.5rem, 2.25vw, 2.25rem);
     line-height: 1.08;
     letter-spacing: 0;
 }
 
-.showcase-copy p {
+.home-showcase-copy p {
     max-width: 29rem;
     color: #475569;
     font-size: 0.94rem;
     line-height: 1.56;
 }
 
-.showcase-action {
+.home-showcase-action {
     width: max-content;
     display: inline-flex;
     align-items: center;
@@ -1458,7 +1458,7 @@ nav {
     box-shadow: 0 16px 34px rgba(37, 99, 235, 0.26);
 }
 
-.showcase-visual {
+.home-showcase-visual {
     position: relative;
     min-height: 17rem;
     display: grid;
@@ -1468,10 +1468,10 @@ nav {
     box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.86);
 }
 
-.doc-card,
-.image-tile,
-.format-chip,
-.ai-visual span {
+.home-showcase .doc-card,
+.home-showcase .image-tile,
+.home-showcase .format-chip,
+.home-showcase .ai-visual span {
     display: grid;
     place-items: center;
     border-radius: 18px;
@@ -1480,17 +1480,17 @@ nav {
     box-shadow: 0 18px 32px rgba(15, 23, 42, 0.14);
 }
 
-.doc-card {
+.home-showcase .doc-card {
     position: absolute;
     width: 5.4rem;
     height: 6.6rem;
 }
 
-.doc-card.pdf { left: 1.3rem; background: linear-gradient(135deg, #ef4444, #f97316); }
-.doc-card.word { right: 1.2rem; top: 3.4rem; background: linear-gradient(135deg, #2563eb, #60a5fa); }
-.doc-card.excel { right: 4rem; bottom: 2rem; background: linear-gradient(135deg, #16a34a, #22c55e); }
+.home-showcase .doc-card.pdf { left: 1.3rem; background: linear-gradient(135deg, #ef4444, #f97316); }
+.home-showcase .doc-card.word { right: 1.2rem; top: 3.4rem; background: linear-gradient(135deg, #2563eb, #60a5fa); }
+.home-showcase .doc-card.excel { right: 4rem; bottom: 2rem; background: linear-gradient(135deg, #16a34a, #22c55e); }
 
-.showcase-visual > .fa-arrow-right {
+.home-showcase-visual > .fa-arrow-right {
     width: 3.1rem;
     height: 3.1rem;
     display: grid;
@@ -1501,10 +1501,10 @@ nav {
     font-size: 1.4rem;
 }
 
-.image-visual,
-.media-visual,
-.audio-visual,
-.ai-visual {
+.home-showcase .image-visual,
+.home-showcase .media-visual,
+.home-showcase .audio-visual,
+.home-showcase .ai-visual {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1512,16 +1512,16 @@ nav {
     flex-wrap: wrap;
 }
 
-.image-tile {
+.home-showcase .image-tile {
     width: 5.8rem;
     height: 5.8rem;
 }
 
-.image-tile.jpg { background: linear-gradient(135deg, #f97316, #fb7185); }
-.image-tile.png { background: linear-gradient(135deg, #06b6d4, #2563eb); }
-.image-tile.webp { background: linear-gradient(135deg, #14b8a6, #22c55e); }
+.home-showcase .image-tile.jpg { background: linear-gradient(135deg, #f97316, #fb7185); }
+.home-showcase .image-tile.png { background: linear-gradient(135deg, #06b6d4, #2563eb); }
+.home-showcase .image-tile.webp { background: linear-gradient(135deg, #14b8a6, #22c55e); }
 
-.media-ring {
+.home-showcase .media-ring {
     width: 8rem;
     height: 8rem;
     display: grid;
@@ -1533,46 +1533,46 @@ nav {
     box-shadow: 0 22px 44px rgba(79, 70, 229, 0.24);
 }
 
-.format-chip {
+.home-showcase .format-chip {
     width: 4.6rem;
     height: 2.7rem;
     background: rgba(15, 23, 42, 0.84);
 }
 
-.audio-visual span {
+.home-showcase .audio-visual span {
     width: 1.3rem;
     border-radius: 999px;
     background: linear-gradient(180deg, #60a5fa, #7c3aed);
 }
 
-.audio-visual span:nth-child(1) { height: 4rem; }
-.audio-visual span:nth-child(2) { height: 7rem; }
-.audio-visual span:nth-child(3) { height: 10rem; }
-.audio-visual span:nth-child(4) { height: 6.5rem; }
-.audio-visual span:nth-child(5) { height: 4.8rem; }
+.home-showcase .audio-visual span:nth-child(1) { height: 4rem; }
+.home-showcase .audio-visual span:nth-child(2) { height: 7rem; }
+.home-showcase .audio-visual span:nth-child(3) { height: 10rem; }
+.home-showcase .audio-visual span:nth-child(4) { height: 6.5rem; }
+.home-showcase .audio-visual span:nth-child(5) { height: 4.8rem; }
 
-.ai-visual span {
+.home-showcase .ai-visual span {
     width: 5.4rem;
     height: 5.4rem;
     background: linear-gradient(135deg, #2563eb, #7c3aed);
     font-size: 1.8rem;
 }
 
-.showcase-controls {
+.home-showcase-controls {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.85rem;
 }
 
-.showcase-arrow,
-.showcase-dot {
+.home-showcase-arrow,
+.home-showcase-dot {
     appearance: none;
     border: 0;
     cursor: pointer;
 }
 
-.showcase-arrow {
+.home-showcase-arrow {
     width: 2.35rem;
     height: 2.35rem;
     display: grid;
@@ -1582,13 +1582,13 @@ nav {
     color: var(--home-primary);
 }
 
-.showcase-dots {
+.home-showcase-dots {
     display: flex;
     align-items: center;
     gap: 0.45rem;
 }
 
-.showcase-dot {
+.home-showcase-dot {
     width: 0.55rem;
     height: 0.55rem;
     border-radius: 999px;
@@ -1596,7 +1596,7 @@ nav {
     transition: width 0.2s ease, background 0.2s ease;
 }
 
-.showcase-dot.active {
+.home-showcase-dot.active {
     width: 1.55rem;
     background: linear-gradient(135deg, #2563eb, #7c3aed);
 }
@@ -2522,17 +2522,17 @@ nav {
         border-radius: 20px;
     }
 
-    .showcase-frame {
+    .home-showcase-frame {
         min-height: 36rem;
     }
 
-    .showcase-slide {
+    .home-showcase-slide {
         grid-template-columns: 1fr;
         align-content: center;
         text-align: left;
     }
 
-    .showcase-visual {
+    .home-showcase-visual {
         min-height: 13rem;
     }
 

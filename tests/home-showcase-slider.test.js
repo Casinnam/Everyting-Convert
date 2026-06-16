@@ -52,10 +52,21 @@ assert(
 
 assert(
   styles.includes('.home-showcase') &&
-    styles.includes('.showcase-slide') &&
-    styles.includes('.showcase-dot') &&
+    styles.includes('.home-showcase-frame') &&
+    styles.includes('.home-showcase-slide') &&
+    styles.includes('.home-showcase-dot') &&
     styles.includes('font-size: clamp(2.35rem, 4.1vw, 4.05rem)'),
   'Home hero styles should define the showcase slider and smaller hero title.',
+);
+
+assert(
+  index.includes('styles.css?v=ui-20260616b') &&
+    index.includes('home-showcase-copy') &&
+    index.includes('home-showcase-visual') &&
+    index.includes('home-showcase-action') &&
+    languageMenu.includes('.home-showcase-copy h2') &&
+    languageMenu.includes('.home-showcase-action'),
+  'Home showcase should use home-specific class names and a fresh CSS cache key.',
 );
 
 console.log('home showcase slider tests passed');
