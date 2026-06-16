@@ -61,19 +61,27 @@ async function translateOne(srcName: string, tgtName: string, payload: { title: 
     + 'Return ONLY JSON with this exact shape: {"title": "...", "excerpt": "...", "body": "..."}.\n\n'
     + `TITLE:\n${payload.title}\n\nEXCERPT:\n${payload.excerpt}\n\nBODY (Markdown):\n${payload.body}`;
 
+  // GPT-5 / o-series reasoning models reject temperature and max_tokens.
+  const reasoning = /^(gpt-5|o\d)/i.test(MODEL);
+  const body: Record<string, unknown> = {
+    model: MODEL,
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: sys },
+      { role: 'user', content: instruction },
+    ],
+  };
+  if (reasoning) {
+    body.max_completion_tokens = 16000;
+    body.reasoning_effort = 'low';
+  } else {
+    body.temperature = 0.3;
+    body.max_tokens = 8000;
+  }
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: MODEL,
-      temperature: 0.3,
-      max_tokens: 8000,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: sys },
-        { role: 'user', content: instruction },
-      ],
-    }),
+    body: JSON.stringify(body),
   });
   const data = await res.json();
   if (!res.ok) {

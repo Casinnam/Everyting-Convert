@@ -52,19 +52,34 @@ async function dbGetJob(jobId: string): Promise<Record<string, unknown> | null> 
 
 const OCR_MODEL = Deno.env.get('OPENAI_OCR_MODEL') || 'gpt-4o';
 
+// GPT-5 / o-series are reasoning models: they reject temperature (only 1) and
+// max_tokens, and use max_completion_tokens. Build params accordingly so we can
+// switch models with just the OPENAI_OCR_MODEL secret.
+function isReasoningModel(model: string): boolean {
+  return /^(gpt-5|o\d)/i.test(model);
+}
+
 async function chat(messages: unknown, maxTokens = 4096): Promise<Record<string, unknown>> {
   const apiKey = Deno.env.get('OPENAI_API_KEY');
   if (!apiKey) throw new Error('not_configured');
+  const reasoning = isReasoningModel(OCR_MODEL);
+  const body: Record<string, unknown> = {
+    model: OCR_MODEL,
+    response_format: { type: 'json_object' },
+    messages,
+  };
+  if (reasoning) {
+    // Leave headroom: max_completion_tokens also covers reasoning tokens.
+    body.max_completion_tokens = Math.max(maxTokens * 2, 8000);
+    body.reasoning_effort = 'low';
+  } else {
+    body.temperature = 0;
+    body.max_tokens = maxTokens;
+  }
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: OCR_MODEL,
-      temperature: 0,
-      max_tokens: maxTokens,
-      response_format: { type: 'json_object' },
-      messages,
-    }),
+    body: JSON.stringify(body),
   });
   const data = await res.json();
   if (!res.ok) {
