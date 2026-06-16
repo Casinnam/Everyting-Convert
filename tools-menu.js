@@ -397,6 +397,7 @@
               <div class="tools-group-title"><i class="fa-solid fa-file-export"></i> PDF Converters</div>
               <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
               <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel</span></a>
+              <a href="${prefix}pdf to powerpoint/pdf-to-powerpoint.html"><span class="tool-emoji ppt">P</span><span>PDF to PowerPoint</span></a>
               <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
               <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
               <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>
@@ -460,6 +461,7 @@
               <div class="tools-subgroup-title"><i class="fa-solid fa-file-export"></i> PDF Converters</div>
               <a href="${prefix}pdf to word/pdf-to-word.html"><span class="tool-emoji word">W</span><span>PDF to Word</span></a>
               <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel</span></a>
+              <a href="${prefix}pdf to powerpoint/pdf-to-powerpoint.html"><span class="tool-emoji ppt">P</span><span>PDF to PowerPoint</span></a>
               <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
               <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
               <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>

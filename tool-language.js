@@ -153,6 +153,26 @@
         fr: 'Placez, déplacez, dimensionnez et colorez du texte n’importe où sur un PDF, puis téléchargez-le. Gratuit et privé dans votre navigateur.',
       },
     },
+    pdfPpt: {
+      category: 'pdfDocuments',
+      drop: 'dropPdf',
+      title: { en: 'PDF to PowerPoint', ko: 'PDF를 PowerPoint로 변환', de: 'PDF zu PowerPoint', es: 'PDF a PowerPoint', fr: 'PDF vers PowerPoint' },
+      description: {
+        en: 'Turn a PDF into an editable PowerPoint (.pptx) — one slide per page. Free image slides, or AI editable-text slides.',
+        ko: 'PDF를 편집 가능한 PowerPoint(.pptx)로 변환하세요 — 페이지당 한 슬라이드. 무료 이미지 슬라이드 또는 AI 편집 텍스트 슬라이드.',
+        de: 'Verwandeln Sie ein PDF in eine bearbeitbare PowerPoint (.pptx) – eine Folie pro Seite. Kostenlose Bildfolien oder KI-Textfolien.',
+        es: 'Convierte un PDF en un PowerPoint editable (.pptx): una diapositiva por página. Diapositivas de imagen gratis o diapositivas de texto con IA.',
+        fr: 'Transformez un PDF en PowerPoint modifiable (.pptx) — une diapositive par page. Diapositives image gratuites ou diapositives texte par IA.',
+      },
+      convert: { en: 'Convert to PowerPoint', ko: 'PowerPoint로 변환', de: 'In PowerPoint konvertieren', es: 'Convertir a PowerPoint', fr: 'Convertir en PowerPoint' },
+      modesNote: {
+        en: 'Two modes — free image slides (each page becomes a picture slide), or AI editable-text slides that read each page with AI for 2 credits per page (new accounts get 10 free credits).',
+        ko: '두 가지 모드 — 무료 이미지 슬라이드(각 페이지가 그림 슬라이드가 됩니다), 또는 AI가 각 페이지를 읽어 편집 가능한 텍스트 슬라이드로 만드는 AI 모드(페이지당 2크레딧). 신규 계정은 10크레딧을 무료로 받습니다.',
+        de: 'Zwei Modi — kostenlose Bildfolien (jede Seite wird zur Bildfolie) oder KI-Textfolien, die jede Seite per KI auslesen, für 2 Credits pro Seite (neue Konten erhalten 10 Gratis-Credits).',
+        es: 'Dos modos: diapositivas de imagen gratis (cada página se convierte en una diapositiva de imagen) o diapositivas de texto editable con IA que leen cada página por 2 créditos por página (las cuentas nuevas reciben 10 créditos gratis).',
+        fr: 'Deux modes — diapositives image gratuites (chaque page devient une diapositive image), ou diapositives texte modifiable par IA qui lisent chaque page pour 2 crédits par page (10 crédits offerts aux nouveaux comptes).',
+      },
+    },
     imagePdf: {
       category: 'image',
       drop: 'dropImage',
@@ -290,6 +310,7 @@
     if (path.includes('/pdf to excel/')) return 'pdfExcel';
     if (path.includes('/pdf watermark/')) return 'pdfWatermark';
     if (path.includes('/pdf annotate/')) return 'pdfAnnotate';
+    if (path.includes('/pdf to powerpoint/')) return 'pdfPpt';
     if (path.includes('/image to pdf/')) return 'imagePdf';
     if (path.includes('/excel to pdf/')) return 'excelPdf';
     if (path.includes('/docx to pdf/')) return 'docxPdf';

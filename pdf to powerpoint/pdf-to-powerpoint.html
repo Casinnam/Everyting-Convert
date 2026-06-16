@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../analytics.js?v=analytics-20260614a"></script>
+  <script src="../ads.js?v=ads-20260611a"></script>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="usage-limit" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to PowerPoint Converter - Free Online | EverythingConvert</title>
+  <meta name="description" content="Convert PDF to PowerPoint (.pptx) online — one slide per page. Free image slides, or AI editable-text slides. Private, in your browser.">
+  <link rel="canonical" href="https://www.everythingconvert.com/pdf%20to%20powerpoint/pdf-to-powerpoint.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EverythingConvert">
+  <meta property="og:title" content="PDF to PowerPoint Converter - Free Online">
+  <meta property="og:description" content="Turn a PDF into an editable PowerPoint — one slide per page. Free image slides, or AI editable-text slides.">
+  <meta property="og:url" content="https://www.everythingconvert.com/pdf%20to%20powerpoint/pdf-to-powerpoint.html">
+  <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PDF to PowerPoint Converter","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://www.everythingconvert.com/pdf%20to%20powerpoint/pdf-to-powerpoint.html","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert a PDF into an editable PowerPoint presentation (.pptx) in your browser."}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../styles.css?v=ui-20260614a">
+  <style>
+    .pp-main { width: min(1080px, calc(100% - 2rem)); margin: 0 auto; padding: 2.5rem 0 4rem; }
+    .pp-hero { text-align: center; margin-bottom: 1.4rem; }
+    .pp-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); color: #0f172a; margin: .2rem 0 .6rem; line-height: 1.1; }
+    .pp-hero p { color: #64748b; max-width: 660px; margin: 0 auto; line-height: 1.7; }
+    #heroModes { max-width: 720px; margin: 0 auto 1.5rem; padding: .85rem 1.1rem; border: 1px solid #fca5a5; border-radius: 12px; background: #fef2f2; color: #7f1d1d; font-size: .9rem; line-height: 1.65; text-align: center; font-weight: 600; }
+    .pp-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(300px,360px); gap: 1.25rem; align-items: start; }
+    @media (max-width: 860px) { .pp-grid { grid-template-columns: 1fr; } }
+    .pp-card { background: rgba(255,255,255,.92); border: 1px solid #e2e8f0; border-radius: 18px; padding: 1.25rem; box-shadow: 0 18px 44px rgba(15,23,42,.06); }
+    .pp-drop { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 2.5rem 1rem; text-align: center; cursor: pointer; background: #fafbff; transition: border-color .2s, background .2s; display: block; }
+    .pp-drop.drag, .pp-drop:hover { border-color: #d97706; background: #fffbeb; }
+    .pp-drop .ic { width: 3.5rem; height: 3.5rem; margin: 0 auto .7rem; border-radius: 16px; display: grid; place-items: center; color: #fff; font-size: 1.5rem; background: linear-gradient(135deg,#ea580c,#d97706); }
+    .pp-drop h3 { color: #0f172a; margin: 0 0 .25rem; font-size: 1.05rem; }
+    .pp-drop p { color: #64748b; font-size: .9rem; margin: 0; }
+    .pp-drop input { display: none; }
+    .pp-file { display: none; align-items: center; gap: .75rem; padding: .8rem 1rem; background: #fff7ed; border-radius: 10px; margin-top: 1rem; }
+    .pp-file.show { display: flex; }
+    .pp-file .nm { font-weight: 700; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #0f172a; }
+    .pp-file .rm { border: 0; background: none; cursor: pointer; color: #64748b; font-size: 1.1rem; }
+    .pp-preview { display: flex; flex-direction: column; align-items: center; gap: 14px; min-height: 240px; max-height: 560px; overflow: auto; background: #f1f5f9; border-radius: 12px; padding: 14px; margin-top: 1rem; }
+    .pp-preview canvas { max-width: 100%; height: auto; box-shadow: 0 8px 24px rgba(15,23,42,.15); border-radius: 4px; }
+    .pp-page { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .pp-pagenum { font-size: 12px; color: #94a3b8; }
+    .pp-preview .hint { color: #94a3b8; padding: 2rem; text-align: center; margin: auto; }
+    .pp-field { display: grid; gap: .35rem; margin-bottom: .9rem; }
+    .pp-field label { font-weight: 800; font-size: .82rem; color: #475569; }
+    .pp-field input[type=text], .pp-field select { width: 100%; padding: .65rem .75rem; border: 1px solid #dbe6f3; border-radius: 9px; font: inherit; color: #0f172a; background: #fff; box-sizing: border-box; }
+    .pp-apply { width: 100%; min-height: 3rem; border: 0; border-radius: 12px; margin-top: .5rem; color: #fff; font: inherit; font-weight: 900; cursor: pointer; background: linear-gradient(135deg,#ea580c,#d97706); box-shadow: 0 16px 36px rgba(234,88,12,.22); }
+    .pp-apply:disabled { opacity: .5; cursor: not-allowed; }
+    .pp-modenote { color: #64748b; font-size: .82rem; line-height: 1.55; margin-top: -.4rem; margin-bottom: .9rem; }
+    .pp-modenote.ai { color: #b45309; font-weight: 600; }
+    .pp-progress { display: none; margin-top: 1rem; }
+    .pp-progress.show { display: block; }
+    .pp-bar { height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .pp-bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg,#ea580c,#d97706); transition: width .3s; }
+    .pp-prog-label { font-size: .82rem; color: #64748b; margin-bottom: .4rem; font-weight: 700; }
+    .pp-status { margin-top: .9rem; font-weight: 700; min-height: 1.2em; }
+    .pp-status.ok { color: #15803d; } .pp-status.err { color: #b91c1c; }
+    .pp-note { background: #fff7ed; border-left: 3px solid #d97706; padding: .8rem 1rem; border-radius: 0 8px 8px 0; color: #64748b; font-size: .85rem; margin-top: 1.25rem; line-height: 1.6; }
+    .pp-info { margin-top: 2.5rem; }
+    .pp-info h2 { font-size: 1.2rem; color: #0f172a; margin: 0 0 .8rem; }
+    .pp-info details { border: 1px solid #e2e8f0; border-radius: 10px; padding: .85rem 1rem; margin-bottom: .6rem; background: #fff; }
+    .pp-info summary { font-weight: 700; cursor: pointer; color: #0f172a; }
+    .pp-info details p { color: #64748b; margin: .5rem 0 0; line-height: 1.6; }
+  </style>
+</head>
+<body class="premium-subpage">
+  <header class="header">
+    <a class="logo" href="../index.html" aria-label="EverythingConvert home">
+      <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
+      <span>EverythingConvert</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#tool-browser">All Tools</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../auth.html" data-auth-login>Login</a>
+      <a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a>
+      <a href="#" data-auth-logout style="display:none;">Logout</a>
+      <a href="../admin.html" data-admin-only style="display:none;">Admin</a>
+    </nav>
+  </header>
+
+  <main class="pp-main">
+    <div class="pp-hero hero">
+      <div class="eyebrow" style="color:#d97706;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;">PDF Tools</div>
+      <h1>PDF to PowerPoint</h1>
+      <p>Turn a PDF into an editable PowerPoint (.pptx) — one slide per page. Free image slides, or AI editable-text slides. Runs in your browser.</p>
+    </div>
+
+    <div id="heroModes">Two modes — free image slides (each page becomes a picture slide), or AI editable-text slides that read each page with AI for 2 credits per page (new accounts get 10 free credits).</div>
+
+    <div class="pp-grid">
+      <div class="pp-card">
+        <label class="pp-drop" id="dropZone">
+          <input type="file" id="fileInput" accept="application/pdf,.pdf">
+          <div class="ic"><i class="fa-solid fa-file-powerpoint"></i></div>
+          <h3 data-ko="PDF 파일을 클릭하거나 여기에 놓으세요">Click or drop your PDF here</h3>
+          <p data-ko="브라우저에서 바로 처리됩니다 · 업로드 없음">Processed in your browser · nothing uploaded</p>
+        </label>
+        <div class="pp-file" id="fileInfo">
+          <i class="fa-solid fa-file-pdf" style="color:#ea580c;"></i>
+          <span class="nm" id="fileName"></span>
+          <button class="rm" id="removeFile" title="Remove">&times;</button>
+        </div>
+        <div class="pp-preview" id="preview">
+          <div class="hint" data-ko="PDF를 올리면 모든 페이지 미리보기가 여기에 표시됩니다.">Upload a PDF to preview every page here.</div>
+        </div>
+      </div>
+
+      <div class="pp-card">
+        <div class="pp-field">
+          <label for="ppMode" data-ko="변환 모드">Conversion mode</label>
+          <select id="ppMode">
+            <option value="image" data-ko="이미지 슬라이드 (무료)">Image slides (free)</option>
+            <option value="ai" data-ko="AI 편집 텍스트 슬라이드 (페이지당 2크레딧)">AI editable-text slides (2 credits/page)</option>
+          </select>
+        </div>
+        <div class="pp-modenote" id="modeNote" data-ko="각 PDF 페이지가 고해상도 그림 슬라이드가 됩니다. 무료이며 브라우저에서 처리됩니다.">Each PDF page becomes a high-resolution picture slide. Free and processed in your browser.</div>
+
+        <div class="pp-field">
+          <label for="ppRange" data-ko="페이지 범위">Page range</label>
+          <select id="ppRange">
+            <option value="all" data-ko="모든 페이지">All pages</option>
+            <option value="first" data-ko="첫 페이지만">First page only</option>
+            <option value="custom" data-ko="사용자 지정 범위">Custom range</option>
+          </select>
+        </div>
+        <div class="pp-field" id="customWrap" style="display:none;">
+          <label for="ppCustom" data-ko="페이지 번호 (예: 1,3,5-8)">Page numbers (e.g. 1,3,5-8)</label>
+          <input type="text" id="ppCustom" placeholder="1,3,5-8">
+        </div>
+
+        <button class="pp-apply" id="applyBtn" disabled data-ko="PowerPoint로 변환 후 다운로드">Convert to PowerPoint &amp; download</button>
+
+        <div class="pp-progress" id="progress">
+          <div class="pp-prog-label" id="progressLabel">Working…</div>
+          <div class="pp-bar"><i id="progressFill"></i></div>
+        </div>
+        <div class="pp-status" id="status"></div>
+
+        <div class="pp-note" data-ko="이미지 모드는 모든 언어와 레이아웃을 그대로 보존합니다. AI 모드는 텍스트를 추출해 편집 가능한 슬라이드로 만들며, 결제 후에만 크레딧이 차감됩니다.">Image mode preserves every language and layout exactly. AI mode extracts the text into editable slides and only charges credits after you confirm.</div>
+      </div>
+    </div>
+
+    <div class="pp-info">
+      <h2 data-ko="PDF를 PowerPoint로 변환하는 방법">How to convert PDF to PowerPoint</h2>
+      <details open><summary data-ko="1) PDF 업로드 → 2) 모드 선택 → 3) 변환 후 다운로드">1) Upload a PDF → 2) choose a mode → 3) convert &amp; download</summary><p data-ko="모든 작업은 브라우저에서 처리됩니다. 이미지 모드는 파일이 서버로 업로드되지 않습니다.">Everything runs in your browser. In image mode your file is never uploaded to a server.</p></details>
+      <details><summary data-ko="이미지 모드와 AI 모드의 차이는?">What is the difference between image and AI mode?</summary><p data-ko="이미지 모드는 각 페이지를 그림으로 슬라이드에 넣어 레이아웃을 100% 보존합니다(무료). AI 모드는 각 페이지의 글자를 읽어 편집 가능한 텍스트 슬라이드를 만듭니다(페이지당 2크레딧).">Image mode places each page as a picture, preserving the layout 100% (free). AI mode reads the text on each page and produces editable text slides (2 credits per page).</p></details>
+      <details><summary data-ko="한국어 PDF도 되나요?">Does it work with Korean PDFs?</summary><p data-ko="네. 이미지 모드는 모든 언어를 그대로 보존하고, AI 모드도 한국어를 포함한 다양한 언어를 인식합니다.">Yes. Image mode preserves every language exactly, and AI mode recognizes many languages including Korean.</p></details>
+      <details><summary data-ko="결과 파일을 PowerPoint에서 편집할 수 있나요?">Can I edit the result in PowerPoint?</summary><p data-ko="네. .pptx 파일로 저장되어 PowerPoint, Keynote, Google Slides에서 열고 편집할 수 있습니다. AI 모드의 텍스트는 직접 수정할 수 있습니다.">Yes. It saves a .pptx you can open and edit in PowerPoint, Keynote, or Google Slides. Text from AI mode is fully editable.</p></details>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-legal-row">
+      <a href="../about.html">About Us</a>
+      <a href="../privacy.html">Privacy</a>
+      <a href="../terms.html">Terms</a>
+      <a href="../security.html">Security and Compliance</a>
+      <a href="#cookie-settings">Cookie Settings</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="24" height="24"><span>EverythingConvert.com</span></div>
+      <p>&copy; EverythingConvert.com All rights reserved (2026)</p>
+      <div class="language-menu">
+        <button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button>
+        <div class="language-dropdown">
+          <button type="button" data-language="en">English</button>
+          <button type="button" data-language="ko">한국어</button>
+          <button type="button" data-language="de">Deutsch</button>
+          <button type="button" data-language="es">Español</button>
+          <button type="button" data-language="fr">Français</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../auth.js?v=auth-20260528b"></script>
+  <script src="../ai-credits.js?v=credits-20260613d"></script>
+  <script src="../tools-menu.js?v=nav-20260616a"></script>
+  <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260608a"></script>
+  <script src="../tool-language.js?v=toollang-20260616a"></script>
+  <script>
+  (function () {
+    if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const AI_FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
+    const AI_ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
+    const AI_MAX_PAGES = 30;
+    const $ = (id) => document.getElementById(id);
+    const fileInput = $('fileInput'), dropZone = $('dropZone'), fileInfo = $('fileInfo'), fileName = $('fileName'), removeFile = $('removeFile');
+    const ppMode = $('ppMode'), ppRange = $('ppRange'), ppCustom = $('ppCustom'), customWrap = $('customWrap');
+    const applyBtn = $('applyBtn'), statusEl = $('status'), preview = $('preview'), modeNote = $('modeNote');
+    const progress = $('progress'), progressLabel = $('progressLabel'), progressFill = $('progressFill');
+    let pdfBytes = null, pdfName = '', pdfDoc = null, pageRasters = [], busy = false;
+    const PREVIEW_CAP = 40;
+
+    function setStatus(t, k) { statusEl.textContent = t || ''; statusEl.className = 'pp-status' + (k ? ' ' + k : ''); }
+    function setProgress(label, pct) {
+      progress.classList.add('show');
+      progressLabel.textContent = label;
+      progressFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+    function hideProgress() { progress.classList.remove('show'); progressFill.style.width = '0'; }
+
+    function updateModeNote() {
+      const ai = ppMode.value === 'ai';
+      modeNote.classList.toggle('ai', ai);
+      modeNote.textContent = ai
+        ? 'AI reads each page and builds editable text slides — best for documents you want to edit. 2 credits per page, charged only after you confirm. New accounts get 10 free credits.'
+        : 'Each PDF page becomes a high-resolution picture slide. Free and processed in your browser.';
+      // Let tool-language re-apply data-ko/i18n on the freshly set text.
+      try { window.dispatchEvent(new CustomEvent('everything-language-change')); } catch (e) {}
+    }
+
+    // Raster each page once (cached); the preview re-uses these.
+    async function buildRasters() {
+      pageRasters = [];
+      if (!pdfDoc) return;
+      const total = pdfDoc.numPages;
+      const limit = Math.min(total, PREVIEW_CAP);
+      for (let i = 1; i <= limit; i++) {
+        const page = await pdfDoc.getPage(i);
+        const baseScale = Math.min(1.5, 560 / page.getViewport({ scale: 1 }).width);
+        const viewport = page.getViewport({ scale: baseScale });
+        const rc = document.createElement('canvas');
+        rc.width = viewport.width; rc.height = viewport.height;
+        await page.render({ canvasContext: rc.getContext('2d'), viewport }).promise;
+        pageRasters.push(rc);
+      }
+      pageRasters.total = total;
+    }
+
+    function renderPreview() {
+      if (!pageRasters.length) return;
+      const frag = document.createDocumentFragment();
+      const total = pageRasters.total || pageRasters.length;
+      pageRasters.forEach((rc, idx) => {
+        const wrap = document.createElement('div'); wrap.className = 'pp-page';
+        const lbl = document.createElement('div'); lbl.className = 'pp-pagenum'; lbl.textContent = (idx + 1) + ' / ' + total;
+        wrap.appendChild(rc); wrap.appendChild(lbl);
+        frag.appendChild(wrap);
+      });
+      preview.innerHTML = ''; preview.appendChild(frag);
+      if (total > pageRasters.length) {
+        const more = document.createElement('div'); more.className = 'pp-pagenum';
+        more.textContent = '… +' + (total - pageRasters.length) + ' more page(s) — all selected pages are converted.';
+        preview.appendChild(more);
+      }
+    }
+
+    async function loadFile(file) {
+      if (!file || file.type !== 'application/pdf') { setStatus('Please choose a PDF file.', 'err'); return; }
+      pdfName = file.name; pdfBytes = await file.arrayBuffer();
+      fileName.textContent = file.name; fileInfo.classList.add('show'); applyBtn.disabled = false;
+      setStatus(''); hideProgress();
+      preview.innerHTML = '<div class="hint">Rendering preview…</div>';
+      try {
+        pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise;
+        await buildRasters();
+        renderPreview();
+      } catch (e) { preview.innerHTML = '<div class="hint">Preview unavailable, but the conversion will still run.</div>'; }
+    }
+
+    function getPageIndices() {
+      if (!pdfDoc) return [];
+      const total = pdfDoc.numPages;
+      const mode = ppRange.value;
+      if (mode === 'first') return [1];
+      if (mode === 'all') return Array.from({ length: total }, (_, i) => i + 1);
+      const pages = new Set();
+      (ppCustom.value || '').split(',').forEach((part) => {
+        part = part.trim(); if (!part) return;
+        if (part.includes('-')) {
+          const [a, b] = part.split('-').map(Number);
+          if (!Number.isFinite(a) || !Number.isFinite(b)) return;
+          for (let i = Math.max(1, a); i <= Math.min(b, total); i++) pages.add(i);
+        } else { const n = parseInt(part, 10); if (n >= 1 && n <= total) pages.add(n); }
+      });
+      return [...pages].sort((a, b) => a - b);
+    }
+
+    async function rasterizePage(pageNum, scale) {
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width; canvas.height = viewport.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+      return { dataUrl: canvas.toDataURL('image/jpeg', 0.85), w: viewport.width, h: viewport.height };
+    }
+
+    function placeContain(slide, dataUrl, imgW, imgH, slideW, slideH) {
+      const ar = imgW / imgH, sar = slideW / slideH;
+      let w, h;
+      if (ar > sar) { w = slideW; h = slideW / ar; } else { h = slideH; w = slideH * ar; }
+      slide.addImage({ data: dataUrl, x: (slideW - w) / 2, y: (slideH - h) / 2, w, h });
+    }
+
+    function downloadName() { return (pdfName.replace(/\.pdf$/i, '') || 'presentation') + '.pptx'; }
+
+    // ── Free: one picture slide per page ──
+    async function runImage(pages) {
+      const pptx = new PptxGenJS();
+      const first = await pdfDoc.getPage(pages[0]);
+      const fv = first.getViewport({ scale: 1 });
+      // pptxgenjs caps custom layouts at ~56in; PDF pages are well within that.
+      const win = Math.min(56, fv.width / 72), hin = Math.min(56, fv.height / 72);
+      pptx.defineLayout({ name: 'PDFPAGE', width: win, height: hin });
+      pptx.layout = 'PDFPAGE';
+      for (let i = 0; i < pages.length; i++) {
+        setProgress(`Rendering page ${pages[i]} (${i + 1}/${pages.length})…`, Math.round((i / pages.length) * 92));
+        const img = await rasterizePage(pages[i], 2);
+        const slide = pptx.addSlide();
+        placeContain(slide, img.dataUrl, img.w, img.h, win, hin);
+      }
+      setProgress('Building PowerPoint…', 96);
+      await pptx.writeFile({ fileName: downloadName() });
+    }
+
+    // ── AI: editable text slides via ai-ocr (credit-based) ──
+    async function aiOcr(payload) {
+      const res = await fetch(`${AI_FUNC}/ai-ocr`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(AI_ANON ? { apikey: AI_ANON } : {}) },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      return { ok: res.ok, status: res.status, data };
+    }
+
+    function resultToSlideContent(result) {
+      const md = (result && (result.markdown || result.plain_text)) || '';
+      const lines = String(md).split('\n');
+      let title = '', foundTitle = false;
+      const body = [];
+      for (const raw of lines) {
+        const l = raw.trim();
+        if (!l) continue;
+        if (/^\|?\s*:?-{2,}/.test(l)) continue; // markdown table separators
+        const heading = l.match(/^#{1,6}\s+(.*)$/);
+        const isBullet = /^[-*+]\s+/.test(l) || /^\d+\.\s+/.test(l);
+        const clean = l.replace(/^#{1,6}\s+/, '').replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '').replace(/\|/g, ' ').trim();
+        if (!clean) continue;
+        if (heading && !foundTitle) { title = clean; foundTitle = true; continue; }
+        body.push({ text: clean, bullet: isBullet });
+      }
+      return { title, body };
+    }
+
+    function addTextSlide(pptx, pageNum, result) {
+      const { title, body } = resultToSlideContent(result);
+      const slide = pptx.addSlide();
+      slide.addText(title || `Page ${pageNum}`, { x: 0.5, y: 0.3, w: 12.33, h: 0.9, fontSize: 24, bold: true, color: '0F172A', fontFace: 'Arial' });
+      if (body.length) {
+        const runs = body.map((b, i) => ({ text: b.text, options: { bullet: b.bullet, breakLine: true, fontSize: 14, color: '334155' } }));
+        slide.addText(runs, { x: 0.5, y: 1.35, w: 12.33, h: 5.7, valign: 'top', fontFace: 'Arial', fit: 'shrink' });
+      } else {
+        slide.addText('No readable text detected on this page.', { x: 0.5, y: 1.35, w: 12.33, h: 1, fontSize: 14, italic: true, color: '94A3B8' });
+      }
+    }
+
+    async function runAi(pages) {
+      const credits = window.EverythingConvertCredits;
+      if (!credits || !credits.isLoggedIn()) {
+        if (confirm('AI text slides need an account (you get 10 free credits). Go to login now?')) {
+          window.location.href = '../auth.html?next=' + encodeURIComponent('pdf to powerpoint/pdf-to-powerpoint.html');
+        }
+        return false;
+      }
+      const processCount = Math.min(pages.length, AI_MAX_PAGES);
+      if (pages.length > AI_MAX_PAGES && !confirm(`AI mode processes up to ${AI_MAX_PAGES} pages at a time. Only the first ${AI_MAX_PAGES} of your ${pages.length} pages will be converted. Continue?`)) {
+        return false;
+      }
+
+      setProgress('Preparing AI text slides…', 4);
+      const preview2 = await aiOcr({ mode: 'preview', pages: processCount });
+      if (!preview2.ok || !preview2.data.job_id) throw new Error(preview2.data.error || 'Could not start AI conversion.');
+      const jobId = preview2.data.job_id;
+      const cost = preview2.data.cost;
+
+      const balance = await credits.getBalance();
+      if (balance != null && balance < cost) {
+        alert(`This needs ${cost} credits but you have ${balance}. Buy more on the pricing page.`);
+        window.location.href = '../pricing.html#credit-packs';
+        return false;
+      }
+      if (!confirm(`Create editable text slides for ${processCount} page${processCount > 1 ? 's' : ''} with AI for ${cost} credits?` + (balance != null ? ` (Your balance: ${balance})` : ''))) {
+        return false;
+      }
+
+      setProgress('Charging credits…', 8);
+      const redeem = await credits.redeem(jobId);
+      if (!redeem.ok) {
+        if (redeem.code === 'insufficient_credits') { alert('Not enough credits.'); window.location.href = '../pricing.html#credit-packs'; }
+        else if (redeem.code === 'login_required') { alert('Please log in again.'); }
+        else { alert(redeem.error || 'Could not charge credits.'); }
+        return false;
+      }
+
+      const pptx = new PptxGenJS();
+      pptx.layout = 'LAYOUT_WIDE'; // 13.33 x 7.5 in
+      for (let i = 0; i < processCount; i++) {
+        const pageNum = pages[i];
+        setProgress(`AI reading page ${pageNum} (${i + 1}/${processCount})…`, Math.round(10 + (i / processCount) * 84));
+        const img = await rasterizePage(pageNum, 1.8);
+        const full = await aiOcr({ mode: 'full', job_id: jobId, page_index: i, image: img.dataUrl });
+        if (!full.ok) throw new Error(full.data.error || `AI failed on page ${pageNum}.`);
+        addTextSlide(pptx, pageNum, full.data.result);
+      }
+      setProgress('Building PowerPoint…', 96);
+      await pptx.writeFile({ fileName: downloadName() });
+      return true;
+    }
+
+    async function apply() {
+      if (!pdfDoc || busy) return;
+      if (!window.PptxGenJS) { setStatus('PowerPoint library failed to load. Refresh and try again.', 'err'); return; }
+      const pages = getPageIndices();
+      if (!pages.length) { setStatus('No valid pages selected.', 'err'); return; }
+      busy = true; applyBtn.disabled = true; setStatus('');
+      try {
+        let ok = true;
+        if (ppMode.value === 'ai') ok = await runAi(pages);
+        else await runImage(pages);
+        if (ok) {
+          setProgress('Done!', 100);
+          setStatus('Done — your PowerPoint was downloaded.', 'ok');
+          try { window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-to-powerpoint', mode: ppMode.value, pages: pages.length } })); } catch (e) {}
+          setTimeout(hideProgress, 1200);
+        } else {
+          hideProgress();
+        }
+      } catch (e) {
+        hideProgress();
+        setStatus((ppMode.value === 'ai' ? 'AI conversion error: ' : 'Could not convert this PDF: ') + e.message, 'err');
+      } finally {
+        busy = false; applyBtn.disabled = false;
+      }
+    }
+
+    fileInput.addEventListener('change', () => fileInput.files[0] && loadFile(fileInput.files[0]));
+    ['dragover', 'dragenter'].forEach((ev) => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach((ev) => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('drag'); }));
+    dropZone.addEventListener('drop', (e) => { const f = e.dataTransfer.files[0]; if (f) loadFile(f); });
+    removeFile.addEventListener('click', (e) => { e.preventDefault(); pdfBytes = null; pdfDoc = null; pageRasters = []; fileInfo.classList.remove('show'); applyBtn.disabled = true; fileInput.value = ''; preview.innerHTML = '<div class="hint">Upload a PDF to preview every page here.</div>'; setStatus(''); hideProgress(); });
+    ppMode.addEventListener('change', () => { updateModeNote(); setStatus(''); hideProgress(); });
+    ppRange.addEventListener('change', () => { customWrap.style.display = ppRange.value === 'custom' ? 'grid' : 'none'; setStatus(''); });
+    applyBtn.addEventListener('click', apply);
+    updateModeNote();
+  })();
+  </script>
+  <script src="../static-i18n.js"></script>
+</body>
+</html>
