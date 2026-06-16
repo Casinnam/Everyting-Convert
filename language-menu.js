@@ -42,6 +42,26 @@
     startConverting: { en: 'Start Converting', ko: '변환 시작', de: 'Konvertieren starten', es: 'Empezar a convertir', fr: 'Commencer' },
     exploreTools: { en: 'Explore All Tools', ko: '모든 도구 보기', de: 'Alle Tools ansehen', es: 'Explorar herramientas', fr: 'Explorer les outils' },
     searchTools: { en: 'Search tools...', ko: '도구 검색...', de: 'Tools suchen...', es: 'Buscar herramientas...', fr: 'Rechercher des outils...' },
+    showcasePdfKicker: { en: 'PDF & Documents', ko: 'PDF 및 문서', de: 'PDF & Dokumente', es: 'PDF y documentos', fr: 'PDF et documents' },
+    showcasePdfTitle: { en: 'Turn PDFs and office files into the format you need.', ko: 'PDF와 오피스 파일을 필요한 형식으로 바꾸세요.', de: 'Wandle PDFs und Office-Dateien in das passende Format um.', es: 'Convierte PDF y archivos Office al formato que necesitas.', fr: 'Transformez PDF et fichiers Office dans le format utile.' },
+    showcasePdfText: { en: 'Convert PDF to Word, PDF to Excel, PDF Summary, Smart OCR, DOCX to PDF, and Excel to PDF from one focused workspace.', ko: 'PDF to Word, PDF to Excel, PDF Summary, Smart OCR, DOCX to PDF, Excel to PDF를 한 공간에서 빠르게 찾아보세요.', de: 'Nutze PDF zu Word, PDF zu Excel, PDF Summary, Smart OCR, DOCX zu PDF und Excel zu PDF an einem Ort.', es: 'Usa PDF a Word, PDF a Excel, PDF Summary, Smart OCR, DOCX a PDF y Excel a PDF desde un solo espacio.', fr: 'Utilisez PDF vers Word, PDF vers Excel, PDF Summary, Smart OCR, DOCX vers PDF et Excel vers PDF au même endroit.' },
+    showcasePdfAction: { en: 'Explore PDF tools', ko: 'PDF 도구 보기', de: 'PDF-Tools ansehen', es: 'Ver herramientas PDF', fr: 'Voir les outils PDF' },
+    showcaseImageKicker: { en: 'Image Tools', ko: '이미지 도구', de: 'Bildtools', es: 'Herramientas de imagen', fr: 'Outils image' },
+    showcaseImageTitle: { en: 'Resize, convert, and package images for every channel.', ko: '이미지를 변환하고 채널별 크기로 준비하세요.', de: 'Skaliere, konvertiere und bereite Bilder für jeden Kanal vor.', es: 'Redimensiona, convierte y prepara imágenes para cada canal.', fr: 'Redimensionnez, convertissez et préparez vos images pour chaque canal.' },
+    showcaseImageText: { en: 'Create PDFs from images, convert JPG, PNG, WEBP, and HEIC, then prepare social media sizes without extra software.', ko: '이미지로 PDF를 만들고 JPG, PNG, WEBP, HEIC를 변환하며 소셜 미디어 크기까지 준비할 수 있습니다.', de: 'Erstelle PDFs aus Bildern, konvertiere JPG, PNG, WEBP und HEIC und bereite Social-Media-Größen vor.', es: 'Crea PDF desde imágenes, convierte JPG, PNG, WEBP y HEIC, y prepara tamaños para redes sociales.', fr: 'Créez des PDF depuis des images, convertissez JPG, PNG, WEBP et HEIC, puis préparez les tailles sociales.' },
+    showcaseImageAction: { en: 'Explore Image tools', ko: '이미지 도구 보기', de: 'Bildtools ansehen', es: 'Ver herramientas de imagen', fr: 'Voir les outils image' },
+    showcaseVideoKicker: { en: 'Video Convert', ko: '비디오 변환', de: 'Videokonvertierung', es: 'Convertir video', fr: 'Conversion vidéo' },
+    showcaseVideoTitle: { en: 'Move video files into practical web-friendly formats.', ko: '비디오 파일을 웹에서 쓰기 좋은 형식으로 바꾸세요.', de: 'Bringe Videodateien in praktische webfreundliche Formate.', es: 'Convierte videos a formatos prácticos para la web.', fr: 'Convertissez vos vidéos en formats pratiques pour le web.' },
+    showcaseVideoText: { en: 'Use video converter, MOV to MP4, video to GIF, and quick audio extraction tools directly in your browser.', ko: '비디오 변환, MOV to MP4, Video to GIF, 빠른 오디오 추출을 브라우저에서 바로 사용할 수 있습니다.', de: 'Nutze Videokonverter, MOV zu MP4, Video zu GIF und schnelle Audioextraktion direkt im Browser.', es: 'Usa convertidor de video, MOV a MP4, video a GIF y extracción rápida de audio en el navegador.', fr: 'Utilisez le convertisseur vidéo, MOV vers MP4, vidéo vers GIF et l’extraction audio rapide dans le navigateur.' },
+    showcaseVideoAction: { en: 'Explore Video tools', ko: '비디오 도구 보기', de: 'Videotools ansehen', es: 'Ver herramientas de video', fr: 'Voir les outils vidéo' },
+    showcaseAudioKicker: { en: 'Audio Convert', ko: '오디오 변환', de: 'Audiokonvertierung', es: 'Convertir audio', fr: 'Conversion audio' },
+    showcaseAudioTitle: { en: 'Extract, convert, and prepare audio with fewer steps.', ko: '오디오 추출과 변환을 더 적은 단계로 처리하세요.', de: 'Extrahiere, konvertiere und bereite Audio mit weniger Schritten vor.', es: 'Extrae, convierte y prepara audio con menos pasos.', fr: 'Extrayez, convertissez et préparez l’audio en moins d’étapes.' },
+    showcaseAudioText: { en: 'Convert audio formats, extract MP3 from video, and move from media files to usable text with AI transcription.', ko: '오디오 형식 변환, 비디오에서 MP3 추출, AI 전사로 미디어를 텍스트로 바꾸는 작업까지 이어갈 수 있습니다.', de: 'Konvertiere Audioformate, extrahiere MP3 aus Videos und erstelle mit KI-Transkription nutzbaren Text.', es: 'Convierte audio, extrae MP3 de video y pasa de medios a texto con transcripción AI.', fr: 'Convertissez l’audio, extrayez du MP3 depuis une vidéo et transformez les médias en texte avec l’IA.' },
+    showcaseAudioAction: { en: 'Explore Audio tools', ko: '오디오 도구 보기', de: 'Audiotools ansehen', es: 'Ver herramientas de audio', fr: 'Voir les outils audio' },
+    showcaseAiKicker: { en: 'AI Tools', ko: 'AI 도구', de: 'KI-Tools', es: 'Herramientas AI', fr: 'Outils IA' },
+    showcaseAiTitle: { en: 'Summarize, transcribe, OCR, and clean images faster.', ko: '요약, 전사, OCR, 이미지 정리를 더 빠르게 처리하세요.', de: 'Fasse zusammen, transkribiere, nutze OCR und bereinige Bilder schneller.', es: 'Resume, transcribe, usa OCR y limpia imágenes más rápido.', fr: 'Résumez, transcrivez, utilisez l’OCR et nettoyez les images plus vite.' },
+    showcaseAiText: { en: 'Use Audio to Text, PDF Summary, Smart OCR, and Background Remover when ordinary converters are not enough.', ko: '일반 변환만으로 부족할 때 Audio to Text, PDF Summary, Smart OCR, Background Remover를 사용할 수 있습니다.', de: 'Nutze Audio to Text, PDF Summary, Smart OCR und Background Remover, wenn normale Konverter nicht reichen.', es: 'Usa Audio to Text, PDF Summary, Smart OCR y Background Remover cuando los convertidores comunes no bastan.', fr: 'Utilisez Audio to Text, PDF Summary, Smart OCR et Background Remover quand les convertisseurs classiques ne suffisent pas.' },
+    showcaseAiAction: { en: 'Explore AI tools', ko: 'AI 도구 보기', de: 'KI-Tools ansehen', es: 'Ver herramientas AI', fr: 'Voir les outils IA' },
     dragDrop: {
       en: 'Drag & drop your file here',
       ko: '파일을 여기에 끌어다 놓으세요',
@@ -323,15 +343,26 @@
     setText('.secondary-cta', text('exploreTools', language));
     const search = document.getElementById('homeToolSearch');
     if (search) search.placeholder = text('searchTools', language);
-    setText('#homeDropzone h2', text('dragDrop', language));
-    const choose = document.querySelector('#homeChooseFile');
-    if (choose) choose.innerHTML = `<i class="fa-regular fa-folder-open"></i> ${text('chooseFile', language)}`;
-    setText('#selectedFileName', text('noFile', language));
-    const labelsInHero = document.querySelectorAll('.quick-convert-row label span');
-    if (labelsInHero[0]) labelsInHero[0].textContent = text('convertFrom', language);
-    if (labelsInHero[1]) labelsInHero[1].textContent = text('convertTo', language);
-    const continueButton = document.getElementById('homeOpenConverter');
-    if (continueButton) continueButton.innerHTML = `${text('openSelectedConverter', language)} <i class="fa-solid fa-arrow-right"></i>`;
+    const showcaseSlides = Array.from(document.querySelectorAll('.home-showcase [data-showcase-slide]'));
+    const showcaseCopy = [
+      { icon: 'fa-regular fa-file-pdf', kicker: 'showcasePdfKicker', title: 'showcasePdfTitle', body: 'showcasePdfText', action: 'showcasePdfAction' },
+      { icon: 'fa-regular fa-image', kicker: 'showcaseImageKicker', title: 'showcaseImageTitle', body: 'showcaseImageText', action: 'showcaseImageAction' },
+      { icon: 'fa-regular fa-circle-play', kicker: 'showcaseVideoKicker', title: 'showcaseVideoTitle', body: 'showcaseVideoText', action: 'showcaseVideoAction' },
+      { icon: 'fa-solid fa-music', kicker: 'showcaseAudioKicker', title: 'showcaseAudioTitle', body: 'showcaseAudioText', action: 'showcaseAudioAction' },
+      { icon: 'fa-solid fa-wand-magic-sparkles', kicker: 'showcaseAiKicker', title: 'showcaseAiTitle', body: 'showcaseAiText', action: 'showcaseAiAction' },
+    ];
+    showcaseSlides.forEach((slide, index) => {
+      const copy = showcaseCopy[index];
+      if (!copy) return;
+      const kicker = slide.querySelector('.showcase-kicker');
+      const title = slide.querySelector('.showcase-copy h2');
+      const body = slide.querySelector('.showcase-copy p');
+      const action = slide.querySelector('.showcase-action');
+      if (kicker) kicker.innerHTML = `<i class="${copy.icon}"></i> ${text(copy.kicker, language)}`;
+      if (title) title.textContent = text(copy.title, language);
+      if (body) body.textContent = text(copy.body, language);
+      if (action) action.innerHTML = `${text(copy.action, language)} <i class="fa-solid fa-arrow-right"></i>`;
+    });
     setText('#toolBrowserTitle', text('popularTools', language));
     setText('.tool-browser .section-heading p', text('popularToolsLead', language));
     setText('#whyTitle', text('whyTitle', language));

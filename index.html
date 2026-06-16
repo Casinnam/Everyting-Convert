@@ -162,54 +162,85 @@
                 </div>
             </div>
 
-            <section class="upload-console" aria-label="Upload converter">
+            <section class="home-showcase" id="homeShowcase" aria-label="Featured tool categories">
                 <div class="floating-file file-one"><i class="fa-regular fa-file-lines"></i></div>
                 <div class="floating-file file-two"><i class="fa-regular fa-image"></i></div>
-                <div class="upload-dropzone" id="homeDropzone">
-                    <div class="upload-cloud"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-                    <h2>Drag & drop your file here</h2>
-                    <p>or choose a file from your device</p>
-                    <input type="file" id="homeFileInput" hidden>
-                    <button class="choose-file-button" type="button" id="homeChooseFile">
-                        <i class="fa-regular fa-folder-open"></i>
-                        Choose File
-                    </button>
-                    <p class="selected-file-name" id="selectedFileName">No file selected</p>
-                    <div class="quick-convert-row">
-                        <label>
-                            <span>Convert from:</span>
-                            <select id="homeConvertSource">
-                                <option>Auto detect</option>
-                                <option>PDF</option>
-                                <option>Image</option>
-                                <option>Video</option>
-                                <option>Audio</option>
-                            </select>
-                        </label>
-                        <i class="fa-solid fa-arrow-right"></i>
-                        <label>
-                            <span>Convert to:</span>
-                            <select id="homeConvertTarget">
-                                <option value="pdf to word/pdf-to-word.html">PDF to Word</option>
-                                <option value="pdf to jpg/pdf-to-jpg.html">PDF to JPG</option>
-                                <option value="pdf to excel/pdf-to-excel.html">PDF to Excel</option>
-                                <option value="pdf to powerpoint/pdf-to-powerpoint.html">PDF to PowerPoint</option>
-                                <option value="image to pdf/image-to-pdf.html">Image to PDF</option>
-                                <option value="excel to pdf/excel-to-pdf.html">Excel to PDF</option>
-                                <option value="docx to pdf/docx-to-pdf.html">DOCX to PDF</option>
-                                <option value="image converter/image-converter.html">Image Converter</option>
-                                <option value="media converter/media-converter.html">Video Converter</option>
-                                <option value="media converter/media-converter.html?mode=audio">Audio Converter</option>
-                                <option value="gif converter/gif-converter.html">Video to GIF</option>
-                                <option value="json to csv/json-to-csv.html">JSON to CSV</option>
-                            </select>
-                        </label>
+                <div class="showcase-frame">
+                    <article class="showcase-slide active" data-showcase-slide>
+                        <div class="showcase-copy">
+                            <span class="showcase-kicker"><i class="fa-regular fa-file-pdf"></i> PDF &amp; Documents</span>
+                            <h2>Turn PDFs and office files into the format you need.</h2>
+                            <p>Convert PDF to Word, PDF to Excel, PDF Summary, Smart OCR, DOCX to PDF, and Excel to PDF from one focused workspace.</p>
+                            <a class="showcase-action" href="#tool-browser" data-tab-jump="documents">Explore PDF tools <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="showcase-visual" aria-hidden="true">
+                            <span class="doc-card pdf">PDF</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <span class="doc-card word">DOCX</span>
+                            <span class="doc-card excel">XLS</span>
+                        </div>
+                    </article>
+                    <article class="showcase-slide" data-showcase-slide>
+                        <div class="showcase-copy">
+                            <span class="showcase-kicker"><i class="fa-regular fa-image"></i> Image Tools</span>
+                            <h2>Resize, convert, and package images for every channel.</h2>
+                            <p>Create PDFs from images, convert JPG, PNG, WEBP, and HEIC, then prepare social media sizes without extra software.</p>
+                            <a class="showcase-action" href="#tool-browser" data-tab-jump="media">Explore Image tools <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="showcase-visual image-visual" aria-hidden="true">
+                            <span class="image-tile jpg">JPG</span>
+                            <span class="image-tile png">PNG</span>
+                            <span class="image-tile webp">WEBP</span>
+                        </div>
+                    </article>
+                    <article class="showcase-slide" data-showcase-slide>
+                        <div class="showcase-copy">
+                            <span class="showcase-kicker"><i class="fa-regular fa-circle-play"></i> Video Convert</span>
+                            <h2>Move video files into practical web-friendly formats.</h2>
+                            <p>Use video converter, MOV to MP4, video to GIF, and quick audio extraction tools directly in your browser.</p>
+                            <a class="showcase-action" href="media converter/media-converter.html">Explore Video tools <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="showcase-visual media-visual" aria-hidden="true">
+                            <span class="media-ring"><i class="fa-solid fa-play"></i></span>
+                            <span class="format-chip">MP4</span>
+                            <span class="format-chip">GIF</span>
+                        </div>
+                    </article>
+                    <article class="showcase-slide" data-showcase-slide>
+                        <div class="showcase-copy">
+                            <span class="showcase-kicker"><i class="fa-solid fa-music"></i> Audio Convert</span>
+                            <h2>Extract, convert, and prepare audio with fewer steps.</h2>
+                            <p>Convert audio formats, extract MP3 from video, and move from media files to usable text with AI transcription.</p>
+                            <a class="showcase-action" href="media converter/media-converter.html?mode=audio">Explore Audio tools <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="showcase-visual audio-visual" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </article>
+                    <article class="showcase-slide" data-showcase-slide>
+                        <div class="showcase-copy">
+                            <span class="showcase-kicker"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tools</span>
+                            <h2>Summarize, transcribe, OCR, and clean images faster.</h2>
+                            <p>Use Audio to Text, PDF Summary, Smart OCR, and Background Remover when ordinary converters are not enough.</p>
+                            <a class="showcase-action" href="ai tools/pdf-summary/index.html">Explore AI tools <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="showcase-visual ai-visual" aria-hidden="true">
+                            <span><i class="fa-solid fa-wave-square"></i></span>
+                            <span><i class="fa-regular fa-file-lines"></i></span>
+                            <span><i class="fa-solid fa-eye"></i></span>
+                        </div>
+                    </article>
+                </div>
+                <div class="showcase-controls" aria-label="Featured category controls">
+                    <button class="showcase-arrow" type="button" data-showcase-prev aria-label="Previous category"><i class="fa-solid fa-arrow-left"></i></button>
+                    <div class="showcase-dots" aria-label="Choose category">
+                        <button class="showcase-dot active" type="button" data-showcase-dot="0" aria-label="PDF tools"></button>
+                        <button class="showcase-dot" type="button" data-showcase-dot="1" aria-label="Image tools"></button>
+                        <button class="showcase-dot" type="button" data-showcase-dot="2" aria-label="Video tools"></button>
+                        <button class="showcase-dot" type="button" data-showcase-dot="3" aria-label="Audio tools"></button>
+                        <button class="showcase-dot" type="button" data-showcase-dot="4" aria-label="AI tools"></button>
                     </div>
-                    <button class="home-convert-button" type="button" id="homeOpenConverter">
-                        <span>Open selected converter</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                    <p class="home-route-note" id="homeRouteNote">Choose a file and a converter. We will open the right tool page for you.</p>
+                    <button class="showcase-arrow" type="button" data-showcase-next aria-label="Next category"><i class="fa-solid fa-arrow-right"></i></button>
                 </div>
                 <div class="trust-strip" aria-label="Conversion trust badges">
                     <span><i class="fa-regular fa-user"></i>No signup required</span>
@@ -634,94 +665,51 @@
 
     <script>
         (function () {
-            function tr(key) {
-                if (window.EverythingConvertLanguage) {
-                    return window.EverythingConvertLanguage.translate(key, window.EverythingConvertLanguage.get());
-                }
-                const fallback = {
-                    noFile: 'No file selected',
-                    routeNoteDefault: 'Choose a file and a converter. We will open the right tool page for you.',
-                    routeNoteReady: 'is ready. Continue to',
-                    routeNoteReadySuffix: 'and select the file there to convert.',
-                    routeNoteNoFile: 'Please choose or drop a file first, then continue to the selected converter.',
-                };
-                return fallback[key] || key;
-            }
-
-            const fileInput = document.getElementById('homeFileInput');
-            const chooseFile = document.getElementById('homeChooseFile');
-            const selectedFileName = document.getElementById('selectedFileName');
-            const dropzone = document.getElementById('homeDropzone');
-            const convertSource = document.getElementById('homeConvertSource');
-            const convertTarget = document.getElementById('homeConvertTarget');
-            const openConverter = document.getElementById('homeOpenConverter');
-            const routeNote = document.getElementById('homeRouteNote');
+            const showcase = document.getElementById('homeShowcase');
+            const slides = Array.from(document.querySelectorAll('[data-showcase-slide]'));
+            const dots = Array.from(document.querySelectorAll('[data-showcase-dot]'));
+            const prevSlide = document.querySelector('[data-showcase-prev]');
+            const nextSlide = document.querySelector('[data-showcase-next]');
             const searchInput = document.getElementById('homeToolSearch');
             const cards = Array.from(document.querySelectorAll('.home-tool-card'));
             const tabs = Array.from(document.querySelectorAll('.tool-tab'));
             const emptyMessage = document.getElementById('toolEmptyMessage');
             let activeTab = 'popular';
-            let selectedFile = null;
+            let showcaseIndex = 0;
+            let showcaseTimer = null;
 
-            function updateFileName(file) {
-                selectedFile = file || null;
-                selectedFileName.textContent = selectedFile ? selectedFile.name : tr('noFile');
-                updateRouteNote(selectedFile ? 'ready' : '');
+            function showSlide(nextIndex) {
+                if (!slides.length) return;
+                showcaseIndex = (nextIndex + slides.length) % slides.length;
+                slides.forEach((slide, index) => slide.classList.toggle('active', index === showcaseIndex));
+                dots.forEach((dot, index) => dot.classList.toggle('active', index === showcaseIndex));
             }
 
-            chooseFile.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', () => updateFileName(fileInput.files[0]));
+            function startShowcase() {
+                if (showcaseTimer || slides.length < 2) return;
+                showcaseTimer = setInterval(() => showSlide(showcaseIndex + 1), 5000);
+            }
 
-            ['dragenter', 'dragover'].forEach((eventName) => {
-                dropzone.addEventListener(eventName, (event) => {
-                    event.preventDefault();
-                    dropzone.classList.add('dragging');
-                });
+            function stopShowcase() {
+                if (!showcaseTimer) return;
+                clearInterval(showcaseTimer);
+                showcaseTimer = null;
+            }
+
+            if (showcase) {
+                showcase.addEventListener('mouseenter', stopShowcase);
+                showcase.addEventListener('mouseleave', startShowcase);
+                showcase.addEventListener('focusin', stopShowcase);
+                showcase.addEventListener('focusout', startShowcase);
+            }
+
+            dots.forEach((dot) => {
+                dot.addEventListener('click', () => showSlide(Number(dot.dataset.showcaseDot || 0)));
             });
 
-            ['dragleave', 'drop'].forEach((eventName) => {
-                dropzone.addEventListener(eventName, (event) => {
-                    event.preventDefault();
-                    dropzone.classList.remove('dragging');
-                    if (eventName === 'drop' && event.dataTransfer.files[0]) {
-                        updateFileName(event.dataTransfer.files[0]);
-                    }
-                });
-            });
-
-            function selectedToolLabel() {
-                return convertTarget.options[convertTarget.selectedIndex]
-                    ? convertTarget.options[convertTarget.selectedIndex].textContent.trim()
-                    : 'the selected tool';
-            }
-
-            function updateRouteNote(state) {
-                routeNote.classList.remove('ready', 'warning');
-                if (state) routeNote.classList.add(state);
-                if (selectedFile) {
-                    routeNote.textContent = `${selectedFile.name} ${tr('routeNoteReady')} ${selectedToolLabel()} ${tr('routeNoteReadySuffix')}`;
-                    return;
-                }
-                routeNote.textContent = tr('routeNoteDefault');
-            }
-
-            function openSelectedConverter() {
-                if (!selectedFile) {
-                    updateRouteNote('warning');
-                    routeNote.textContent = tr('routeNoteNoFile');
-                    fileInput.click();
-                    return;
-                }
-
-                const targetUrl = convertTarget.value;
-                const source = encodeURIComponent(convertSource.value || 'Auto detect');
-                const target = encodeURIComponent(selectedToolLabel());
-                window.location.href = `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}from=${source}&target=${target}&fromHome=1`;
-            }
-
-            convertTarget.addEventListener('change', () => updateRouteNote(selectedFile ? 'ready' : ''));
-            convertSource.addEventListener('change', () => updateRouteNote(selectedFile ? 'ready' : ''));
-            openConverter.addEventListener('click', openSelectedConverter);
+            if (prevSlide) prevSlide.addEventListener('click', () => showSlide(showcaseIndex - 1));
+            if (nextSlide) nextSlide.addEventListener('click', () => showSlide(showcaseIndex + 1));
+            startShowcase();
 
             function setActiveTab(nextTab) {
                 activeTab = nextTab;
@@ -764,6 +752,4 @@
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
 </body>
 </html>
-
-
 

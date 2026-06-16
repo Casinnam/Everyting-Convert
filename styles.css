@@ -1339,7 +1339,7 @@ nav {
 
 .home-hero h1 {
     max-width: 680px;
-    font-size: clamp(2.45rem, 4.8vw, 4.55rem);
+    font-size: clamp(2.35rem, 4.1vw, 4.05rem);
     line-height: 1.03;
     letter-spacing: 0;
 }
@@ -1363,6 +1363,242 @@ nav {
     gap: 0.85rem;
     flex-wrap: wrap;
     margin-top: 0.3rem;
+}
+
+.home-showcase {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.2rem, 2vw, 1.6rem);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.14);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.showcase-frame {
+    position: relative;
+    min-height: 27rem;
+    overflow: hidden;
+    border: 2px solid rgba(203, 213, 225, 0.78);
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 85% 10%, rgba(124, 58, 237, 0.15), transparent 16rem),
+        radial-gradient(circle at 12% 16%, rgba(6, 182, 212, 0.13), transparent 15rem),
+        rgba(255, 255, 255, 0.74);
+}
+
+.showcase-slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.86fr);
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    padding: clamp(1.6rem, 4vw, 3rem);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(1.5rem) scale(0.985);
+    transition: opacity 0.42s ease, transform 0.42s ease;
+}
+
+.showcase-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) scale(1);
+}
+
+.showcase-copy {
+    display: grid;
+    gap: 0.75rem;
+    align-content: center;
+}
+
+.showcase-kicker {
+    width: max-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--home-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.showcase-copy h2 {
+    max-width: 25rem;
+    font-size: clamp(1.5rem, 2.25vw, 2.25rem);
+    line-height: 1.08;
+    letter-spacing: 0;
+}
+
+.showcase-copy p {
+    max-width: 29rem;
+    color: #475569;
+    font-size: 0.94rem;
+    line-height: 1.56;
+}
+
+.showcase-action {
+    width: max-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.15rem;
+    padding: 0.82rem 1rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #fff;
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 0 16px 34px rgba(37, 99, 235, 0.26);
+}
+
+.showcase-visual {
+    position: relative;
+    min-height: 17rem;
+    display: grid;
+    place-items: center;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.86);
+}
+
+.doc-card,
+.image-tile,
+.format-chip,
+.ai-visual span {
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    color: #fff;
+    font-weight: 950;
+    box-shadow: 0 18px 32px rgba(15, 23, 42, 0.14);
+}
+
+.doc-card {
+    position: absolute;
+    width: 5.4rem;
+    height: 6.6rem;
+}
+
+.doc-card.pdf { left: 1.3rem; background: linear-gradient(135deg, #ef4444, #f97316); }
+.doc-card.word { right: 1.2rem; top: 3.4rem; background: linear-gradient(135deg, #2563eb, #60a5fa); }
+.doc-card.excel { right: 4rem; bottom: 2rem; background: linear-gradient(135deg, #16a34a, #22c55e); }
+
+.showcase-visual > .fa-arrow-right {
+    width: 3.1rem;
+    height: 3.1rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--home-primary);
+    font-size: 1.4rem;
+}
+
+.image-visual,
+.media-visual,
+.audio-visual,
+.ai-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.image-tile {
+    width: 5.8rem;
+    height: 5.8rem;
+}
+
+.image-tile.jpg { background: linear-gradient(135deg, #f97316, #fb7185); }
+.image-tile.png { background: linear-gradient(135deg, #06b6d4, #2563eb); }
+.image-tile.webp { background: linear-gradient(135deg, #14b8a6, #22c55e); }
+
+.media-ring {
+    width: 8rem;
+    height: 8rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #fff;
+    font-size: 2.5rem;
+    box-shadow: 0 22px 44px rgba(79, 70, 229, 0.24);
+}
+
+.format-chip {
+    width: 4.6rem;
+    height: 2.7rem;
+    background: rgba(15, 23, 42, 0.84);
+}
+
+.audio-visual span {
+    width: 1.3rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #60a5fa, #7c3aed);
+}
+
+.audio-visual span:nth-child(1) { height: 4rem; }
+.audio-visual span:nth-child(2) { height: 7rem; }
+.audio-visual span:nth-child(3) { height: 10rem; }
+.audio-visual span:nth-child(4) { height: 6.5rem; }
+.audio-visual span:nth-child(5) { height: 4.8rem; }
+
+.ai-visual span {
+    width: 5.4rem;
+    height: 5.4rem;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    font-size: 1.8rem;
+}
+
+.showcase-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+}
+
+.showcase-arrow,
+.showcase-dot {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.showcase-arrow {
+    width: 2.35rem;
+    height: 2.35rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--home-primary);
+}
+
+.showcase-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.showcase-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transition: width 0.2s ease, background 0.2s ease;
+}
+
+.showcase-dot.active {
+    width: 1.55rem;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
 }
 
 .upload-console {
@@ -2278,11 +2514,26 @@ nav {
     }
 
     .home-hero h1 {
-        font-size: clamp(2.2rem, 10vw, 3.35rem);
+        font-size: clamp(2rem, 9vw, 3rem);
     }
 
-    .upload-console {
+    .upload-console,
+    .home-showcase {
         border-radius: 20px;
+    }
+
+    .showcase-frame {
+        min-height: 36rem;
+    }
+
+    .showcase-slide {
+        grid-template-columns: 1fr;
+        align-content: center;
+        text-align: left;
+    }
+
+    .showcase-visual {
+        min-height: 13rem;
     }
 
     .floating-file {
