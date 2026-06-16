@@ -175,7 +175,7 @@
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
   <script src="supabase-config.js"></script>
   <script src="auth.js?v=auth-20260528b"></script>
-  <script src="tools-menu.js?v=nav-20260614b"></script>
+  <script src="tools-menu.js?v=nav-20260614c"></script>
   <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260608a"></script>
   <script>
   (function () {
@@ -425,10 +425,24 @@
             + '<td><span class="be-badge ' + (g.status === 'published' ? 'published' : 'draft') + '">' + g.status + '</span></td>'
             + '<td>' + g.langs.map((l) => l.toUpperCase()).join(' ') + '</td>'
             + '<td class="be-hint">' + new Date(g.updated_at).toLocaleDateString() + '</td>'
-            + '<td><button class="be-btn" data-edit="' + escapeHtml(g.group_id || '') + '" data-slug="' + escapeHtml(g.slug) + '">Edit</button></td>'
+            + '<td class="be-row"><button class="be-btn" data-edit="' + escapeHtml(g.group_id || '') + '" data-slug="' + escapeHtml(g.slug) + '">Edit</button>'
+            + '<button class="be-btn danger" data-del-group="' + escapeHtml(g.group_id || '') + '" data-del-slug="' + escapeHtml(g.slug) + '">Delete</button></td>'
             + '</tr>').join('')
           + '</tbody></table>';
       } catch (e) { els.postList.innerHTML = '<p class="be-msg err">Could not load posts: ' + escapeHtml(e.message) + '</p>'; }
+    }
+
+    async function deleteFromList(groupId, slug) {
+      if (!window.confirm('Delete this post and all its language versions permanently?')) return;
+      setMsg('Deleting…');
+      try {
+        const q = groupId ? client.from('blog_posts').delete().eq('group_id', groupId) : client.from('blog_posts').delete().eq('slug', slug);
+        const r = await q;
+        if (r.error) throw r.error;
+        if (editingGroupId && editingGroupId === groupId) resetForm();
+        setMsg('Post deleted.', 'ok');
+        loadPosts();
+      } catch (e) { setMsg('Delete failed: ' + e.message, 'err'); }
     }
 
     async function openGroup(groupId, slug) {
@@ -487,7 +501,11 @@
     els.deleteBtn.addEventListener('click', removePost);
     $('newPostBtn').addEventListener('click', resetForm);
     $('refreshListBtn').addEventListener('click', loadPosts);
-    els.postList.addEventListener('click', (e) => { const b = e.target.closest('[data-edit]'); if (b) openGroup(b.dataset.edit, b.dataset.slug); });
+    els.postList.addEventListener('click', (e) => {
+      const del = e.target.closest('[data-del-group]');
+      if (del) { deleteFromList(del.dataset.delGroup, del.dataset.delSlug); return; }
+      const b = e.target.closest('[data-edit]'); if (b) openGroup(b.dataset.edit, b.dataset.slug);
+    });
 
     window.addEventListener('everything-auth-change', () => {
       const s = window.EverythingConvertAuth && window.EverythingConvertAuth.state;

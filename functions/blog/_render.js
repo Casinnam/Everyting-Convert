@@ -156,19 +156,29 @@ const STYLE = `
   .blog-card p { color: #64748b; margin: 0 0 .7rem; line-height: 1.6; font-size: .95rem; }
   .blog-card .card-date { color: #94a3b8; font-weight: 700; font-size: .82rem; }
   .blog-empty { color: #64748b; padding: 3rem 0; text-align: center; }
+  .blog-foot-langs { display: flex; gap: .55rem; flex-wrap: wrap; align-items: center; justify-content: center; padding: .25rem 0 1rem; }
+  .blog-foot-langs i { color: #94a3b8; margin-right: .25rem; }
+  .blog-foot-langs a { font-size: .85rem; font-weight: 800; color: #475569; text-decoration: none; }
+  .blog-foot-langs a.active { color: #2563eb; }
 `;
 
-function shell({ lang, title, description, canonical, head = '', body }) {
+function shell({ lang, title, description, canonical, head = '', body, footerLangs }) {
+  const footLangs = (footerLangs && footerLangs.length)
+    ? `<div class="blog-foot-langs"><i class="fa-solid fa-globe"></i>${footerLangs.map((f) => `<a href="${escapeHtml(f.url)}"${f.active ? ' class="active"' : ''}>${escapeHtml(LANG_LABEL[f.lang] || f.lang)}</a>`).join('')}</div>`
+    : '';
   return `<!DOCTYPE html>
 <html lang="${escapeHtml(lang || 'en')}">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MWPYMT3Q6H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MWPYMT3Q6H');</script>
+<script src="/analytics.js?v=analytics-20260614a"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(description)}">
 <link rel="canonical" href="${escapeHtml(canonical)}">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/styles.css?v=ui-20260611a">
+<link rel="stylesheet" href="/styles.css?v=ui-20260614a">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>${STYLE}</style>
@@ -195,17 +205,27 @@ ${body}
     <a href="/security.html">Security and Compliance</a>
     <a href="/contact.html">Contact</a>
     <a href="/blog">Blog</a>
+    <a href="#cookie-settings">Cookie Settings</a>
   </div>
+  ${footLangs}
   <div class="footer-bottom">
     <div class="footer-logo"><img class="brand-icon" src="/favicon.svg" alt="" width="24" height="24"><span>${SITE_NAME}</span></div>
     <p>&copy; ${SITE_NAME}.com All rights reserved (2026)</p>
   </div>
 </footer>
+<script>window.EVERYTHING_CONVERT_NAV_PREFIX='/';</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase-config.js"></script>
+<script src="/auth.js?v=auth-20260528b"></script>
+<script src="/tools-menu.js?v=nav-20260614c"></script>
+<script src="/language-menu.js?v=lang-20260611a"></script>
+<script src="/header-language.js?v=headerlang-20260608a"></script>
 </body>
 </html>`;
 }
 
 const LANG_LABEL = { en: 'English', ko: '한국어', de: 'Deutsch', es: 'Español', fr: 'Français' };
+const LANGS = ['en', 'ko', 'de', 'es', 'fr'];
 
 export function postUrl(origin, lang, slug) {
   return `${origin}/blog/${lang}/${encodeURIComponent(slug)}`;
@@ -267,7 +287,8 @@ ${hreflang}
   </article>
 </main>`;
 
-  return shell({ lang: post.lang, title: `${post.title} | ${SITE_NAME} Blog`, description, canonical, head, body });
+  const footerLangs = alts.map((a) => ({ lang: a.lang, url: postUrl(origin, a.lang, a.slug), active: a.lang === post.lang }));
+  return shell({ lang: post.lang, title: `${post.title} | ${SITE_NAME} Blog`, description, canonical, head, body, footerLangs });
 }
 
 export function renderListPage({ posts, origin, lang }) {
@@ -293,11 +314,12 @@ export function renderListPage({ posts, origin, lang }) {
   ${cards ? `<div class="blog-cards">${cards}</div>` : '<div class="blog-empty">No posts yet. Check back soon!</div>'}
 </main>`;
 
+  const footerLangs = LANGS.map((l) => ({ lang: l, url: `${origin}/blog?lang=${l}`, active: l === (lang || 'en') }));
   return shell({
     lang: lang || 'en',
     title: `Blog | ${SITE_NAME}`,
     description: `Guides, tips, and product updates from ${SITE_NAME}.`,
-    canonical, body,
+    canonical, body, footerLangs,
   });
 }
 
@@ -308,8 +330,9 @@ export function notFoundPage(origin) {
   <h1>Post not found</h1>
   <p style="color:#64748b">This post may have been moved or unpublished.</p>
 </main>`;
+  const footerLangs = LANGS.map((l) => ({ lang: l, url: `${origin}/blog?lang=${l}`, active: l === 'en' }));
   return shell({
     lang: 'en', title: `Not found | ${SITE_NAME} Blog`,
-    description: 'Post not found.', canonical: `${origin}/blog`, body,
+    description: 'Post not found.', canonical: `${origin}/blog`, body, footerLangs,
   });
 }

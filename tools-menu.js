@@ -1,5 +1,8 @@
 (function () {
   function scriptPrefix() {
+    // Pages served at dynamic depths (e.g. the blog at /blog/<lang>/<slug>) can
+    // force absolute-root links by setting this before loading tools-menu.js.
+    if (typeof window.EVERYTHING_CONVERT_NAV_PREFIX === 'string') return window.EVERYTHING_CONVERT_NAV_PREFIX;
     const current = document.currentScript || Array.from(document.scripts).find((script) => /tools-menu\.js/.test(script.src || ''));
     const src = current ? current.getAttribute('src') || '' : '';
     const match = src.match(/^((?:\.\.\/)+)/);
