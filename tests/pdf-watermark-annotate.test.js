@@ -31,7 +31,16 @@ assert(/opacity|wmOpacity/.test(wm) && wm.includes('wmColor'), 'Watermark should
 
 // ── Annotate specifics ──
 assert(an.includes('addText') && an.includes('pointerdown'), 'Annotate should add draggable text.');
-assert(an.includes('does not edit') || an.includes('overlay') || an.includes('overlays new text'), 'Annotate should clarify it overlays new text (not edit existing).');
+
+// ── Annotate: edit existing PDF text (Pro / 3 credits) ──
+assert(an.includes('editTextBtn') && an.includes('getTextContent'), 'Annotate should detect existing text for editing.');
+assert(an.includes('drawRectangle'), 'Annotate edit-text should erase the original via a covering rectangle.');
+assert(an.includes("spend('pdf-edit-text'"), 'Annotate edit-text should charge via the pdf-edit-text credit spend.');
+assert(an.includes('ai-credits.js'), 'Annotate should load the credit helper for edit-text.');
+assert(/EDIT_COST\s*=\s*3/.test(an), 'Annotate edit-text should cost 3 credits.');
+assert(an.includes('isPro'), 'Annotate edit-text should be free for Pro members.');
+const spendFn = read('supabase/functions/ai-spend-credit/index.ts');
+assert(/'pdf-edit-text':\s*3/.test(spendFn), 'ai-spend-credit must price pdf-edit-text at 3 credits.');
 
 // ── i18n wiring ──
 const tl = read('tool-language.js');

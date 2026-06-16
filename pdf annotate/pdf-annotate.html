@@ -51,6 +51,11 @@
     .an-status { margin-top: .9rem; font-weight: 700; min-height: 1.2em; }
     .an-status.ok { color: #15803d; } .an-status.err { color: #b91c1c; }
     .an-hint { color: #94a3b8; padding: 3rem 1rem; text-align: center; }
+    .an-badge { display: inline-flex; align-items: center; gap: .2rem; font-size: .68rem; font-weight: 800; background: #ede9fe; color: #6d28d9; padding: .12rem .45rem; border-radius: 999px; margin-left: .35rem; vertical-align: middle; }
+    .an-btn.active { background: #eef2ff; border-color: #2563eb; color: #1d4ed8; }
+    .an-edit-hit { position: absolute; cursor: text; background: rgba(37,99,235,.10); outline: 1px solid rgba(37,99,235,.35); border-radius: 3px; }
+    .an-edit-hit:hover { background: rgba(37,99,235,.24); }
+    .an-erase { position: absolute; pointer-events: none; }
     .an-note { background: #eff6ff; border-left: 3px solid #7c3aed; padding: .8rem 1rem; border-radius: 0 8px 8px 0; color: #64748b; font-size: .85rem; margin-top: 1.25rem; line-height: 1.6; }
     .an-info { margin-top: 2.5rem; } .an-info h2 { font-size: 1.2rem; color: #0f172a; margin: 0 0 .8rem; }
     .an-info details { border: 1px solid #e2e8f0; border-radius: 10px; padding: .85rem 1rem; margin-bottom: .6rem; background: #fff; }
@@ -91,6 +96,7 @@
 
       <div class="an-toolbar" id="toolbar">
         <button class="an-btn primary" id="addTextBtn" type="button"><i class="fa-solid fa-plus"></i> <span data-ko="텍스트 추가">Add text</span></button>
+        <button class="an-btn" id="editTextBtn" type="button"><i class="fa-solid fa-i-cursor"></i> <span data-ko="기존 글자 편집">Edit text</span><span class="an-badge"><i class="fa-solid fa-crown" style="font-size:.6rem;"></i> Pro · 3</span></button>
         <label style="font-weight:800;color:#475569;font-size:.85rem;" data-ko="크기">Size</label>
         <input type="number" id="fontSize" min="6" max="200" value="24">
         <input type="color" id="fontColor" value="#e11d48" title="Color">
@@ -106,13 +112,13 @@
         <div class="an-hint" data-ko="PDF를 올리면 여기에서 글씨를 추가할 수 있습니다.">Upload a PDF to start adding text.</div>
       </div>
       <div class="an-status" id="status"></div>
-      <div class="an-note" data-ko="추가한 글씨는 PDF에 영구적으로 합쳐져 새 파일로 저장됩니다. 한국어 등 모든 언어를 지원합니다. (원본의 기존 글자는 수정하지 않고, 새 글씨만 얹습니다.)">Added text is permanently merged into the PDF and saved as a new file. All languages (incl. Korean) are supported. (It overlays new text; it does not edit the PDF's existing text.)</div>
+      <div class="an-note" data-ko="새 글씨 추가는 무료입니다. 기존 글자 편집(지우고 다시 쓰기)은 ‘기존 글자 편집’을 켜고 글자를 클릭하세요 — Pro는 무료, 그 외에는 다운로드 1건당 3크레딧입니다. 흰색 등 단색 배경 문서에서 가장 깔끔하게 됩니다. 결과는 새 PDF로 합쳐져 저장되며 한국어 등 모든 언어를 지원합니다.">Adding new text is free. To edit the PDF's existing text (erase &amp; replace), turn on ‘Edit text’ and click any text — free with Pro, otherwise 3 credits per download. It works best on solid-background (e.g. white) documents. The result is merged into a new PDF and supports all languages (incl. Korean).</div>
     </div>
 
     <div class="an-info">
       <h2 data-ko="PDF에 글씨를 추가하는 방법">How to add text to a PDF</h2>
       <details open><summary data-ko="1) PDF 업로드 → 2) '텍스트 추가' 후 입력·드래그 → 3) 다운로드">1) Upload a PDF → 2) click 'Add text', type &amp; drag → 3) download</summary><p data-ko="모든 작업은 브라우저에서 처리되어 파일이 업로드되지 않습니다.">Everything runs in your browser, so your file is never uploaded.</p></details>
-      <details><summary data-ko="기존 PDF의 글자도 수정되나요?">Can it edit the PDF's existing text?</summary><p data-ko="아니요. 새 글씨를 위에 얹는 방식입니다. 기존 글자 편집은 지원하지 않습니다.">No. It overlays new text; editing the original embedded text is not supported.</p></details>
+      <details><summary data-ko="기존 PDF의 글자도 수정할 수 있나요?">Can it edit the PDF's existing text?</summary><p data-ko="네. ‘기존 글자 편집’을 켜고 글자를 클릭하면 그 자리를 지우고 새로 입력할 수 있습니다. Pro 회원은 무료, 그 외에는 다운로드 1건당 3크레딧입니다. 원래 글자를 배경색으로 덮고 같은 위치에 새 글자를 그리는 방식이라, 흰색 등 단색 배경 문서에서 가장 깔끔합니다.">Yes. Turn on ‘Edit text’ and click any text to erase that spot and retype it. This is free for Pro members, otherwise 3 credits per download. It covers the original with the background color and draws the new text in the same spot, so it works best on solid-background (e.g. white) documents.</p></details>
       <details><summary data-ko="한국어도 되나요?">Does Korean work?</summary><p data-ko="네. 모든 언어와 이모지를 지원합니다.">Yes — all languages and emoji are supported.</p></details>
     </div>
   </main>
@@ -147,6 +153,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
   <script src="../auth.js?v=auth-20260528b"></script>
+  <script src="../ai-credits.js?v=credits-20260613d"></script>
   <script src="../tools-menu.js?v=nav-20260616a"></script>
   <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260608a"></script>
   <script src="../tool-language.js?v=toollang-20260616a"></script>
@@ -155,15 +162,21 @@
     if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const $ = (id) => document.getElementById(id);
     const fileInput = $('fileInput'), dropZone = $('dropZone'), toolbar = $('toolbar'), stageWrap = $('stageWrap');
-    const addTextBtn = $('addTextBtn'), fontSize = $('fontSize'), fontColor = $('fontColor');
+    const addTextBtn = $('addTextBtn'), editTextBtn = $('editTextBtn'), fontSize = $('fontSize'), fontColor = $('fontColor');
     const prevPage = $('prevPage'), nextPage = $('nextPage'), pageNow = $('pageNow'), pageTotal = $('pageTotal'), downloadBtn = $('downloadBtn'), statusEl = $('status');
 
+    const EDIT_COST = 3; // credits per download that contains existing-text edits (Pro: free)
     let pdfBytes = null, pdfName = '', pdfjsDoc = null;
     let current = 1, total = 0, renderScale = 1; // renderScale = displayPx / pagePoint
-    const annos = {};   // { pageIndex(1-based): [ {xr, yr, fontPt, color, text} ] }
-    let selected = null;
+    const annos = {};            // { pageIndex(1-based): [ {type:'add'|'edit', xr, yr, fontPt, color, text, bbox?, bg?} ] }
+    const pageTextItems = {};    // { pageIndex: [ detected text items for Edit-text mode ] }
+    const paidSignatures = new Set(); // edit-signatures already charged this session
+    let selected = null, editMode = false;
+    let curCtx = null, curW = 0, curH = 0; // current page canvas (for colour sampling)
 
     function setStatus(t, k) { statusEl.textContent = t || ''; statusEl.className = 'an-status' + (k ? ' ' + k : ''); }
+    function hexToRgb(hex) { const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return { r: 0, g: 0, b: 0 }; const n = parseInt(m[1], 16); return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }; }
+    function rgbHex(r, g, b) { return '#' + [r, g, b].map((v) => ('0' + (v | 0).toString(16)).slice(-2)).join(''); }
 
     async function loadFile(file) {
       if (!file || file.type !== 'application/pdf') { setStatus('Please choose a PDF file.', 'err'); return; }
@@ -171,6 +184,9 @@
       pdfjsDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise;
       total = pdfjsDoc.numPages; current = 1; pageTotal.textContent = total;
       Object.keys(annos).forEach(k => delete annos[k]);
+      Object.keys(pageTextItems).forEach(k => delete pageTextItems[k]);
+      paidSignatures.clear();
+      editMode = false; editTextBtn.classList.remove('active');
       toolbar.classList.add('show'); setStatus('');
       await renderPage();
     }
@@ -184,7 +200,9 @@
       const viewport = page.getViewport({ scale: renderScale });
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width; canvas.height = viewport.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+      const cctx = canvas.getContext('2d', { willReadFrequently: true });
+      await page.render({ canvasContext: cctx, viewport }).promise;
+      curCtx = cctx; curW = viewport.width; curH = viewport.height;
 
       const stage = document.createElement('div');
       stage.className = 'an-stage'; stage.style.width = viewport.width + 'px'; stage.style.height = viewport.height + 'px';
@@ -193,10 +211,97 @@
       stage.appendChild(overlay);
       stageWrap.innerHTML = ''; stageWrap.appendChild(stage);
 
+      if (!pageTextItems[current]) pageTextItems[current] = await buildTextItems(page, pt.width, pt.height);
       (annos[current] || []).forEach((a) => renderAnno(a, overlay));
+      renderHits(overlay);
+    }
+
+    // ── Existing-text detection (for Edit-text mode) ──
+    async function buildTextItems(page, Wpts, Hpts) {
+      let tc; try { tc = await page.getTextContent(); } catch (e) { return []; }
+      const items = [];
+      (tc.items || []).forEach((it) => {
+        const s = (it.str || '').trim(); if (!s) return;
+        const tr = it.transform || [1, 0, 0, 1, 0, 0];
+        const fontPt = Math.hypot(tr[1], tr[3]) || it.height || 10;
+        const wPt = it.width || (s.length * fontPt * 0.5);
+        if (wPt < 1 || fontPt < 2) return;
+        items.push({ str: it.str, xPt: tr[4], baseYPt: tr[5], fontPt, wPt, Wpts, Hpts, used: false });
+      });
+      return items;
+    }
+
+    function renderHits(overlay) {
+      if (!editMode || !overlay) return;
+      (pageTextItems[current] || []).forEach((it) => {
+        if (it.used) return;
+        const hit = document.createElement('div'); hit.className = 'an-edit-hit';
+        hit.style.left = (it.xPt * renderScale) + 'px';
+        hit.style.top = ((it.Hpts - (it.baseYPt + it.fontPt * 0.8)) * renderScale) + 'px';
+        hit.style.width = (it.wPt * renderScale) + 'px';
+        hit.style.height = (it.fontPt * 1.15 * renderScale) + 'px';
+        hit.title = 'Click to edit this text';
+        hit.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); createEditFromItem(it, overlay, hit); });
+        overlay.appendChild(hit);
+      });
+    }
+
+    function pixel(x, y) {
+      x = Math.max(0, Math.min(curW - 1, Math.round(x))); y = Math.max(0, Math.min(curH - 1, Math.round(y)));
+      try { const d = curCtx.getImageData(x, y, 1, 1).data; return [d[0], d[1], d[2]]; } catch (e) { return [255, 255, 255]; }
+    }
+    // Background = lightest neighbour just outside the glyph box.
+    function sampleBg(l, t, w, h) {
+      const pts = [[l - 3, t + h / 2], [l + w + 3, t + h / 2], [l + w / 2, t - 3], [l + w / 2, t + h + 3], [l - 3, t - 3], [l + w + 3, t + h + 3]];
+      let best = [255, 255, 255], bestSum = -1;
+      pts.forEach((p) => { const c = pixel(p[0], p[1]); const s = c[0] + c[1] + c[2]; if (s > bestSum) { bestSum = s; best = c; } });
+      return rgbHex(best[0], best[1], best[2]);
+    }
+    // Ink = pixel in the glyph box most different from the background.
+    function sampleInk(l, t, w, h, bgHex) {
+      const bg = hexToRgb(bgHex); let best = [17, 17, 17], bestD = -1;
+      const x0 = Math.max(0, Math.round(l)), y0 = Math.max(0, Math.round(t)), x1 = Math.min(curW, Math.round(l + w)), y1 = Math.min(curH, Math.round(t + h));
+      if (x1 <= x0 || y1 <= y0) return '#111111';
+      let img; try { img = curCtx.getImageData(x0, y0, x1 - x0, y1 - y0).data; } catch (e) { return '#111111'; }
+      for (let i = 0; i < img.length; i += 4) { const d = Math.abs(img[i] - bg.r) + Math.abs(img[i + 1] - bg.g) + Math.abs(img[i + 2] - bg.b); if (d > bestD) { bestD = d; best = [img[i], img[i + 1], img[i + 2]]; } }
+      return bestD < 40 ? '#111111' : rgbHex(best[0], best[1], best[2]);
+    }
+
+    function createEditFromItem(it, overlay, hitEl) {
+      const dispLeft = it.xPt * renderScale;
+      const dispTop = (it.Hpts - (it.baseYPt + it.fontPt * 0.8)) * renderScale;
+      const dispW = it.wPt * renderScale, dispH = it.fontPt * renderScale;
+      const bg = sampleBg(dispLeft, dispTop, dispW, dispH);
+      const ink = sampleInk(dispLeft, dispTop, dispW, dispH, bg);
+      const padTopPt = it.fontPt * 0.18, padBotPt = it.fontPt * 0.30, padXPt = it.fontPt * 0.06;
+      const a = {
+        type: 'edit', text: it.str, fontPt: it.fontPt, color: ink, bg,
+        xr: it.xPt / it.Wpts,
+        yr: (it.Hpts - (it.baseYPt + it.fontPt * 0.85)) / it.Hpts,
+        bbox: {
+          xr: (it.xPt - padXPt) / it.Wpts,
+          yr: ((it.Hpts - (it.baseYPt + it.fontPt * 0.8)) - padTopPt) / it.Hpts,
+          wr: (it.wPt + padXPt * 2) / it.Wpts,
+          hr: (it.fontPt * 0.8 + padTopPt + padBotPt) / it.Hpts,
+        },
+      };
+      (annos[current] = annos[current] || []).push(a);
+      it.used = true; if (hitEl) hitEl.remove();
+      const el = renderAnno(a, overlay);
+      fontColor.value = /^#[0-9a-f]{6}$/i.test(ink) ? ink : '#111111';
+      select(el); startEdit(el, a);
     }
 
     function renderAnno(a, overlay) {
+      if (a.type === 'edit' && a.bbox) {
+        const er = document.createElement('div'); er.className = 'an-erase';
+        er.style.left = (a.bbox.xr * overlay.clientWidth) + 'px';
+        er.style.top = (a.bbox.yr * overlay.clientHeight) + 'px';
+        er.style.width = (a.bbox.wr * overlay.clientWidth) + 'px';
+        er.style.height = (a.bbox.hr * overlay.clientHeight) + 'px';
+        er.style.background = a.bg || '#ffffff';
+        a.__erEl = er; overlay.appendChild(er);
+      }
       const el = document.createElement('div');
       el.className = 'an-text';
       el.textContent = a.text;
@@ -206,7 +311,7 @@
       el.style.color = a.color;
       el.__anno = a;
       const del = document.createElement('button'); del.className = 'an-del'; del.textContent = '×';
-      del.addEventListener('click', (e) => { e.stopPropagation(); const arr = annos[current]; const i = arr.indexOf(a); if (i >= 0) arr.splice(i, 1); el.remove(); selected = null; });
+      del.addEventListener('click', (e) => { e.stopPropagation(); const arr = annos[current]; const i = arr.indexOf(a); if (i >= 0) arr.splice(i, 1); el.remove(); if (a.__erEl) a.__erEl.remove(); selected = null; });
       el.appendChild(del);
       makeInteractive(el, a, overlay);
       overlay.appendChild(el);
@@ -245,7 +350,7 @@
       const finish = () => {
         el.contentEditable = 'false';
         a.text = (el.textContent || '').replace(/ /g, ' ');
-        if (!a.text.trim()) { const arr = annos[current]; const i = arr.indexOf(a); if (i >= 0) arr.splice(i, 1); el.remove(); }
+        if (!a.text.trim() && a.type !== 'edit') { const arr = annos[current]; const i = arr.indexOf(a); if (i >= 0) arr.splice(i, 1); el.remove(); if (a.__erEl) a.__erEl.remove(); }
         el.removeEventListener('blur', finish);
       };
       el.addEventListener('blur', finish);
@@ -259,10 +364,62 @@
       select(el); startEdit(el, a);
     }
 
+    // Identifies this edited output so identical re-saves don't re-charge, while a
+    // new file or changed edits do (server spend is also idempotent on this ref).
+    function editSignature() {
+      const parts = [pdfName, String(pdfBytes ? pdfBytes.byteLength : 0)];
+      Object.keys(annos).sort().forEach((p) => {
+        (annos[p] || []).forEach((a) => {
+          if (a.type === 'edit') parts.push(p + ':' + Math.round(a.xr * 1000) + ',' + Math.round(a.yr * 1000) + ':' + a.text);
+        });
+      });
+      let h = 5381; const s = parts.join('|');
+      for (let i = 0; i < s.length; i++) h = (((h << 5) + h) ^ s.charCodeAt(i)) >>> 0;
+      return h.toString(36);
+    }
+
+    // Returns 'ok' to proceed or 'stop' to abort. Free when there are no edits or the user is Pro.
+    async function chargeForEditsIfNeeded() {
+      const hasEdits = Object.values(annos).some((arr) => arr && arr.some((a) => a.type === 'edit'));
+      if (!hasEdits) return 'ok';
+      const auth = window.EverythingConvertAuth;
+      if (auth && typeof auth.refresh === 'function') { try { await auth.refresh(); } catch (e) {} }
+      if (auth && auth.isPro && auth.isPro()) return 'ok';
+      const credits = window.EverythingConvertCredits;
+      if (!credits || !credits.isLoggedIn()) {
+        if (confirm('Editing existing PDF text needs Pro or ' + EDIT_COST + ' credits. New accounts get 10 free credits — log in now?')) {
+          window.location.href = '../auth.html?next=' + encodeURIComponent('pdf annotate/pdf-annotate.html');
+        }
+        return 'stop';
+      }
+      const sig = editSignature();
+      if (paidSignatures.has(sig)) return 'ok';
+      const bal = await credits.getBalance();
+      if (bal != null && bal < EDIT_COST) {
+        alert('Editing text costs ' + EDIT_COST + ' credits but you have ' + bal + '. Buy more on the pricing page.');
+        window.location.href = '../pricing.html#credit-packs';
+        return 'stop';
+      }
+      if (!confirm('Spend ' + EDIT_COST + ' credits to download your edited PDF?' + (bal != null ? ' (Balance: ' + bal + ')' : ''))) return 'stop';
+      setStatus('Charging credits…');
+      const res = await credits.spend('pdf-edit-text', 'pdfedit:' + sig);
+      if (!res.ok) {
+        if (res.code === 'insufficient_credits') { alert('Not enough credits.'); window.location.href = '../pricing.html#credit-packs'; }
+        else if (res.code === 'login_required') { alert('Please log in again.'); }
+        else { alert(res.error || 'Could not charge credits.'); }
+        setStatus('');
+        return 'stop';
+      }
+      paidSignatures.add(sig);
+      return 'ok';
+    }
+
     async function download() {
       if (!pdfBytes) return;
-      const hasAny = Object.values(annos).some(arr => arr && arr.length);
-      if (!hasAny) { setStatus('Add some text first.', 'err'); return; }
+      const hasAny = Object.values(annos).some(arr => arr && arr.some(a => a.type === 'edit' || a.text.trim()));
+      if (!hasAny) { setStatus('Add or edit some text first.', 'err'); return; }
+      const gate = await chargeForEditsIfNeeded();
+      if (gate !== 'ok') return;
       downloadBtn.disabled = true; setStatus('Building your PDF…');
       try {
         const doc = await PDFLib.PDFDocument.load(pdfBytes.slice(0));
@@ -272,6 +429,11 @@
           const list = annos[p]; if (!list || !list.length) continue;
           const page = pages[p - 1]; const { width: W, height: H } = page.getSize();
           for (const a of list) {
+            if (a.type === 'edit' && a.bbox) {
+              const bgc = hexToRgb(a.bg || '#ffffff');
+              const rTop = a.bbox.yr * H, rH = a.bbox.hr * H;
+              page.drawRectangle({ x: a.bbox.xr * W, y: H - rTop - rH, width: a.bbox.wr * W, height: rH, color: PDFLib.rgb(bgc.r / 255, bgc.g / 255, bgc.b / 255) });
+            }
             if (!a.text.trim()) continue;
             const lines = a.text.split('\n');
             const fpx = a.fontPt * EXPORT;
@@ -308,6 +470,18 @@
     ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('drag'); }));
     dropZone.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) loadFile(f); });
     addTextBtn.addEventListener('click', addText);
+    editTextBtn.addEventListener('click', () => {
+      editMode = !editMode;
+      editTextBtn.classList.toggle('active', editMode);
+      const overlay = $('overlay');
+      if (overlay) { overlay.querySelectorAll('.an-edit-hit').forEach((n) => n.remove()); if (editMode) renderHits(overlay); }
+      if (editMode) {
+        const pro = window.EverythingConvertAuth && EverythingConvertAuth.isPro && EverythingConvertAuth.isPro();
+        setStatus(pro
+          ? 'Edit mode (Pro): click any text to erase and retype it.'
+          : 'Edit mode: click any text to erase and retype it. Pro is free, otherwise ' + EDIT_COST + ' credits per download.');
+      } else { setStatus(''); }
+    });
     fontSize.addEventListener('input', () => { if (selected) { selected.__anno.fontPt = parseInt(fontSize.value, 10) || 24; selected.style.fontSize = (selected.__anno.fontPt * renderScale) + 'px'; } });
     fontColor.addEventListener('input', () => { if (selected) { selected.__anno.color = fontColor.value; selected.style.color = fontColor.value; } });
     prevPage.addEventListener('click', () => { if (current > 1) { current--; renderPage(); } });
