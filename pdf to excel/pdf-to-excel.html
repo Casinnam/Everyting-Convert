@@ -853,7 +853,7 @@
     <h1>PDF to Excel<span class="line2">Converter</span></h1>
     <p>Extract PDF text and tables into an Excel workbook (.xlsx).</p>
   </div>
-  <div id="heroModes" style="max-width:720px;margin:0 auto 1.5rem;padding:.8rem 1.1rem;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--muted);font-size:.9rem;line-height:1.65;text-align:center;">Two modes — free standard text extraction, or AI table detection (GPT-4o) that rebuilds real tables into spreadsheet cells for 2 credits per page (new accounts get 10 free credits).</div>
+  <div id="heroModes" style="max-width:720px;margin:0 auto 1.5rem;padding:.85rem 1.1rem;border:1px solid #fca5a5;border-radius:12px;background:#fef2f2;color:#7f1d1d;font-size:.9rem;line-height:1.65;text-align:center;font-weight:600;">Two modes — free standard text extraction, or AI table detection that rebuilds real tables into spreadsheet cells for 2 credits per page (new accounts get 10 free credits).</div>
 
   <div class="drop-zone" id="dropZone">
     <div class="drop-icon">
@@ -877,7 +877,7 @@
         <select id="conversionMode">
           <option value="simple">Standard text extraction (free)</option>
           <option value="enhanced">Enhanced table detection (Pro)</option>
-          <option value="ai">AI table detection · GPT-4o (2 credits/page)</option>
+          <option value="ai">AI table detection (2 credits/page)</option>
         </select>
       </div>
       <div class="setting-item">
@@ -1124,7 +1124,7 @@
 <script src="../usage-limit.js"></script>
 <script src="../tools-menu.js?v=nav-20260614c"></script>
 <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260608a"></script>
-<script src="../tool-language.js?v=toollang-20260615a"></script>
+<script src="../tool-language.js?v=toollang-20260615b"></script>
 <script>
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -1165,7 +1165,7 @@
     if (conversionMode.value === 'enhanced') {
       notice.innerHTML = 'Enhanced table detection (geometry-based) is available to Pro members. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     } else if (conversionMode.value === 'ai') {
-      notice.innerHTML = 'AI table detection reads each page with GPT-4o vision for the most accurate tables — best for scanned or complex layouts. <strong>2 credits per page</strong> (charged only when you confirm). New accounts get 10 free credits. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
+      notice.innerHTML = 'AI table detection reads each page with AI vision for the most accurate tables — best for scanned or complex layouts. <strong>2 credits per page</strong> (charged only when you confirm). New accounts get 10 free credits. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     } else {
       notice.innerHTML = 'Standard text extraction is available without login. Current status: <strong style="color:var(--text);" data-auth-state>Checking...</strong>';
     }
@@ -1504,7 +1504,7 @@
     }
   }
 
-  // ── AI table detection (GPT-4o vision, credit-based) ──
+  // ── AI table detection (AI vision via ai-ocr, credit-based) ──
   const AI_FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
   const AI_ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
   const AI_MAX_PAGES = 30;
