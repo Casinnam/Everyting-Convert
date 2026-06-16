@@ -1133,10 +1133,31 @@
 
   const pageRange = document.getElementById('pageRange');
   const conversionMode = document.getElementById('conversionMode');
+
+  // When a file is already loaded, changing any setting should bring back the
+  // Convert button (and clear the previous result) so the same file can be
+  // re-converted without re-uploading it.
+  function showConvertAgain() {
+    if (!pdfDoc) return;
+    document.getElementById('convertBtn').classList.add('visible');
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('resultsSection').classList.remove('visible');
+    document.getElementById('resetArea').classList.remove('visible');
+    document.getElementById('previewWrap').classList.remove('visible');
+  }
+
   pageRange.addEventListener('change', () => {
     document.getElementById('customPageInput').style.display = pageRange.value === 'custom' ? 'block' : 'none';
+    showConvertAgain();
   });
-  conversionMode.addEventListener('change', updateModeNotice);
+  conversionMode.addEventListener('change', () => { updateModeNotice(); showConvertAgain(); });
+  ['sensitivity', 'sheetPerPage', 'customPages'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', showConvertAgain);
+      el.addEventListener('input', showConvertAgain);
+    }
+  });
 
   function updateModeNotice() {
     const notice = document.getElementById('proNotice');
