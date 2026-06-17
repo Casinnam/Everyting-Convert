@@ -60,7 +60,7 @@ assert(
 );
 
 assert(
-  index.includes('styles.css?v=ui-20260616b') &&
+  index.includes('styles.css?v=ui-20260616c') &&
     index.includes('home-showcase-copy') &&
     index.includes('home-showcase-visual') &&
     index.includes('home-showcase-action') &&
