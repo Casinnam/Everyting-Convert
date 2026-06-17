@@ -257,6 +257,10 @@
       }
       /* Account avatar + dropdown */
       .ec-unified-header .ec-user { position: relative !important; display: inline-flex !important; align-items: center !important; }
+      .ec-unified-header [data-auth-account][style*="display:none"],
+      .ec-unified-header [data-auth-account][style*="display: none"],
+      .ec-unified-header [data-admin-only][style*="display:none"],
+      .ec-unified-header [data-admin-only][style*="display: none"] { display: none !important; }
       .ec-unified-header .ec-avatar { width: 2.5rem !important; height: 2.5rem !important; border: 0 !important; border-radius: 50% !important; cursor: pointer !important; color: #fff !important; font-family: Inter, "Noto Sans KR", system-ui, sans-serif !important; font-weight: 800 !important; font-size: .95rem !important; letter-spacing: .02em !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, #2563eb, #7c3aed) !important; box-shadow: 0 6px 16px rgba(37, 99, 235, .28) !important; padding: 0 !important; line-height: 1 !important; }
       .ec-unified-header .ec-avatar:hover { filter: brightness(1.05) !important; }
       .ec-unified-header .ec-avatar.lg { width: 2.75rem !important; height: 2.75rem !important; font-size: 1.05rem !important; box-shadow: none !important; flex: 0 0 auto !important; }
