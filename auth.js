@@ -224,8 +224,11 @@
       element.style.display = '';
     });
 
+    // Never reveal admin links from cache — only a live-confirmed admin (in
+    // renderAuthWidgets) may show them, so a stale cache can't flash Admin to a
+    // non-admin.
     document.querySelectorAll('[data-admin-only]').forEach((element) => {
-      element.style.display = cached.role === 'admin' ? '' : 'none';
+      element.style.display = 'none';
     });
 
     fillUserWidgets({ name: cached.username, email: '', plan: planLabel || translateAuth('authFree'), pro: cached.plan === 'pro' });
@@ -353,12 +356,14 @@
       element.textContent = authLabel;
     });
 
+    // Avatar shows only for a real logged-in user. Returning users get the avatar
+    // immediately via renderCachedAuthWidgets; everyone else just sees Login.
     document.querySelectorAll('[data-auth-account]').forEach((element) => {
-      element.style.display = state.user || checkingAuth ? '' : 'none';
+      element.style.display = state.user ? '' : 'none';
     });
 
     document.querySelectorAll('[data-auth-login]').forEach((element) => {
-      element.style.display = state.user || checkingAuth ? 'none' : '';
+      element.style.display = state.user ? 'none' : '';
     });
 
     document.querySelectorAll('[data-auth-logout]').forEach((element) => {
