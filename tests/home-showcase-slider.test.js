@@ -50,6 +50,43 @@ assert(
   'Home showcase copy should be connected to the shared language menu.',
 );
 
+const showcaseI18nKeys = [
+  'showcasePdfKicker',
+  'showcasePdfTitle',
+  'showcasePdfText',
+  'showcasePdfAction',
+  'showcaseImageKicker',
+  'showcaseImageTitle',
+  'showcaseImageText',
+  'showcaseImageAction',
+  'showcaseVideoKicker',
+  'showcaseVideoTitle',
+  'showcaseVideoText',
+  'showcaseVideoAction',
+  'showcaseAudioKicker',
+  'showcaseAudioTitle',
+  'showcaseAudioText',
+  'showcaseAudioAction',
+  'showcaseAiKicker',
+  'showcaseAiTitle',
+  'showcaseAiText',
+  'showcaseAiAction',
+];
+
+showcaseI18nKeys.forEach((key) => {
+  assert(index.includes(`data-i18n="${key}"`), `Home showcase markup should expose ${key}.`);
+
+  const keyBlock = languageMenu.match(new RegExp(`${key}:\\s*\\{([^}]+)\\}`));
+  assert(keyBlock, `Home showcase translation key ${key} should exist.`);
+
+  ['en', 'ko', 'de', 'es', 'fr'].forEach((languageCode) => {
+    assert(
+      new RegExp(`\\b${languageCode}:\\s*['"][^'"]+['"]`).test(keyBlock[1]),
+      `Home showcase translation key ${key} should include ${languageCode}.`,
+    );
+  });
+});
+
 assert(
   styles.includes('.home-showcase') &&
     styles.includes('.home-showcase-frame') &&
