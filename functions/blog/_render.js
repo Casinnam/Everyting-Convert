@@ -216,10 +216,11 @@ ${body}
 <script>window.EVERYTHING_CONVERT_NAV_PREFIX='/';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/supabase-config.js"></script>
-<script src="/auth.js?v=auth-20260528b"></script>
-<script src="/tools-menu.js?v=nav-20260614c"></script>
+<script src="/auth.js?v=auth-20260616b"></script>
+<script src="/tools-menu.js?v=nav-20260616b"></script>
 <script src="/language-menu.js?v=lang-20260611a"></script>
-<script src="/header-language.js?v=headerlang-20260608a"></script>
+<script src="/header-language.js?v=headerlang-20260616a"></script>
+<script src="/ai-credits.js?v=credits-20260613d"></script>
 </body>
 </html>`;
 }
