@@ -1417,7 +1417,8 @@ nav {
 }
 
 .home-showcase-kicker {
-    width: max-content;
+    width: fit-content;
+    max-width: 100%;
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
@@ -1427,6 +1428,7 @@ nav {
     color: var(--home-primary);
     font-size: 0.78rem;
     font-weight: 900;
+    white-space: normal;
 }
 
 .home-showcase-copy h2 {
@@ -1444,9 +1446,12 @@ nav {
 }
 
 .home-showcase-action {
-    width: max-content;
+    width: fit-content;
+    max-width: 100%;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 0.6rem;
     margin-top: 0.15rem;
     padding: 0.82rem 1rem;
@@ -1454,7 +1459,10 @@ nav {
     background: linear-gradient(135deg, #2563eb, #7c3aed);
     color: #fff;
     font-weight: 900;
+    line-height: 1.18;
+    text-align: center;
     text-decoration: none;
+    overflow-wrap: anywhere;
     box-shadow: 0 16px 34px rgba(37, 99, 235, 0.26);
 }
 

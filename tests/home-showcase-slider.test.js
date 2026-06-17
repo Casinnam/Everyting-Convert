@@ -92,12 +92,15 @@ assert(
     styles.includes('.home-showcase-frame') &&
     styles.includes('.home-showcase-slide') &&
     styles.includes('.home-showcase-dot') &&
+    styles.includes('max-width: 100%') &&
+    styles.includes('overflow-wrap: anywhere') &&
     styles.includes('font-size: clamp(2.35rem, 4.1vw, 4.05rem)'),
-  'Home hero styles should define the showcase slider and smaller hero title.',
+  'Home hero styles should define the showcase slider, smaller hero title, and long-language wrapping.',
 );
 
 assert(
-  index.includes('styles.css?v=ui-20260616c') &&
+  index.includes('styles.css?v=ui-20260616d') &&
+    index.includes('language-menu.js?v=lang-20260616b') &&
     index.includes('home-showcase-copy') &&
     index.includes('home-showcase-visual') &&
     index.includes('home-showcase-action') &&
