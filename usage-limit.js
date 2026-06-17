@@ -1,7 +1,13 @@
 (function () {
-  const DEFAULT_LIMIT = 10;
+  const DEFAULT_LIMIT = 5;
   const COUNT_PREFIX = 'everything_convert_usage_count_';
   const DEFAULT_ID_KEY = 'everything_convert_usage_identity';
+
+  // Daily reset for the offline fallback counter (the server path resets daily by
+  // keying the counter on the UTC date; mirror that here).
+  function dayStamp() {
+    return new Date().toISOString().slice(0, 10);
+  }
 
   function safeStorage() {
     try {
@@ -122,7 +128,7 @@
     controller = createUsageController({
       limit: DEFAULT_LIMIT,
       storage,
-      key: `${COUNT_PREFIX}${identity}`,
+      key: `${COUNT_PREFIX}${identity}:${dayStamp()}`,
       isPro: isProUser,
     });
     return controller;
@@ -189,7 +195,7 @@
     if (usage && usage.unlimited) return 'Pro plan active: unlimited conversions';
     const remaining = remainingValue(usage);
     const label = usage && usage.accountType === 'free' ? 'free account conversions' : 'guest conversions';
-    return `${remaining} ${label} left`;
+    return `${remaining} ${label} left today`;
   }
 
   function ensureStyles() {
@@ -314,8 +320,8 @@
     const limit = usage.limit || DEFAULT_LIMIT;
     const isGuestLimit = usage.accountType === 'guest';
     const message = isGuestLimit
-      ? 'Create a free account for 20 total conversions, or upgrade to Pro for unlimited conversions, an ad-free workspace, and unlimited AI PDF Summary.'
-      : 'Upgrade to Pro to keep converting without limits, remove ads, and use AI PDF Summary without daily caps.';
+      ? 'Create a free account for more daily conversions, or upgrade to Pro for unlimited conversions, an ad-free workspace, and AI tools.'
+      : 'You can convert again tomorrow when the daily limit resets, or upgrade to Pro for unlimited conversions, an ad-free workspace, and AI tools.';
     const accountLabel = isGuestLimit ? 'Log in or sign up' : 'Account';
 
     const backdrop = document.createElement('div');
@@ -323,8 +329,8 @@
     backdrop.innerHTML = `
       <div class="usage-modal" role="dialog" aria-modal="true" aria-labelledby="usageModalTitle">
         <button class="usage-modal-close" type="button" aria-label="Close">×</button>
-        <p class="usage-kicker">Free limit reached</p>
-        <h2 id="usageModalTitle">You used all ${limit} free conversions.</h2>
+        <p class="usage-kicker">Daily free limit reached</p>
+        <h2 id="usageModalTitle">You've used all ${limit} free conversions today.</h2>
         <p>${message}</p>
         <div class="usage-modal-actions">
           <a class="usage-primary" href="${rootPrefix()}pricing.html">See pricing</a>

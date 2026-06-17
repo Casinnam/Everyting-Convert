@@ -1,5 +1,11 @@
-const GUEST_LIMIT = 10;
-const FREE_ACCOUNT_LIMIT = 20;
+const GUEST_LIMIT = 5;
+const FREE_ACCOUNT_LIMIT = 10;
+
+// Daily reset: the usage counter is keyed by identity, so appending the UTC date
+// gives every visitor a fresh counter row each day (no DB/RPC change needed).
+function dayStamp() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
+}
 
 const jsonHeaders = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -96,7 +102,7 @@ async function usageContext(request, env) {
 
     return {
       accountType: 'free',
-      identity: `user-${user.id}`,
+      identity: `user-${user.id}:${dayStamp()}`,
       userId: user.id,
       limit: Number(env.FREE_AUTH_CONVERSION_LIMIT) || FREE_ACCOUNT_LIMIT,
       unlimited: false,
@@ -105,7 +111,7 @@ async function usageContext(request, env) {
 
   return {
     accountType: 'guest',
-    identity: await usageIdentity(request, env),
+    identity: `${await usageIdentity(request, env)}:${dayStamp()}`,
     userId: null,
     limit: Number(env.FREE_GUEST_CONVERSION_LIMIT) || Number(env.FREE_CONVERSION_LIMIT) || GUEST_LIMIT,
     unlimited: false,

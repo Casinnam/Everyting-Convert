@@ -71,8 +71,8 @@ assert(
 );
 
 assert(
-  mediaPage.includes('tools-menu.js?v=nav-20260616b') &&
-    pdfWordPage.includes('tools-menu.js?v=nav-20260616b'),
+  mediaPage.includes('tools-menu.js?v=nav-20260616c') &&
+    pdfWordPage.includes('tools-menu.js?v=nav-20260616c'),
   'Tool pages should use the latest tools menu cache-busting version.',
 );
 

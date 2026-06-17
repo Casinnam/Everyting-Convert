@@ -5,7 +5,6 @@
   <script src="../ads.js?v=ads-20260611a"></script>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta charset="UTF-8">
-  <meta name="usage-limit" content="none">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Watermark to PDF - Free Online | EverythingConvert</title>
   <meta name="description" content="Add a text watermark to every page of a PDF online — set the text, color, opacity, size, angle, and layout. Free, private, in your browser.">
@@ -63,7 +62,7 @@
     .wm-info details p { color: #64748b; margin: .5rem 0 0; line-height: 1.6; }
   </style>
 </head>
-<body class="premium-subpage">
+<body class="premium-subpage" data-tool-id="pdf-watermark">
   <header class="header">
     <a class="logo" href="../index.html" aria-label="EverythingConvert home">
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
@@ -133,7 +132,7 @@
           <label data-ko="글자 크기"><span data-ko="글자 크기">Font size</span></label>
           <div class="wm-range"><input type="range" id="wmSize" min="10" max="120" value="48"><span class="val" id="wmSizeVal">48</span></div>
         </div>
-        <button class="wm-apply" id="applyBtn" disabled data-ko="워터마크 적용 후 다운로드">Apply watermark &amp; download</button>
+        <button class="wm-apply" id="applyBtn" disabled data-usage-guard data-ko="워터마크 적용 후 다운로드">Apply watermark &amp; download</button>
         <div class="wm-note" data-ko="워터마크는 모든 페이지에 영구적으로 합쳐져서 새 PDF로 저장됩니다. 한국어 등 모든 언어를 지원합니다.">The watermark is permanently merged onto every page and saved as a new PDF. All languages (incl. Korean) are supported.</div>
       </div>
     </div>
@@ -176,6 +175,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
   <script src="../auth.js?v=auth-20260616c"></script>
+  <script src="../usage-limit.js?v=usage-20260617a"></script>
   <script src="../tools-menu.js?v=nav-20260616c"></script>
   <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260616a"></script>
   <script src="../tool-language.js?v=toollang-20260616a"></script>
@@ -305,7 +305,13 @@
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 4000);
         setStatus('Done — your watermarked PDF was downloaded.', 'ok');
-        try { window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-watermark' } })); } catch (e) {}
+        try {
+          if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.recordSuccessfulConversion) {
+            window.EverythingConvertUsageLimit.recordSuccessfulConversion(); // counts toward the daily free limit + fires the success signal
+          } else {
+            window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-watermark' } }));
+          }
+        } catch (e) {}
       } catch (e) { setStatus('Could not watermark this PDF: ' + e.message, 'err'); }
       finally { applyBtn.disabled = false; }
     }

@@ -83,11 +83,18 @@ const api = loadModule();
 }
 
 assert(
-  serverSource.includes('FREE_ACCOUNT_LIMIT = 20') &&
-    serverSource.includes('GUEST_LIMIT = 10') &&
+  serverSource.includes('FREE_ACCOUNT_LIMIT = 10') &&
+    serverSource.includes('GUEST_LIMIT = 5') &&
     serverSource.includes("accountType: 'free'") &&
     serverSource.includes("accountType: 'guest'"),
-  'Server usage limit should distinguish 10 guest conversions and 20 free account conversions.',
+  'Server usage limit should distinguish 5 guest conversions and 10 free account conversions per day.',
+);
+
+assert(
+  serverSource.includes('function dayStamp') &&
+    /identity:\s*`user-\$\{user\.id\}:\$\{dayStamp\(\)\}`/.test(serverSource) &&
+    serverSource.includes('${await usageIdentity(request, env)}:${dayStamp()}'),
+  'Server usage limit should reset daily by keying the counter identity on the UTC date.',
 );
 
 assert(

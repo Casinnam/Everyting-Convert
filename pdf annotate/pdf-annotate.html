@@ -5,7 +5,6 @@
   <script src="../ads.js?v=ads-20260611a"></script>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta charset="UTF-8">
-  <meta name="usage-limit" content="none">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Text to PDF - Free Online PDF Annotator | EverythingConvert</title>
   <meta name="description" content="Add text directly onto a PDF online — place, drag, size, and color text on any page, then download a flattened PDF. Free, private, in your browser.">
@@ -80,7 +79,7 @@
     .an-info summary { font-weight: 700; cursor: pointer; color: #0f172a; } .an-info details p { color: #64748b; margin: .5rem 0 0; line-height: 1.6; }
   </style>
 </head>
-<body class="premium-subpage">
+<body class="premium-subpage" data-tool-id="pdf-annotate">
   <header class="header">
     <a class="logo" href="../index.html" aria-label="EverythingConvert home">
       <img class="brand-icon" src="../favicon.svg" alt="" width="28" height="28">
@@ -172,6 +171,7 @@
   <script src="../supabase-config.js"></script>
   <script src="../auth.js?v=auth-20260616c"></script>
   <script src="../ai-credits.js?v=credits-20260613d"></script>
+  <script src="../usage-limit.js?v=usage-20260617a"></script>
   <script src="../tools-menu.js?v=nav-20260616c"></script>
   <script src="../language-menu.js?v=lang-20260611a"></script><script src="../header-language.js?v=headerlang-20260616a"></script>
   <script src="../tool-language.js?v=toollang-20260616a"></script>
@@ -501,6 +501,13 @@
       if (!pdfBytes) return;
       const hasAny = Object.values(annos).some(arr => arr && arr.some(a => a.type === 'edit' || a.text.trim()));
       if (!hasAny) { setStatus('Add or edit some text first.', 'err'); return; }
+      const hasEdits = Object.values(annos).some(arr => arr && arr.some(a => a.type === 'edit'));
+      // Free add-text downloads count toward the daily free limit. Paid edit-text
+      // downloads are gated by credits below, so they skip the daily limit.
+      if (!hasEdits && window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.checkConversionAllowed) {
+        const allowed = await window.EverythingConvertUsageLimit.checkConversionAllowed();
+        if (!allowed) return;
+      }
       const gate = await chargeForEditsIfNeeded();
       if (gate !== 'ok') return;
       downloadBtn.disabled = true; setStatus('Building your PDF…');
@@ -543,7 +550,13 @@
         link.href = url; link.download = (pdfName.replace(/\.pdf$/i, '') || 'annotated') + '-annotated.pdf'; link.click();
         setTimeout(() => URL.revokeObjectURL(url), 4000);
         setStatus('Done — your PDF was downloaded.', 'ok');
-        try { window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-annotate' } })); } catch (e) {}
+        try {
+          if (!hasEdits && window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.recordSuccessfulConversion) {
+            window.EverythingConvertUsageLimit.recordSuccessfulConversion(); // counts the free download toward the daily limit
+          } else {
+            window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-annotate' } }));
+          }
+        } catch (e) {}
       } catch (e) { setStatus('Could not build the PDF: ' + e.message, 'err'); }
       finally { downloadBtn.disabled = false; }
     }
