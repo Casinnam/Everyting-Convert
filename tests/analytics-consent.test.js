@@ -51,7 +51,7 @@ function collectHtml(dir) {
 }
 collectHtml(root);
 
-const missingAnalytics = htmlFiles.filter((file) => !fs.readFileSync(file, 'utf8').includes('analytics.js?v=analytics-20260614a'));
+const missingAnalytics = htmlFiles.filter((file) => !fs.readFileSync(file, 'utf8').includes('analytics.js?v=analytics-20260617a'));
 assert.strictEqual(
   missingAnalytics.length,
   0,

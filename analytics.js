@@ -131,6 +131,23 @@
     }, params || {}));
   }
 
+  // Fire-and-forget: record a successful conversion in our own analytics table so
+  // the admin dashboard can show per-tool usage (guests included). Best-effort —
+  // never blocks the user. Skipped on file:// (local) where there is no API.
+  function recordToolUsage(toolId) {
+    if (window.location.protocol === 'file:') return;
+    try {
+      const auth = window.EverythingConvertAuth;
+      const token = auth && auth.state && auth.state.session ? auth.state.session.access_token : '';
+      fetch('/api/track-conversion', {
+        method: 'POST',
+        keepalive: true,
+        headers: Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: 'Bearer ' + token } : {}),
+        body: JSON.stringify({ tool_id: String(toolId || 'unknown').slice(0, 64) }),
+      }).catch(function () {});
+    } catch (e) { /* analytics is best-effort */ }
+  }
+
   function injectStyles() {
     if (document.getElementById('ec-cookie-consent-style')) return;
     const style = document.createElement('style');
@@ -243,7 +260,9 @@
     }, true);
 
     window.addEventListener('everythingconvert:conversion-success', (event) => {
-      track('conversion_success', event.detail || {});
+      const detail = event.detail || {};
+      track('conversion_success', detail);
+      recordToolUsage(detail.tool_id || document.body.getAttribute('data-tool-id') || 'unknown');
     });
     window.addEventListener('everythingconvert:conversion-error', (event) => {
       track('conversion_error', event.detail || {});

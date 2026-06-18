@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <script src="analytics.js?v=analytics-20260614a"></script>
+        <script src="analytics.js?v=analytics-20260617a"></script>
 <script src="ads.js?v=ads-20260611a"></script>
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -223,6 +223,23 @@
             line-height: 1.6;
         }
 
+        .admin-range {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border, #e2e8f0);
+            border-radius: 8px;
+            background: var(--surface, #fff);
+            color: var(--text, #0f172a);
+            font: inherit;
+            font-weight: 700;
+        }
+        .usage-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .usage-table th, .usage-table td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border, #e2e8f0); white-space: nowrap; }
+        .usage-table th { color: var(--text-muted, #64748b); font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        .usage-table td:nth-child(2) { font-weight: 800; }
+        .usage-table .bar { width: 140px; height: 8px; background: #eef2f7; border-radius: 999px; overflow: hidden; }
+        .usage-table .bar > i { display: block; height: 100%; background: linear-gradient(90deg, #2563eb, #7c3aed); }
+        @media (max-width: 720px) { .usage-table .bar { width: 70px; } }
+
         .db-note {
             color: var(--text-muted);
             line-height: 1.7;
@@ -389,6 +406,27 @@
                 <div class="admin-table-wrap" id="tableWrap">
                     <div class="empty-state">Loading members...</div>
                 </div>
+            </section>
+
+            <section class="admin-panel" id="conversionsPanel">
+                <div class="admin-toolbar">
+                    <div class="admin-status" style="font-weight:800;color:var(--text,#0f172a);">Tool usage — conversions (guests included)</div>
+                    <select id="usageRange" class="admin-range">
+                        <option value="1">Today</option>
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                </div>
+                <div class="admin-stats" id="usageStats">
+                    <div class="stat-card"><span>Total conversions</span><strong id="uTotal">-</strong></div>
+                    <div class="stat-card"><span>Today</span><strong id="uToday">-</strong></div>
+                    <div class="stat-card"><span>Guests</span><strong id="uGuest">-</strong></div>
+                    <div class="stat-card"><span>Logged-in</span><strong id="uUser">-</strong></div>
+                    <div class="stat-card"><span>Unique visitors</span><strong id="uVisitors">-</strong></div>
+                    <div class="stat-card"><span>Tools used</span><strong id="uTools">-</strong></div>
+                </div>
+                <div class="admin-table-wrap" id="usageByTool"><div class="empty-state">Loading usage…</div></div>
             </section>
 
             <section class="admin-panel db-note">
@@ -716,12 +754,61 @@
 
                 adminStatus.textContent = `${EverythingConvertAuth.displayName()} | Admin | ${allProfiles.length} members`;
                 renderProfiles(filteredProfiles());
+                loadToolUsage();
             } catch (error) {
                 adminStatus.textContent = 'Failed to load members';
                 renderEmpty(error.message);
             } finally {
                 refreshBtn.disabled = false;
                 loadingProfiles = false;
+            }
+        }
+
+        function prettyToolName(id) {
+            return String(id || 'unknown').replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+        }
+
+        async function loadToolUsage() {
+            const client = EverythingConvertAuth.state && EverythingConvertAuth.state.client;
+            const wrap = document.getElementById('usageByTool');
+            const rangeEl = document.getElementById('usageRange');
+            if (!client || !wrap || !rangeEl) return;
+            const days = parseInt(rangeEl.value, 10) || 30;
+            wrap.innerHTML = '<div class="empty-state">Loading usage…</div>';
+            try {
+                const [dailyRes, visRes] = await Promise.all([
+                    client.rpc('admin_tool_usage_daily', { p_days: days }),
+                    client.rpc('admin_tool_usage_visitors', { p_days: days }),
+                ]);
+                if (dailyRes.error) throw dailyRes.error;
+                const rows = dailyRes.data || [];
+                const vis = (visRes && visRes.data) || [];
+                const today = new Date().toISOString().slice(0, 10);
+                let total = 0, todayCount = 0, guest = 0, user = 0;
+                const byTool = {};
+                rows.forEach((r) => {
+                    const c = Number(r.conversions) || 0;
+                    total += c;
+                    if (String(r.day).slice(0, 10) === today) todayCount += c;
+                    if (r.account_type === 'guest') guest += c; else user += c;
+                    const t = byTool[r.tool_id] || (byTool[r.tool_id] = { total: 0, guest: 0, user: 0 });
+                    t.total += c;
+                    if (r.account_type === 'guest') t.guest += c; else t.user += c;
+                });
+                const uniqueVisitors = vis.reduce((s, v) => s + (Number(v.visitors) || 0), 0);
+                const setNum = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = Number(n).toLocaleString(); };
+                setNum('uTotal', total); setNum('uToday', todayCount); setNum('uGuest', guest); setNum('uUser', user); setNum('uVisitors', uniqueVisitors);
+                const tools = Object.entries(byTool).sort((a, b) => b[1].total - a[1].total);
+                document.getElementById('uTools').textContent = tools.length;
+                if (!tools.length) { wrap.innerHTML = '<div class="empty-state">No conversions recorded yet for this period.</div>'; return; }
+                const max = tools[0][1].total || 1;
+                wrap.innerHTML = '<table class="usage-table"><thead><tr><th>Tool</th><th>Conversions</th><th>Guest</th><th>Logged-in</th><th></th></tr></thead><tbody>' +
+                    tools.map(([id, t]) => {
+                        const pct = Math.round((t.total / max) * 100);
+                        return '<tr><td>' + escapeHtml(prettyToolName(id)) + '</td><td>' + t.total.toLocaleString() + '</td><td>' + t.guest.toLocaleString() + '</td><td>' + t.user.toLocaleString() + '</td><td><div class="bar"><i style="width:' + pct + '%"></i></div></td></tr>';
+                    }).join('') + '</tbody></table>';
+            } catch (error) {
+                wrap.innerHTML = '<div class="empty-state">Could not load usage: ' + escapeHtml(error.message || 'error') + '</div>';
             }
         }
 
@@ -867,6 +954,7 @@
         creditModal.addEventListener('click', (event) => { if (event.target === creditModal) closeCreditsModal(); });
 
         refreshBtn.addEventListener('click', loadProfiles);
+        document.getElementById('usageRange').addEventListener('change', loadToolUsage);
         [searchInput, planFilter, roleFilter].forEach((control) => {
             control.addEventListener('input', () => renderProfiles(filteredProfiles()));
             control.addEventListener('change', () => renderProfiles(filteredProfiles()));
