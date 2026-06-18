@@ -237,6 +237,7 @@
       .ec-unified-header .tool-emoji.pdf { background: linear-gradient(135deg, #ef4444, #fb7185) !important; }
       .ec-unified-header .tool-emoji.word { background: linear-gradient(135deg, #2563eb, #60a5fa) !important; }
       .ec-unified-header .tool-emoji.excel { background: linear-gradient(135deg, #16a34a, #22c55e) !important; }
+      .ec-unified-header .tool-emoji.ppt { background: linear-gradient(135deg, #d24726, #f97316) !important; }
       .ec-unified-header .tool-emoji.image { background: linear-gradient(135deg, #06b6d4, #2dd4bf) !important; }
       .ec-unified-header .tool-emoji.video { background: linear-gradient(135deg, #7c3aed, #a855f7) !important; }
       .ec-unified-header .tool-emoji.audio { background: linear-gradient(135deg, #f59e0b, #fb923c) !important; }
