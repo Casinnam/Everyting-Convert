@@ -12,6 +12,7 @@
       '10 free conversions per day with an account': '계정 생성 시 하루 무료 변환 10회',
       '5 per day as a guest, no signup needed': '비회원은 하루 5회 (가입 불필요)',
       '5/day · 10/day': '하루 5회 · 10회',
+      'Both unlock the same Pro benefits. Monthly Pro is $9.99 per month. Yearly Pro is shown as $7.99 per month and billed annually at $95.88 during Stripe checkout, saving about 20% compared to paying monthly.': '두 플랜 모두 동일한 Pro 혜택을 제공합니다. 월간 Pro는 월 $9.99입니다. 연간 Pro는 월 $7.99로 표시되며 Stripe 결제 시 연 $95.88로 청구되어, 월간 결제 대비 약 20% 절약됩니다.',
       'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': '표준 파일 변환은 무료입니다 — 비회원은 하루 5회, 무료 계정은 하루 10회. Pro로 업그레이드하면 무제한 변환, 광고 없는 환경, 매달 300 AI 크레딧을 제공합니다.',
       '300 AI credits included every month': '매달 300 AI 크레딧 포함',
       'Unlimited standard conversions — no daily limits': '표준 변환 무제한 — 일일 한도 없음',
@@ -130,6 +131,7 @@
       '10 free conversions per day with an account': '10 kostenlose Konvertierungen pro Tag mit Konto',
       '5 per day as a guest, no signup needed': '5 pro Tag als Gast, ohne Anmeldung',
       '5/day · 10/day': '5/Tag · 10/Tag',
+      'Both unlock the same Pro benefits. Monthly Pro is $9.99 per month. Yearly Pro is shown as $7.99 per month and billed annually at $95.88 during Stripe checkout, saving about 20% compared to paying monthly.': 'Beide bieten dieselben Pro-Vorteile. Monatliches Pro kostet $9,99 pro Monat. Jährliches Pro wird als $7,99 pro Monat angezeigt und beim Stripe-Checkout jährlich mit $95,88 abgerechnet — rund 20% günstiger als monatlich.',
       'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': 'Standard-Dateikonvertierungen sind kostenlos — 5 pro Tag als Gast, 10 pro Tag mit kostenlosem Konto. Mit Pro: unbegrenzte Konvertierungen, werbefreier Arbeitsbereich und 300 KI-Credits pro Monat.',
       '300 AI credits included every month': '300 KI-Credits jeden Monat inklusive',
       'Unlimited standard conversions — no daily limits': 'Unbegrenzte Standard-Konvertierungen — keine Tageslimits',
@@ -248,6 +250,7 @@
       '10 free conversions per day with an account': '10 conversiones gratis al día con cuenta',
       '5 per day as a guest, no signup needed': '5 al día como invitado, sin registro',
       '5/day · 10/day': '5/día · 10/día',
+      'Both unlock the same Pro benefits. Monthly Pro is $9.99 per month. Yearly Pro is shown as $7.99 per month and billed annually at $95.88 during Stripe checkout, saving about 20% compared to paying monthly.': 'Ambos dan las mismas ventajas Pro. El Pro mensual cuesta $9.99 al mes. El Pro anual se muestra como $7.99 al mes y se cobra anualmente $95.88 en el pago con Stripe, ahorrando alrededor del 20% frente al pago mensual.',
       'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': 'Las conversiones estándar son gratis — 5 al día como invitado, 10 al día con cuenta gratuita. Con Pro: conversiones ilimitadas, espacio sin anuncios y 300 créditos IA al mes.',
       '300 AI credits included every month': '300 créditos IA incluidos cada mes',
       'Unlimited standard conversions — no daily limits': 'Conversiones estándar ilimitadas — sin límites diarios',
@@ -366,6 +369,7 @@
       '10 free conversions per day with an account': '10 conversions gratuites par jour avec un compte',
       '5 per day as a guest, no signup needed': '5 par jour en invité, sans inscription',
       '5/day · 10/day': '5/jour · 10/jour',
+      'Both unlock the same Pro benefits. Monthly Pro is $9.99 per month. Yearly Pro is shown as $7.99 per month and billed annually at $95.88 during Stripe checkout, saving about 20% compared to paying monthly.': 'Les deux offrent les mêmes avantages Pro. Le Pro mensuel coûte 9,99 $ par mois. Le Pro annuel est affiché à 7,99 $ par mois et facturé annuellement 95,88 $ lors du paiement Stripe, soit environ 20 % d’économie par rapport au mensuel.',
       'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': 'Les conversions de fichiers standard sont gratuites — 5 par jour en invité, 10 par jour avec un compte gratuit. Passez à Pro pour des conversions illimitées, un espace sans publicité et 300 crédits IA par mois.',
       '300 AI credits included every month': '300 crédits IA inclus chaque mois',
       'Unlimited standard conversions — no daily limits': 'Conversions standard illimitées — sans limite quotidienne',
@@ -490,14 +494,17 @@
 
   function getLanguage() {
     try {
-      const fromUrl = new URLSearchParams(window.location.search).get('lang');
-      if (translations[fromUrl] || fromUrl === 'en') return fromUrl;
+      // The live menu choice must win. The ?lang= param only seeds the first
+      // load — it stays in the current URL after navigation, so reading it first
+      // would block in-page language switches on this page.
       if (window.EverythingConvertLanguage && typeof window.EverythingConvertLanguage.get === 'function') {
         const current = window.EverythingConvertLanguage.get();
         if (translations[current] || current === 'en') return current;
       }
       const saved = localStorage.getItem('everything_convert_language');
       if (translations[saved] || saved === 'en') return saved;
+      const fromUrl = new URLSearchParams(window.location.search).get('lang');
+      if (translations[fromUrl] || fromUrl === 'en') return fromUrl;
     } catch (error) {
       return 'en';
     }
