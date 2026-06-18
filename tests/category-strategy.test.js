@@ -15,7 +15,7 @@ assert(!menu.includes('>Advanced</button>'), 'Advanced should be removed because
 assert(menu.includes('PDF Converters') && menu.includes('PDF Tools') && menu.includes('Office & Ebooks'), 'Documents dropdown should be split into clear subgroups.');
 assert(menu.includes('Image Tools') && menu.includes('Video & Audio'), 'Media dropdown should be split into image and media subgroups.');
 assert(menu.includes('QR & Data') && menu.includes('Developer Utilities'), 'Developer dropdown should organize current and future developer tools.');
-assert(menu.includes('AI Roadmap') && menu.includes('Smart OCR'), 'AI Tools dropdown should show the future AI/OCR direction without pretending it is fully launched.');
+assert(menu.includes('Smart OCR') && menu.includes('use AI credits'), 'AI Tools dropdown should list the AI tools and group the credit-using tools together.');
 
 assert(index.includes('data-tool-tab="documents"') && index.includes('data-tool-tab="media"'), 'Homepage tool browser should use broad Documents and Media tabs.');
 assert(!index.includes('data-tool-tab="office"') && !index.includes('data-tool-tab="video"'), 'Homepage tabs should avoid over-fragmented Office/Video categories.');

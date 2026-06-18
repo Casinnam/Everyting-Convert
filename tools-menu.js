@@ -557,11 +557,16 @@
         <div class="tools-menu">
           <button class="tools-toggle" type="button" aria-expanded="false">AI Tools</button>
           <div class="tools-dropdown">
-            <div class="tools-subgroup-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Roadmap</div>
+            <div class="tools-subgroup-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tools</div>
             <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
             <a href="${prefix}ai tools/background-remover/index.html"><span class="tool-emoji ai">&#128247;</span><span>Background Remover</span></a>
             <a href="${prefix}ai tools/pdf-summary/index.html"><span class="tool-emoji ai">PDF</span><span>PDF Summary</span></a>
             <a href="${prefix}ai tools/smart-ocr/index.html"><span class="tool-emoji ai">OCR</span><span>Smart OCR</span></a>
+            <div class="tools-subgroup-title"><i class="fa-solid fa-coins"></i> Tools that use AI credits</div>
+            <a href="${prefix}pdf to excel/pdf-to-excel.html"><span class="tool-emoji excel">X</span><span>PDF to Excel (AI tables)</span></a>
+            <a href="${prefix}pdf to powerpoint/pdf-to-powerpoint.html"><span class="tool-emoji ppt">P</span><span>PDF to PowerPoint (AI text)</span></a>
+            <a href="${prefix}pdf annotate/pdf-annotate.html"><span class="tool-emoji pdf">&#9999;</span><span>Edit Text in PDF</span></a>
+            <a href="${prefix}qr code generator/qr-code-generator.html"><span class="tool-emoji dev">QR</span><span>Premium QR Code</span></a>
           </div>
         </div>
         <a href="${prefix}pricing.html">Pricing</a>

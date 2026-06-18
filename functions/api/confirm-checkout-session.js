@@ -97,6 +97,27 @@ async function updateSupabasePlan(env, user, plan) {
   }
 }
 
+// Grant this month's Pro AI-credit allowance immediately on activation.
+// Idempotent per (user, month); also topped up lazily on every balance read.
+async function grantProMonthlyCredits(env, user) {
+  const supabaseUrl = env.SUPABASE_URL || 'https://tuwhuftbjqkgduukvbfv.supabase.co';
+  const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey || !user || !user.id) return;
+  try {
+    await fetch(`${supabaseUrl}/rest/v1/rpc/ensure_pro_monthly_credits`, {
+      method: 'POST',
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_user_id: user.id }),
+    });
+  } catch (error) {
+    // Non-fatal: the allowance is also granted lazily on the next balance read.
+  }
+}
+
 export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
@@ -146,6 +167,7 @@ export async function onRequestPost(context) {
     }
 
     await updateSupabasePlan(env, user, 'pro');
+    await grantProMonthlyCredits(env, user);
     return jsonResponse({ plan: 'pro', confirmed: true });
   } catch (confirmError) {
     return jsonResponse({ error: confirmError.message || 'Payment could not be confirmed yet.' }, 500);
