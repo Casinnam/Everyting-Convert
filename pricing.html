@@ -246,7 +246,7 @@
         <div class="billing-toggle-row">
             <div class="billing-toggle" role="group" aria-label="Billing period">
                 <button type="button" class="billing-option active" id="billingMonthly" data-billing="monthly">Monthly</button>
-                <button type="button" class="billing-option" id="billingYearly" data-billing="yearly">Yearly <span class="save-chip">Save 42%</span></button>
+                <button type="button" class="billing-option" id="billingYearly" data-billing="yearly">Yearly <span class="save-chip">Save 20%</span></button>
             </div>
         </div>
 
@@ -273,7 +273,7 @@
                 <div class="plan-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
                 <div>
                     <h2>Pro</h2>
-                    <p class="price" id="proPrice">$6.99<span>/month</span></p>
+                    <p class="price" id="proPrice">$9.99<span>/month</span></p>
                     <p class="price-note" id="proPriceNote">Cancel any time</p>
                 </div>
                 <button class="plan-button" type="button" id="proCheckoutButton" data-stripe-checkout>
@@ -464,7 +464,7 @@
                 </article>
                 <article>
                     <h3>Monthly or yearly Pro — what is the difference?</h3>
-                    <p>Both unlock the same Pro benefits. Yearly Pro costs $49 — about $4.08 per month, saving roughly 42% compared to paying monthly.</p>
+                    <p>Both unlock the same Pro benefits. Monthly Pro is $9.99 per month. Yearly Pro is shown as $7.99 per month and billed annually at $95.88 during Stripe checkout, saving about 20% compared to paying monthly.</p>
                 </article>
             </div>
         </section>
@@ -566,11 +566,11 @@
                     option.classList.toggle('active', option.dataset.billing === billing);
                 });
                 if (proPrice) {
-                    proPrice.innerHTML = billing === 'yearly' ? '$49<span>/year</span>' : '$6.99<span>/month</span>';
+                    proPrice.innerHTML = billing === 'yearly' ? '$7.99<span>/month</span>' : '$9.99<span>/month</span>';
                 }
                 if (proPriceNote) {
                     proPriceNote.textContent = billing === 'yearly'
-                        ? 'About $4.08 per month — save 42%'
+                        ? 'Billed annually at $95.88 during checkout — save 20%'
                         : 'Cancel any time';
                 }
             }
