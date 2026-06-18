@@ -211,6 +211,9 @@
 
         @media (max-width: 860px) { .credit-pack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 460px) { .credit-pack-grid { grid-template-columns: 1fr; } }
+
+        /* Slightly smaller hero heading (fits the longer translated headings better). */
+        .pricing-page .pricing-hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.8rem); }
     </style>
 </head>
 <body class="premium-subpage pricing-page">
@@ -549,7 +552,7 @@
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260617b"></script>
     <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
-    <script src="pricing-language.js?v=pricelang-20260613b"></script>
+    <script src="pricing-language.js?v=pricelang-20260617a"></script>
     <script src="ai-credits.js?v=credits-20260613d"></script>
     <script>
         (function () {
