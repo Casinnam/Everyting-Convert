@@ -9,6 +9,10 @@
     ko: {
       'Convert more for less': '더 저렴하게 더 많이 변환',
       'Save 20%': '20% 절약',
+      '10 free conversions per day with an account': '계정 생성 시 하루 무료 변환 10회',
+      '5 per day as a guest, no signup needed': '비회원은 하루 5회 (가입 불필요)',
+      '5/day · 10/day': '하루 5회 · 10회',
+      'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': '표준 파일 변환은 무료입니다 — 비회원은 하루 5회, 무료 계정은 하루 10회. Pro로 업그레이드하면 무제한 변환, 광고 없는 환경, 매달 300 AI 크레딧을 제공합니다.',
       '300 AI credits included every month': '매달 300 AI 크레딧 포함',
       'Unlimited standard conversions — no daily limits': '표준 변환 무제한 — 일일 한도 없음',
       'Edit text in PDF — free for Pro': 'PDF 글자 편집 — Pro는 무료',
@@ -123,6 +127,10 @@
     de: {
       'Convert more for less': 'Mehr konvertieren für weniger',
       'Save 20%': '20% sparen',
+      '10 free conversions per day with an account': '10 kostenlose Konvertierungen pro Tag mit Konto',
+      '5 per day as a guest, no signup needed': '5 pro Tag als Gast, ohne Anmeldung',
+      '5/day · 10/day': '5/Tag · 10/Tag',
+      'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': 'Standard-Dateikonvertierungen sind kostenlos — 5 pro Tag als Gast, 10 pro Tag mit kostenlosem Konto. Mit Pro: unbegrenzte Konvertierungen, werbefreier Arbeitsbereich und 300 KI-Credits pro Monat.',
       '300 AI credits included every month': '300 KI-Credits jeden Monat inklusive',
       'Unlimited standard conversions — no daily limits': 'Unbegrenzte Standard-Konvertierungen — keine Tageslimits',
       'Edit text in PDF — free for Pro': 'Text im PDF bearbeiten — für Pro kostenlos',
@@ -237,6 +245,10 @@
     es: {
       'Convert more for less': 'Convierte más por menos',
       'Save 20%': 'Ahorra 20%',
+      '10 free conversions per day with an account': '10 conversiones gratis al día con cuenta',
+      '5 per day as a guest, no signup needed': '5 al día como invitado, sin registro',
+      '5/day · 10/day': '5/día · 10/día',
+      'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': 'Las conversiones estándar son gratis — 5 al día como invitado, 10 al día con cuenta gratuita. Con Pro: conversiones ilimitadas, espacio sin anuncios y 300 créditos IA al mes.',
       '300 AI credits included every month': '300 créditos IA incluidos cada mes',
       'Unlimited standard conversions — no daily limits': 'Conversiones estándar ilimitadas — sin límites diarios',
       'Edit text in PDF — free for Pro': 'Editar texto en PDF — gratis para Pro',
@@ -351,6 +363,10 @@
     fr: {
       'Convert more for less': 'Convertissez plus pour moins',
       'Save 20%': 'Économisez 20%',
+      '10 free conversions per day with an account': '10 conversions gratuites par jour avec un compte',
+      '5 per day as a guest, no signup needed': '5 par jour en invité, sans inscription',
+      '5/day · 10/day': '5/jour · 10/jour',
+      'Standard file conversions are free — 5 a day as a guest, 10 a day with a free account. Go Pro for unlimited conversions, an ad-free workspace, and 300 AI credits every month.': 'Les conversions de fichiers standard sont gratuites — 5 par jour en invité, 10 par jour avec un compte gratuit. Passez à Pro pour des conversions illimitées, un espace sans publicité et 300 crédits IA par mois.',
       '300 AI credits included every month': '300 crédits IA inclus chaque mois',
       'Unlimited standard conversions — no daily limits': 'Conversions standard illimitées — sans limite quotidienne',
       'Edit text in PDF — free for Pro': 'Modifier le texte du PDF — gratuit pour Pro',
