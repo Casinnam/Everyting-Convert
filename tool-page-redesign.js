@@ -242,8 +242,8 @@
         'If a browser-based media conversion is slow, reduce the file size or clip length first.',
         'If a file does not open after download, repeat the conversion with a fresh source file.'
       ],
-      privacyTitle: 'Privacy note',
-      privacyText: 'Many conversions run directly in your browser. When a server feature is needed, we keep the workflow limited to the conversion task and avoid unnecessary file access.',
+      privacyTitle: 'Your files never leave your device',
+      privacyText: 'This tool runs entirely in your browser. Your files are processed on your own device and are never uploaded to our servers, so they never leave your computer.',
       faqTitle: 'Frequently asked questions',
       faqs: [
         ['Do I need to install software?', 'No. EverythingConvert tools are designed to work in a modern browser.'],
@@ -251,14 +251,14 @@
         ['Can I use this on mobile?', 'Yes. The site works on mobile browsers, although large files are usually easier on a desktop or laptop.']
       ],
       relatedTitle: 'More {category} Tools You May Need',
-      securityTitle: 'Your Files Are Safe With Us',
-      securityText: 'We use secure workflows and keep privacy at the center of every converter.',
-      secureTransfer: 'Secure Transfer',
-      secureTransferText: 'Protected browser sessions',
-      autoDelete: 'Auto File Deletion',
-      autoDeleteText: 'Temporary files are removed',
-      noAccess: 'No One Can Access',
-      noAccessText: 'Your files stay private'
+      securityTitle: 'Private by design',
+      securityText: 'There is nothing to upload. The conversion happens right in your browser, so your files stay on your device from start to finish.',
+      secureTransfer: 'In-browser processing',
+      secureTransferText: 'No upload to any server',
+      autoDelete: 'Nothing is stored',
+      autoDeleteText: 'We never receive your files',
+      noAccess: '100% private',
+      noAccessText: 'Only you can see your files'
     },
     ko: {
       featureFastTitle: '빠른 변환',
@@ -295,8 +295,8 @@
         '브라우저 미디어 변환이 느리면 파일 용량이나 영상 길이를 먼저 줄이는 것이 좋습니다.',
         '다운로드한 파일이 열리지 않으면 원본 파일을 새로 준비해서 다시 변환해 보세요.'
       ],
-      privacyTitle: '개인정보 보호 안내',
-      privacyText: '많은 변환은 사용자의 브라우저 안에서 직접 처리됩니다. 서버 기능이 필요한 경우에도 변환에 필요한 범위로만 처리하고 불필요한 파일 접근을 피합니다.',
+      privacyTitle: '파일이 기기를 떠나지 않습니다',
+      privacyText: '이 도구는 전적으로 브라우저 안에서 작동합니다. 파일은 사용자 기기에서 처리되며 서버로 업로드되지 않습니다 — 즉, 파일이 컴퓨터를 떠나지 않습니다.',
       faqTitle: '자주 묻는 질문',
       faqs: [
         ['프로그램을 설치해야 하나요?', '아니요. EverythingConvert 도구는 최신 웹 브라우저에서 바로 사용할 수 있도록 만들었습니다.'],
@@ -304,14 +304,14 @@
         ['휴대폰에서도 사용할 수 있나요?', '네. 모바일 브라우저에서도 사용할 수 있습니다. 다만 큰 파일은 컴퓨터에서 작업하는 것이 더 안정적입니다.']
       ],
       relatedTitle: '함께 쓰기 좋은 {category} 도구',
-      securityTitle: '파일을 안전하게 보호합니다',
-      securityText: 'EverythingConvert는 모든 변환 도구에서 보안과 개인정보 보호를 중요하게 생각합니다.',
-      secureTransfer: '안전한 전송',
-      secureTransferText: '보호된 브라우저 세션',
-      autoDelete: '자동 파일 삭제',
-      autoDeleteText: '임시 파일은 작업 후 제거',
-      noAccess: '불필요한 접근 없음',
-      noAccessText: '내 파일은 비공개로 유지'
+      securityTitle: '설계부터 비공개',
+      securityText: '업로드할 것이 없습니다. 변환은 브라우저 안에서 바로 이루어지며, 파일은 처음부터 끝까지 사용자 기기에 머뭅니다.',
+      secureTransfer: '브라우저 내 처리',
+      secureTransferText: '서버 업로드 없음',
+      autoDelete: '저장하지 않음',
+      autoDeleteText: '파일을 받지 않습니다',
+      noAccess: '100% 비공개',
+      noAccessText: '오직 본인만 볼 수 있음'
     },
     de: {
       featureFastTitle: 'Schnelle Konvertierung',
@@ -334,19 +334,19 @@
       bestItems: ['Nutzen Sie Dateien, die auf Ihrem Gerät korrekt geöffnet werden.', 'Bei Scans hilft eine klare, gerade Vorlage.', 'Testen Sie große Bild- oder Mediendateien zuerst mit kleineren Beispielen.'],
       fixesTitle: 'Häufige Probleme und Lösungen',
       fixesItems: ['Wenn das Layout anders aussieht, versuchen Sie einen kleineren Seitenbereich.', 'Wenn Medienkonvertierung langsam ist, reduzieren Sie Größe oder Länge.', 'Wenn eine Datei nicht geöffnet wird, konvertieren Sie erneut mit einer frischen Quelle.'],
-      privacyTitle: 'Datenschutzhinweis',
-      privacyText: 'Viele Konvertierungen laufen direkt im Browser. Wenn Serverfunktionen nötig sind, beschränken wir die Verarbeitung auf die Aufgabe.',
+      privacyTitle: 'Ihre Dateien verlassen Ihr Gerät nie',
+      privacyText: 'Dieses Tool läuft vollständig in Ihrem Browser. Ihre Dateien werden auf Ihrem eigenen Gerät verarbeitet und niemals auf unsere Server hochgeladen – sie verlassen Ihren Computer also nie.',
       faqTitle: 'Häufige Fragen',
       faqs: [['Muss ich Software installieren?', 'Nein. Die Tools funktionieren in modernen Browsern.'], ['Ist das Ergebnis immer perfekt?', 'Einfache Dateien gelingen meist sauber. Komplexe Layouts sollten geprüft werden.'], ['Funktioniert es auf Mobilgeräten?', 'Ja, große Dateien sind jedoch auf Desktop oder Laptop einfacher.']],
       relatedTitle: 'Weitere {category}-Tools',
-      securityTitle: 'Ihre Dateien sind bei uns sicher',
-      securityText: 'Sichere Abläufe und Datenschutz stehen im Mittelpunkt.',
-      secureTransfer: 'Sichere Übertragung',
-      secureTransferText: 'Geschützte Browsersitzungen',
-      autoDelete: 'Automatische Löschung',
-      autoDeleteText: 'Temporäre Dateien werden entfernt',
-      noAccess: 'Kein unnötiger Zugriff',
-      noAccessText: 'Ihre Dateien bleiben privat'
+      securityTitle: 'Privat per Design',
+      securityText: 'Es gibt nichts hochzuladen. Die Konvertierung erfolgt direkt in Ihrem Browser, sodass Ihre Dateien von Anfang bis Ende auf Ihrem Gerät bleiben.',
+      secureTransfer: 'Verarbeitung im Browser',
+      secureTransferText: 'Kein Upload auf Server',
+      autoDelete: 'Nichts wird gespeichert',
+      autoDeleteText: 'Wir erhalten Ihre Dateien nie',
+      noAccess: '100% privat',
+      noAccessText: 'Nur Sie sehen Ihre Dateien'
     },
     es: {
       featureFastTitle: 'Conversión rápida',
@@ -369,19 +369,19 @@
       bestItems: ['Usa archivos que se abran correctamente en tu dispositivo.', 'Para escaneos, elige la versión más clara.', 'Para imágenes y medios grandes, prueba primero con un archivo pequeño.'],
       fixesTitle: 'Problemas comunes y soluciones',
       fixesItems: ['Si el formato cambia, prueba con menos páginas o una copia más simple.', 'Si un video tarda mucho, reduce tamaño o duración.', 'Si el archivo descargado no abre, repite la conversión con un original nuevo.'],
-      privacyTitle: 'Nota de privacidad',
-      privacyText: 'Muchas conversiones se ejecutan en tu navegador. Cuando se necesita servidor, limitamos el uso a la tarea de conversión.',
+      privacyTitle: 'Tus archivos nunca salen de tu dispositivo',
+      privacyText: 'Esta herramienta funciona por completo en tu navegador. Tus archivos se procesan en tu propio dispositivo y nunca se suben a nuestros servidores, así que nunca salen de tu ordenador.',
       faqTitle: 'Preguntas frecuentes',
       faqs: [['¿Necesito instalar software?', 'No. Las herramientas funcionan en navegadores modernos.'], ['¿El resultado siempre será perfecto?', 'Los archivos simples suelen salir bien. Los diseños complejos deben revisarse.'], ['¿Funciona en móvil?', 'Sí, aunque los archivos grandes son más cómodos en ordenador.']],
       relatedTitle: 'Más herramientas de {category}',
-      securityTitle: 'Tus archivos están seguros',
-      securityText: 'Usamos flujos seguros y priorizamos la privacidad.',
-      secureTransfer: 'Transferencia segura',
-      secureTransferText: 'Sesiones protegidas',
-      autoDelete: 'Eliminación automática',
-      autoDeleteText: 'Archivos temporales eliminados',
-      noAccess: 'Sin acceso innecesario',
-      noAccessText: 'Tus archivos siguen privados'
+      securityTitle: 'Privado por diseño',
+      securityText: 'No hay nada que subir. La conversión ocurre en tu navegador, así que tus archivos permanecen en tu dispositivo de principio a fin.',
+      secureTransfer: 'Procesado en el navegador',
+      secureTransferText: 'Sin subida a ningún servidor',
+      autoDelete: 'No se guarda nada',
+      autoDeleteText: 'Nunca recibimos tus archivos',
+      noAccess: '100% privado',
+      noAccessText: 'Solo tú ves tus archivos'
     },
     fr: {
       featureFastTitle: 'Conversion rapide',
@@ -404,19 +404,19 @@
       bestItems: ['Utilisez des fichiers qui s’ouvrent correctement sur votre appareil.', 'Pour les scans, choisissez la version la plus nette.', 'Pour les grandes images ou vidéos, testez d’abord un petit fichier.'],
       fixesTitle: 'Problèmes fréquents et solutions',
       fixesItems: ['Si la mise en page change, essayez moins de pages ou une copie plus simple.', 'Si la conversion média est lente, réduisez la taille ou la durée.', 'Si le fichier téléchargé ne s’ouvre pas, recommencez avec une source propre.'],
-      privacyTitle: 'Note de confidentialité',
-      privacyText: 'De nombreuses conversions se font dans le navigateur. Quand un serveur est nécessaire, nous limitons le traitement à la conversion.',
+      privacyTitle: 'Vos fichiers ne quittent jamais votre appareil',
+      privacyText: "Cet outil fonctionne entièrement dans votre navigateur. Vos fichiers sont traités sur votre propre appareil et ne sont jamais envoyés à nos serveurs : ils ne quittent donc jamais votre ordinateur.",
       faqTitle: 'Questions fréquentes',
       faqs: [['Dois-je installer un logiciel ?', 'Non. Les outils fonctionnent dans les navigateurs modernes.'], ['Le résultat sera-t-il toujours parfait ?', 'Les fichiers simples se convertissent bien. Les mises en page complexes doivent être vérifiées.'], ['Puis-je utiliser le site sur mobile ?', 'Oui, mais les gros fichiers sont plus pratiques sur ordinateur.']],
       relatedTitle: 'Autres outils {category}',
-      securityTitle: 'Vos fichiers sont en sécurité',
-      securityText: 'Nous utilisons des flux sécurisés et plaçons la confidentialité au centre.',
-      secureTransfer: 'Transfert sécurisé',
-      secureTransferText: 'Sessions protégées',
-      autoDelete: 'Suppression automatique',
-      autoDeleteText: 'Fichiers temporaires supprimés',
-      noAccess: 'Aucun accès inutile',
-      noAccessText: 'Vos fichiers restent privés'
+      securityTitle: 'Privé par conception',
+      securityText: "Il n'y a rien à téléverser. La conversion se fait dans votre navigateur, vos fichiers restent donc sur votre appareil du début à la fin.",
+      secureTransfer: 'Traitement dans le navigateur',
+      secureTransferText: 'Aucun envoi vers un serveur',
+      autoDelete: "Rien n'est stocké",
+      autoDeleteText: 'Nous ne recevons jamais vos fichiers',
+      noAccess: '100% privé',
+      noAccessText: 'Vous seul voyez vos fichiers'
     }
   };
 
@@ -781,6 +781,36 @@
     document.querySelectorAll('[data-language="fr"]').forEach((node) => { node.textContent = 'Français'; });
   }
 
+  // Emit FAQPage + HowTo structured data so Google can show rich results for the
+  // FAQ and step-by-step content already rendered on the page. Injected once.
+  function injectSchema(meta, language = currentLanguage()) {
+    if (document.querySelector('script[data-ec-schema]')) return;
+    const input = meta.input;
+    const output = meta.output;
+    const steps = meta.steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step,
+    }));
+    const faqs = list('faqs', language).map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    }));
+    const data = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        { '@type': 'HowTo', name: tr('howTitle', { input, output }, language), step: steps },
+        { '@type': 'FAQPage', mainEntity: faqs },
+      ],
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.dataset.ecSchema = 'true';
+    script.textContent = JSON.stringify(data);
+    document.head.appendChild(script);
+  }
+
   function init() {
     const meta = pageMeta();
     ensureFontAwesome();
@@ -790,6 +820,7 @@
     enhanceHero(meta);
     enhanceDropZone(meta);
     renderLocalizedSections(meta);
+    injectSchema(meta);
     window.addEventListener('everything-language-change', (event) => {
       renderLocalizedSections(meta, event.detail.language);
     });

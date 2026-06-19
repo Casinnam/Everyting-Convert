@@ -290,7 +290,7 @@
   async function convert(){ if(!currentFile) return; setStatus('Reading DOCX...'); const arrayBuffer = await currentFile.arrayBuffer(); const result = await mammoth.extractRawText({ arrayBuffer }); const text = result.value.trim() || 'No readable text found.'; const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, lineHeight = 14, maxWidth = 500; let y = margin; doc.setFontSize(11); text.split(/\n+/).forEach(paragraph => { const lines = doc.splitTextToSize(paragraph, maxWidth); lines.forEach(line => { if (y > 790) { doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 8; }); doc.save(currentFile.name.replace(/\.docx$/i, '') + '.pdf'); setStatus('PDF download started.'); }
   dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
 </script>
-<script src="../tool-page-redesign.js?v=20260601d"></script>
+<script src="../tool-page-redesign.js?v=20260618a"></script>
 <script src="../static-i18n.js"></script>
 </body>
 </html>

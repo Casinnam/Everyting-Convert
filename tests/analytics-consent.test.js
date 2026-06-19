@@ -40,7 +40,9 @@ assert(
 const htmlFiles = [];
 function collectHtml(dir) {
   fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
-    if (entry.name === '.git' || entry.name === 'node_modules') return;
+    // The browser extension is a separate artifact — its pages are not site pages
+    // and must not load the site's analytics/consent script.
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === 'extension') return;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       collectHtml(full);

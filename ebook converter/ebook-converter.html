@@ -291,7 +291,7 @@
   async function convert(){ if(!currentFile) return; setStatus('Reading EPUB...'); const zip = await JSZip.loadAsync(await currentFile.arrayBuffer()); const htmlFiles = Object.keys(zip.files).filter(name => /\.(xhtml|html)$/i.test(name)).sort(); if(!htmlFiles.length){ setStatus('No readable EPUB chapters found.'); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, maxWidth = 500, lineHeight = 14; let y = margin; doc.setFontSize(11); for(let i=0;i<htmlFiles.length;i++){ const html = await zip.file(htmlFiles[i]).async('text'); const text = stripHtml(html); if(!text) continue; const lines = doc.splitTextToSize(text, maxWidth); lines.forEach(line => { if(y > 790){ doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 12; setStatus(`Converting chapter ${i + 1}/${htmlFiles.length}...`); } doc.save(currentFile.name.replace(/\.epub$/i,'') + '.pdf'); setStatus('PDF download started.'); }
   dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
 </script>
-<script src="../tool-page-redesign.js?v=20260601d"></script>
+<script src="../tool-page-redesign.js?v=20260618a"></script>
 <script src="../static-i18n.js"></script>
 </body>
 </html>
