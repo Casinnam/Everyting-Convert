@@ -1,5 +1,6 @@
 (function () {
   const MEASUREMENT_ID = 'G-MWPYMT3Q6H';
+  const ADS_ID = 'AW-18249432363'; // Google Ads — Pro purchase conversion tracking
   const CONSENT_KEY = 'everything_convert_cookie_consent_v1';
   const VERSION = '20260614a';
   const LANGS = {
@@ -280,6 +281,7 @@
   window.gtag('consent', 'default', consentStateToGtag(savedConsent || { analytics: false, ads: false }));
   window.gtag('js', new Date());
   window.gtag('config', MEASUREMENT_ID, { anonymize_ip: true });
+  window.gtag('config', ADS_ID);
   loadGtag();
 
   if (document.readyState === 'loading') {
