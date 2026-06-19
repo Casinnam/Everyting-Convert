@@ -4,3 +4,13 @@ Desktop.ini
 *.tmp
 *.log
 node_modules/
+
+# Agent scratch dirs & ad-hoc screenshots (never part of the site)
+.codex/
+.codex-remote-attachments/
+supabase/.temp/
+/20260602_224209.png
+/live-home-debug.png
+/policies capture.png
+/KakaoTalk_20260603_214528421.jpg
+/KakaoTalk_20260603_214528421_01.jpg
