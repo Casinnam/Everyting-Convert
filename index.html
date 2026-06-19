@@ -37,6 +37,22 @@
         border: 1px solid rgba(59, 130, 246, .22); color: #1e3a8a; font-weight: 700;
         font-size: .85rem; line-height: 1.2; }
       .hero-trust i { color: #3b82f6; }
+      /* Trust band: prominent privacy/trust block — our client-side, no-upload
+         model is the strongest differentiator, so we state it plainly. */
+      .trust-band { max-width: 1100px; margin: clamp(2rem, 5vw, 4rem) auto; padding: 0 1.5rem; text-align: center; }
+      .trust-band .trust-badge { display: inline-grid; place-items: center; width: 56px; height: 56px;
+        border-radius: 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff;
+        font-size: 24px; margin-bottom: 1rem; box-shadow: 0 12px 28px rgba(59, 130, 246, .28); }
+      .trust-band h2 { font-size: clamp(1.6rem, 3.4vw, 2.4rem); font-weight: 900; color: #0f172a; margin: 0 0 .6rem; }
+      .trust-band .trust-band-head p { max-width: 620px; margin: 0 auto; color: #475569; font-size: 1.05rem; line-height: 1.6; }
+      .trust-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; }
+      .trust-pillars article { background: #fff; border: 1px solid #eef2f7; border-radius: 16px;
+        padding: 1.4rem 1.2rem; box-shadow: 0 12px 30px rgba(15, 23, 42, .05);
+        display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+      .trust-pillars i { font-size: 22px; color: #3b82f6; }
+      .trust-pillars strong { font-size: 1rem; color: #0f172a; }
+      .trust-pillars span { font-size: .9rem; color: #64748b; line-height: 1.5; }
+      @media (max-width: 760px) { .trust-pillars { grid-template-columns: 1fr; } }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -570,11 +586,16 @@
             </div>
         </section>
 
-        <section class="security-note" aria-label="Security and privacy">
-            <i class="fa-solid fa-lock"></i>
-            <div>
-                <strong>Private by design.</strong>
-                <span>No suspicious downloads, no required browser extensions, and no unnecessary permissions. Just secure browser-based file conversion.</span>
+        <section class="trust-band" aria-labelledby="trustTitle">
+            <div class="trust-band-head">
+                <span class="trust-badge"><i class="fa-solid fa-shield-halved"></i></span>
+                <h2 id="trustTitle" data-i18n-key="trustHeadline">Your files never leave your device</h2>
+                <p data-i18n-key="trustSub">Every standard conversion runs right in your browser — nothing is uploaded to a server. No account, no installation, no catch.</p>
+            </div>
+            <div class="trust-pillars">
+                <article><i class="fa-solid fa-lock"></i><strong data-i18n-key="trustP1T">100% in your browser</strong><span data-i18n-key="trustP1B">Files are processed on your device and never uploaded.</span></article>
+                <article><i class="fa-solid fa-bolt"></i><strong data-i18n-key="trustP2T">No install, no account</strong><span data-i18n-key="trustP2B">Start instantly in any modern browser, free.</span></article>
+                <article><i class="fa-solid fa-toolbox"></i><strong data-i18n-key="trustP3T">20+ tools, 5 languages</strong><span data-i18n-key="trustP3B">PDF, image, video, QR and AI tools in one place.</span></article>
             </div>
         </section>
 
@@ -765,6 +786,6 @@
     <script src="supabase-config.js"></script>
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260617b"></script>
-    <script src="language-menu.js?v=lang-20260618a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
+    <script src="language-menu.js?v=lang-20260618b"></script><script src="header-language.js?v=headerlang-20260616a"></script>
 </body>
 </html>

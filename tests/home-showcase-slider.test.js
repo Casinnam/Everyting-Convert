@@ -100,7 +100,7 @@ assert(
 
 assert(
   index.includes('styles.css?v=ui-20260616d') &&
-    index.includes('language-menu.js?v=lang-20260618a') &&
+    index.includes('language-menu.js?v=lang-20260618b') &&
     index.includes('home-showcase-copy') &&
     index.includes('home-showcase-visual') &&
     index.includes('home-showcase-action') &&
