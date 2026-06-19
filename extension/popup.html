@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="pop-header">
+    <img class="pop-logo" src="icons/icon48.png" alt="">
+    <div class="pop-titles">
+      <strong>EverythingConvert</strong>
+      <span>Quick file converter</span>
+    </div>
+  </header>
+
+  <div class="pop-search">
+    <input id="search" type="search" placeholder="Search tools…" autocomplete="off" autofocus>
+  </div>
+
+  <ul id="tools" class="pop-tools"></ul>
+  <p id="empty" class="pop-empty" hidden>No tool matches.</p>
+
+  <footer class="pop-footer">
+    <a id="allTools" href="#">All tools <span aria-hidden="true">→</span></a>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

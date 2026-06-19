@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EverythingConvert — store screenshot 1280x800</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 800px; overflow: hidden; }
+  body {
+    font-family: "Segoe UI", -apple-system, Roboto, "Noto Sans KR", sans-serif;
+    background: radial-gradient(1100px 700px at 18% 20%, #eef2ff 0%, #ffffff 45%),
+                linear-gradient(135deg, #f8fafc, #eef2ff);
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: 40px;
+    padding: 0 80px;
+    position: relative;
+  }
+  .orb { position: absolute; border-radius: 50%; filter: blur(8px); opacity: .35; }
+  .orb1 { width: 280px; height: 280px; background: #93c5fd; top: -60px; left: -40px; }
+  .orb2 { width: 320px; height: 320px; background: #c4b5fd; bottom: -90px; right: 60px; }
+
+  .left { position: relative; z-index: 2; }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .brand img { width: 44px; height: 44px; border-radius: 11px; box-shadow: 0 8px 20px rgba(59,130,246,.25); }
+  .brand b { font-size: 22px; font-weight: 800; color: #0f172a; }
+
+  h1 { font-size: 52px; line-height: 1.08; font-weight: 900; color: #0f172a; letter-spacing: -1px; }
+  h1 span { background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { margin-top: 18px; font-size: 20px; color: #475569; max-width: 520px; line-height: 1.5; }
+
+  .chips { margin-top: 34px; display: flex; flex-direction: column; gap: 14px; }
+  .chip { display: flex; align-items: center; gap: 14px; font-size: 18px; font-weight: 600; color: #1e293b; }
+  .chip .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    font-size: 22px; background: #fff; box-shadow: 0 8px 20px rgba(15,23,42,.08); }
+
+  /* popup mock */
+  .right { position: relative; z-index: 2; display: flex; justify-content: center; }
+  .popup { width: 340px; border-radius: 18px; overflow: hidden; background: #fff;
+    box-shadow: 0 40px 90px rgba(15,23,42,.22); border: 1px solid #eef2f7; }
+  .pop-head { display: flex; align-items: center; gap: 11px; padding: 18px 18px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; }
+  .pop-head img { width: 34px; height: 34px; border-radius: 9px; }
+  .pop-head b { font-size: 16px; font-weight: 800; display: block; }
+  .pop-head s { font-size: 12px; opacity: .9; text-decoration: none; }
+  .pop-search { margin: 14px 16px 6px; padding: 11px 13px; border: 1px solid #e2e8f0;
+    border-radius: 11px; color: #94a3b8; font-size: 14px; }
+  .pop-list { padding: 4px 10px 12px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 10px 10px; border-radius: 11px; font-size: 14px; font-weight: 600; color: #0f172a; }
+  .row.active { background: #f1f5f9; }
+  .row .e { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
+    background: rgba(59,130,246,.1); font-size: 17px; }
+</style>
+</head>
+<body>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="left">
+    <div class="brand"><img src="../icons/icon128.png" alt=""><b>EverythingConvert</b></div>
+    <h1>Convert anything.<br><span>Right in your browser.</span></h1>
+    <p class="sub">20+ free file tools, one click from your toolbar. No download, no installation.</p>
+    <div class="chips">
+      <div class="chip"><span class="ico">⚡</span> One-click launcher with instant search</div>
+      <div class="chip"><span class="ico">🖱️</span> Right-click any image to convert it</div>
+      <div class="chip"><span class="ico">🔒</span> Nothing to install — runs on the web</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="popup">
+      <div class="pop-head"><img src="../icons/icon128.png" alt=""><div><b>EverythingConvert</b><s>Quick file converter</s></div></div>
+      <div class="pop-search">Search tools…</div>
+      <div class="pop-list">
+        <div class="row active"><span class="e">🖼️</span> Image Converter</div>
+        <div class="row"><span class="e">📄</span> PDF to Word</div>
+        <div class="row"><span class="e">🔗</span> Merge PDF</div>
+        <div class="row"><span class="e">🗜️</span> Compress PDF</div>
+        <div class="row"><span class="e">🔳</span> QR Code Generator</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

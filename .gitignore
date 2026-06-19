@@ -14,3 +14,6 @@ supabase/.temp/
 /policies capture.png
 /KakaoTalk_20260603_214528421.jpg
 /KakaoTalk_20260603_214528421_01.jpg
+
+# Built extension upload package
+/everythingconvert-extension-*.zip
