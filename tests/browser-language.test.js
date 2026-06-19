@@ -33,7 +33,7 @@ assert(
 // 4. Pages must reference the bumped cache version so browsers load the new script.
 const indexHtml = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 assert(
-  indexHtml.includes('language-menu.js?v=lang-20260616b'),
+  indexHtml.includes('language-menu.js?v=lang-20260618a'),
   'index.html should load the cache-busted language-menu.js version that ships browser language detection.',
 );
 

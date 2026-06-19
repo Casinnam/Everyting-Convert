@@ -30,6 +30,13 @@
          inactive slides stay absolutely positioned behind it for the cross-fade. */
       .home-showcase-frame { display: grid; align-items: center; }
       .home-showcase-slide.active { position: relative; }
+      /* Trust badge: makes it obvious this is a browser-based tool with nothing
+         to install — reassures users and helps ad review classify it correctly. */
+      .hero-trust { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.1rem;
+        padding: .5rem .95rem; border-radius: 999px; background: rgba(59, 130, 246, .09);
+        border: 1px solid rgba(59, 130, 246, .22); color: #1e3a8a; font-weight: 700;
+        font-size: .85rem; line-height: 1.2; }
+      .hero-trust i { color: #3b82f6; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -168,6 +175,7 @@
                     <a class="primary-cta" href="#tool-browser">Start Converting <i class="fa-solid fa-arrow-right"></i></a>
                     <a class="secondary-cta" href="#tool-browser">Explore All Tools</a>
                 </div>
+                <div class="hero-trust"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <span>No download · No installation · Works in your browser</span></div>
             </div>
 
             <section class="home-showcase" id="homeShowcase" aria-label="Featured tool categories">
@@ -757,6 +765,6 @@
     <script src="supabase-config.js"></script>
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260617b"></script>
-    <script src="language-menu.js?v=lang-20260616b"></script><script src="header-language.js?v=headerlang-20260616a"></script>
+    <script src="language-menu.js?v=lang-20260618a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
 </body>
 </html>

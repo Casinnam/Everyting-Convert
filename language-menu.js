@@ -41,6 +41,13 @@
     },
     startConverting: { en: 'Start Converting', ko: '변환 시작', de: 'Konvertieren starten', es: 'Empezar a convertir', fr: 'Commencer' },
     exploreTools: { en: 'Explore All Tools', ko: '모든 도구 보기', de: 'Alle Tools ansehen', es: 'Explorar herramientas', fr: 'Explorer les outils' },
+    homeTrust: {
+      en: 'No download · No installation · Works in your browser',
+      ko: '다운로드 없음 · 설치 없음 · 브라우저에서 바로 작동',
+      de: 'Kein Download · Keine Installation · Läuft im Browser',
+      es: 'Sin descargas · Sin instalación · Funciona en tu navegador',
+      fr: 'Sans téléchargement · Sans installation · Fonctionne dans le navigateur',
+    },
     searchTools: { en: 'Search tools...', ko: '도구 검색...', de: 'Tools suchen...', es: 'Buscar herramientas...', fr: 'Rechercher des outils...' },
     showcasePdfKicker: { en: 'PDF & Documents', ko: 'PDF 및 문서', de: 'PDF & Dokumente', es: 'PDF y documentos', fr: 'PDF et documents' },
     showcasePdfTitle: { en: 'Turn PDFs and office files into the format you need.', ko: 'PDF와 오피스 파일을 필요한 형식으로 바꾸세요.', de: 'Wandle PDFs und Office-Dateien in das passende Format um.', es: 'Convierte PDF y archivos Office al formato que necesitas.', fr: 'Transformez PDF et fichiers Office dans le format utile.' },
@@ -341,6 +348,7 @@
     const primary = document.querySelector('.primary-cta');
     if (primary) primary.innerHTML = `${text('startConverting', language)} <i class="fa-solid fa-arrow-right"></i>`;
     setText('.secondary-cta', text('exploreTools', language));
+    setText('.hero-trust span', text('homeTrust', language));
     const search = document.getElementById('homeToolSearch');
     if (search) search.placeholder = text('searchTools', language);
     const showcaseSlides = Array.from(document.querySelectorAll('.home-showcase [data-showcase-slide]'));
