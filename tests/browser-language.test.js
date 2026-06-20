@@ -37,4 +37,15 @@ assert(
   'index.html should load the cache-busted language-menu.js version that ships browser language detection.',
 );
 
+// 5. Footer legal links must be translated by destination, not by index. Some
+// pages include Cookie Settings before Contact; index-based translation turns
+// the privacy choices link into a duplicate Contact link.
+assert(
+  script.includes('privacyChoices:') &&
+    script.includes("if (href === '#cookie-settings') return 'privacyChoices';") &&
+    script.includes("if (href.endsWith('contact.html')) return 'contact';") &&
+    !script.includes("const legalKeys = ['aboutUs', 'donate', 'privacy', 'terms', 'security', 'contact'];"),
+  'language-menu.js should keep #cookie-settings labeled as Privacy Choices instead of translating it as Contact.',
+);
+
 console.log('browser language tests passed');

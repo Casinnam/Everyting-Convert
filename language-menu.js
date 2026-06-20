@@ -210,6 +210,7 @@
     aboutUs: { en: 'About Us', ko: '회사 소개', de: 'Über uns', es: 'Sobre nosotros', fr: 'À propos' },
     donate: { en: 'Donate', ko: '후원', de: 'Spenden', es: 'Donar', fr: 'Faire un don' },
     privacy: { en: 'Privacy', ko: '개인정보 처리방침', de: 'Datenschutz', es: 'Privacidad', fr: 'Confidentialité' },
+    privacyChoices: { en: 'Privacy Choices', ko: '개인정보 선택', de: 'Datenschutzoptionen', es: 'Opciones de privacidad', fr: 'Choix de confidentialité' },
     terms: { en: 'Terms', ko: '이용약관', de: 'Bedingungen', es: 'Términos', fr: 'Conditions' },
     security: { en: 'Security and Compliance', ko: '보안 및 규정 준수', de: 'Sicherheit und Compliance', es: 'Seguridad y cumplimiento', fr: 'Sécurité et conformité' },
     contact: { en: 'Contact', ko: '문의', de: 'Kontakt', es: 'Contacto', fr: 'Contact' },
@@ -439,12 +440,23 @@
     const copyright = footer.querySelector('.footer-bottom p');
     if (copyright) copyright.textContent = text('copyright', language);
 
-    // AI pages: translate footer-legal-row links (About, Donate, Privacy, Terms, Security, Contact)
+    // AI pages: translate footer-legal-row links by destination. Some pages
+    // include Privacy Choices before Contact, so index-based mapping duplicates Contact.
     const legalLinks = footer.querySelectorAll('.footer-legal-row a');
     if (legalLinks.length) {
-      const legalKeys = ['aboutUs', 'donate', 'privacy', 'terms', 'security', 'contact'];
-      legalLinks.forEach((link, index) => {
-        const key = legalKeys[index];
+      const legalKeyForLink = (link) => {
+        const href = link.getAttribute('href') || '';
+        if (href === '#cookie-settings') return 'privacyChoices';
+        if (href.endsWith('about.html')) return 'aboutUs';
+        if (href.includes('donate.stripe.com')) return 'donate';
+        if (href.endsWith('privacy.html')) return 'privacy';
+        if (href.endsWith('terms.html')) return 'terms';
+        if (href.endsWith('security.html')) return 'security';
+        if (href.endsWith('contact.html')) return 'contact';
+        return '';
+      };
+      legalLinks.forEach((link) => {
+        const key = legalKeyForLink(link);
         if (key && t[key]) link.textContent = text(key, language);
       });
     }
