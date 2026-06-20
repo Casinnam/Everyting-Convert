@@ -4,6 +4,15 @@
         <script src="analytics.js?v=analytics-20260618a"></script>
 <script src="ads.js?v=ads-20260611a"></script>
 
+    <!-- Google Ads conversion event — fires on the Pro purchase success page only.
+         gtag is defined by analytics.js (loaded synchronously above). transaction_id
+         is the Stripe session id so a page refresh is not double-counted. -->
+    <script>
+      gtag('event', 'ads_conversion___1', {
+        transaction_id: (new URLSearchParams(window.location.search)).get('session_id') || ''
+      });
+    </script>
+
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
