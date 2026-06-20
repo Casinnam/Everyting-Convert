@@ -286,6 +286,13 @@
             border: 1px solid rgba(47, 38, 18, 0.20);
             color: var(--text-main);
         }
+
+        /* Login page only: the shared 4rem hero title is too large here. */
+        .hero-title {
+            font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body class="premium-subpage auth-page">
