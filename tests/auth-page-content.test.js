@@ -7,8 +7,8 @@ const auth = fs.readFileSync(path.join(root, 'auth.html'), 'utf8');
 const authJs = fs.readFileSync(path.join(root, 'auth.js'), 'utf8');
 
 [
-  'Manage features',
-  'with your account',
+  'Welcome to',
+  'EverythingConvert</span>',
   'Login</button>',
   'Sign up</button>',
   'Continue with Gmail',

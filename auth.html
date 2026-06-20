@@ -366,8 +366,8 @@
     <main class="main-container">
                 <section class="hero">
             <div class="subpage-kicker"><i class="fa-solid fa-user-shield"></i> EverythingConvert Account</div>
-            <h1 class="hero-title">Manage features<br><span class="gradient-text">with your account</span></h1>
-            <p class="hero-subtitle">Free members can use standard extraction, and Pro members can use enhanced table detection.</p>
+            <h1 class="hero-title">Welcome to <span class="gradient-text">EverythingConvert</span></h1>
+            <p class="hero-subtitle">Log in or create a free account to unlock more daily conversions, free AI credits, and a saved history of everything you convert — on any device, nothing to install.</p>
         </section>
 
                 <section class="auth-shell">
@@ -474,7 +474,7 @@
     <script src="supabase-config.js?v=auth-20260522d"></script>
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260618a"></script>
-    <script src="language-menu.js?v=lang-20260611a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
+    <script src="language-menu.js?v=lang-20260618c"></script><script src="header-language.js?v=headerlang-20260616a"></script>
     <script src="ai-credits.js?v=credits-20260613d"></script>
     <script>
         let mode = 'login';
@@ -907,7 +907,7 @@
             blogLink.style.display = 'none';
             accountHint.dataset.i18nKey = cachedPlan ? 'proMemberHint' : 'accountLoadingHint';
             accountHint.textContent = cachedPlan
-                ? 'You are a Pro member. Enhanced table detection is available.'
+                ? 'You\'re on Pro — unlimited conversions, no ads, and 300 AI credits every month.'
                 : 'Refreshing account status...';
             applyCurrentLanguage();
             return true;
@@ -917,11 +917,11 @@
             const heroTitle = document.querySelector('.hero-title');
             const heroSubtitle = document.querySelector('.hero-subtitle');
             if (heroTitle) {
-                heroTitle.innerHTML = 'Manage features<br><span class="gradient-text">with your account</span>';
+                heroTitle.innerHTML = 'Welcome to <span class="gradient-text">EverythingConvert</span>';
             }
             if (heroSubtitle) {
                 heroSubtitle.dataset.i18nKey = 'authSubtitle';
-                heroSubtitle.textContent = 'Free members can use standard extraction, and Pro members can use enhanced table detection.';
+                heroSubtitle.textContent = 'Log in or create a free account to unlock more daily conversions, free AI credits, and a saved history of everything you convert — on any device, nothing to install.';
             }
 
             setI18nText(loginTab, 'navLogin', 'Login');
@@ -984,8 +984,8 @@
             } else {
                 accountHint.dataset.i18nKey = auth.isPro() ? 'proMemberHint' : 'freeMemberHint';
                 accountHint.textContent = auth.isPro()
-                    ? 'You are a Pro member. Enhanced table detection is available.'
-                    : 'You are a Free member. Standard text extraction is available, and enhanced table detection requires Pro.';
+                    ? 'You\'re on Pro — unlimited conversions, no ads, and 300 AI credits every month.'
+                    : 'You\'re on the Free plan — 10 conversions a day plus AI credits. Upgrade to Pro for unlimited use and 300 monthly AI credits.';
             }
             applyCurrentLanguage();
         }
