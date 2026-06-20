@@ -8,20 +8,22 @@
 <meta charset="UTF-8">
 <meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOCX to PDF Converter - EverythingConvert</title>
+<title>Word to PDF Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
     <!-- SEO:START -->
     <meta name="description" content="Convert Word DOCX documents to PDF online with EverythingConvert.">
     <link rel="canonical" href="https://www.everythingconvert.com/docx%20to%20pdf/docx-to-pdf.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="EverythingConvert">
-    <meta property="og:title" content="DOCX to PDF Converter - EverythingConvert">
+    <meta property="og:title" content="Word to PDF Converter - EverythingConvert">
     <meta property="og:description" content="Convert Word DOCX documents to PDF online with EverythingConvert.">
     <meta property="og:url" content="https://www.everythingconvert.com/docx%20to%20pdf/docx-to-pdf.html">
     <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="DOCX to PDF Converter - EverythingConvert">
+    <meta name="twitter:title" content="Word to PDF Converter - EverythingConvert">
     <meta name="twitter:description" content="Convert Word DOCX documents to PDF online with EverythingConvert.">
     <!-- SEO:END -->
     <script type="application/ld+json">
@@ -30,7 +32,7 @@
       "@graph": [
         {
           "@type": "SoftwareApplication",
-          "name": "DOCX to PDF Converter",
+          "name": "Word to PDF Converter",
           "applicationCategory": "BusinessApplication",
           "operatingSystem": "Web",
           "url": "https://www.everythingconvert.com/docx%20to%20pdf/docx-to-pdf.html",
@@ -59,7 +61,7 @@
             {
               "@type": "ListItem",
               "position": 3,
-              "name": "DOCX to PDF"
+              "name": "Word to PDF"
             }
           ]
         },
@@ -115,6 +117,51 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <link rel="stylesheet" href="../tool-page-redesign.css?v=20260601e">
+<style>
+  .word-pdf-render-host {
+    position: fixed;
+    left: -10000px;
+    top: 0;
+    width: 760px;
+    min-height: 1000px;
+    padding: 0;
+    background: #ffffff;
+    color: #111827;
+    font-family: Arial, "Noto Sans", "Noto Sans KR", sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .word-pdf-render-host h1,
+  .word-pdf-render-host h2,
+  .word-pdf-render-host h3 {
+    margin: 0 0 12px;
+    color: inherit;
+    line-height: 1.18;
+  }
+
+  .word-pdf-render-host h1 { font-size: 30px; }
+  .word-pdf-render-host h2 { font-size: 24px; }
+  .word-pdf-render-host h3 { font-size: 19px; }
+  .word-pdf-render-host p { margin: 0 0 10px; }
+  .word-pdf-render-host ul,
+  .word-pdf-render-host ol { margin: 0 0 12px 24px; padding: 0; }
+  .word-pdf-render-host table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  .word-pdf-render-host td,
+  .word-pdf-render-host th {
+    border: 1px solid #d1d5db;
+    padding: 7px 9px;
+    vertical-align: top;
+  }
+  .word-pdf-render-host img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
 </head>
 <body>
 <header><a class="brand-link" href="../index.html"><img class="brand-icon logo-mark-img" src="../favicon.svg" alt="" width="36" height="36"><div class="logo-text">Everything <span>Convert</span></div></a><nav class="top-nav"><a href="../index.html">Home</a><div class="tools-menu"><button class="tools-toggle" type="button" aria-expanded="false">Tools</button><div class="tools-dropdown mega-tools"><div class="tools-group">
@@ -124,7 +171,7 @@
                         <a href="../pdf to excel/pdf-to-excel.html">PDF to Excel</a>
                         <a href="../image to pdf/image-to-pdf.html">Image to PDF</a>
                         <a href="../excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-                        <a href="../docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="../docx to pdf/docx-to-pdf.html">Word to PDF</a>
                         <a href="../pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
                         <a href="../ebook converter/ebook-converter.html">Ebook Converter</a>
                     </div>
@@ -164,18 +211,18 @@
                         <a href="../gif converter/gif-converter.html?mode=gif-mp4">GIF to MP4</a>
                         <a href="../gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
                     </div></div></div><a href="../auth.html" data-auth-login>Login</a><a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a><a href="../admin.html" data-admin-only style="display:none;">Admin</a><a href="#" data-auth-logout style="display:none;">Logout</a></nav></header>
-<main><section class="hero"><div class="eyebrow">PDF & Documents</div><h1>DOCX to PDF</h1><p>Convert Word documents to a simple text-based PDF in your browser. Layout-heavy documents are flattened into readable text.</p></section><section class="tool-card"><div class="drop-zone" id="dropZone"><i class="fa-regular fa-file-word"></i><p>Click or drop a DOCX file here</p><input id="fileInput" type="file" accept=".docx"></div><button class="primary-btn" id="convertBtn" disabled>Convert to PDF</button><div class="status" id="status">No file selected.</div></section>
+<main><section class="hero"><div class="eyebrow">PDF & Documents</div><h1>Word to PDF</h1><p>Convert Word documents to PDF in your browser while preserving common formatting such as headings, colors, lists, and tables.</p></section><section class="tool-card"><div class="drop-zone" id="dropZone"><i class="fa-regular fa-file-word"></i><p>Click or drop a Word file here</p><input id="fileInput" type="file" accept=".docx"></div><button class="primary-btn" id="convertBtn" disabled>Convert to PDF</button><div class="status" id="status">No file selected.</div></section>
   <section class="ec-info-grid" data-static>
     <article class="ec-info-panel">
-      <h2 data-ko="DOCX를 PDF로 변환하는 방법">How to convert DOCX to PDF</h2>
+      <h2 data-ko="Word 파일을 PDF로 변환하는 방법">How to convert Word to PDF</h2>
       <ol class="ec-step-list">
-        <li><b>1</b><div><strong data-ko="DOCX 파일 업로드">Upload your DOCX file</strong><span data-ko="워드 문서를 끌어다 놓거나 선택하세요. 브라우저에서 읽힙니다.">Drag in or choose a Word document; it is read in your browser.</span></div></li>
+        <li><b>1</b><div><strong data-ko="Word 파일 업로드">Upload your Word file</strong><span data-ko="워드 문서를 끌어다 놓거나 선택하세요. 브라우저에서 읽힙니다.">Drag in or choose a Word document; it is read in your browser.</span></div></li>
         <li><b>2</b><div><strong data-ko="PDF로 변환">Convert to PDF</strong><span data-ko="문서가 고정된 읽기 전용 PDF로 배치됩니다.">Your document is laid out as a fixed, read-only PDF.</span></div></li>
         <li><b>3</b><div><strong data-ko="PDF 다운로드">Download your PDF</strong><span data-ko="공유·인쇄에 바로 쓸 수 있는 전문적인 PDF를 저장하세요.">Save a professional PDF ready to share or print.</span></div></li>
       </ol>
     </article>
     <article class="ec-info-panel">
-      <h2 data-ko="여기서 DOCX를 PDF로 변환하는 이유">Why convert DOCX to PDF here</h2>
+      <h2 data-ko="여기서 Word 파일을 PDF로 변환하는 이유">Why convert Word to PDF here</h2>
       <ul class="ec-check-list">
         <li><i class="fa-solid fa-check"></i><span data-ko="레이아웃과 글꼴 유지">Preserves your layout and fonts</span></li>
         <li><i class="fa-solid fa-check"></i><span data-ko="읽기 전용의 전문적인 출력">Read-only, professional output</span></li>
@@ -189,7 +236,7 @@
     <div class="ec-guide-copy">
       <p class="ec-guide-kicker" data-ko="오피스 및 문서">Office &amp; Documents</p>
       <h2 data-ko="워드 문서를 PDF로 변환">Convert Word documents to PDF</h2>
-      <p data-ko="워드 파일을 보내면 받는 사람의 컴퓨터에서 레이아웃이 틀어지거나 글꼴이 바뀌고 실수로 편집될 위험이 있습니다. DOCX를 PDF로 변환하면 문서가 디자인 그대로 고정되어 누구에게나 동일하게 보이고 실수로 바뀌지 않습니다. 이력서, 계약서, 편지, 보고서에 이상적입니다.">Sending a Word file risks layout shifts, font swaps, and accidental edits on the recipient's computer. Converting your DOCX to PDF freezes the document exactly as you designed it, so it looks identical for everyone and cannot be changed by mistake. It is ideal for resumes, contracts, letters, and reports.</p>
+      <p data-ko="워드 파일을 보내면 받는 사람의 컴퓨터에서 레이아웃이 틀어지거나 글꼴이 바뀌고 실수로 편집될 위험이 있습니다. Word 파일을 PDF로 변환하면 문서가 디자인 그대로 고정되어 누구에게나 동일하게 보이고 실수로 바뀌지 않습니다. 이력서, 계약서, 편지, 보고서에 이상적입니다.">Sending a Word file risks layout shifts, font swaps, and accidental edits on the recipient's computer. Converting your Word file to PDF freezes the document exactly as you designed it, so it looks identical for everyone and cannot be changed by mistake. It is ideal for resumes, contracts, letters, and reports.</p>
     </div>
     <div class="ec-guide-grid">
       <article>
@@ -221,7 +268,7 @@
       <details><summary data-ko="서식이 그대로 유지되나요?">Will my formatting stay the same?</summary><p data-ko="네. 텍스트 위주 문서는 깔끔하게 변환됩니다. 매우 복잡한 레이아웃은 약간 틀어질 수 있습니다.">Yes. Text-focused documents convert cleanly. Very complex layouts may shift slightly.</p></details>
       <details><summary data-ko="Microsoft Word가 설치돼 있어야 하나요?">Do I need Microsoft Word installed?</summary><p data-ko="아니요. 추가 소프트웨어 없이 브라우저에서 변환됩니다.">No. Conversion happens in your browser with no extra software.</p></details>
       <details><summary data-ko="워터마크가 있나요?">Is there a watermark?</summary><p data-ko="PDF에 워터마크가 추가되지 않습니다.">No watermark is added to your PDF.</p></details>
-      <details><summary data-ko="내 파일이 업로드되나요?">Are my files uploaded?</summary><p data-ko="아니요. DOCX는 기기에 그대로 남습니다.">No. Your DOCX stays on your device.</p></details>
+      <details><summary data-ko="내 파일이 업로드되나요?">Are my files uploaded?</summary><p data-ko="아니요. Word 파일은 기기에 그대로 남습니다.">No. Your Word file stays on your device.</p></details>
       <details><summary data-ko="무료인가요?">Is it free?</summary><p data-ko="네, 일상적인 사용은 무료이며 Pro는 일일 한도를 없앱니다.">Yes, free for everyday use with Pro removing daily limits.</p></details>
     </div>
   </section>
@@ -233,7 +280,7 @@
                 <a href="../pdf to excel/pdf-to-excel.html">PDF to Excel</a>
                 <a href="../image to pdf/image-to-pdf.html">Image to PDF</a>
                 <a href="../excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-                <a href="../docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="../docx to pdf/docx-to-pdf.html">Word to PDF</a>
                 <a href="../pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
                 <a href="../ebook converter/ebook-converter.html">Ebook Converter</a>
             </div>
@@ -287,7 +334,66 @@
   const fileInput = document.getElementById('fileInput'), dropZone = document.getElementById('dropZone'), convertBtn = document.getElementById('convertBtn'), statusEl = document.getElementById('status');
   function setStatus(text){ statusEl.textContent = text; }
   function setFile(file){ currentFile = file; convertBtn.disabled = false; setStatus(`${file.name} selected.`); }
-  async function convert(){ if(!currentFile) return; setStatus('Reading DOCX...'); const arrayBuffer = await currentFile.arrayBuffer(); const result = await mammoth.extractRawText({ arrayBuffer }); const text = result.value.trim() || 'No readable text found.'; const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, lineHeight = 14, maxWidth = 500; let y = margin; doc.setFontSize(11); text.split(/\n+/).forEach(paragraph => { const lines = doc.splitTextToSize(paragraph, maxWidth); lines.forEach(line => { if (y > 790) { doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 8; }); doc.save(currentFile.name.replace(/\.docx$/i, '') + '.pdf'); setStatus('PDF download started.'); }
+  async function convert(){
+    if(!currentFile) return;
+    convertBtn.disabled = true;
+    let renderHost = null;
+    setStatus('Reading Word document...');
+
+    try {
+      const arrayBuffer = await currentFile.arrayBuffer();
+      const result = await mammoth.convertToHtml({
+        arrayBuffer
+      }, {
+        styleMap: [
+          "p[style-name='Title'] => h1:fresh",
+          "p[style-name='Subtitle'] => h2:fresh",
+          "p[style-name='Heading 1'] => h1:fresh",
+          "p[style-name='Heading 2'] => h2:fresh",
+          "p[style-name='Heading 3'] => h3:fresh",
+          "r[style-name='Strong'] => strong",
+          "r[style-name='Emphasis'] => em"
+        ]
+      });
+
+      const html = result.value && result.value.trim()
+        ? result.value
+        : '<p>No readable content found.</p>';
+
+      setStatus('Preparing formatted PDF...');
+      renderHost = document.createElement('div');
+      renderHost.className = 'word-pdf-render-host';
+      renderHost.innerHTML = window.DOMPurify ? DOMPurify.sanitize(html) : html;
+      document.body.appendChild(renderHost);
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:'pt', format:'a4', orientation:'portrait' });
+
+      await doc.html(renderHost, {
+        x: 42,
+        y: 42,
+        width: 511,
+        windowWidth: 760,
+        autoPaging: 'text',
+        html2canvas: {
+          scale: 0.78,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        },
+        callback: (pdf) => {
+          pdf.save(currentFile.name.replace(/\.docx$/i, '') + '.pdf');
+        }
+      });
+
+      setStatus('PDF download started.');
+    } catch (error) {
+      console.error(error);
+      setStatus('Could not create the formatted PDF. Try a simpler Word file or export from Word for exact layout.');
+    } finally {
+      if (renderHost && renderHost.isConnected) renderHost.remove();
+      convertBtn.disabled = false;
+    }
+  }
   dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
 </script>
 <script src="../tool-page-redesign.js?v=20260618a"></script>

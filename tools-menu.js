@@ -424,7 +424,7 @@
               <a href="${prefix}pdf to powerpoint/pdf-to-powerpoint.html"><span class="tool-emoji ppt">P</span><span>PDF to PowerPoint</span></a>
               <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
               <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
-              <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>
+              <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>Word to PDF</span></a>
               <a href="${prefix}pdf to epub/pdf-to-epub.html"><span class="tool-emoji pdf">&#128218;</span><span>PDF to EPUB</span></a>
               <a href="${prefix}ebook converter/ebook-converter.html"><span class="tool-emoji pdf">&#128214;</span><span>Ebook Converter</span></a>
             </div>
@@ -488,7 +488,7 @@
               <a href="${prefix}pdf to powerpoint/pdf-to-powerpoint.html"><span class="tool-emoji ppt">P</span><span>PDF to PowerPoint</span></a>
               <a href="${prefix}pdf to jpg/pdf-to-jpg.html"><span class="tool-emoji image">&#128444;</span><span>PDF to JPG</span></a>
               <a href="${prefix}excel to pdf/excel-to-pdf.html"><span class="tool-emoji pdf">PDF</span><span>Excel to PDF</span></a>
-              <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>DOCX to PDF</span></a>
+              <a href="${prefix}docx to pdf/docx-to-pdf.html"><span class="tool-emoji word">D</span><span>Word to PDF</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-solid fa-wrench"></i> PDF Tools</div>

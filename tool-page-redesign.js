@@ -54,12 +54,12 @@
       drop: 'Drag & drop your Excel or CSV file here',
       max: 'Supports XLSX, XLS, and CSV files.',
       steps: ['Upload your spreadsheet', 'Choose sheet and layout', 'Download your PDF file'],
-      related: ['PDF to Excel', 'PDF to Word', 'DOCX to PDF', 'Image to PDF', 'PDF to JPG']
+      related: ['PDF to Excel', 'PDF to Word', 'Word to PDF', 'Image to PDF', 'PDF to JPG']
     },
     'docx-to-pdf.html': {
       category: 'Office',
-      title: 'DOCX to PDF Converter',
-      accent: 'DOCX',
+      title: 'Word to PDF Converter',
+      accent: 'Word',
       description: 'Convert Word documents into PDF files with a simple browser-based workflow.',
       input: 'DOCX',
       output: 'PDF',
@@ -82,7 +82,7 @@
       drop: 'Drag & drop your PDF file here',
       max: 'Works best with text-based PDFs.',
       steps: ['Upload your PDF file', 'Extract readable text', 'Download EPUB file'],
-      related: ['Ebook Converter', 'PDF to Word', 'PDF to JPG', 'DOCX to PDF', 'PDF to Excel']
+      related: ['Ebook Converter', 'PDF to Word', 'PDF to JPG', 'Word to PDF', 'PDF to Excel']
     },
     'ebook-converter.html': {
       category: 'Office',
@@ -96,7 +96,7 @@
       drop: 'Drag & drop your ebook or document file here',
       max: 'Browser-based conversion for supported formats.',
       steps: ['Upload your file', 'Choose ebook output', 'Download converted ebook'],
-      related: ['PDF to EPUB', 'PDF to Word', 'DOCX to PDF', 'PDF to Excel', 'Image to PDF']
+      related: ['PDF to EPUB', 'PDF to Word', 'Word to PDF', 'PDF to Excel', 'Image to PDF']
     },
     'image-to-pdf.html': {
       category: 'Image',
@@ -176,7 +176,7 @@
     'PDF to Excel': ['pdf to excel/pdf-to-excel.html', 'fa-file-excel', 'Extract PDF data to Excel'],
     'Excel to PDF': ['excel to pdf/excel-to-pdf.html', 'fa-file-pdf', 'Convert sheets to PDF'],
     'Image to PDF': ['image to pdf/image-to-pdf.html', 'fa-file-pdf', 'Combine images into PDF'],
-    'DOCX to PDF': ['docx to pdf/docx-to-pdf.html', 'fa-file-pdf', 'Convert Word files to PDF'],
+    'Word to PDF': ['docx to pdf/docx-to-pdf.html', 'fa-file-pdf', 'Convert Word files to PDF'],
     'PDF to EPUB': ['pdf to epub/pdf-to-epub.html', 'fa-book', 'Create EPUB ebooks'],
     'Merge PDF': ['pdf tools/pdf-tools.html?mode=merge', 'fa-layer-group', 'Combine multiple PDFs'],
     'Compress PDF': ['pdf tools/pdf-tools.html?mode=compress', 'fa-compress', 'Reduce PDF file size'],
@@ -541,7 +541,7 @@
             <a href="${prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
             <a href="${prefix}pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
             <a href="${prefix}excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-            <a href="${prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+            <a href="${prefix}docx to pdf/docx-to-pdf.html">Word to PDF</a>
             <a href="${prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
           </div>
           <div class="tools-group">

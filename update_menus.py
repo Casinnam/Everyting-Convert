@@ -35,7 +35,7 @@ for root, dirs, files in os.walk('.'):
                         <a href="{prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
                         <a href="{prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
                         <a href="{prefix}excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-                        <a href="{prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                        <a href="{prefix}docx to pdf/docx-to-pdf.html">Word to PDF</a>
                         <a href="{prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
                         <a href="{prefix}ebook converter/ebook-converter.html">Ebook Converter</a>
                     </div>
@@ -57,7 +57,7 @@ for root, dirs, files in os.walk('.'):
                 <a href="{prefix}pdf to excel/pdf-to-excel.html">PDF to Excel</a>
                 <a href="{prefix}image to pdf/image-to-pdf.html">Image to PDF</a>
                 <a href="{prefix}excel to pdf/excel-to-pdf.html">Excel to PDF</a>
-                <a href="{prefix}docx to pdf/docx-to-pdf.html">DOCX to PDF</a>
+                <a href="{prefix}docx to pdf/docx-to-pdf.html">Word to PDF</a>
                 <a href="{prefix}pdf to epub/pdf-to-epub.html">PDF to EPUB</a>
                 <a href="{prefix}ebook converter/ebook-converter.html">Ebook Converter</a>
             </div>

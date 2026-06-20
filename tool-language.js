@@ -202,7 +202,7 @@
     docxPdf: {
       category: 'pdfDocuments',
       drop: 'dropDocx',
-      title: { en: 'DOCX to PDF', ko: 'DOCX를 PDF로 변환', de: 'DOCX zu PDF', es: 'DOCX a PDF', fr: 'DOCX vers PDF' },
+      title: { en: 'Word to PDF', ko: 'Word를 PDF로 변환', de: 'Word zu PDF', es: 'Word a PDF', fr: 'Word vers PDF' },
       description: {
         en: 'Convert Word documents into PDF files with a simple workflow.',
         ko: 'Word 문서를 간단한 과정으로 PDF 파일로 변환하세요.',
