@@ -20,7 +20,7 @@ assert(
     menu.includes('display: grid !important') &&
     menu.includes('flex-direction: column !important') &&
     menu.includes('min-width: 230px !important') &&
-    menu.includes('width: min(1320px, calc(100vw - 2rem)) !important') &&
+    menu.includes('width: calc(100vw - 1.5rem) !important') &&
     menu.includes('grid-template-columns: repeat(6, minmax(150px, 1fr)) !important') &&
     menu.includes('grid-template-columns: repeat(var(--ec-category-cols, 2), minmax(210px, 1fr)) !important') &&
     menu.includes('transform: translateX(-50%) !important') &&
@@ -73,8 +73,8 @@ assert(
 );
 
 assert(
-  mediaPage.includes('tools-menu.js?v=nav-20260618a') &&
-    pdfWordPage.includes('tools-menu.js?v=nav-20260618a'),
+  mediaPage.includes('tools-menu.js?v=nav-20260620a') &&
+    pdfWordPage.includes('tools-menu.js?v=nav-20260620a'),
   'Tool pages should use the latest tools menu cache-busting version.',
 );
 

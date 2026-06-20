@@ -141,11 +141,13 @@
         left: 50vw !important;
         right: auto !important;
         top: 4.45rem !important;
-        width: min(1320px, calc(100vw - 2rem)) !important;
+        width: calc(100vw - 1.5rem) !important;
+        max-width: calc(100vw - 1.5rem) !important;
+        max-height: min(90vh, 800px) !important;
         transform: translateX(-50%) !important;
         grid-template-columns: repeat(6, minmax(150px, 1fr)) !important;
         gap: 1.05rem !important;
-        padding: 1.05rem !important;
+        padding: 1.15rem 1.6rem !important;
         background:
           radial-gradient(circle at 15% 20%, rgba(59, 130, 246, .12), transparent 28%),
           radial-gradient(circle at 82% 10%, rgba(124, 58, 237, .12), transparent 26%),
