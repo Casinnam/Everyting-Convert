@@ -592,6 +592,7 @@
               <a href="${prefix}auth.html" role="menuitem"><i class="fa-regular fa-user"></i> <span>Account</span></a>
               <a href="${prefix}my-conversions.html" role="menuitem"><i class="fa-solid fa-clock-rotate-left"></i> <span>My Conversions</span></a>
               <a href="${prefix}pricing.html#credit-packs" role="menuitem"><i class="fa-solid fa-coins"></i> <span>Buy Credits</span></a>
+              <a href="${prefix}support.html" role="menuitem"><i class="fa-solid fa-receipt"></i> <span>Manage subscription</span></a>
               <a href="${prefix}admin.html" role="menuitem" data-admin-only style="display:none;"><i class="fa-solid fa-shield-halved"></i> <span>Admin Dashboard</span></a>
               <a href="#" role="menuitem" data-auth-logout><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Logout</span></a>
             </div>

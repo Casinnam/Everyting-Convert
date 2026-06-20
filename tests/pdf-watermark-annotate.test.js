@@ -16,7 +16,7 @@ const an = read('pdf annotate/pdf-annotate.html');
   assert(html.includes('application/ld+json'), `${name}: needs structured data.`);
   assert(html.includes('#cookie-settings'), `${name}: footer must expose Cookie Settings.`);
   assert(html.includes('class="site-footer"'), `${name}: needs the shared footer.`);
-  assert(/tools-menu\.js\?v=nav-20260617b/.test(html), `${name}: must load the current tools-menu (common sticky header).`);
+  assert(/tools-menu\.js\?v=nav-20260618a/.test(html), `${name}: must load the current tools-menu (common sticky header).`);
   assert(/tool-language\.js\?v=toollang-20260616a/.test(html), `${name}: must load current tool-language for i18n.`);
   assert(html.includes('pdf-lib'), `${name}: needs pdf-lib to write the PDF.`);
   assert(html.includes('pdf.min.js'), `${name}: needs pdf.js to read/preview the PDF.`);
