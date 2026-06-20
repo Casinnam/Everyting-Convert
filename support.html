@@ -153,23 +153,45 @@
                     try {
                         const result = await client.auth.getSession();
                         const session = result && result.data ? result.data.session : null;
-                        if (session && session.access_token) return session.access_token;
+                        if (session && session.access_token) {
+                            // Cache it back so the next read is instant.
+                            if (s) { s.session = session; s.user = session.user || s.user; }
+                            return session.access_token;
+                        }
                     } catch (error) { /* treat as logged out */ }
                 }
                 return '';
             }
 
+            const label = btn.querySelector('span');
+            const icon = btn.querySelector('i');
+            const originalLabel = label ? label.textContent : '';
+            const originalIcon = icon ? icon.className : '';
+
+            function setLoading(on, message) {
+                btn.disabled = on;
+                if (icon) icon.className = on ? 'fa-solid fa-spinner fa-spin' : originalIcon;
+                if (label) label.textContent = on ? 'Opening…' : originalLabel;
+                statusEl.style.color = '#64748b';
+                statusEl.textContent = message || '';
+            }
+            function fail(message) {
+                setLoading(false);
+                statusEl.style.color = '#b91c1c';
+                statusEl.textContent = message;
+            }
+
             btn.addEventListener('click', async () => {
-                statusEl.textContent = '';
+                if (btn.disabled) return; // already in progress — ignore repeat clicks
+                // Give immediate feedback BEFORE any await, so the user never thinks
+                // the click did nothing and re-clicks (which would fire extra requests).
+                setLoading(true, 'Connecting to Stripe — this can take a few seconds…');
+
                 const token = await resolveToken();
                 if (!token) {
                     window.location.href = 'auth.html';
                     return;
                 }
-                const label = btn.querySelector('span');
-                const original = label ? label.textContent : '';
-                btn.disabled = true;
-                if (label) label.textContent = 'Opening…';
                 // Open the Stripe portal in the language the user picked on our site,
                 // not whatever their browser happens to be set to.
                 let locale = 'en';
@@ -186,15 +208,20 @@
                     });
                     const data = await res.json().catch(() => ({}));
                     if (res.ok && data.url) {
+                        statusEl.textContent = 'Opening…';
                         window.location.href = data.url;
                         return;
                     }
-                    statusEl.textContent = data.error || 'Could not open the billing portal. Please try again or contact support.';
+                    fail(data.error || 'Could not open the billing portal. Please try again or contact support.');
                 } catch (error) {
-                    statusEl.textContent = 'Network error. Please try again.';
+                    fail('Network error. Please try again.');
                 }
-                btn.disabled = false;
-                if (label) label.textContent = original;
+            });
+
+            // Warm up the auth token in the background (after the auth scripts load)
+            // so the first click resolves instantly instead of waiting on getSession.
+            window.addEventListener('load', function () {
+                setTimeout(function () { resolveToken().catch(function () {}); }, 400);
             });
         })();
     </script>
