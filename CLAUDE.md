@@ -27,7 +27,7 @@ Each test file prints `<name> tests passed` on success, or throws an assertion e
 Key shared modules loaded by every page:
 - `tools-menu.js` — injects the unified sticky header/mega-menu
 - `auth.js` — manages Supabase auth session, exposes `isPro()` / `isAdmin()`
-- `usage-limit.js` — enforces free tier (guest: 10, free account: 20 conversions) via localStorage + Supabase `usage_counters`
+- `usage-limit.js` — enforces free tier (guest: 5, free account: 10 daily downloads) via localStorage + Supabase `usage_counters`. The limit is gated on the **download** action (convert/preview stays free): `gatedDownload({token,download})` counts the first download of a result and frees re-downloads; `showDownloadCard()` renders the shared completion card. AI/credit tools are exempt (no `usage-limit` meta change on those)
 - `language-menu.js` / `header-language.js` / `tool-language.js` / `developer-language.js` — i18n translation objects for 5 languages (en, ko, de, es, fr); switching persists to localStorage
 - `tool-page-redesign.js` — metadata-driven UI generator that builds the upload zone, progress indicator, and related-tools section for each converter page
 
@@ -39,7 +39,7 @@ Serverless functions deployed to a Cloudflare-compatible runtime (they use the W
 
 | File | Purpose |
 |---|---|
-| `usage-limit.js` | Check/increment free-tier usage counters; enforces guest (10) and free-account (20) limits |
+| `usage-limit.js` | Check/increment free-tier usage counters; enforces guest (5) and free-account (10) daily limits |
 | `conversion-history.js` | GET/POST conversion records; requires auth; pro/admin only |
 | `create-checkout-session.js` | Create Stripe checkout for pro subscription |
 | `confirm-checkout-session.js` | Verify Stripe payment and upgrade user plan to `pro` |
