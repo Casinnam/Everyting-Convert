@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const menu = fs.readFileSync(path.join(root, 'tools-menu.js'), 'utf8');
+// Normalize CRLF -> LF so the multi-line structure assertions below are not
+// broken by Windows line endings (the repo mixes CRLF/LF on Windows checkouts).
+const menu = fs.readFileSync(path.join(root, 'tools-menu.js'), 'utf8').replace(/\r\n/g, '\n');
 const mediaPage = fs.readFileSync(path.join(root, 'media converter', 'media-converter.html'), 'utf8');
 const pdfWordPage = fs.readFileSync(path.join(root, 'pdf to word', 'pdf-to-word.html'), 'utf8');
 const qrCss = fs.readFileSync(path.join(root, 'qr code generator', 'qr-code-generator.css'), 'utf8');
