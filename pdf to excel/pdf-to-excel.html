@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF to Excel Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1130,6 +1129,13 @@
 
   let pdfDoc = null;
   let currentFile = null;
+  // Daily-limit-gated download: the first download of a workbook counts, re-downloads
+  // of the same result are free, Pro/admin are unlimited.
+  function gatedExcelDownload(workbook, name){
+    const g = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+    if (g) { g({ token: workbook, download: () => XLSX.writeFile(workbook, name) }); }
+    else { XLSX.writeFile(workbook, name); }
+  }
   let workbook = null;
 
   const pageRange = document.getElementById('pageRange');
@@ -1482,7 +1488,7 @@
 
       document.getElementById('downloadExcelBtn').onclick = () => {
         const baseName = currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted';
-        XLSX.writeFile(workbook, `${baseName}.xlsx`);
+        gatedExcelDownload(workbook, `${baseName}.xlsx`);
       };
 
       document.getElementById('pageCount').textContent = pages.length;
@@ -1568,7 +1574,7 @@
     const maxColumns = Math.max(0, ...combinedRows.map((row) => row.length));
     document.getElementById('downloadExcelBtn').onclick = () => {
       const baseName = currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted';
-      XLSX.writeFile(workbook, `${baseName}.xlsx`);
+      gatedExcelDownload(workbook, `${baseName}.xlsx`);
     };
     document.getElementById('pageCount').textContent = pageCountLabel;
     document.getElementById('rowCount').textContent = combinedRows.filter((row) => row.some((cell) => cell)).length;

@@ -462,6 +462,47 @@
     }
   }
 
+  // Gate a file download behind the daily free limit. Converting/previewing stays
+  // free; only the actual download counts toward the limit. The SAME produced
+  // result can be re-downloaded for free — pass `alreadyCounted: true` on repeat
+  // downloads of an unchanged result so a user is never charged twice for it.
+  //
+  // Usage from a tool page:
+  //   const res = await EverythingConvertUsageLimit.gatedDownload({
+  //     alreadyCounted: resultCounted,
+  //     download: () => { /* trigger the real browser download here */ },
+  //   });
+  //   if (res.ok) resultCounted = resultCounted || res.counted;
+  //   // res.ok === false means the daily limit was hit (upgrade modal already shown)
+  // Tracks result objects (a jsPDF doc, a Blob, an XLSX workbook, etc.) that have
+  // already counted, so re-downloading the SAME result is free without each page
+  // wiring its own flag. Pass `token: <resultObject>` for this automatic behavior,
+  // or the explicit `alreadyCounted: <bool>` for primitives.
+  const countedResults = new WeakSet();
+
+  async function gatedDownload(options = {}) {
+    const download = typeof options.download === 'function' ? options.download : null;
+    if (!download) return { ok: false, reason: 'no-download' };
+
+    const token = options.token && typeof options.token === 'object' ? options.token : null;
+    const already = options.alreadyCounted || (token && countedResults.has(token));
+
+    // Re-download of an already-counted result: always free and never blocked.
+    if (already) {
+      await download();
+      return { ok: true, counted: false };
+    }
+
+    const allowed = await checkConversionAllowed();
+    if (!allowed) return { ok: false, reason: 'limit_reached' };
+
+    await download();
+    // Pro/admin and free (meta="none") pages no-op inside recordSuccessfulConversion.
+    await recordSuccessfulConversion();
+    if (token) countedResults.add(token);
+    return { ok: true, counted: true };
+  }
+
   async function guardConversion() {
     return checkConversionAllowed();
   }
@@ -473,8 +514,12 @@
     ensureUsageBadge();
     renderUsage();
 
+    // NOTE: we intentionally do NOT auto-gate the convert button anymore.
+    // Converting/previewing is free; the daily limit is enforced on the DOWNLOAD
+    // action via EverythingConvertUsageLimit.gatedDownload(). Pages that still want
+    // click-time gating can opt in with [data-usage-guard].
     document.addEventListener('click', async (event) => {
-      const button = event.target.closest('#convertBtn, [data-usage-guard]');
+      const button = event.target.closest('[data-usage-guard]');
       if (!button || button.disabled) return;
       if (button.dataset.usageBypass === '1') return;
 
@@ -513,6 +558,7 @@
     getUsageStatus,
     checkConversionAllowed,
     recordSuccessfulConversion,
+    gatedDownload,
     guardConversion,
     renderUsage,
     showUpgradeModal,

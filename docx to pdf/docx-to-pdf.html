@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Word to PDF Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -132,6 +131,51 @@
     background: #ffffff;
     padding: 0;
   }
+
+  /* Result card — mirrors the pdf-to-word completion UI. */
+  .results-section { display: none; text-align: center; margin-top: 1.75rem; }
+  .results-section.visible { display: block; }
+  .results-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--tool-ink, #0f172a);
+  }
+  .download-result-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 2px solid var(--tool-ink, #0f172a);
+    color: var(--tool-ink, #0f172a);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .download-result-btn:hover { background: var(--tool-ink, #0f172a); color: #fff; }
+  .download-result-btn:disabled { opacity: 0.6; cursor: default; }
+  .reset-btn {
+    display: block;
+    margin: 1.5rem auto 0;
+    padding: 0.6rem 1.5rem;
+    background: none;
+    border: 1px solid var(--tool-line, #e2e8f0);
+    color: var(--tool-muted, #64748b);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--tool-ink, #0f172a); color: var(--tool-ink, #0f172a); }
 </style>
 </head>
 <body>
@@ -182,7 +226,7 @@
                         <a href="../gif converter/gif-converter.html?mode=gif-mp4">GIF to MP4</a>
                         <a href="../gif converter/gif-converter.html?mode=image-gif">Image to GIF</a>
                     </div></div></div><a href="../auth.html" data-auth-login>Login</a><a href="../auth.html" data-auth-state data-auth-account style="display:none;">Account</a><a href="../admin.html" data-admin-only style="display:none;">Admin</a><a href="#" data-auth-logout style="display:none;">Logout</a></nav></header>
-<main><section class="hero"><div class="eyebrow">PDF & Documents</div><h1>Word to PDF</h1><p>Convert Word documents to PDF in your browser while preserving common formatting such as headings, colors, lists, and tables.</p></section><section class="tool-card"><div class="drop-zone" id="dropZone"><i class="fa-regular fa-file-word"></i><p>Click or drop a Word file here</p><input id="fileInput" type="file" accept=".docx"></div><button class="primary-btn" id="convertBtn" disabled>Convert to PDF</button><div class="status" id="status">No file selected.</div></section>
+<main><section class="hero"><div class="eyebrow">PDF & Documents</div><h1>Word to PDF</h1><p>Convert Word documents to PDF in your browser while preserving common formatting such as headings, colors, lists, and tables.</p></section><section class="tool-card"><div class="drop-zone" id="dropZone"><i class="fa-regular fa-file-word"></i><p>Click or drop a Word file here</p><input id="fileInput" type="file" accept=".docx"></div><button class="primary-btn" id="convertBtn" disabled>Convert to PDF</button><div class="status" id="status">No file selected.</div><div class="results-section" id="resultsSection" style="display:none;"><div class="results-title" data-ko="변환 완료 — PDF가 준비되었습니다">Conversion complete — your PDF is ready</div><button class="download-result-btn" id="downloadBtn"><i class="fa-solid fa-download"></i> <span data-ko="PDF 다운로드">Download PDF</span></button><button class="reset-btn" id="resetBtn" data-ko="다른 파일 변환">Convert another file</button></div></section>
   <section class="ec-info-grid" data-static>
     <article class="ec-info-panel">
       <h2 data-ko="Word 파일을 PDF로 변환하는 방법">How to convert Word to PDF</h2>
@@ -302,9 +346,12 @@
 <script src="../tool-language.js?v=toollang-20260616a"></script>
 <script>
   let currentFile = null;
-  const fileInput = document.getElementById('fileInput'), dropZone = document.getElementById('dropZone'), convertBtn = document.getElementById('convertBtn'), statusEl = document.getElementById('status');
+  let lastPdf = null, lastPdfName = '', resultCounted = false;
+  const fileInput = document.getElementById('fileInput'), dropZone = document.getElementById('dropZone'), convertBtn = document.getElementById('convertBtn'), downloadBtn = document.getElementById('downloadBtn'), resultsSection = document.getElementById('resultsSection'), resetBtn = document.getElementById('resetBtn'), statusEl = document.getElementById('status');
   function setStatus(text){ statusEl.textContent = text; }
-  function setFile(file){ currentFile = file; convertBtn.disabled = false; setStatus(`${file.name} selected.`); }
+  function resetResult(){ lastPdf = null; lastPdfName = ''; resultCounted = false; if (resultsSection) resultsSection.style.display = 'none'; }
+  function setFile(file){ currentFile = file; convertBtn.style.display = ''; convertBtn.disabled = false; resetResult(); setStatus(`${file.name} selected.`); }
+  function resetAll(){ currentFile = null; resetResult(); convertBtn.style.display = ''; convertBtn.disabled = true; fileInput.value = ''; setStatus('No file selected.'); }
   async function convert(){
     if(!currentFile) return;
     convertBtn.disabled = true;
@@ -386,8 +433,13 @@
 
       if (!added) throw new Error('pages rendered with zero size (nothing to capture)');
 
-      pdf.save(currentFile.name.replace(/\.docx$/i, '') + '.pdf');
-      setStatus('PDF download started.');
+      // Keep the result so the (limit-gated) Download button can save it on demand.
+      lastPdf = pdf;
+      lastPdfName = currentFile.name.replace(/\.docx$/i, '') + '.pdf';
+      resultCounted = false;
+      convertBtn.style.display = 'none';
+      if (resultsSection) resultsSection.style.display = 'block';
+      setStatus('');
     } catch (error) {
       console.error(error);
       setStatus('Could not create the formatted PDF: ' + (error && error.message ? error.message : 'unknown error'));
@@ -397,7 +449,34 @@
       convertBtn.disabled = false;
     }
   }
-  dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
+  // Download is gated by the daily free limit; the first download of a result
+  // counts, re-downloads of the same PDF are free. Pro/admin are unlimited.
+  async function handleDownload(){
+    if (!lastPdf) return;
+    downloadBtn.disabled = true;
+    const prev = statusEl.textContent;
+    setStatus('Preparing download…');
+    try {
+      const gate = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+      if (gate) {
+        const res = await window.EverythingConvertUsageLimit.gatedDownload({
+          alreadyCounted: resultCounted,
+          download: () => lastPdf.save(lastPdfName),
+        });
+        if (!res.ok) { setStatus('Daily free limit reached.'); return; }
+        resultCounted = resultCounted || res.counted;
+      } else {
+        lastPdf.save(lastPdfName);
+      }
+      setStatus('PDF download started.');
+    } catch (e) {
+      console.error(e);
+      setStatus(prev);
+    } finally {
+      downloadBtn.disabled = false;
+    }
+  }
+  dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert); downloadBtn.addEventListener('click',handleDownload); resetBtn.addEventListener('click',resetAll);
 </script>
 <script src="../tool-page-redesign.js?v=20260618a"></script>
 <script src="../static-i18n.js"></script>

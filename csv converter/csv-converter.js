@@ -145,6 +145,7 @@
   /* ---------- state ---------- */
   var currentMode = 'csv-json';
   var currentOutput = '';
+  var lastCountedOutput = null; // the output string already counted toward the daily limit
   var loadedFileName = '';
 
   /* ---------- DOM refs ---------- */
@@ -463,12 +464,26 @@
       ext = '.txt';
     }
     var baseName = loadedFileName ? loadedFileName.replace(/\.[^.]+$/, '') : 'everythingconvert-data';
-    var link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = baseName + ext;
-    link.click();
-    URL.revokeObjectURL(link.href);
-    setStatus('Download started.', 'success');
+    var savedOutput = currentOutput;
+    var doSave = function () {
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = baseName + ext;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      setStatus('Download started.', 'success');
+    };
+    // Daily-limit-gated: first download of an output counts; re-downloading the
+    // same result is free; Pro/admin unlimited.
+    var g = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+    if (g) {
+      g({ alreadyCounted: (savedOutput === lastCountedOutput), download: doSave }).then(function (res) {
+        if (!res.ok) { setStatus('Daily free limit reached.', 'error'); return; }
+        if (res.counted) lastCountedOutput = savedOutput;
+      });
+    } else {
+      doSave();
+    }
   }
 
   /* ---------- conversion history ---------- */

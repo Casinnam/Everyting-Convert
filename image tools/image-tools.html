@@ -5,7 +5,6 @@
 <script src="../ads.js?v=ads-20260611a"></script>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta charset="UTF-8">
-  <meta name="usage-limit" content="none">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Tools - EverythingConvert</title>
   <meta name="description" content="Compress, resize, crop, clean metadata, create favicons, and prepare social media images online in your browser.">
@@ -902,7 +901,26 @@
     objectUrls.push(url);
     const item = document.createElement('div');
     item.className = 'result-item';
-    item.innerHTML = `<div><strong>${name}</strong><span>${formatBytes(blob.size)}</span></div><a href="${url}" download="${name}">${tr('download')}</a>`;
+    const meta = document.createElement('div');
+    meta.innerHTML = `<strong>${name}</strong><span>${formatBytes(blob.size)}</span>`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = name;
+    link.textContent = tr('download');
+    // Gate each download by the daily free limit; re-downloading the same result
+    // (token = blob) is free, Pro/admin are unlimited.
+    link.addEventListener('click', (e) => {
+      const g = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+      if (!g) return; // helper absent → allow the native download
+      e.preventDefault();
+      g({ token: blob, download: () => {
+        const a = document.createElement('a');
+        a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+      } });
+    });
+    item.appendChild(meta);
+    item.appendChild(link);
     els.resultList.appendChild(item);
   }
 

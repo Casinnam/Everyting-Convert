@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF to Word Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1177,6 +1176,9 @@
   let currentFile = null;
   let currentWordBlob = null;
   let currentWordFilename = 'converted.docx';
+  // High-quality (Adobe) results are paid for with AI credits, so they are EXEMPT
+  // from the free daily download limit. The free text path is limit-gated.
+  let lastResultIsCredit = false;
 
   const pageRange = document.getElementById('pageRange');
   pageRange.addEventListener('change', () => {
@@ -1272,6 +1274,7 @@
         : await createTextWordDocument(pages, includePageNum);
 
       currentWordBlob = blob;
+      lastResultIsCredit = false;
       const suffix = conversionMode === 'layout' ? '-layout-beta' : '';
       currentWordFilename = (currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted') + suffix + '.docx';
       document.getElementById('downloadWordBtn').onclick = () => {
@@ -1490,9 +1493,7 @@
     return bytes;
   }
 
-  function downloadCurrentWordFile() {
-    if (!currentWordBlob) return;
-
+  function saveCurrentWordFile() {
     if (navigator.msSaveOrOpenBlob) {
       navigator.msSaveOrOpenBlob(currentWordBlob, currentWordFilename);
       return;
@@ -1518,6 +1519,15 @@
     }
 
     setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+
+  function downloadCurrentWordFile() {
+    if (!currentWordBlob) return;
+    // Credit-paid (high-quality) results bypass the free daily limit entirely.
+    const gate = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+    if (lastResultIsCredit || !gate) { saveCurrentWordFile(); return; }
+    // Free path: first download of a result counts, re-downloads are free.
+    gate({ token: currentWordBlob, download: saveCurrentWordFile });
   }
 
   function updateProgress(label, pct) {
@@ -1677,6 +1687,7 @@
           const blob = await res.blob();
           // Hand off to the shared download UI (identical to the free converter).
           currentWordBlob = blob;
+          lastResultIsCredit = true; // paid with credits — exempt from the free daily limit
           currentWordFilename = file.name.replace(/\.pdf$/i, '') + ' (editable).docx';
           el('downloadWordBtn').onclick = function () { downloadCurrentWordFile(); };
           hqStop();

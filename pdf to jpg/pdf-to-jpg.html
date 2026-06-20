@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF to JPG Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1293,49 +1292,60 @@
     grid.appendChild(card);
   }
 
+  // Each download click counts toward the daily free limit; re-downloading the
+  // same page/zip is free (token = the result object). Pro/admin are unlimited.
   function downloadSingle(dataURL, pageNum) {
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = `page_${pageNum}.jpg`;
-    a.click();
+    const doSave = () => {
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = `page_${pageNum}.jpg`;
+      a.click();
+    };
+    const g = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+    const token = generatedImages.find((im) => im.pageNum === pageNum) || null;
+    if (g) g({ token, download: doSave }); else doSave();
   }
 
   async function downloadAll() {
     if (generatedImages.length === 0) return;
 
     const btn = document.getElementById('downloadAllBtn');
-    btn.textContent = 'Creating ZIP...';
-    btn.disabled = true;
+    const buildAndSave = async () => {
+      btn.textContent = 'Creating ZIP...';
+      btn.disabled = true;
+      try {
+        if (typeof JSZip === 'undefined') throw new Error('JSZip not loaded');
 
-    try {
-      if (typeof JSZip === 'undefined') throw new Error('JSZip not loaded');
+        const zip = new JSZip();
+        const folderName = currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'pdf_pages';
+        const folder = zip.folder(folderName);
 
-      const zip = new JSZip();
-      const folderName = currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'pdf_pages';
-      const folder = zip.folder(folderName);
+        for (const { dataURL, pageNum } of generatedImages) {
+          const base64 = dataURL.split(',')[1];
+          folder.file(`page_${String(pageNum).padStart(3, '0')}.jpg`, base64, { base64: true });
+        }
 
-      for (const { dataURL, pageNum } of generatedImages) {
-        const base64 = dataURL.split(',')[1];
-        folder.file(`page_${String(pageNum).padStart(3, '0')}.jpg`, base64, { base64: true });
+        const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 3 } });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = folderName + '.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+      } catch (e) {
+        console.error('ZIP creation error:', e);
+        alert('ZIP creation failed. Please use each page download button instead.');
       }
 
-      const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 3 } });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = folderName + '.zip';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 3000);
+      btn.textContent = 'Download all';
+      btn.disabled = false;
+    };
 
-    } catch (e) {
-      console.error('ZIP creation error:', e);
-      alert('ZIP creation failed. Please use each page download button instead.');
-    }
-
-    btn.textContent = 'Download all';
-    btn.disabled = false;
+    const g = window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.gatedDownload;
+    if (g) await g({ token: generatedImages, download: buildAndSave });
+    else await buildAndSave();
   }
 
   function resetAll() {
