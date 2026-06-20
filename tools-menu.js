@@ -660,6 +660,13 @@
     grid.dataset.ecHeaderToolsBound = 'true';
   }
 
+  function normalizeFooterPrivacyChoices() {
+    document.querySelectorAll('.footer-legal-row a[href="#cookie-settings"]').forEach((link) => {
+      link.textContent = 'Privacy Choices';
+      link.setAttribute('aria-label', 'Privacy Choices');
+    });
+  }
+
   // Add a "Blog" link to the footer legal row on every page. The blog lives at
   // the clean URL /blog (Cloudflare Function) and is intentionally kept out of
   // the top navigation — footer only.
@@ -804,6 +811,7 @@
   injectHeaderStyles();
   if (normalizeHeader()) syncAuthHeaderState();
   bindHomeHeaderTools();
+  normalizeFooterPrivacyChoices();
   injectFooterBlogLink();
   injectFooterExtensionLink();
   initPwa(scriptPrefix());

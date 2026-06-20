@@ -78,6 +78,14 @@ assert(
   'Tool pages should use the latest tools menu cache-busting version.',
 );
 
+assert(
+  menu.includes('function normalizeFooterPrivacyChoices()') &&
+    menu.includes("a[href=\"#cookie-settings\"]") &&
+    menu.includes("link.textContent = 'Privacy Choices'") &&
+    menu.includes('normalizeFooterPrivacyChoices();'),
+  'Unified footer should label the cookie/privacy settings link as Privacy Choices so it is not confused with the Contact page.',
+);
+
 console.log('tools menu layout tests passed');
 
 assert(

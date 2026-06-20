@@ -203,7 +203,47 @@
     'Image to GIF': ['gif converter/gif-converter.html?mode=image-gif', 'fa-images', 'Animate images as GIF'],
     'QR Code Generator': ['qr code generator/qr-code-generator.html', 'fa-qrcode', 'Create custom QR codes instantly'],
     'JSON to CSV': ['json to csv/json-to-csv.html', 'fa-code', 'Convert JSON data to spreadsheet CSV'],
-    'CSV Converter': ['csv converter/csv-converter.html', 'fa-file-csv', 'Convert CSV to JSON, Excel, or XML']
+    'CSV Converter': ['csv converter/csv-converter.html', 'fa-file-csv', 'Convert CSV to JSON, Excel, or XML'],
+    'PDF Summary': ['ai tools/pdf-summary/index.html', 'fa-file-lines', 'Summarize PDFs with AI']
+  };
+
+  const popularFooterTools = ['PDF to Word', 'PDF to JPG', 'QR Code Generator', 'Image Converter', 'PDF Summary'];
+
+  const localizedToolNames = {
+    'PDF to Word': { ko: 'PDF를 Word로 변환', de: 'PDF zu Word', es: 'PDF a Word', fr: 'PDF vers Word' },
+    'PDF to JPG': { ko: 'PDF를 JPG로 변환', de: 'PDF zu JPG', es: 'PDF a JPG', fr: 'PDF vers JPG' },
+    'PDF to Excel': { ko: 'PDF를 Excel로 변환', de: 'PDF zu Excel', es: 'PDF a Excel', fr: 'PDF vers Excel' },
+    'Excel to PDF': { ko: 'Excel을 PDF로 변환', de: 'Excel zu PDF', es: 'Excel a PDF', fr: 'Excel vers PDF' },
+    'Image to PDF': { ko: '이미지를 PDF로 변환', de: 'Bild zu PDF', es: 'Imagen a PDF', fr: 'Image vers PDF' },
+    'Word to PDF': { ko: 'Word를 PDF로 변환', de: 'Word zu PDF', es: 'Word a PDF', fr: 'Word vers PDF' },
+    'PDF to EPUB': { ko: 'PDF를 EPUB로 변환', de: 'PDF zu EPUB', es: 'PDF a EPUB', fr: 'PDF vers EPUB' },
+    'Merge PDF': { ko: 'PDF 병합', de: 'PDF zusammenführen', es: 'Unir PDF', fr: 'Fusionner PDF' },
+    'Compress PDF': { ko: 'PDF 압축', de: 'PDF komprimieren', es: 'Comprimir PDF', fr: 'Compresser PDF' },
+    'Split PDF': { ko: 'PDF 분할', de: 'PDF teilen', es: 'Dividir PDF', fr: 'Diviser PDF' },
+    'Rotate PDF': { ko: 'PDF 회전', de: 'PDF drehen', es: 'Girar PDF', fr: 'Faire pivoter PDF' },
+    'Remove PDF Pages': { ko: 'PDF 페이지 삭제', de: 'PDF-Seiten entfernen', es: 'Eliminar páginas PDF', fr: 'Supprimer des pages PDF' },
+    'Extract PDF Pages': { ko: 'PDF 페이지 추출', de: 'PDF-Seiten extrahieren', es: 'Extraer páginas PDF', fr: 'Extraire des pages PDF' },
+    'Organize PDF': { ko: 'PDF 정리', de: 'PDF organisieren', es: 'Organizar PDF', fr: 'Organiser PDF' },
+    'Ebook Converter': { ko: '전자책 변환기', de: 'Ebook-Konverter', es: 'Convertidor de ebooks', fr: 'Convertisseur ebook' },
+    'Image Converter': { ko: '이미지 변환기', de: 'Bildkonverter', es: 'Convertidor de imágenes', fr: "Convertisseur d'images" },
+    'JPG to PDF': { ko: 'JPG를 PDF로 변환', de: 'JPG zu PDF', es: 'JPG a PDF', fr: 'JPG vers PDF' },
+    'PNG to PDF': { ko: 'PNG를 PDF로 변환', de: 'PNG zu PDF', es: 'PNG a PDF', fr: 'PNG vers PDF' },
+    'WEBP to PNG': { ko: 'WEBP를 PNG로 변환', de: 'WEBP zu PNG', es: 'WEBP a PNG', fr: 'WEBP vers PNG' },
+    'WEBP to JPG': { ko: 'WEBP를 JPG로 변환', de: 'WEBP zu JPG', es: 'WEBP a JPG', fr: 'WEBP vers JPG' },
+    'HEIC to JPG': { ko: 'HEIC를 JPG로 변환', de: 'HEIC zu JPG', es: 'HEIC a JPG', fr: 'HEIC vers JPG' },
+    'PNG to SVG': { ko: 'PNG를 SVG로 변환', de: 'PNG zu SVG', es: 'PNG a SVG', fr: 'PNG vers SVG' },
+    'MP4 to MP3': { ko: 'MP4를 MP3로 변환', de: 'MP4 zu MP3', es: 'MP4 a MP3', fr: 'MP4 vers MP3' },
+    'MOV to MP4': { ko: 'MOV를 MP4로 변환', de: 'MOV zu MP4', es: 'MOV a MP4', fr: 'MOV vers MP4' },
+    'Video to MP3': { ko: '비디오를 MP3로 변환', de: 'Video zu MP3', es: 'Vídeo a MP3', fr: 'Vidéo vers MP3' },
+    'Video to GIF': { ko: '비디오를 GIF로 변환', de: 'Video zu GIF', es: 'Vídeo a GIF', fr: 'Vidéo vers GIF' },
+    'MP4 to GIF': { ko: 'MP4를 GIF로 변환', de: 'MP4 zu GIF', es: 'MP4 a GIF', fr: 'MP4 vers GIF' },
+    'WEBM to GIF': { ko: 'WEBM을 GIF로 변환', de: 'WEBM zu GIF', es: 'WEBM a GIF', fr: 'WEBM vers GIF' },
+    'GIF to MP4': { ko: 'GIF를 MP4로 변환', de: 'GIF zu MP4', es: 'GIF a MP4', fr: 'GIF vers MP4' },
+    'Image to GIF': { ko: '이미지를 GIF로 변환', de: 'Bild zu GIF', es: 'Imagen a GIF', fr: 'Image vers GIF' },
+    'QR Code Generator': { ko: 'QR 코드 생성기', de: 'QR-Code-Generator', es: 'Generador de códigos QR', fr: 'Générateur de QR code' },
+    'JSON to CSV': { ko: 'JSON을 CSV로 변환', de: 'JSON zu CSV', es: 'JSON a CSV', fr: 'JSON vers CSV' },
+    'CSV Converter': { ko: 'CSV 변환기', de: 'CSV-Konverter', es: 'Convertidor CSV', fr: 'Convertisseur CSV' },
+    'PDF Summary': { ko: 'PDF 요약', de: 'PDF-Zusammenfassung', es: 'Resumen de PDF', fr: 'Résumé PDF' }
   };
 
   const localizedContent = {
@@ -251,6 +291,17 @@
         ['Can I use this on mobile?', 'Yes. The site works on mobile browsers, although large files are usually easier on a desktop or laptop.']
       ],
       relatedTitle: 'More {category} Tools You May Need',
+      footerPopularTitle: 'Popular tools',
+      footerHubTitle: 'Conversion hub',
+      footerHubText: 'Jump back to the full toolbox or manage your saved conversion history.',
+      footerBrowseTitle: 'Browse categories',
+      footerAllToolsLabel: 'All tools',
+      footerAccountLabel: 'Account',
+      footerPdfToolsLabel: 'PDF tools',
+      footerImageToolsLabel: 'Image tools',
+      footerVideoToolsLabel: 'Video & Audio',
+      footerAiToolsLabel: 'AI tools',
+      footerDeveloperToolsLabel: 'Developer tools',
       securityTitle: 'Private by design',
       securityText: 'There is nothing to upload. The conversion happens right in your browser, so your files stay on your device from start to finish.',
       secureTransfer: 'In-browser processing',
@@ -304,6 +355,17 @@
         ['휴대폰에서도 사용할 수 있나요?', '네. 모바일 브라우저에서도 사용할 수 있습니다. 다만 큰 파일은 컴퓨터에서 작업하는 것이 더 안정적입니다.']
       ],
       relatedTitle: '함께 쓰기 좋은 {category} 도구',
+      footerPopularTitle: '인기 도구',
+      footerHubTitle: '변환 도구 허브',
+      footerHubText: '전체 도구 목록으로 돌아가거나 계정의 변환 기록을 관리하세요.',
+      footerBrowseTitle: '카테고리 둘러보기',
+      footerAllToolsLabel: '모든 도구',
+      footerAccountLabel: '계정',
+      footerPdfToolsLabel: 'PDF 도구',
+      footerImageToolsLabel: '이미지 도구',
+      footerVideoToolsLabel: '비디오 & 오디오',
+      footerAiToolsLabel: 'AI 도구',
+      footerDeveloperToolsLabel: '개발자 도구',
       securityTitle: '설계부터 비공개',
       securityText: '업로드할 것이 없습니다. 변환은 브라우저 안에서 바로 이루어지며, 파일은 처음부터 끝까지 사용자 기기에 머뭅니다.',
       secureTransfer: '브라우저 내 처리',
@@ -339,6 +401,17 @@
       faqTitle: 'Häufige Fragen',
       faqs: [['Muss ich Software installieren?', 'Nein. Die Tools funktionieren in modernen Browsern.'], ['Ist das Ergebnis immer perfekt?', 'Einfache Dateien gelingen meist sauber. Komplexe Layouts sollten geprüft werden.'], ['Funktioniert es auf Mobilgeräten?', 'Ja, große Dateien sind jedoch auf Desktop oder Laptop einfacher.']],
       relatedTitle: 'Weitere {category}-Tools',
+      footerPopularTitle: 'Beliebte Tools',
+      footerHubTitle: 'Konvertierungs-Hub',
+      footerHubText: 'Zur vollständigen Tool-Auswahl wechseln oder gespeicherte Konvertierungen verwalten.',
+      footerBrowseTitle: 'Kategorien durchsuchen',
+      footerAllToolsLabel: 'Alle Tools',
+      footerAccountLabel: 'Konto',
+      footerPdfToolsLabel: 'PDF-Tools',
+      footerImageToolsLabel: 'Bild-Tools',
+      footerVideoToolsLabel: 'Video & Audio',
+      footerAiToolsLabel: 'KI-Tools',
+      footerDeveloperToolsLabel: 'Entwickler-Tools',
       securityTitle: 'Privat per Design',
       securityText: 'Es gibt nichts hochzuladen. Die Konvertierung erfolgt direkt in Ihrem Browser, sodass Ihre Dateien von Anfang bis Ende auf Ihrem Gerät bleiben.',
       secureTransfer: 'Verarbeitung im Browser',
@@ -374,6 +447,17 @@
       faqTitle: 'Preguntas frecuentes',
       faqs: [['¿Necesito instalar software?', 'No. Las herramientas funcionan en navegadores modernos.'], ['¿El resultado siempre será perfecto?', 'Los archivos simples suelen salir bien. Los diseños complejos deben revisarse.'], ['¿Funciona en móvil?', 'Sí, aunque los archivos grandes son más cómodos en ordenador.']],
       relatedTitle: 'Más herramientas de {category}',
+      footerPopularTitle: 'Herramientas populares',
+      footerHubTitle: 'Centro de conversión',
+      footerHubText: 'Vuelve a todas las herramientas o gestiona tu historial de conversiones guardado.',
+      footerBrowseTitle: 'Explorar categorías',
+      footerAllToolsLabel: 'Todas las herramientas',
+      footerAccountLabel: 'Cuenta',
+      footerPdfToolsLabel: 'Herramientas PDF',
+      footerImageToolsLabel: 'Herramientas de imagen',
+      footerVideoToolsLabel: 'Vídeo y audio',
+      footerAiToolsLabel: 'Herramientas de IA',
+      footerDeveloperToolsLabel: 'Herramientas para desarrolladores',
       securityTitle: 'Privado por diseño',
       securityText: 'No hay nada que subir. La conversión ocurre en tu navegador, así que tus archivos permanecen en tu dispositivo de principio a fin.',
       secureTransfer: 'Procesado en el navegador',
@@ -409,6 +493,17 @@
       faqTitle: 'Questions fréquentes',
       faqs: [['Dois-je installer un logiciel ?', 'Non. Les outils fonctionnent dans les navigateurs modernes.'], ['Le résultat sera-t-il toujours parfait ?', 'Les fichiers simples se convertissent bien. Les mises en page complexes doivent être vérifiées.'], ['Puis-je utiliser le site sur mobile ?', 'Oui, mais les gros fichiers sont plus pratiques sur ordinateur.']],
       relatedTitle: 'Autres outils {category}',
+      footerPopularTitle: 'Outils populaires',
+      footerHubTitle: 'Centre de conversion',
+      footerHubText: "Revenez à tous les outils ou gérez l'historique de vos conversions.",
+      footerBrowseTitle: 'Parcourir les catégories',
+      footerAllToolsLabel: 'Tous les outils',
+      footerAccountLabel: 'Compte',
+      footerPdfToolsLabel: 'Outils PDF',
+      footerImageToolsLabel: 'Outils image',
+      footerVideoToolsLabel: 'Vidéo et audio',
+      footerAiToolsLabel: 'Outils IA',
+      footerDeveloperToolsLabel: 'Outils développeur',
       securityTitle: 'Privé par conception',
       securityText: "Il n'y a rien à téléverser. La conversion se fait dans votre navigateur, vos fichiers restent donc sur votre appareil du début à la fin.",
       secureTransfer: 'Traitement dans le navigateur',
@@ -447,6 +542,11 @@
   function list(key, language = currentLanguage()) {
     const pack = localizedContent[language] || localizedContent.en;
     return pack[key] || localizedContent.en[key] || [];
+  }
+
+  function displayToolName(name, language = currentLanguage()) {
+    const pack = localizedToolNames[name];
+    return (pack && (pack[language] || pack.en)) || name;
   }
 
   function currentFileName() {
@@ -736,11 +836,44 @@
       <div class="ec-related-grid">
         ${meta.related.map((name) => {
           const link = relatedLinks[name] || ['index.html#tools', 'fa-wand-magic-sparkles', 'Explore this tool'];
-          return `<a href="${rootPrefix()}${link[0]}"><i class="fa-solid ${link[1]}"></i><strong>${name}</strong><span>${link[2]}</span></a>`;
+          return `<a href="${rootPrefix()}${link[0]}"><i class="fa-solid ${link[1]}"></i><strong>${displayToolName(name, language)}</strong><span>${link[2]}</span></a>`;
         }).join('')}
       </div>
     `;
     main.appendChild(related);
+  }
+
+  function compactToolPageFooter(meta, language = currentLanguage()) {
+    const footerGrid = document.querySelector('.site-footer .footer-grid');
+    if (!footerGrid) return;
+    footerGrid.dataset.ecRelatedFooter = 'true';
+    footerGrid.classList.add('ec-related-footer-grid');
+    const prefix = rootPrefix();
+    const footerToolLink = (name, language) => {
+      const link = relatedLinks[name] || ['index.html#tools', 'fa-wand-magic-sparkles', 'Explore this tool'];
+      return `<a href="${prefix}${link[0]}">${displayToolName(name, language)}</a>`;
+    };
+
+    footerGrid.innerHTML = `
+      <div class="footer-group">
+        <h2><i class="fa-solid fa-compass"></i> ${tr('footerHubTitle', {}, language)}</h2>
+        <p class="footer-note">${tr('footerHubText', {}, language)}</p>
+        <a href="${prefix}index.html#tools">${tr('footerAllToolsLabel', {}, language)}</a>
+        <a href="${prefix}auth.html">${tr('footerAccountLabel', {}, language)}</a>
+      </div>
+      <div class="footer-group">
+        <h2><i class="fa-solid fa-fire"></i> ${tr('footerPopularTitle', {}, language)}</h2>
+        ${popularFooterTools.map((name) => footerToolLink(name, language)).join('')}
+      </div>
+      <div class="footer-group">
+        <h2><i class="fa-solid fa-layer-group"></i> ${tr('footerBrowseTitle', {}, language)}</h2>
+        <a href="${prefix}pdf tools/pdf-tools.html">${tr('footerPdfToolsLabel', {}, language)}</a>
+        <a href="${prefix}image tools/image-tools.html">${tr('footerImageToolsLabel', {}, language)}</a>
+        <a href="${prefix}index.html#tool-browser">${tr('footerVideoToolsLabel', {}, language)}</a>
+        <a href="${prefix}index.html#ai-preview">${tr('footerAiToolsLabel', {}, language)}</a>
+        <a href="${prefix}index.html#tool-browser">${tr('footerDeveloperToolsLabel', {}, language)}</a>
+      </div>
+    `;
   }
 
   function addSecurityBand(language = currentLanguage()) {
@@ -767,6 +900,7 @@
     addInfoSections(meta, language);
     addSeoGuide(meta, language);
     addRelated(meta, language);
+    compactToolPageFooter(meta, language);
     addSecurityBand(language);
   }
 
@@ -823,6 +957,7 @@
     injectSchema(meta);
     window.addEventListener('everything-language-change', (event) => {
       renderLocalizedSections(meta, event.detail.language);
+      compactToolPageFooter(meta, event.detail.language);
     });
     fixFooterText();
   }
