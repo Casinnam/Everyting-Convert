@@ -1,0 +1,23 @@
+{
+  "name": "EverythingConvert — Private File Converter",
+  "short_name": "EverythingConvert",
+  "description": "Convert PDF, image, video, audio, and office files entirely in your browser. Nothing is uploaded — your files never leave your device.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

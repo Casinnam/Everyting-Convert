@@ -9,6 +9,40 @@
     return match ? match[1] : '';
   }
 
+  // Progressive Web App: link the manifest, set theme color, and register the
+  // service worker so the site is installable and works offline once visited.
+  // Kept defensive — never throws, never runs off a secure context.
+  function initPwa(prefix) {
+    try {
+      const head = document.head || document.documentElement;
+      if (head && !document.querySelector('link[rel="manifest"]')) {
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = `${prefix}manifest.webmanifest`;
+        head.appendChild(link);
+      }
+      if (head && !document.querySelector('meta[name="theme-color"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        meta.content = '#3b82f6';
+        head.appendChild(meta);
+      }
+      if (head && !document.querySelector('link[rel="apple-touch-icon"]')) {
+        const icon = document.createElement('link');
+        icon.rel = 'apple-touch-icon';
+        icon.href = `${prefix}favicon.svg`;
+        head.appendChild(icon);
+      }
+      const secure = location.protocol === 'https:' ||
+        ['localhost', '127.0.0.1'].includes(location.hostname);
+      if (secure && 'serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register(`${prefix}sw.js`).catch(() => {});
+        });
+      }
+    } catch (_) { /* PWA is progressive enhancement — ignore failures */ }
+  }
+
   function injectHeaderStyles() {
     if (document.getElementById('ec-unified-header-style')) return;
     const style = document.createElement('style');
@@ -645,6 +679,29 @@
     });
   }
 
+  // Surface our published Chrome Web Store extension in the footer of every
+  // page — a free distribution / retention channel the site didn't link to.
+  function injectFooterExtensionLink() {
+    const STORE_URL = 'https://chromewebstore.google.com/detail/dmakfpmllfdkjdebjgaokiefgogplgec';
+    document.querySelectorAll('.footer-legal-row').forEach((row) => {
+      if (row.querySelector(`a[href="${STORE_URL}"]`)) return;
+      const link = document.createElement('a');
+      link.href = STORE_URL;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'Chrome Extension';
+      const existing = row.querySelector('a');
+      if (existing) {
+        existing.getAttributeNames().forEach((name) => {
+          if (name !== 'href' && name !== 'target' && name !== 'rel') {
+            link.setAttribute(name, existing.getAttribute(name));
+          }
+        });
+      }
+      row.appendChild(link);
+    });
+  }
+
   function closeAll(except) {
     document.querySelectorAll('.tools-menu.open').forEach((menu) => {
       if (menu === except) return;
@@ -748,4 +805,6 @@
   if (normalizeHeader()) syncAuthHeaderState();
   bindHomeHeaderTools();
   injectFooterBlogLink();
+  injectFooterExtensionLink();
+  initPwa(scriptPrefix());
 })();

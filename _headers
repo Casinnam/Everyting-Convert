@@ -13,6 +13,11 @@
 /*.js
   Cache-Control: public, max-age=86400
 
+# The service worker must always revalidate so updates reach users promptly;
+# never let it sit in the browser cache for a day like the other scripts.
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
 /*.css
   Cache-Control: public, max-age=86400
 
