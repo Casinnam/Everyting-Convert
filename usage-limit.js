@@ -192,11 +192,16 @@
   }
 
   function panelText(usage) {
-    if (usage && usage.unlimited) return 'Pro plan active: unlimited conversions';
     const remaining = remainingValue(usage);
-    const label = usage && usage.accountType === 'free' ? 'free account conversions' : 'guest conversions';
-    return `${remaining} ${label} left today`;
+    const lang = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) || 'en';
+    if (lang === 'ko') return `오늘 무료 다운로드 ${remaining}회 남음`;
+    return `${remaining} free download${remaining === 1 ? '' : 's'} left today`;
   }
+
+  // Hybrid badge policy: stay invisible while there is plenty of headroom, and
+  // only surface the remaining count once the user is close to the daily limit
+  // (a scarcity nudge at the decision moment, not a constant restriction).
+  const USAGE_BADGE_THRESHOLD = 2;
 
   function ensureStyles() {
     if (document.getElementById('usageLimitStyles')) return;
@@ -301,14 +306,23 @@
     const badge = document.createElement('div');
     badge.setAttribute('data-usage-badge', '');
     badge.className = 'usage-badge';
-    badge.textContent = 'Checking free conversions...';
+    badge.textContent = '';
+    badge.style.display = 'none'; // hidden until we know the count is low
     main.insertBefore(badge, main.firstChild);
   }
 
   async function renderUsage() {
     const usage = await getUsageStatus();
+    const remaining = remainingValue(usage);
+    // Show only when the free user is near the limit; never for Pro/admin.
+    const show = Boolean(usage) && !usage.unlimited && typeof remaining === 'number' && remaining <= USAGE_BADGE_THRESHOLD;
     document.querySelectorAll('[data-usage-badge]').forEach((element) => {
-      element.textContent = panelText(usage);
+      if (show) {
+        element.textContent = panelText(usage);
+        element.style.display = '';
+      } else {
+        element.style.display = 'none';
+      }
     });
   }
 

@@ -106,9 +106,9 @@ assert(
 
 assert(
   source.includes('Authorization: `Bearer ${token}`') &&
-    source.includes('free account conversions') &&
-    source.includes('guest conversions'),
-  'Browser usage helper should send auth tokens and show account-specific remaining text.',
+    source.includes('free download') &&
+    source.includes('USAGE_BADGE_THRESHOLD'),
+  'Browser usage helper should send auth tokens and surface remaining free downloads only near the daily limit (hybrid badge).',
 );
 
 assert(
