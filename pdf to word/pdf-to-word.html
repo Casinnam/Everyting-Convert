@@ -927,12 +927,22 @@
 
   <div class="settings-panel" id="settingsPanel">
     <div class="settings-title">Conversion settings</div>
-    <div class="conversion-mode-grid" role="radiogroup" aria-label="Conversion type">
+    <style>
+      .hq-card { font: inherit; text-align: left; color: inherit; }
+      .hq-card:hover { border-color: rgba(124, 58, 237, .5); }
+      .hq-card.busy { opacity: .65; pointer-events: none; }
+      .hq-pill { background: rgba(124, 58, 237, .12) !important; color: #7c3aed !important; }
+    </style>
+    <div class="conversion-mode-grid" aria-label="Conversion type">
       <label class="conversion-mode-card">
         <input type="radio" name="conversionMode" value="text" checked>
         <span class="conversion-mode-title"><span data-ko="편집 가능한 텍스트">Editable text</span> <span class="conversion-mode-pill" data-ko="빠름">Fast</span></span>
         <p data-ko="선택 가능한 PDF 텍스트를 추출해 깔끔한 편집용 Word 문서로 만듭니다.">Extract selectable PDF text and rebuild it as a clean editable Word document.</p>
       </label>
+      <button type="button" class="conversion-mode-card hq-card" id="hqCard" onclick="startHighQualityConversion()">
+        <span class="conversion-mode-title"><span data-ko="고품질 편집 변환">High-quality editable</span> <span class="conversion-mode-pill hq-pill">5 credits</span></span>
+        <p data-ko="원본 레이아웃을 그대로 유지하고 글자를 실제로 편집 (Adobe). 양식·고지서에 최적 — 누르면 바로 변환돼요.">Keeps the original layout with real editable text (Adobe). Best for forms &amp; bills — click to convert now.</p>
+      </button>
     </div>
     <div class="settings-grid">
       <div class="setting-item">
@@ -977,25 +987,6 @@
     </svg>
     <span id="convertBtnText">Convert to Word</span>
   </button>
-
-  <style>
-    #hqConvert { display: none; margin-top: .7rem; text-align: center; }
-    /* #hqConvert visibility is mirrored from the free convert button in JS below.
-       .hq-btn must override the .convert-btn { display:none } default. */
-    .hq-btn { background: linear-gradient(135deg, #7c3aed, #2563eb) !important; display: flex !important; }
-    .hq-note { margin: .55rem auto 0; max-width: 470px; color: #64748b; font-size: .85rem; line-height: 1.55; }
-    .hq-status { margin: .45rem 0 0; font-size: .9rem; min-height: 1.2em; color: #475569; }
-    .hq-status.error { color: #b91c1c; }
-    .hq-status.ok { color: #166534; }
-  </style>
-  <div id="hqConvert">
-    <button class="convert-btn hq-btn" id="hqBtn" type="button" onclick="startHighQualityConversion()">
-      <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-      <span data-ko="고품질 편집가능 Word (5 크레딧)">High-quality editable Word (5 credits)</span>
-    </button>
-    <p class="hq-note" data-ko="원본 레이아웃을 그대로 유지하고 글자를 실제로 편집할 수 있어요 — 양식·고지서에 적합합니다. AI 크레딧을 사용합니다.">Keeps the original layout with real, editable text — ideal for forms &amp; bills. Uses AI credits.</p>
-    <p class="hq-status" id="hqStatus" role="status"></p>
-  </div>
 
   <div class="progress-section" id="progressSection">
     <div class="progress-header">
@@ -1604,9 +1595,12 @@
 <script src="../tool-page-redesign.js?v=20260618a"></script>
 <script src="../static-i18n.js"></script>
 <script>
-  // High-quality (editable) PDF -> Word via the Adobe-backed API. Reuses the file
-  // the user already selected (currentFile, shared from the converter script).
+  // High-quality (editable) PDF -> Word via the Adobe API. Reuses the selected
+  // file and the normal converter's progress bar + result/download UI.
   (function () {
+    var hqBusy = false;
+    var hqTimer = null;
+    function el(id) { return document.getElementById(id); }
     async function hqToken() {
       const st = (window.EverythingConvertAuth && window.EverythingConvertAuth.state) || {};
       if (st.session && st.session.access_token) return st.session.access_token;
@@ -1615,27 +1609,26 @@
       }
       return '';
     }
-    function hqStatus(msg, kind) {
-      const el = document.getElementById('hqStatus');
-      if (!el) return;
-      el.className = 'hq-status' + (kind ? ' ' + kind : '');
-      el.textContent = msg || '';
+    function hqShowProgress(label) {
+      const rs = el('resultsSection'); if (rs) rs.classList.remove('visible');
+      const ps = el('progressSection'); if (ps) ps.classList.add('visible');
+      var pct = 6;
+      if (typeof updateProgress === 'function') updateProgress(label, pct);
+      if (hqTimer) clearInterval(hqTimer);
+      hqTimer = setInterval(function () { pct = Math.min(92, pct + 2); if (typeof updateProgress === 'function') updateProgress(label, pct); }, 700);
     }
+    function hqStop() { if (hqTimer) { clearInterval(hqTimer); hqTimer = null; } }
+    function hqDone() { hqStop(); hqBusy = false; var c = el('hqCard'); if (c) c.classList.remove('busy'); }
+    function hqFail(msg) { hqStop(); const ps = el('progressSection'); if (ps) ps.classList.remove('visible'); hqDone(); if (msg) alert(msg); }
     window.startHighQualityConversion = async function () {
+      if (hqBusy) return; // ignore repeat clicks while a conversion is running
       const file = (typeof currentFile !== 'undefined' && currentFile) || null;
-      if (!file) { hqStatus('Please choose a PDF first.', 'error'); return; }
-      const btn = document.getElementById('hqBtn');
-      const span = btn ? btn.querySelector('span') : null;
-      const original = span ? span.textContent : '';
+      if (!file) { alert('Please choose a PDF first.'); return; }
+      hqBusy = true;
+      const card = el('hqCard'); if (card) card.classList.add('busy');
+      hqShowProgress('Converting in high quality… (up to ~30s)');
       const token = await hqToken();
-      if (!token) {
-        hqStatus('Please log in to use high-quality conversion.', 'error');
-        setTimeout(function () { window.location.href = '../auth.html'; }, 1200);
-        return;
-      }
-      if (btn) btn.disabled = true;
-      if (span) span.textContent = 'Converting… (up to ~30s)';
-      hqStatus('Uploading and converting in high quality…');
+      if (!token) { hqFail('Please log in to use high-quality conversion.'); setTimeout(function () { window.location.href = '../auth.html'; }, 900); return; }
       const ref = ('pdf2word:' + file.name + ':' + file.size + ':' + (file.lastModified || 0)).replace(/[^a-zA-Z0-9:_-]/g, '_').slice(0, 150);
       const lang = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get() === 'ko') ? 'ko-KR' : 'en-US';
       try {
@@ -1647,43 +1640,30 @@
         const ctype = res.headers.get('Content-Type') || '';
         if (res.ok && ctype.indexOf('wordprocessingml') !== -1) {
           const blob = await res.blob();
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = file.name.replace(/\.pdf$/i, '') + ' (editable).docx';
-          document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+          // Hand off to the shared download UI (identical to the free converter).
+          currentWordBlob = blob;
+          currentWordFilename = file.name.replace(/\.pdf$/i, '') + ' (editable).docx';
+          el('downloadWordBtn').onclick = function () { downloadCurrentWordFile(); };
+          hqStop();
+          if (typeof updateProgress === 'function') updateProgress('Done!', 100);
           const bal = res.headers.get('X-Credits-Balance');
-          hqStatus('Done! Editable Word downloaded.' + (bal ? ' Credits left: ' + bal : ''), 'ok');
+          setTimeout(function () {
+            const ps = el('progressSection'); if (ps) ps.classList.remove('visible');
+            const rt = el('resultsTitle'); if (rt) rt.textContent = 'High-quality conversion complete';
+            const rn = el('resultsNote'); if (rn) rn.textContent = 'Editable Word with the original layout (Adobe).' + (bal ? ' Credits left: ' + bal + '.' : '');
+            const rs = el('resultsSection'); if (rs) rs.classList.add('visible');
+            const ra = el('resetArea'); if (ra) ra.classList.add('visible');
+          }, 400);
+          hqDone();
         } else {
           const data = await res.json().catch(function () { return {}; });
-          if (data.code === 'insufficient_credits') {
-            hqStatus('Not enough credits (needs 5). Redirecting to buy credits…', 'error');
-            setTimeout(function () { window.location.href = '../pricing.html#credit-packs'; }, 1600);
-          } else if (data.code === 'login_required') {
-            hqStatus('Please log in.', 'error');
-            setTimeout(function () { window.location.href = '../auth.html'; }, 1200);
-          } else if (data.code === 'not_configured') {
-            hqStatus('High-quality conversion is not available yet.', 'error');
-          } else {
-            hqStatus(data.error || 'Conversion failed. Please try again.', 'error');
-          }
+          if (data.code === 'insufficient_credits') { hqFail(''); if (confirm('Not enough credits (needs 5). Go to buy credits?')) window.location.href = '../pricing.html#credit-packs'; }
+          else if (data.code === 'login_required') { hqFail(''); window.location.href = '../auth.html'; }
+          else if (data.code === 'not_configured') { hqFail('High-quality conversion is not available yet.'); }
+          else { hqFail(data.error || 'Conversion failed. Please try again.'); }
         }
-      } catch (e) {
-        hqStatus('Network error. Please try again.', 'error');
-      }
-      if (btn) btn.disabled = false;
-      if (span) span.textContent = original;
+      } catch (e) { hqFail('Network error. Please try again.'); }
     };
-
-    // Show the high-quality section exactly when the free convert button is shown
-    // (i.e. once a PDF is selected). Robust to CSS sibling quirks.
-    var _cb = document.getElementById('convertBtn');
-    var _hq = document.getElementById('hqConvert');
-    function _syncHq() { if (_cb && _hq) _hq.style.display = _cb.classList.contains('visible') ? 'block' : 'none'; }
-    if (_cb && _hq) {
-      _syncHq();
-      new MutationObserver(_syncHq).observe(_cb, { attributes: true, attributeFilter: ['class'] });
-    }
   })();
 </script>
 </body>
