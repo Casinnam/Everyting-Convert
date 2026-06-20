@@ -525,6 +525,9 @@
 
         async function loadAccountCredits() {
             if (!accountCredits) return;
+            // Already resolved: show the cached number instead of re-fetching and flickering.
+            if (creditsLoaded && typeof lastCreditBalance === 'number') { accountCredits.textContent = String(lastCreditBalance); return; }
+            accountCredits.textContent = checkingLabel();
             const credits = window.EverythingConvertCredits;
             if (!credits) return;
             // The auth session can attach a moment after render, so retry a few
@@ -553,30 +556,61 @@
             fr: { r: 'Renouvellement le', e: 'Fin le' },
         };
         const RENEW_LOCALE = { en: 'en-US', ko: 'ko-KR', de: 'de-DE', es: 'es-ES', fr: 'fr-FR' };
-        async function loadRenewalDate() {
-            if (!accountRenewalRow) return;
-            const authApi = window.EverythingConvertAuth;
-            const st = (authApi && authApi.state) || {};
-            let token = st.session && st.session.access_token;
-            if (!token && st.client && st.client.auth && typeof st.client.auth.getSession === 'function') {
-                try {
-                    const r = await st.client.auth.getSession();
-                    token = r && r.data && r.data.session ? r.data.session.access_token : '';
-                } catch (e) { token = ''; }
+        const CHECKING_LABELS = { en: 'Checking…', ko: '확인 중…', de: 'Wird geprüft…', es: 'Comprobando…', fr: 'Vérification…' };
+        function uiLang() {
+            try { return (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) || localStorage.getItem('everything_convert_language') || 'en'; } catch (e) { return 'en'; }
+        }
+        function checkingLabel() { return CHECKING_LABELS[uiLang()] || CHECKING_LABELS.en; }
+        async function renewalToken() {
+            const st = (window.EverythingConvertAuth && window.EverythingConvertAuth.state) || {};
+            if (st.session && st.session.access_token) return st.session.access_token;
+            if (st.client && st.client.auth && typeof st.client.auth.getSession === 'function') {
+                try { const r = await st.client.auth.getSession(); return r && r.data && r.data.session ? r.data.session.access_token : ''; } catch (e) { return ''; }
             }
-            if (!token) { accountRenewalRow.style.display = 'none'; return; }
+            return '';
+        }
+        let renewalData = null;
+        function renderRenewal() {
+            if (!accountRenewalRow || !renewalData) return;
+            const labels = RENEW_LABELS[uiLang()] || RENEW_LABELS.en;
+            const dateStr = new Date(renewalData.current_period_end * 1000).toLocaleDateString(RENEW_LOCALE[uiLang()] || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            accountRenewalRow.textContent = (renewalData.cancel_at_period_end ? labels.e : labels.r) + ': ' + dateStr;
+            accountRenewalRow.style.display = '';
+        }
+        let renewalRunning = false;
+        let renewalDone = false;
+        async function loadRenewalDate() {
+            // Run to completion only once, and never re-enter — re-renders kept
+            // toggling the row hidden/visible, which made it flicker.
+            if (!accountRenewalRow || renewalRunning || renewalDone) return;
+            renewalRunning = true;
+            accountRenewalRow.style.display = '';
+            accountRenewalRow.textContent = checkingLabel();
             try {
+                let token = '';
+                const delays = [0, 500, 1200, 2500];
+                for (let i = 0; i < delays.length && !token; i += 1) {
+                    if (delays[i]) await new Promise((r) => window.setTimeout(r, delays[i]));
+                    token = await renewalToken();
+                }
+                if (!token) { accountRenewalRow.style.display = 'none'; return; }
                 const res = await fetch('/api/subscription-info', { headers: { Authorization: 'Bearer ' + token } });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok || !data.active || !data.current_period_end) { accountRenewalRow.style.display = 'none'; return; }
-                let lang = 'en';
-                try { lang = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) || localStorage.getItem('everything_convert_language') || 'en'; } catch (e) { lang = 'en'; }
-                const labels = RENEW_LABELS[lang] || RENEW_LABELS.en;
-                const dateStr = new Date(data.current_period_end * 1000).toLocaleDateString(RENEW_LOCALE[lang] || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                accountRenewalRow.textContent = (data.cancel_at_period_end ? labels.e : labels.r) + ': ' + dateStr;
-                accountRenewalRow.style.display = '';
-            } catch (e) { accountRenewalRow.style.display = 'none'; }
+                if (!res.ok || !data.active || !data.current_period_end) {
+                    accountRenewalRow.style.display = 'none';
+                    renewalDone = true;
+                    return;
+                }
+                renewalData = data;
+                renderRenewal();
+                renewalDone = true;
+            } catch (e) {
+                accountRenewalRow.style.display = 'none';
+            } finally {
+                renewalRunning = false;
+            }
         }
+        window.addEventListener('everything-language-change', function () { if (renewalData) renderRenewal(); });
 
         const accountUsername = document.getElementById('accountUsername');
         const usernameForm = document.getElementById('usernameForm');
