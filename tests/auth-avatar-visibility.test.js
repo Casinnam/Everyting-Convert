@@ -19,7 +19,7 @@ assert(
 );
 
 assert(
-  index.includes('tools-menu.js?v=nav-20260620a'),
+  index.includes('tools-menu.js?v=nav-20260620c'),
   'The homepage should load the cache-busted tools-menu.js version that includes avatar visibility fixes.',
 );
 
