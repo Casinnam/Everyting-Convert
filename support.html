@@ -26,11 +26,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .manage-card {
-            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-            gap: 1rem; padding: 1.5rem; border: 1px solid rgba(59, 130, 246, .22);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            gap: 1rem; padding: 1.5rem 1.5rem 1.75rem; border: 1px solid rgba(59, 130, 246, .22);
             border-radius: 18px; background: rgba(59, 130, 246, .06);
         }
-        .manage-card .manage-copy { max-width: 540px; }
+        .manage-card .manage-copy { max-width: 600px; }
         .manage-card h2 { margin: 0 0 .35rem; }
         .manage-card p { margin: 0; color: #475569; }
         .support-btn {
@@ -153,10 +153,19 @@
                 const original = label ? label.textContent : '';
                 btn.disabled = true;
                 if (label) label.textContent = 'Opening…';
+                // Open the Stripe portal in the language the user picked on our site,
+                // not whatever their browser happens to be set to.
+                let locale = 'en';
+                try {
+                    locale = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get())
+                        || localStorage.getItem('everything_convert_language')
+                        || document.documentElement.lang || 'en';
+                } catch (e) { locale = 'en'; }
                 try {
                     const res = await fetch('/api/create-portal-session', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                        body: JSON.stringify({ locale: locale }),
                     });
                     const data = await res.json().catch(() => ({}));
                     if (res.ok && data.url) {

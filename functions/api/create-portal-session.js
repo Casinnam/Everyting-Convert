@@ -20,6 +20,17 @@ function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify(payload), { status, headers: corsHeaders });
 }
 
+// Stripe billing-portal locales we support (matches the site languages).
+const ALLOWED_LOCALES = new Set(['en', 'ko', 'de', 'es', 'fr']);
+
+async function readJson(request) {
+  try {
+    return await request.json();
+  } catch (error) {
+    return {};
+  }
+}
+
 async function getSupabaseUser(request, env) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
@@ -84,9 +95,15 @@ export async function onRequestPost(context) {
     }, 404);
   }
 
+  const body = await readJson(request);
+  const requested = body && typeof body.locale === 'string' ? body.locale.toLowerCase() : '';
+
   const params = new URLSearchParams();
   params.set('customer', customerId);
   params.set('return_url', `${siteOrigin(request, env)}/index.html`);
+  // Force the portal language to the site language the user chose, so it does not
+  // fall back to the browser's Accept-Language (e.g. Korean on an English page).
+  if (ALLOWED_LOCALES.has(requested)) params.set('locale', requested);
 
   const res = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {
     method: 'POST',
