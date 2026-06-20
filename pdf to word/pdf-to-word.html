@@ -983,6 +983,24 @@
     <span id="convertBtnText">Convert to Word</span>
   </button>
 
+  <style>
+    #hqConvert { display: none; margin-top: .7rem; text-align: center; }
+    .convert-btn.visible + #hqConvert { display: block; }
+    .hq-btn { background: linear-gradient(135deg, #7c3aed, #2563eb) !important; }
+    .hq-note { margin: .55rem auto 0; max-width: 470px; color: #64748b; font-size: .85rem; line-height: 1.55; }
+    .hq-status { margin: .45rem 0 0; font-size: .9rem; min-height: 1.2em; color: #475569; }
+    .hq-status.error { color: #b91c1c; }
+    .hq-status.ok { color: #166534; }
+  </style>
+  <div id="hqConvert">
+    <button class="convert-btn hq-btn" id="hqBtn" type="button" onclick="startHighQualityConversion()">
+      <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+      <span data-ko="고품질 편집가능 Word (5 크레딧)">High-quality editable Word (5 credits)</span>
+    </button>
+    <p class="hq-note" data-ko="원본 레이아웃을 그대로 유지하고 글자를 실제로 편집할 수 있어요 — 양식·고지서에 적합합니다. AI 크레딧을 사용합니다.">Keeps the original layout with real, editable text — ideal for forms &amp; bills. Uses AI credits.</p>
+    <p class="hq-status" id="hqStatus" role="status"></p>
+  </div>
+
   <div class="progress-section" id="progressSection">
     <div class="progress-header">
       <span class="progress-label" id="progressLabel">Extracting text...</span>
@@ -1589,6 +1607,79 @@
 </script>
 <script src="../tool-page-redesign.js?v=20260618a"></script>
 <script src="../static-i18n.js"></script>
+<script>
+  // High-quality (editable) PDF -> Word via the Adobe-backed API. Reuses the file
+  // the user already selected (currentFile, shared from the converter script).
+  (function () {
+    async function hqToken() {
+      const st = (window.EverythingConvertAuth && window.EverythingConvertAuth.state) || {};
+      if (st.session && st.session.access_token) return st.session.access_token;
+      if (st.client && st.client.auth && typeof st.client.auth.getSession === 'function') {
+        try { const r = await st.client.auth.getSession(); return r && r.data && r.data.session ? r.data.session.access_token : ''; } catch (e) {}
+      }
+      return '';
+    }
+    function hqStatus(msg, kind) {
+      const el = document.getElementById('hqStatus');
+      if (!el) return;
+      el.className = 'hq-status' + (kind ? ' ' + kind : '');
+      el.textContent = msg || '';
+    }
+    window.startHighQualityConversion = async function () {
+      const file = (typeof currentFile !== 'undefined' && currentFile) || null;
+      if (!file) { hqStatus('Please choose a PDF first.', 'error'); return; }
+      const btn = document.getElementById('hqBtn');
+      const span = btn ? btn.querySelector('span') : null;
+      const original = span ? span.textContent : '';
+      const token = await hqToken();
+      if (!token) {
+        hqStatus('Please log in to use high-quality conversion.', 'error');
+        setTimeout(function () { window.location.href = '../auth.html'; }, 1200);
+        return;
+      }
+      if (btn) btn.disabled = true;
+      if (span) span.textContent = 'Converting… (up to ~30s)';
+      hqStatus('Uploading and converting in high quality…');
+      const ref = ('pdf2word:' + file.name + ':' + file.size + ':' + (file.lastModified || 0)).replace(/[^a-zA-Z0-9:_-]/g, '_').slice(0, 150);
+      const lang = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get() === 'ko') ? 'ko-KR' : 'en-US';
+      try {
+        const res = await fetch('/api/pdf-to-word-pro?ref=' + encodeURIComponent(ref) + '&lang=' + lang + '&name=' + encodeURIComponent(file.name), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/pdf', Authorization: 'Bearer ' + token },
+          body: file,
+        });
+        const ctype = res.headers.get('Content-Type') || '';
+        if (res.ok && ctype.indexOf('wordprocessingml') !== -1) {
+          const blob = await res.blob();
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = file.name.replace(/\.pdf$/i, '') + ' (editable).docx';
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+          const bal = res.headers.get('X-Credits-Balance');
+          hqStatus('Done! Editable Word downloaded.' + (bal ? ' Credits left: ' + bal : ''), 'ok');
+        } else {
+          const data = await res.json().catch(function () { return {}; });
+          if (data.code === 'insufficient_credits') {
+            hqStatus('Not enough credits (needs 5). Redirecting to buy credits…', 'error');
+            setTimeout(function () { window.location.href = '../pricing.html#credit-packs'; }, 1600);
+          } else if (data.code === 'login_required') {
+            hqStatus('Please log in.', 'error');
+            setTimeout(function () { window.location.href = '../auth.html'; }, 1200);
+          } else if (data.code === 'not_configured') {
+            hqStatus('High-quality conversion is not available yet.', 'error');
+          } else {
+            hqStatus(data.error || 'Conversion failed. Please try again.', 'error');
+          }
+        }
+      } catch (e) {
+        hqStatus('Network error. Please try again.', 'error');
+      }
+      if (btn) btn.disabled = false;
+      if (span) span.textContent = original;
+    };
+  })();
+</script>
 </body>
 </html>
 
