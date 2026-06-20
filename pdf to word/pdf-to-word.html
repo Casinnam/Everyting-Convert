@@ -980,10 +980,9 @@
 
   <style>
     #hqConvert { display: none; margin-top: .7rem; text-align: center; }
-    /* general sibling (~) not adjacent (+): a <style> tag sits between the
-       convert button and #hqConvert, which would break the + combinator. */
-    .convert-btn.visible ~ #hqConvert { display: block; }
-    .hq-btn { background: linear-gradient(135deg, #7c3aed, #2563eb) !important; }
+    /* #hqConvert visibility is mirrored from the free convert button in JS below.
+       .hq-btn must override the .convert-btn { display:none } default. */
+    .hq-btn { background: linear-gradient(135deg, #7c3aed, #2563eb) !important; display: flex !important; }
     .hq-note { margin: .55rem auto 0; max-width: 470px; color: #64748b; font-size: .85rem; line-height: 1.55; }
     .hq-status { margin: .45rem 0 0; font-size: .9rem; min-height: 1.2em; color: #475569; }
     .hq-status.error { color: #b91c1c; }
@@ -1675,6 +1674,16 @@
       if (btn) btn.disabled = false;
       if (span) span.textContent = original;
     };
+
+    // Show the high-quality section exactly when the free convert button is shown
+    // (i.e. once a PDF is selected). Robust to CSS sibling quirks.
+    var _cb = document.getElementById('convertBtn');
+    var _hq = document.getElementById('hqConvert');
+    function _syncHq() { if (_cb && _hq) _hq.style.display = _cb.classList.contains('visible') ? 'block' : 'none'; }
+    if (_cb && _hq) {
+      _syncHq();
+      new MutationObserver(_syncHq).observe(_cb, { attributes: true, attributeFilter: ['class'] });
+    }
   })();
 </script>
 </body>
