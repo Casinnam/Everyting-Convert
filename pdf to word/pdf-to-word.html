@@ -939,10 +939,11 @@
         <span class="conversion-mode-title"><span data-ko="편집 가능한 텍스트">Editable text</span> <span class="conversion-mode-pill" data-ko="빠름">Fast</span></span>
         <p data-ko="선택 가능한 PDF 텍스트를 추출해 깔끔한 편집용 Word 문서로 만듭니다.">Extract selectable PDF text and rebuild it as a clean editable Word document.</p>
       </label>
-      <button type="button" class="conversion-mode-card hq-card" id="hqCard" onclick="startHighQualityConversion()">
+      <label class="conversion-mode-card hq-card" id="hqCard">
+        <input type="radio" name="conversionMode" value="highquality">
         <span class="conversion-mode-title"><span data-ko="고품질 편집 변환">High-quality editable</span> <span class="conversion-mode-pill hq-pill">5 credits</span></span>
-        <p data-ko="원본 레이아웃을 그대로 유지하고 글자를 실제로 편집 (Adobe). 양식·고지서에 최적 — 누르면 바로 변환돼요.">Keeps the original layout with real editable text (Adobe). Best for forms &amp; bills — click to convert now.</p>
-      </button>
+        <p data-ko="원본 레이아웃을 그대로 유지하고 글자를 실제로 편집 (Adobe). 양식·고지서에 최적. 이걸 선택한 뒤 ‘Convert to Word’를 누르세요.">Keeps the original layout with real editable text (Adobe). Best for forms &amp; bills. Select this, then press “Convert to Word.”</p>
+      </label>
     </div>
     <div class="settings-grid">
       <div class="setting-item">
@@ -1246,6 +1247,9 @@
   }
 
   async function startConversion() {
+    // High-quality (Adobe, credits) is a separate server-side flow — it only needs
+    // the raw file, so branch before the local pdf.js / docx checks.
+    if (getConversionMode() === 'highquality') { startHighQualityConversion(); return; }
     if (!pdfDoc) return;
 
     if (!window.docx) {
@@ -1609,6 +1613,36 @@
       }
       return '';
     }
+    function hqConfirm() {
+      var ko = !!(window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get() === 'ko');
+      var T = {
+        title: ko ? '고품질 변환' : 'High-quality conversion',
+        body: ko ? '원본 레이아웃을 유지한 편집 가능한 Word를 만듭니다. <b>AI 크레딧 5개가 차감됩니다.</b> 계속할까요?' : 'Creates an editable Word that keeps the original layout. <b>This uses 5 AI credits.</b> Continue?',
+        ok: ko ? '변환 (5 크레딧)' : 'Convert (5 credits)',
+        cancel: ko ? '취소' : 'Cancel'
+      };
+      return new Promise(function (resolve) {
+        var back = document.createElement('div');
+        back.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;padding:1rem;';
+        back.innerHTML = '<div role="dialog" aria-modal="true" style="background:#fff;border-radius:18px;max-width:410px;width:100%;padding:1.6rem;box-shadow:0 30px 80px rgba(15,23,42,.3);text-align:center;font-family:inherit;">' +
+          '<div style="width:54px;height:54px;border-radius:14px;margin:0 auto .9rem;display:grid;place-items:center;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:24px;">&#10024;</div>' +
+          '<h3 style="margin:0 0 .5rem;font-size:1.15rem;color:#0f172a;font-weight:800;">' + T.title + '</h3>' +
+          '<p style="margin:0 0 1.3rem;color:#475569;line-height:1.55;font-size:.95rem;">' + T.body + '</p>' +
+          '<div style="display:flex;gap:.6rem;">' +
+            '<button data-act="cancel" style="flex:1;padding:.8rem;border:1px solid #e2e8f0;border-radius:12px;background:#fff;font:inherit;font-weight:700;color:#334155;cursor:pointer;">' + T.cancel + '</button>' +
+            '<button data-act="ok" style="flex:1;padding:.8rem;border:0;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font:inherit;font-weight:800;cursor:pointer;">' + T.ok + '</button>' +
+          '</div></div>';
+        function close(v) { back.remove(); document.removeEventListener('keydown', onKey); resolve(v); }
+        function onKey(e) { if (e.key === 'Escape') close(false); else if (e.key === 'Enter') close(true); }
+        back.addEventListener('click', function (e) {
+          if (e.target === back) return close(false);
+          var a = e.target.closest('[data-act]'); if (a) close(a.dataset.act === 'ok');
+        });
+        document.addEventListener('keydown', onKey);
+        document.body.appendChild(back);
+        var okb = back.querySelector('[data-act=ok]'); if (okb) okb.focus();
+      });
+    }
     function hqShowProgress(label) {
       const rs = el('resultsSection'); if (rs) rs.classList.remove('visible');
       const ps = el('progressSection'); if (ps) ps.classList.add('visible');
@@ -1624,6 +1658,7 @@
       if (hqBusy) return; // ignore repeat clicks while a conversion is running
       const file = (typeof currentFile !== 'undefined' && currentFile) || null;
       if (!file) { alert('Please choose a PDF first.'); return; }
+      if (!(await hqConfirm())) return; // "5 credits will be deducted" — confirm first
       hqBusy = true;
       const card = el('hqCard'); if (card) card.classList.add('busy');
       hqShowProgress('Converting in high quality… (up to ~30s)');
