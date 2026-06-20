@@ -869,9 +869,9 @@
         <h2><i class="fa-solid fa-layer-group"></i> ${tr('footerBrowseTitle', {}, language)}</h2>
         <a href="${prefix}pdf tools/pdf-tools.html">${tr('footerPdfToolsLabel', {}, language)}</a>
         <a href="${prefix}image tools/image-tools.html">${tr('footerImageToolsLabel', {}, language)}</a>
-        <a href="${prefix}index.html#tool-browser">${tr('footerVideoToolsLabel', {}, language)}</a>
-        <a href="${prefix}index.html#ai-preview">${tr('footerAiToolsLabel', {}, language)}</a>
-        <a href="${prefix}index.html#tool-browser">${tr('footerDeveloperToolsLabel', {}, language)}</a>
+        <a href="/media%20converter/media-converter">${tr('footerVideoToolsLabel', {}, language)}</a>
+        <a href="/ai%20tools/transcription/">${tr('footerAiToolsLabel', {}, language)}</a>
+        <a href="/qr%20code%20generator/qr-code-generator?l">${tr('footerDeveloperToolsLabel', {}, language)}</a>
       </div>
     `;
   }

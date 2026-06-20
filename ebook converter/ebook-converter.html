@@ -113,7 +113,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link rel="stylesheet" href="../tool-page-redesign.css?v=20260620b">
+<link rel="stylesheet" href="../tool-page-redesign.css?v=20260620c">
 </head>
 <body>
 <header><a class="brand-link" href="../index.html"><img class="brand-icon logo-mark-img" src="../favicon.svg" alt="" width="36" height="36"><div class="logo-text">Everything <span>Convert</span></div></a><nav class="top-nav"><a href="../index.html">Home</a><div class="tools-menu"><button class="tools-toggle" type="button" aria-expanded="false">Tools</button><div class="tools-dropdown mega-tools"><div class="tools-group">
@@ -305,7 +305,7 @@
   async function convert(){ if(!currentFile) return; setStatus('Reading EPUB...'); const zip = await JSZip.loadAsync(await currentFile.arrayBuffer()); const htmlFiles = Object.keys(zip.files).filter(name => /\.(xhtml|html)$/i.test(name)).sort(); if(!htmlFiles.length){ setStatus('No readable EPUB chapters found.'); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, maxWidth = 500, lineHeight = 14; let y = margin; doc.setFontSize(11); for(let i=0;i<htmlFiles.length;i++){ const html = await zip.file(htmlFiles[i]).async('text'); const text = stripHtml(html); if(!text) continue; const lines = doc.splitTextToSize(text, maxWidth); lines.forEach(line => { if(y > 790){ doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 12; setStatus(`Converting chapter ${i + 1}/${htmlFiles.length}...`); } presentResult(doc, currentFile.name.replace(/\.epub$/i,'') + '.pdf'); }
   dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
 </script>
-<script src="../tool-page-redesign.js?v=20260620b"></script>
+<script src="../tool-page-redesign.js?v=20260620c"></script>
 <script src="../static-i18n.js"></script>
 </body>
 </html>

@@ -19,7 +19,7 @@ for (const relativePath of mediaPages) {
     `${relativePath} should apply the redesigned tool-page class before scripts run to prevent first-paint flicker.`,
   );
   assert(
-    html.includes('tool-page-redesign.css?v=20260620b'),
+    html.includes('tool-page-redesign.css?v=20260620c'),
     `${relativePath} should request the latest redesign CSS cache-busting version.`,
   );
 }
@@ -31,7 +31,7 @@ for (const relativePath of binarySafePages) {
     `${relativePath} should apply the redesigned tool-page class before scripts run to prevent first-paint flicker.`,
   );
   assert(
-    html.includes(Buffer.from('tool-page-redesign.css?v=20260620b')),
+    html.includes(Buffer.from('tool-page-redesign.css?v=20260620c')),
     `${relativePath} should request the latest redesign CSS cache-busting version.`,
   );
 }

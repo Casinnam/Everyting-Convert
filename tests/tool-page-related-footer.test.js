@@ -66,4 +66,11 @@ assert(
   'Popular footer should keep the current tool-navigation panel design.',
 );
 
+assert(
+  script.includes('href="/media%20converter/media-converter"') &&
+    script.includes('href="/ai%20tools/transcription/"') &&
+    script.includes('href="/qr%20code%20generator/qr-code-generator?l"'),
+  'Footer category links should route Video & Audio, AI tools, and Developer tools to the requested live destinations.',
+);
+
 console.log('tool page popular footer tests passed');
