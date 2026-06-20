@@ -13,6 +13,7 @@ const CORS = {
 const COSTS: Record<string, number> = {
   'qr-premium': 5,
   'pdf-edit-text': 3,
+  'pdf-to-word-pro': 5,
 };
 
 function json(data: unknown, status = 200): Response {
