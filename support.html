@@ -141,10 +141,27 @@
             const btn = document.getElementById('manageSubBtn');
             const statusEl = document.getElementById('manageStatus');
             if (!btn) return;
+
+            // The session is sometimes only inside the Supabase client and not yet
+            // mirrored onto auth.state.session, so fall back to getSession() before
+            // deciding the user is logged out.
+            async function resolveToken() {
+                const s = window.EverythingConvertAuth && window.EverythingConvertAuth.state;
+                if (s && s.session && s.session.access_token) return s.session.access_token;
+                const client = s && s.client;
+                if (client && client.auth && typeof client.auth.getSession === 'function') {
+                    try {
+                        const result = await client.auth.getSession();
+                        const session = result && result.data ? result.data.session : null;
+                        if (session && session.access_token) return session.access_token;
+                    } catch (error) { /* treat as logged out */ }
+                }
+                return '';
+            }
+
             btn.addEventListener('click', async () => {
                 statusEl.textContent = '';
-                const auth = window.EverythingConvertAuth;
-                const token = auth && auth.state && auth.state.session && auth.state.session.access_token;
+                const token = await resolveToken();
                 if (!token) {
                     window.location.href = 'auth.html';
                     return;
