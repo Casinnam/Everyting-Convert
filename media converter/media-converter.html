@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Video and Audio Converter - EverythingConvert</title>
 <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
@@ -373,8 +372,18 @@
     });
     setMode(new URLSearchParams(location.search).get('mode') || 'video');
   }
+  function presentResult(blob, name) {
+    const ul = window.EverythingConvertUsageLimit;
+    const doSave = () => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000); };
+    if (ul && ul.showDownloadCard) {
+      setStatus('');
+      ul.showDownloadCard({ mount: document.querySelector('.tool-card'), title: 'Conversion complete — your file is ready', titleKo: '변환 완료 — 파일이 준비되었습니다', downloadLabel: 'Download', downloadLabelKo: '다운로드', token: blob, download: doSave, hide: [convertBtn] });
+    } else { doSave(); setStatus('Download started.'); }
+  }
   function setFile(file) {
     currentFile = file;
+    if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) window.EverythingConvertUsageLimit.clearDownloadCard('.tool-card');
+    convertBtn.style.display = '';
     convertBtn.disabled = false;
     fileName.textContent = file.name;
     fileMeta.textContent = `${formatBytes(file.size)} - ${file.type || ext(file.name).toUpperCase()} - Output: ${formatSelect.value.toUpperCase()}`;
@@ -457,13 +466,7 @@
       await runConversionCommand(engine, input, output, outFormat);
       const data = engine.FS('readFile', output);
       const blob = new Blob([data.buffer], { type: mimeFor(outFormat) });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${base(currentFile.name)}.${outFormat}`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 3000);
-      setStatus('Download started.');
+      presentResult(blob, `${base(currentFile.name)}.${outFormat}`);
     } catch (error) {
       setStatus(error.message || 'Conversion failed.');
     } finally {

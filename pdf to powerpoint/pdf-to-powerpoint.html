@@ -5,7 +5,6 @@
   <script src="../ads.js?v=ads-20260611a"></script>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta charset="UTF-8">
-  <meta name="usage-limit" content="none">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PDF to PowerPoint Converter - Free Online | EverythingConvert</title>
   <meta name="description" content="Convert PDF to PowerPoint (.pptx) online — one slide per page. Free image slides, or AI editable-text slides. Private, in your browser.">
@@ -261,6 +260,8 @@
       if (!file || file.type !== 'application/pdf') { setStatus('Please choose a PDF file.', 'err'); return; }
       pdfName = file.name; pdfBytes = await file.arrayBuffer();
       fileName.textContent = file.name; fileInfo.classList.add('show'); applyBtn.disabled = false;
+      if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) window.EverythingConvertUsageLimit.clearDownloadCard(applyBtn.parentElement);
+      applyBtn.style.display = '';
       setStatus(''); hideProgress();
       preview.innerHTML = '<div class="hint">Rendering preview…</div>';
       try {
@@ -322,7 +323,18 @@
         placeContain(slide, img.dataUrl, img.w, img.h, win, hin);
       }
       setProgress('Building PowerPoint…', 96);
-      await pptx.writeFile({ fileName: downloadName() });
+      // Free path: defer the actual download behind the daily limit gate.
+      const blob = await pptx.write({ outputType: 'blob' });
+      presentResult(blob, downloadName());
+    }
+
+    // Show the free .pptx as a limit-gated download card (AI path is exempt).
+    function presentResult(blob, name) {
+      const ul = window.EverythingConvertUsageLimit;
+      const doSave = () => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000); };
+      if (ul && ul.showDownloadCard) {
+        ul.showDownloadCard({ mount: applyBtn.parentElement, title: 'Conversion complete — your PowerPoint is ready', titleKo: '변환 완료 — PowerPoint가 준비되었습니다', downloadLabel: 'Download PowerPoint', downloadLabelKo: 'PowerPoint 다운로드', token: blob, download: doSave, hide: [applyBtn] });
+      } else { doSave(); }
     }
 
     // ── AI: editable text slides via ai-ocr (credit-based) ──
@@ -432,7 +444,9 @@
         else await runImage(pages);
         if (ok) {
           setProgress('Done!', 100);
-          setStatus('Done — your PowerPoint was downloaded.', 'ok');
+          // AI mode auto-downloads; the free mode shows a gated Download button.
+          if (ppMode.value === 'ai') setStatus('Done — your PowerPoint was downloaded.', 'ok');
+          else setStatus('');
           try { window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', { detail: { tool_id: 'pdf-to-powerpoint', mode: ppMode.value, pages: pages.length } })); } catch (e) {}
           setTimeout(hideProgress, 1200);
         } else {

@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ebook Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -286,9 +285,24 @@
   let currentFile = null;
   const fileInput = document.getElementById('fileInput'), dropZone = document.getElementById('dropZone'), convertBtn = document.getElementById('convertBtn'), statusEl = document.getElementById('status');
   function setStatus(text){ statusEl.textContent = text; }
-  function setFile(file){ currentFile = file; convertBtn.disabled = false; setStatus(`${file.name} selected.`); }
+  function presentResult(doc, name){
+    const ul = window.EverythingConvertUsageLimit;
+    if (ul && ul.showDownloadCard) {
+      setStatus('');
+      ul.showDownloadCard({
+        mount: document.querySelector('.tool-card'),
+        title: 'Conversion complete — your PDF is ready',
+        titleKo: '변환 완료 — PDF가 준비되었습니다',
+        downloadLabel: 'Download PDF', downloadLabelKo: 'PDF 다운로드',
+        token: doc,
+        download: () => doc.save(name),
+        hide: [convertBtn]
+      });
+    } else { doc.save(name); setStatus('PDF download started.'); }
+  }
+  function setFile(file){ currentFile = file; if(window.EverythingConvertUsageLimit&&window.EverythingConvertUsageLimit.clearDownloadCard) window.EverythingConvertUsageLimit.clearDownloadCard('.tool-card'); convertBtn.style.display=''; convertBtn.disabled = false; setStatus(`${file.name} selected.`); }
   function stripHtml(html){ return html.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(); }
-  async function convert(){ if(!currentFile) return; setStatus('Reading EPUB...'); const zip = await JSZip.loadAsync(await currentFile.arrayBuffer()); const htmlFiles = Object.keys(zip.files).filter(name => /\.(xhtml|html)$/i.test(name)).sort(); if(!htmlFiles.length){ setStatus('No readable EPUB chapters found.'); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, maxWidth = 500, lineHeight = 14; let y = margin; doc.setFontSize(11); for(let i=0;i<htmlFiles.length;i++){ const html = await zip.file(htmlFiles[i]).async('text'); const text = stripHtml(html); if(!text) continue; const lines = doc.splitTextToSize(text, maxWidth); lines.forEach(line => { if(y > 790){ doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 12; setStatus(`Converting chapter ${i + 1}/${htmlFiles.length}...`); } doc.save(currentFile.name.replace(/\.epub$/i,'') + '.pdf'); setStatus('PDF download started.'); }
+  async function convert(){ if(!currentFile) return; setStatus('Reading EPUB...'); const zip = await JSZip.loadAsync(await currentFile.arrayBuffer()); const htmlFiles = Object.keys(zip.files).filter(name => /\.(xhtml|html)$/i.test(name)).sort(); if(!htmlFiles.length){ setStatus('No readable EPUB chapters found.'); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); const margin = 48, maxWidth = 500, lineHeight = 14; let y = margin; doc.setFontSize(11); for(let i=0;i<htmlFiles.length;i++){ const html = await zip.file(htmlFiles[i]).async('text'); const text = stripHtml(html); if(!text) continue; const lines = doc.splitTextToSize(text, maxWidth); lines.forEach(line => { if(y > 790){ doc.addPage(); y = margin; } doc.text(line, margin, y); y += lineHeight; }); y += 12; setStatus(`Converting chapter ${i + 1}/${htmlFiles.length}...`); } presentResult(doc, currentFile.name.replace(/\.epub$/i,'') + '.pdf'); }
   dropZone.addEventListener('click',()=>fileInput.click()); dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')}); dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover')); dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);}); fileInput.addEventListener('change',()=>{if(fileInput.files[0]) setFile(fileInput.files[0]);}); convertBtn.addEventListener('click',convert);
 </script>
 <script src="../tool-page-redesign.js?v=20260618a"></script>

@@ -156,7 +156,7 @@
       .trim() || 'pdf';
   }
 
-  function downloadBlob(blob, filename) {
+  function rawDownload(blob, filename) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -165,6 +165,31 @@
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
+  }
+
+  // Every tool funnels its result here. Instead of auto-downloading, present a
+  // daily-limit-gated download card (re-download of the same result is free).
+  function downloadBlob(blob, filename) {
+    const ul = window.EverythingConvertUsageLimit;
+    if (ul && ul.showDownloadCard) {
+      ul.showDownloadCard({
+        mount: document.querySelector('.converter-card'),
+        title: 'Conversion complete — your file is ready',
+        titleKo: '변환 완료 — 파일이 준비되었습니다',
+        downloadLabel: 'Download', downloadLabelKo: '다운로드',
+        token: blob,
+        download: () => rawDownload(blob, filename),
+        hide: [els.convert]
+      });
+    } else {
+      rawDownload(blob, filename);
+    }
+  }
+
+  function resetResultCard() {
+    const ul = window.EverythingConvertUsageLimit;
+    if (ul && ul.clearDownloadCard) ul.clearDownloadCard('.converter-card');
+    if (els.convert) els.convert.style.display = '';
   }
 
   function parsePageList(value, pageCount, options = {}) {
@@ -296,6 +321,7 @@
     renderFileList();
     renderOptions();
     setStatus('');
+    resetResultCard();
 
     document.querySelectorAll('[data-mode-button]').forEach((button) => {
       button.classList.toggle('active', button.dataset.modeButton === state.mode);
@@ -321,6 +347,7 @@
 
     state.files = modes[state.mode].multiple ? incoming : incoming.slice(0, 1);
     renderFileList();
+    resetResultCard();
     setStatus(`${state.files.length} PDF file${state.files.length > 1 ? 's' : ''} ready.`, 'success');
   }
 

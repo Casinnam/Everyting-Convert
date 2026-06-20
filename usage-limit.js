@@ -503,6 +503,88 @@
     return { ok: true, counted: true };
   }
 
+  // ── Shared result card (Group B converters) ───────────────────────────────
+  // Replaces "auto-download after convert" with a consistent completion card:
+  // a title, a limit-gated Download button, and a "Convert another file" reset.
+  function ensureResultCardStyles() {
+    if (typeof document === 'undefined' || document.getElementById('ecResultCardStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'ecResultCardStyles';
+    style.textContent = `
+      .ec-result-card { text-align:center; margin-top:1.6rem; }
+      .ec-result-title { font-family:'Bebas Neue', sans-serif; font-size:1.5rem; letter-spacing:2px; text-transform:uppercase; color:#0f172a; }
+      .ec-download-btn { display:inline-flex; align-items:center; gap:10px; margin-top:1.25rem; padding:1rem 2rem; background:transparent; border:2px solid #0f172a; color:#0f172a; font-family:inherit; font-weight:700; font-size:1.05rem; border-radius:8px; cursor:pointer; transition:all .2s; }
+      .ec-download-btn:hover { background:#0f172a; color:#fff; }
+      .ec-download-btn:disabled { opacity:.6; cursor:default; }
+      .ec-reset-btn { display:block; margin:1.25rem auto 0; padding:.55rem 1.4rem; background:none; border:1px solid #e2e8f0; color:#64748b; font-family:inherit; font-size:.8rem; letter-spacing:1px; text-transform:uppercase; border-radius:6px; cursor:pointer; transition:all .2s; }
+      .ec-reset-btn:hover { border-color:#0f172a; color:#0f172a; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // opts: { mount, title, titleKo, downloadLabel, downloadLabelKo, token, download,
+  //         hide:[elements to hide while the card shows], onAnother }
+  function showDownloadCard(opts) {
+    if (typeof document === 'undefined') return null;
+    const mount = typeof opts.mount === 'string' ? document.querySelector(opts.mount) : opts.mount;
+    if (!mount) { if (typeof opts.download === 'function') opts.download(); return null; }
+    ensureResultCardStyles();
+
+    const lang = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) || 'en';
+    const pick = (en, ko) => (lang === 'ko' && ko) ? ko : en;
+    const hideEls = (opts.hide || []).filter(Boolean);
+
+    let card = mount.querySelector(':scope > .ec-result-card');
+    if (!card) { card = document.createElement('div'); card.className = 'ec-result-card'; mount.appendChild(card); }
+    card.innerHTML = '';
+
+    const title = document.createElement('div');
+    title.className = 'ec-result-title';
+    title.textContent = pick(opts.title || 'Conversion complete — your file is ready', opts.titleKo);
+    if (opts.titleKo) title.setAttribute('data-ko', opts.titleKo);
+
+    const dl = document.createElement('button');
+    dl.type = 'button';
+    dl.className = 'ec-download-btn';
+    dl.innerHTML = '<i class="fa-solid fa-download"></i> <span></span>';
+    const span = dl.querySelector('span');
+    span.textContent = pick(opts.downloadLabel || 'Download', opts.downloadLabelKo);
+    if (opts.downloadLabelKo) span.setAttribute('data-ko', opts.downloadLabelKo);
+    dl.addEventListener('click', async () => {
+      dl.disabled = true;
+      try { await gatedDownload({ token: opts.token, download: opts.download }); }
+      finally { dl.disabled = false; }
+    });
+
+    const reset = document.createElement('button');
+    reset.type = 'button';
+    reset.className = 'ec-reset-btn';
+    reset.textContent = pick('Convert another file', '다른 파일 변환');
+    reset.setAttribute('data-ko', '다른 파일 변환');
+    reset.addEventListener('click', () => {
+      card.style.display = 'none';
+      hideEls.forEach((el) => { el.style.display = ''; });
+      if (typeof opts.onAnother === 'function') opts.onAnother();
+    });
+
+    card.appendChild(title);
+    card.appendChild(dl);
+    card.appendChild(reset);
+    card.style.display = '';
+    hideEls.forEach((el) => { el.style.display = 'none'; });
+    return { el: card, hide() { card.style.display = 'none'; hideEls.forEach((e) => { e.style.display = ''; }); } };
+  }
+
+  // Hide any result card under `mount` and restore the elements it hid. Call this
+  // when a new file is selected so the convert button reappears.
+  function clearDownloadCard(mount) {
+    if (typeof document === 'undefined') return;
+    const root = typeof mount === 'string' ? document.querySelector(mount) : (mount || document);
+    if (!root) return;
+    const card = root.querySelector ? root.querySelector('.ec-result-card') : null;
+    if (card) card.style.display = 'none';
+  }
+
   async function guardConversion() {
     return checkConversionAllowed();
   }
@@ -559,6 +641,8 @@
     checkConversionAllowed,
     recordSuccessfulConversion,
     gatedDownload,
+    showDownloadCard,
+    clearDownloadCard,
     guardConversion,
     renderUsage,
     showUpgradeModal,

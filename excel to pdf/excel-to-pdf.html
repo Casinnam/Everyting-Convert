@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Excel to PDF Converter - EverythingConvert</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -393,8 +392,31 @@
   const convertBtn = document.getElementById('convertBtn');
   const statusEl = document.getElementById('status');
   function setStatus(text) { statusEl.textContent = text; }
+  // Show the converted PDF as a limit-gated download card instead of auto-saving.
+  function presentResult(doc, base) {
+    const ul = window.EverythingConvertUsageLimit;
+    if (ul && ul.showDownloadCard) {
+      setStatus('');
+      ul.showDownloadCard({
+        mount: document.querySelector('.tool-card'),
+        title: 'Conversion complete — your PDF is ready',
+        titleKo: '변환 완료 — PDF가 준비되었습니다',
+        downloadLabel: 'Download PDF', downloadLabelKo: 'PDF 다운로드',
+        token: doc,
+        download: () => doc.save(`${base}.pdf`),
+        hide: [convertBtn]
+      });
+    } else {
+      doc.save(`${base}.pdf`);
+      setStatus('PDF download started.');
+    }
+  }
   async function loadFile(file) {
     currentFile = file;
+    if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) {
+      window.EverythingConvertUsageLimit.clearDownloadCard('.tool-card');
+    }
+    convertBtn.style.display = '';
     setStatus('Reading workbook...');
     const data = await file.arrayBuffer();
     workbook = XLSX.read(data, { type: 'array' });
@@ -549,8 +571,7 @@
       try {
         setStatus('Korean or CJK text detected. Rendering with browser fonts...');
         const doc = await convertCjkToImagePdf(table);
-        doc.save(`${base}.pdf`);
-        setStatus('PDF download started.');
+        presentResult(doc, base);
       } catch (error) {
         setStatus('Korean PDF rendering failed. Please try again.');
       }
@@ -610,8 +631,7 @@
       doc.setFontSize(9);
       rows.slice(0, 36).forEach((row, index) => doc.text(row.join('   '), 40, 60 + index * 14));
     }
-    doc.save(`${base}.pdf`);
-    setStatus('PDF download started.');
+    presentResult(doc, base);
   }
   dropZone.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('dragover', event => { event.preventDefault(); dropZone.classList.add('dragover'); });

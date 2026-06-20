@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Image Converter - EverythingConvert</title>
 <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
@@ -449,6 +448,10 @@
     });
     previewList.classList.toggle('visible', selectedFiles.length > 0);
     convertBtn.disabled = selectedFiles.length === 0;
+    if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) {
+      window.EverythingConvertUsageLimit.clearDownloadCard('.tool-card');
+    }
+    convertBtn.style.display = '';
   }
 
   function setFiles(fileList) {
@@ -506,6 +509,33 @@
     return new Promise(resolve => canvas.toBlob(resolve, mimeFor(format), 0.92));
   }
 
+  function presentResult(outputs) {
+    const doSaveAll = () => {
+      outputs.forEach((o, i) => setTimeout(() => {
+        const url = URL.createObjectURL(o.blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = o.name;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+      }, i * 160));
+    };
+    const ul = window.EverythingConvertUsageLimit;
+    const many = outputs.length > 1;
+    if (ul && ul.showDownloadCard) {
+      setStatus('');
+      ul.showDownloadCard({
+        mount: document.querySelector('.tool-card'),
+        title: many ? `Conversion complete — ${outputs.length} images ready` : 'Conversion complete — your image is ready',
+        titleKo: many ? `변환 완료 — 이미지 ${outputs.length}장 준비됨` : '변환 완료 — 이미지가 준비되었습니다',
+        downloadLabel: many ? `Download all (${outputs.length})` : 'Download image',
+        downloadLabelKo: many ? `전체 다운로드 (${outputs.length})` : '이미지 다운로드',
+        token: outputs,
+        download: doSaveAll,
+        hide: [convertBtn]
+      });
+    } else { doSaveAll(); }
+  }
+
   async function convert() {
     if (!selectedFiles.length) return;
     convertBtn.disabled = true;
@@ -517,26 +547,17 @@
       // currentMode.format, so picking WEBP in the generic converter was ignored
       // and it always exported PNG.)
       const outputFormat = formatSelect.value || currentMode.format;
+      const outputs = [];
       for (let index = 0; index < selectedFiles.length; index += 1) {
         const file = selectedFiles[index];
         setStatus(`Converting ${index + 1}/${selectedFiles.length}: ${file.name}`);
         const sourceBlob = await getSourceBlob(file);
         const outputBlob = outputFormat === 'svg' ? await makeSvgWrapper(sourceBlob) : await rasterize(sourceBlob, outputFormat);
         if (!outputBlob) throw new Error(`The browser could not create ${file.name}.`);
-        const url = URL.createObjectURL(outputBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${baseName(file)}.${extensionFor(outputFormat)}`;
-        a.click();
-        const inKb = Math.max(1, Math.round(file.size / 1024));
-        const outKb = Math.max(1, Math.round(outputBlob.size / 1024));
-        setStatus(`Converted ${index + 1}/${selectedFiles.length}: ${a.download} — ${inKb} KB → ${outKb} KB`);
-        setTimeout(() => URL.revokeObjectURL(url), 3000);
-        await new Promise(resolve => setTimeout(resolve, 160));
+        outputs.push({ name: `${baseName(file)}.${extensionFor(outputFormat)}`, blob: outputBlob });
       }
-      if (selectedFiles.length > 1) {
-        setStatus(`Download started for ${selectedFiles.length} converted images.`);
-      }
+      // One conversion of N images = one limit-gated download (re-download free).
+      presentResult(outputs);
       try {
         window.dispatchEvent(new CustomEvent('everythingconvert:conversion-success', {
           detail: { tool_id: 'image-converter', mode: currentModeKey, output_format: outputFormat, count: selectedFiles.length },

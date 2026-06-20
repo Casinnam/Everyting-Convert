@@ -6,7 +6,6 @@
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta charset="UTF-8">
-<meta name="usage-limit" content="none">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Image to PDF Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1046,6 +1045,12 @@
     options.classList.toggle('visible', hasImages);
     convertBtn.classList.toggle('visible', hasImages);
     resetArea.classList.toggle('visible', hasImages);
+    // A changed image set means the previous result is stale: drop the card and
+    // bring the Create-PDF button back.
+    if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) {
+      window.EverythingConvertUsageLimit.clearDownloadCard(convertBtn.parentElement);
+    }
+    convertBtn.style.display = '';
   }
 
   function swapImages(from, to) {
@@ -1166,6 +1171,24 @@
     return { pickedLocation: false };
   }
 
+  function presentResult(blob, fileName) {
+    const ul = window.EverythingConvertUsageLimit;
+    if (ul && ul.showDownloadCard) {
+      setMessage('');
+      ul.showDownloadCard({
+        mount: convertBtn.parentElement,
+        title: 'Conversion complete — your PDF is ready',
+        titleKo: '변환 완료 — PDF가 준비되었습니다',
+        downloadLabel: 'Download PDF', downloadLabelKo: 'PDF 다운로드',
+        token: blob,
+        download: () => savePdfBlob(blob, fileName),
+        hide: [convertBtn]
+      });
+    } else {
+      savePdfBlob(blob, fileName);
+    }
+  }
+
   async function createPdf() {
     if (!images.length) {
       setMessage('Please add image files first.', 'error');
@@ -1203,16 +1226,7 @@
       }
 
       const pdfBlob = createPdfBlob(pdf);
-      setMessage('Saving PDF...');
-      const result = await savePdfBlob(pdfBlob, fileName);
-      setMessage(
-        result.pickedLocation
-          ? `${fileName} saved to your selected location.`
-          : result.securityFallback
-            ? `${fileName} download started. Your browser did not allow the save picker, so the file was sent to Downloads.`
-          : `${fileName} download started. Please check your browser downloads folder.`,
-        'success',
-      );
+      presentResult(pdfBlob, fileName);
     } catch (error) {
       if (error && error.name === 'AbortError') {
         setMessage('Save cancelled. Click the button again to try another location.');
