@@ -417,6 +417,7 @@
                     <div>Display name: <strong id="accountName">-</strong></div>
                     <div>Membership level: <strong id="accountPlan" data-no-i18n>-</strong></div>
                     <div>AI credits: <strong id="accountCredits" data-no-i18n>-</strong> <a href="pricing.html#credit-packs" style="font-weight:700;color:#2563eb;text-decoration:none;margin-left:.4rem;">Buy more</a></div>
+                    <div id="accountRenewalRow" data-no-i18n style="display:none;margin-top:.15rem;color:#1e3a8a;font-weight:700;"></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
                             <label for="accountUsername">Change User ID</label>
@@ -601,6 +602,41 @@
             }
             if (!creditsLoaded) accountCredits.textContent = '-';
         }
+
+        const accountRenewalRow = document.getElementById('accountRenewalRow');
+        const RENEW_LABELS = {
+            en: { r: 'Renews on', e: 'Subscription ends on' },
+            ko: { r: '갱신일', e: '만기일 (해지 예정)' },
+            de: { r: 'Verlängert sich am', e: 'Läuft ab am' },
+            es: { r: 'Se renueva el', e: 'Finaliza el' },
+            fr: { r: 'Renouvellement le', e: 'Fin le' },
+        };
+        const RENEW_LOCALE = { en: 'en-US', ko: 'ko-KR', de: 'de-DE', es: 'es-ES', fr: 'fr-FR' };
+        async function loadRenewalDate() {
+            if (!accountRenewalRow) return;
+            const authApi = window.EverythingConvertAuth;
+            const st = (authApi && authApi.state) || {};
+            let token = st.session && st.session.access_token;
+            if (!token && st.client && st.client.auth && typeof st.client.auth.getSession === 'function') {
+                try {
+                    const r = await st.client.auth.getSession();
+                    token = r && r.data && r.data.session ? r.data.session.access_token : '';
+                } catch (e) { token = ''; }
+            }
+            if (!token) { accountRenewalRow.style.display = 'none'; return; }
+            try {
+                const res = await fetch('/api/subscription-info', { headers: { Authorization: 'Bearer ' + token } });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.active || !data.current_period_end) { accountRenewalRow.style.display = 'none'; return; }
+                let lang = 'en';
+                try { lang = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) || localStorage.getItem('everything_convert_language') || 'en'; } catch (e) { lang = 'en'; }
+                const labels = RENEW_LABELS[lang] || RENEW_LABELS.en;
+                const dateStr = new Date(data.current_period_end * 1000).toLocaleDateString(RENEW_LOCALE[lang] || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                accountRenewalRow.textContent = (data.cancel_at_period_end ? labels.e : labels.r) + ': ' + dateStr;
+                accountRenewalRow.style.display = '';
+            } catch (e) { accountRenewalRow.style.display = 'none'; }
+        }
+
         const accountUsername = document.getElementById('accountUsername');
         const usernameForm = document.getElementById('usernameForm');
         const usernameSaveBtn = document.getElementById('usernameSaveBtn');
@@ -965,6 +1001,7 @@
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
             blogLink.style.display = auth.isAdmin() ? '' : 'none';
             loadAccountCredits();
+            loadRenewalDate();
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             if (!profilePlan) {
                 accountHint.dataset.i18nKey = 'accountLoadingHint';
