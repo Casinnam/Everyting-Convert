@@ -297,6 +297,10 @@
       width: min(92vw, 520px);
       grid-template-columns: 1fr;
     }
+
+    .conversion-mode-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   main {
@@ -419,6 +423,77 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1rem;
+  }
+
+  .conversion-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .conversion-mode-card {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface2);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .conversion-mode-card:hover {
+    border-color: rgba(37, 99, 235, 0.45);
+    transform: translateY(-1px);
+  }
+
+  .conversion-mode-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .conversion-mode-card:has(input:checked) {
+    border-color: var(--accent2);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.14);
+    background: #ffffff;
+  }
+
+  .conversion-mode-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+    font-weight: 800;
+  }
+
+  .conversion-mode-pill {
+    display: inline-flex;
+    width: max-content;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.5rem;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--accent2);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .conversion-mode-card p {
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 720px) {
+    .conversion-mode-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .setting-item label {
@@ -574,6 +649,32 @@
   .download-word-btn:hover {
     background: var(--accent);
     color: white;
+  }
+
+  .download-fallback {
+    display: none;
+    margin-top: 0.9rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(37, 99, 235, 0.24);
+    border-radius: 10px;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  .download-fallback.visible {
+    display: block;
+  }
+
+  .download-fallback a {
+    color: var(--accent2);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .download-fallback a:hover {
+    text-decoration: underline;
   }
 
   .reset-area {
@@ -826,6 +927,18 @@
 
   <div class="settings-panel" id="settingsPanel">
     <div class="settings-title">Conversion settings</div>
+    <div class="conversion-mode-grid" role="radiogroup" aria-label="Conversion type">
+      <label class="conversion-mode-card">
+        <input type="radio" name="conversionMode" value="text" checked>
+        <span class="conversion-mode-title"><span data-ko="편집 가능한 텍스트">Editable text</span> <span class="conversion-mode-pill" data-ko="빠름">Fast</span></span>
+        <p data-ko="선택 가능한 PDF 텍스트를 추출해 깔끔한 편집용 Word 문서로 만듭니다.">Extract selectable PDF text and rebuild it as a clean editable Word document.</p>
+      </label>
+      <label class="conversion-mode-card">
+        <input type="radio" name="conversionMode" value="layout">
+        <span class="conversion-mode-title"><span data-ko="원본 모양 유지">Keep original look</span> <span class="conversion-mode-pill">Beta</span></span>
+        <p data-ko="각 PDF 페이지의 시각적 복사본을 넣고, 아래에 편집 가능한 텍스트를 함께 추가합니다.">Add a visual copy of each PDF page and include editable text below it for easier layout checking.</p>
+      </label>
+    </div>
     <div class="settings-grid">
       <div class="setting-item">
         <label>Include page numbers</label>
@@ -867,7 +980,7 @@
       <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
     </svg>
-    Convert to Word
+    <span id="convertBtnText">Convert to Word</span>
   </button>
 
   <div class="progress-section" id="progressSection">
@@ -882,15 +995,19 @@
 
   <div class="results-section" id="resultsSection">
     <div class="results-header">
-      <div class="results-title">Conversion complete - extracted text from <span id="pageCount">0</span> pages</div>
+      <div class="results-title" id="resultsTitle">Conversion complete - extracted text from <span id="pageCount">0</span> pages</div>
     </div>
     <button class="download-word-btn" id="downloadWordBtn">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download Word file (.docx)
     </button>
     <p style="margin-top: 1rem; color: var(--muted); font-size: 0.85rem;">
-      This tool extracts text from PDFs and builds a Word document. Scanned image PDFs may require OCR for best results.
+      <span id="resultsNote">This tool extracts text from PDFs and builds a Word document. Scanned image PDFs may require OCR for best results.</span>
     </p>
+    <div class="download-fallback" id="downloadFallback">
+      If the download does not start in this browser, use this direct link:
+      <a id="manualDownloadLink" href="#" download>Download Word file</a>
+    </div>
   </div>
 
   <div class="reset-area" id="resetArea">
@@ -1052,10 +1169,16 @@
 
   let pdfDoc = null;
   let currentFile = null;
+  let currentWordBlob = null;
+  let currentWordFilename = 'converted.docx';
 
   const pageRange = document.getElementById('pageRange');
   pageRange.addEventListener('change', () => {
     document.getElementById('customPageInput').style.display = pageRange.value === 'custom' ? 'block' : 'none';
+  });
+
+  document.querySelectorAll('input[name="conversionMode"]').forEach((input) => {
+    input.addEventListener('change', updateConvertButtonText);
   });
 
   const dropZone = document.getElementById('dropZone');
@@ -1088,6 +1211,7 @@
     document.getElementById('fileInfo').classList.add('visible');
     document.getElementById('settingsPanel').classList.add('visible');
     document.getElementById('convertBtn').classList.add('visible');
+    updateConvertButtonText();
   }
 
   function formatSize(bytes) {
@@ -1126,6 +1250,7 @@
 
     const pages = getPageIndices();
     const includePageNum = document.getElementById('includePageNum').checked;
+    const conversionMode = getConversionMode();
 
     document.getElementById('convertBtn').classList.remove('visible');
     document.getElementById('progressSection').classList.add('visible');
@@ -1133,6 +1258,61 @@
     document.getElementById('resetArea').classList.remove('visible');
 
     try {
+      const blob = conversionMode === 'layout'
+        ? await createLayoutWordDocument(pages, includePageNum)
+        : await createTextWordDocument(pages, includePageNum);
+
+      currentWordBlob = blob;
+      const suffix = conversionMode === 'layout' ? '-layout-beta' : '';
+      currentWordFilename = (currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted') + suffix + '.docx';
+      document.getElementById('downloadWordBtn').onclick = () => {
+        downloadCurrentWordFile();
+      };
+
+      updateProgress('Done!', 100);
+      setTimeout(() => {
+        document.getElementById('progressSection').classList.remove('visible');
+        document.getElementById('resultsSection').classList.add('visible');
+        document.getElementById('pageCount').textContent = pages.length;
+        updateResultsCopy(conversionMode, pages.length);
+        document.getElementById('resetArea').classList.add('visible');
+      }, 400);
+
+    } catch (e) {
+      console.error(e);
+      alert('An error occurred during conversion: ' + e.message);
+      resetAll();
+    }
+  }
+
+  function getConversionMode() {
+    const selected = document.querySelector('input[name="conversionMode"]:checked');
+    return selected ? selected.value : 'text';
+  }
+
+  function updateConvertButtonText() {
+    const button = document.getElementById('convertBtn');
+    if (!button) return;
+    const textNode = document.getElementById('convertBtnText');
+    const label = getConversionMode() === 'layout' ? 'Create layout Word' : 'Convert to Word';
+    if (textNode) {
+      textNode.textContent = label;
+    }
+  }
+
+  function updateResultsCopy(mode, pageCount) {
+    const title = document.getElementById('resultsTitle');
+    const note = document.getElementById('resultsNote');
+    if (mode === 'layout') {
+      title.innerHTML = `Layout Beta complete - created visual references for <span id="pageCount">${pageCount}</span> pages`;
+      note.textContent = 'This Beta Word file includes rendered PDF page images plus editable extracted text below each page. It is useful for visual checking, but complex documents may still need cleanup.';
+      return;
+    }
+    title.innerHTML = `Conversion complete - extracted text from <span id="pageCount">${pageCount}</span> pages`;
+    note.textContent = 'This tool extracts text from PDFs and builds a Word document. Scanned image PDFs may require OCR for best results.';
+  }
+
+  async function createTextWordDocument(pages, includePageNum) {
       const docxParagraphs = [];
 
       for (let i = 0; i < pages.length; i++) {
@@ -1188,27 +1368,138 @@
       });
 
       const blob = await docx.Packer.toBlob(doc);
-      const url = URL.createObjectURL(blob);
-      document.getElementById('downloadWordBtn').onclick = () => {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = (currentFile ? currentFile.name.replace(/\.pdf$/i, '') : 'converted') + '.docx';
-          a.click();
-      };
+      return blob;
+  }
 
-      updateProgress('Done!', 100);
-      setTimeout(() => {
-        document.getElementById('progressSection').classList.remove('visible');
-        document.getElementById('resultsSection').classList.add('visible');
-        document.getElementById('pageCount').textContent = pages.length;
-        document.getElementById('resetArea').classList.add('visible');
-      }, 400);
+  async function createLayoutWordDocument(pages, includePageNum) {
+    const docxParagraphs = [
+      new docx.Paragraph({
+        children: [
+          new docx.TextRun({
+            text: 'Layout-preserving Beta',
+            bold: true,
+            size: 32,
+          }),
+        ],
+        spacing: { after: 120 },
+      }),
+      new docx.Paragraph({
+        children: [
+          new docx.TextRun('Each PDF page is inserted as a visual reference, followed by editable text extracted from that page.'),
+        ],
+        spacing: { after: 300 },
+      }),
+    ];
 
-    } catch (e) {
-      console.error(e);
-      alert('An error occurred during conversion: ' + e.message);
-      resetAll();
+    for (let i = 0; i < pages.length; i++) {
+      const pageNum = pages[i];
+      const pct = Math.round((i / pages.length) * 100);
+      updateProgress(`Rendering page ${pageNum}...`, pct);
+
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 1.6 });
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      await page.render({ canvasContext: context, viewport }).promise;
+
+      const imageBytes = dataUrlToUint8Array(canvas.toDataURL('image/png'));
+      const maxImageWidth = 610;
+      const imageWidth = Math.min(maxImageWidth, canvas.width);
+      const imageHeight = Math.round(canvas.height * (imageWidth / canvas.width));
+
+      if (includePageNum) {
+        docxParagraphs.push(new docx.Paragraph({
+          children: [new docx.TextRun({ text: `Page ${pageNum} visual reference`, bold: true, size: 24 })],
+          spacing: { before: 200, after: 120 },
+        }));
+      }
+
+      docxParagraphs.push(new docx.Paragraph({
+        children: [
+          new docx.ImageRun({
+            type: 'png',
+            data: imageBytes,
+            transformation: { width: imageWidth, height: imageHeight },
+          }),
+        ],
+        spacing: { after: 240 },
+      }));
+
+      updateProgress(`Extracting editable text from page ${pageNum}...`, Math.min(90, pct + 8));
+      const textContent = await page.getTextContent();
+      const items = textContent.items.map(item => ({
+        str: item.str,
+        x: item.transform[4],
+        y: item.transform[5],
+      })).filter(item => item.str && item.str.trim());
+
+      const lines = buildReadingOrderLines(items);
+      docxParagraphs.push(new docx.Paragraph({
+        children: [new docx.TextRun({ text: `Editable text from page ${pageNum}`, bold: true })],
+        spacing: { before: 120, after: 80 },
+      }));
+
+      lines.forEach((lineText) => {
+        docxParagraphs.push(new docx.Paragraph({
+          children: [new docx.TextRun(lineText)],
+          spacing: { after: 40 },
+        }));
+      });
     }
+
+    updateProgress('Creating layout Word file...', 95);
+    const doc = new docx.Document({
+      sections: [{
+        properties: {
+          page: {
+            margin: { top: 720, right: 720, bottom: 720, left: 720 },
+          },
+        },
+        children: docxParagraphs,
+      }],
+    });
+
+    return docx.Packer.toBlob(doc);
+  }
+
+  function dataUrlToUint8Array(dataUrl) {
+    const base64 = dataUrl.split(',')[1];
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+
+  function downloadCurrentWordFile() {
+    if (!currentWordBlob) return;
+
+    if (navigator.msSaveOrOpenBlob) {
+      navigator.msSaveOrOpenBlob(currentWordBlob, currentWordFilename);
+      return;
+    }
+
+    const url = URL.createObjectURL(currentWordBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentWordFilename;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    const fallback = document.getElementById('downloadFallback');
+    const manualLink = document.getElementById('manualDownloadLink');
+    if (fallback && manualLink) {
+      const manualUrl = URL.createObjectURL(currentWordBlob);
+      manualLink.href = manualUrl;
+      manualLink.download = currentWordFilename;
+      fallback.classList.add('visible');
+    }
+
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
   }
 
   function updateProgress(label, pct) {
@@ -1272,12 +1563,15 @@
   function resetAll() {
     pdfDoc = null;
     currentFile = null;
+    currentWordBlob = null;
+    currentWordFilename = 'converted.docx';
     document.getElementById('fileInput').value = '';
     document.getElementById('fileInfo').classList.remove('visible');
     document.getElementById('settingsPanel').classList.remove('visible');
     document.getElementById('convertBtn').classList.remove('visible');
     document.getElementById('progressSection').classList.remove('visible');
     document.getElementById('resultsSection').classList.remove('visible');
+    document.getElementById('downloadFallback').classList.remove('visible');
     document.getElementById('resetArea').classList.remove('visible');
     document.getElementById('pageRange').value = 'all';
     document.getElementById('customPageInput').style.display = 'none';
