@@ -517,6 +517,56 @@
     return { ok: true, counted: true };
   }
 
+  // ── Multi-file download helpers ───────────────────────────────────────────
+  // Tools that produce several files (image converter, PDF split, …) offer two
+  // ways to save: each file one-by-one, or everything bundled into a single ZIP.
+  // Both run client-side — files never leave the browser — and both share the
+  // same result token, so whichever the user picks (and re-picks) counts at most
+  // once toward the daily limit.
+  function saveBlob(blob, name) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name || 'download';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  }
+
+  // Save every file individually, staggered so the browser doesn't drop the
+  // rapid-fire download requests.
+  function saveFilesIndividually(files) {
+    files.forEach((f, i) => setTimeout(() => saveBlob(f.blob, f.name), i * 160));
+  }
+
+  // Lazy-load JSZip from the CDN the first time a ZIP is requested. Pages that
+  // already include their own <script> tag (pdf-tools, pdf-to-jpg) resolve
+  // instantly via the existing window.JSZip global.
+  let jszipPromise = null;
+  function loadJSZip() {
+    if (typeof window !== 'undefined' && window.JSZip) return Promise.resolve(window.JSZip);
+    if (jszipPromise) return jszipPromise;
+    jszipPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+      script.onload = () => window.JSZip ? resolve(window.JSZip) : reject(new Error('JSZip failed to load'));
+      script.onerror = () => reject(new Error('JSZip failed to load'));
+      document.head.appendChild(script);
+    });
+    return jszipPromise;
+  }
+
+  // Bundle [{name, blob}] into a single ZIP and download it. Throws on failure
+  // (so the caller's gatedDownload does NOT count a failed attempt).
+  async function zipAndDownload(files, zipName) {
+    const JSZipCtor = await loadJSZip();
+    const zip = new JSZipCtor();
+    for (const f of files) zip.file(f.name, f.blob);
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+    saveBlob(blob, (zipName || 'download').replace(/\.zip$/i, '') + '.zip');
+  }
+
   // ── Shared result card (Group B converters) ───────────────────────────────
   // Replaces "auto-download after convert" with a consistent completion card:
   // a title, a limit-gated Download button, and a "Convert another file" reset.
@@ -527,9 +577,12 @@
     style.textContent = `
       .ec-result-card { text-align:center; margin-top:1.6rem; }
       .ec-result-title { font-family:'Bebas Neue', sans-serif; font-size:1.5rem; letter-spacing:2px; text-transform:uppercase; color:#0f172a; }
-      .ec-download-btn { display:inline-flex; align-items:center; gap:10px; margin-top:1.25rem; padding:1rem 2rem; background:transparent; border:2px solid #0f172a; color:#0f172a; font-family:inherit; font-weight:700; font-size:1.05rem; border-radius:8px; cursor:pointer; transition:all .2s; }
+      .ec-download-actions { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:1.25rem; }
+      .ec-download-btn { display:inline-flex; align-items:center; gap:10px; padding:1rem 2rem; background:transparent; border:2px solid #0f172a; color:#0f172a; font-family:inherit; font-weight:700; font-size:1.05rem; border-radius:8px; cursor:pointer; transition:all .2s; }
       .ec-download-btn:hover { background:#0f172a; color:#fff; }
       .ec-download-btn:disabled { opacity:.6; cursor:default; }
+      .ec-download-btn-alt { border-color:#cbd5e1; color:#475569; }
+      .ec-download-btn-alt:hover { background:#475569; border-color:#475569; color:#fff; }
       .ec-reset-btn { display:block; margin:1.25rem auto 0; padding:.55rem 1.4rem; background:none; border:1px solid #e2e8f0; color:#64748b; font-family:inherit; font-size:.8rem; letter-spacing:1px; text-transform:uppercase; border-radius:6px; cursor:pointer; transition:all .2s; }
       .ec-reset-btn:hover { border-color:#0f172a; color:#0f172a; }
     `;
@@ -538,6 +591,10 @@
 
   // opts: { mount, title, titleKo, downloadLabel, downloadLabelKo, token, download,
   //         hide:[elements to hide while the card shows], onAnother }
+  // Multi-file mode: pass `files: [{name, blob}]` (and optional `zipName`)
+  // instead of `download`. A single file renders one Download button; two or
+  // more render BOTH "Download all" (each file) and "Download .zip" buttons,
+  // sharing one result token so the user is charged at most once.
   function showDownloadCard(opts) {
     if (typeof document === 'undefined') return null;
     const mount = typeof opts.mount === 'string' ? document.querySelector(opts.mount) : opts.mount;
@@ -557,18 +614,55 @@
     title.textContent = pick(opts.title || 'Conversion complete — your file is ready', opts.titleKo);
     if (opts.titleKo) title.setAttribute('data-ko', opts.titleKo);
 
-    const dl = document.createElement('button');
-    dl.type = 'button';
-    dl.className = 'ec-download-btn';
-    dl.innerHTML = '<i class="fa-solid fa-download"></i> <span></span>';
-    const span = dl.querySelector('span');
-    span.textContent = pick(opts.downloadLabel || 'Download', opts.downloadLabelKo);
-    if (opts.downloadLabelKo) span.setAttribute('data-ko', opts.downloadLabelKo);
-    dl.addEventListener('click', async () => {
-      dl.disabled = true;
-      try { await gatedDownload({ token: opts.token, download: opts.download }); }
-      finally { dl.disabled = false; }
-    });
+    // Build a limit-gated download button. While its action runs, every button
+    // in the actions row is disabled so a slow ZIP build can't be double-fired.
+    function makeButton(labelEn, labelKo, iconClass, downloadFn, token, alt) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ec-download-btn' + (alt ? ' ec-download-btn-alt' : '');
+      btn.innerHTML = `<i class="fa-solid ${iconClass}"></i> <span></span>`;
+      const sp = btn.querySelector('span');
+      sp.textContent = pick(labelEn, labelKo);
+      if (labelKo) sp.setAttribute('data-ko', labelKo);
+      btn.addEventListener('click', async () => {
+        const row = btn.parentElement;
+        const siblings = row ? Array.from(row.querySelectorAll('.ec-download-btn')) : [btn];
+        siblings.forEach((b) => { b.disabled = true; });
+        try { await gatedDownload({ token, download: downloadFn }); }
+        finally { siblings.forEach((b) => { b.disabled = false; }); }
+      });
+      return btn;
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'ec-download-actions';
+
+    if (Array.isArray(opts.files)) {
+      const files = opts.files.filter((f) => f && f.blob);
+      const token = opts.token || opts.files;
+      if (files.length > 1) {
+        const zipName = opts.zipName || 'download';
+        actions.appendChild(makeButton(
+          opts.downloadLabel || `Download all (${files.length})`,
+          opts.downloadLabelKo || `전체 다운로드 (${files.length})`,
+          'fa-download', () => saveFilesIndividually(files), token, false));
+        actions.appendChild(makeButton(
+          'Download .zip', 'ZIP으로 받기',
+          'fa-file-zipper', async () => {
+            try { await zipAndDownload(files, zipName); }
+            catch (e) { window.alert('ZIP creation failed. Please use the individual downloads instead.'); throw e; }
+          }, token, true));
+      } else if (files.length === 1) {
+        const one = files[0];
+        actions.appendChild(makeButton(
+          opts.downloadLabel || 'Download', opts.downloadLabelKo || '다운로드',
+          'fa-download', () => saveBlob(one.blob, one.name), token, false));
+      }
+    } else {
+      actions.appendChild(makeButton(
+        opts.downloadLabel || 'Download', opts.downloadLabelKo,
+        'fa-download', opts.download, opts.token, false));
+    }
 
     const reset = document.createElement('button');
     reset.type = 'button';
@@ -582,7 +676,7 @@
     });
 
     card.appendChild(title);
-    card.appendChild(dl);
+    card.appendChild(actions);
     card.appendChild(reset);
     card.style.display = '';
     hideEls.forEach((el) => { el.style.display = 'none'; });
@@ -657,6 +751,8 @@
     gatedDownload,
     showDownloadCard,
     clearDownloadCard,
+    loadJSZip,
+    zipAndDownload,
     guardConversion,
     renderUsage,
     showUpgradeModal,

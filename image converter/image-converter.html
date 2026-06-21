@@ -529,6 +529,10 @@
         titleKo: many ? `변환 완료 — 이미지 ${outputs.length}장 준비됨` : '변환 완료 — 이미지가 준비되었습니다',
         downloadLabel: many ? `Download all (${outputs.length})` : 'Download image',
         downloadLabelKo: many ? `전체 다운로드 (${outputs.length})` : '이미지 다운로드',
+        files: outputs,
+        zipName: 'converted-images',
+        // Back-compat: if a cached older usage-limit.js without `files` support
+        // is in play, it falls back to this single action (the prior behavior).
         token: outputs,
         download: doSaveAll,
         hide: [convertBtn]

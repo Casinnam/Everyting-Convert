@@ -186,6 +186,35 @@
     }
   }
 
+  // Multi-file result (e.g. Split). Offers both per-page downloads and a single
+  // ZIP via the shared result card; both share one token (counted once).
+  function downloadFiles(files, zipName) {
+    const ul = window.EverythingConvertUsageLimit;
+    if (ul && ul.showDownloadCard) {
+      ul.showDownloadCard({
+        mount: document.querySelector('.converter-card'),
+        title: `Split complete — ${files.length} pages ready`,
+        titleKo: `분할 완료 — ${files.length}페이지 준비됨`,
+        downloadLabel: `Download all (${files.length})`,
+        downloadLabelKo: `전체 다운로드 (${files.length})`,
+        files,
+        zipName,
+        // Back-compat: a cached older usage-limit.js without `files` support
+        // falls back to this single ZIP action (the prior behavior).
+        token: files,
+        download: async () => {
+          const zip = new window.JSZip();
+          files.forEach((f) => zip.file(f.name, f.blob));
+          const zipBlob = await zip.generateAsync({ type: 'blob' });
+          rawDownload(zipBlob, `${zipName}.zip`);
+        },
+        hide: [els.convert]
+      });
+    } else {
+      files.forEach((f) => rawDownload(f.blob, f.name));
+    }
+  }
+
   function resetResultCard() {
     const ul = window.EverythingConvertUsageLimit;
     if (ul && ul.clearDownloadCard) ul.clearDownloadCard('.converter-card');
@@ -369,19 +398,21 @@
     const file = state.files[0];
     if (!file) throw new Error('Choose one PDF file to split.');
     const source = await loadPdf(file);
-    const zip = new window.JSZip();
     const base = sanitizeBaseName(file.name);
+    const files = [];
 
     for (let index = 0; index < source.getPageCount(); index += 1) {
       const doc = await window.PDFLib.PDFDocument.create();
       const [page] = await doc.copyPages(source, [index]);
       doc.addPage(page);
       const bytes = await doc.save();
-      zip.file(`${base}-page-${String(index + 1).padStart(3, '0')}.pdf`, bytes);
+      files.push({
+        name: `${base}-page-${String(index + 1).padStart(3, '0')}.pdf`,
+        blob: new Blob([bytes], { type: 'application/pdf' }),
+      });
     }
 
-    const zipBlob = await zip.generateAsync({ type: 'blob' });
-    downloadBlob(zipBlob, `${base}-split-pages.zip`);
+    downloadFiles(files, `${base}-split-pages`);
   }
 
   async function compressPdf() {
