@@ -14,7 +14,7 @@ assert(pp.includes('name="description"'), 'pp: needs a meta description.');
 assert(pp.includes('application/ld+json'), 'pp: needs structured data.');
 assert(pp.includes('#cookie-settings'), 'pp: footer must expose Cookie Settings.');
 assert(pp.includes('class="site-footer"'), 'pp: needs the shared footer.');
-assert(/tools-menu\.js\?v=nav-20260620a/.test(pp), 'pp: must load the current tools-menu (common sticky header).');
+assert(/tools-menu\.js\?v=nav-20260620c/.test(pp), 'pp: must load the current tools-menu (common sticky header).');
 assert(/tool-language\.js\?v=toollang-20260616a/.test(pp), 'pp: must load current tool-language for i18n.');
 assert(pp.includes('pdf.min.js'), 'pp: needs pdf.js to read/rasterize the PDF.');
 assert(pp.includes('pptxgen'), 'pp: needs pptxgenjs to build the .pptx.');

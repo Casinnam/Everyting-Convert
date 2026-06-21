@@ -12,6 +12,93 @@
 <script src="../ads.js?v=ads-20260611a"></script>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg"><link rel="stylesheet" href="../styles.css?v=ui-20260614a"><link rel="stylesheet" href="../tool-page-redesign.css"><link rel="stylesheet" href="../assets/developer-tools.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"URL Encoder Decoder","applicationCategory":"DeveloperApplication","operatingSystem":"Web","url":"https://www.everythingconvert.com/url%20encoder%20decoder/url-encoder-decoder.html","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Encode and decode URL strings in your browser."}</script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "URL Encoder and Decoder",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "url": "https://www.everythingconvert.com/url%20encoder%20decoder/url-encoder-decoder.html",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "description": "Encode and decode URLs and query parameters online, instantly and in your browser."
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.everythingconvert.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Developer Tools",
+              "item": "https://www.everythingconvert.com/#tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "URL Encoder &amp; Decoder"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is the URL encoder free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Encoding and decoding URLs is completely free with no sign-up required."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What characters need encoding?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Spaces, accents, and reserved symbols like &amp;, ?, #, and / inside a value must be percent-encoded so the URL stays valid."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does it work both ways?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. You can encode plain text into a URL-safe string and decode percent-encoded URLs back into readable text."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my data sent anywhere?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Everything runs in your browser, so the links and parameters never leave your device."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does it handle non-Latin text?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. It uses UTF-8, so accented and non-Latin characters encode and decode correctly."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 </head>
 <body class="premium-subpage ec-tool-page developer-utility-page" data-dev-tool="url-encoder">
   <header id="ec-header-inject"></header>
@@ -24,7 +111,68 @@
     </section>
     <section class="dev-info-grid"><article><i class="fa-solid fa-link"></i><strong>Safe URL text</strong><span>Encode spaces, symbols, and non-English text for query strings and links.</span></article><article><i class="fa-solid fa-magnifying-glass"></i><strong>Decode for debugging</strong><span>Turn percent-encoded URLs back into readable text when checking tracking links.</span></article><article><i class="fa-solid fa-shield-halved"></i><strong>No server needed</strong><span>The tool runs locally in your browser and does not require an API key.</span></article></section>
     <section class="dev-guide"><article class="dev-guide-panel"><h2>How to use URL encoder decoder</h2><ol><li>Paste text, a URL, or a query string.</li><li>Choose Encode or Decode.</li><li>Copy the clean result for your app, link, or campaign URL.</li></ol></article><article class="dev-guide-panel"><h2>FAQ</h2><details><summary>When should I encode a URL?</summary><p>Encode text before placing spaces, symbols, or non-English characters into a URL parameter.</p></details><details><summary>Can it decode UTM links?</summary><p>Yes. Paste an encoded URL or query value to make it easier to read.</p></details><details><summary>Is anything uploaded?</summary><p>No. Encoding and decoding happen in your browser.</p></details></article></section>
-  </main>
+  
+  <section class="ec-info-grid" data-static>
+    <article class="ec-info-panel">
+      <h2 data-ko="URL 인코드·디코드 방법">How to encode or decode a URL</h2>
+      <ol class="ec-step-list">
+        <li><b>1</b><div><strong data-ko="텍스트 또는 URL 붙여넣기">Paste your text or URL</strong><span data-ko="변환할 값을 입력란에 입력하거나 붙여넣으세요.">Type or paste the value you want to convert into the input box.</span></div></li>
+        <li><b>2</b><div><strong data-ko="인코드 또는 디코드 선택">Choose encode or decode</strong><span data-ko="인코드는 텍스트를 URL 안전 문자열로, 디코드는 퍼센트 인코딩된 URL을 일반 텍스트로 바꿉니다.">Encode turns text into a URL-safe string; decode turns a percent-encoded URL back into plain text.</span></div></li>
+        <li><b>3</b><div><strong data-ko="결과 복사">Copy the result</strong><span data-ko="출력이 즉시 갱신됩니다 &amp;mdash; 한 번 클릭으로 복사해 링크나 요청에 사용하세요.">The output updates instantly &mdash; copy it with one click to use in a link or request.</span></div></li>
+      </ol>
+    </article>
+    <article class="ec-info-panel">
+      <h2 data-ko="이 URL 도구를 쓰는 이유">Why use this URL tool</h2>
+      <ul class="ec-check-list">
+        <li><i class="fa-solid fa-check"></i><span data-ko="즉시 양방향 인코드·디코드">Instant, two-way encode and decode</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="공백·기호·비라틴 문자 처리">Handles spaces, symbols, and non-Latin characters</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="브라우저에서 처리 &amp;mdash; 서버로 아무것도 전송되지 않음">Runs in your browser &mdash; nothing is sent to a server</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="무료, 가입 불필요, 설치 불필요">Free, with no sign-up and nothing to install</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="ec-seo-guide" data-static>
+    <div class="ec-guide-copy">
+      <p class="ec-guide-kicker" data-ko="개발자 도구">Developer Tools</p>
+      <h2 data-ko="브라우저에서 URL 인코드·디코드">Encode and decode URLs in your browser</h2>
+      <p data-ko="URL에는 정해진 문자만 들어갈 수 있어서 공백·악센트와 &amp;amp;, ? 같은 기호는 링크나 쿼리 문자열에서 안전하게 전달되도록 퍼센트 인코딩해야 합니다. 이 도구는 텍스트를 URL 안전 형식으로 인코딩하고 퍼센트 인코딩된 URL을 다시 읽을 수 있는 텍스트로 즉시 디코딩합니다. 모든 처리가 브라우저에서 이뤄지므로 다루는 링크와 매개변수가 어디로도 전송되지 않습니다.">URLs can only contain a limited set of characters, so spaces, accents, and symbols like &amp; and ? must be percent-encoded to travel safely in a link or query string. This tool encodes text into URL-safe form and decodes percent-encoded URLs back into readable text instantly. It runs entirely in your browser, so the links and parameters you work with are never sent anywhere.</p>
+    </div>
+    <div class="ec-guide-grid">
+      <article>
+        <i class="fa-solid fa-file-circle-check"></i>
+        <h3 data-ko="최상의 결과를 위해">Best results</h3>
+        <ul>
+          <li data-ko="쿼리 값을 링크에 넣기 전에 인코드">Encode query values before adding them to a link</li>
+          <li data-ko="길고 이스케이프된 URL의 실제 내용을 보려면 디코드">Decode to read what a long, escaped URL really says</li>
+          <li data-ko="더 깔끔한 링크를 위해 매개변수를 개별 인코드">Encode each parameter separately for cleaner links</li>
+        </ul>
+      </article>
+      <article>
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <h3 data-ko="자주 겪는 문제 해결">Common fixes</h3>
+        <ul>
+          <li data-ko="이중 인코딩됐나요? 두 번 디코드하면 원본이 나옵니다">Double-encoded? Decode twice to get the original</li>
+          <li data-ko="플러스와 공백이 헷갈리나요? 원본이 공백에 +를 썼는지 확인하세요">Plus vs space confusion? Check whether the source used + for spaces</li>
+          <li data-ko="악센트가 깨지나요? 텍스트가 UTF-8인지 확인하세요">Broken accents? Make sure the text is UTF-8</li>
+        </ul>
+      </article>
+      <article>
+        <i class="fa-solid fa-user-shield"></i>
+        <h3 data-ko="설계부터 프라이버시 우선">Private by design</h3>
+        <p data-ko="인코딩과 디코딩은 클라이언트 측 자바스크립트로 브라우저에서 전부 실행됩니다. URL과 매개변수는 업로드·저장·공유되지 않으므로 기기에 그대로 남습니다.">Encoding and decoding run entirely in your browser using client-side JavaScript. Your URLs and parameters are never uploaded, stored, or shared, so they stay on your device.</p>
+      </article>
+    </div>
+    <div class="ec-faq-list">
+      <h2 data-ko="자주 묻는 질문">Frequently asked questions</h2>
+      <details><summary data-ko="URL 인코더는 무료인가요?">Is the URL encoder free?</summary><p data-ko="네. URL 인코딩과 디코딩은 가입 없이 완전 무료입니다.">Yes. Encoding and decoding URLs is completely free with no sign-up required.</p></details>
+      <details><summary data-ko="어떤 문자를 인코딩해야 하나요?">What characters need encoding?</summary><p data-ko="공백·악센트와 값 안의 &amp;amp;, ?, #, / 같은 예약 기호는 URL이 유효하게 유지되도록 퍼센트 인코딩해야 합니다.">Spaces, accents, and reserved symbols like &amp;, ?, #, and / inside a value must be percent-encoded so the URL stays valid.</p></details>
+      <details><summary data-ko="양방향으로 되나요?">Does it work both ways?</summary><p data-ko="네. 일반 텍스트를 URL 안전 문자열로 인코딩하고 퍼센트 인코딩된 URL을 다시 읽을 수 있는 텍스트로 디코딩할 수 있습니다.">Yes. You can encode plain text into a URL-safe string and decode percent-encoded URLs back into readable text.</p></details>
+      <details><summary data-ko="내 데이터가 어디로 전송되나요?">Is my data sent anywhere?</summary><p data-ko="아니요. 모든 것이 브라우저에서 실행되어 링크와 매개변수가 기기를 떠나지 않습니다.">No. Everything runs in your browser, so the links and parameters never leave your device.</p></details>
+      <details><summary data-ko="비라틴 텍스트도 처리하나요?">Does it handle non-Latin text?</summary><p data-ko="네. UTF-8을 사용하므로 악센트 문자와 비라틴 문자가 올바르게 인코딩·디코딩됩니다.">Yes. It uses UTF-8, so accented and non-Latin characters encode and decode correctly.</p></details>
+    </div>
+  </section>
+</main>
   <footer class="site-footer home-footer"><div class="footer-legal-row"><a href="../about.html">About Us</a><a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a href="../privacy.html">Privacy</a><a href="../terms.html">Terms</a><a href="../security.html">Security and Compliance</a><a href="#cookie-settings">Cookie Settings</a><a href="../contact.html">Contact</a></div><div class="footer-bottom"><div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="24" height="24"><span>EverythingConvert.com</span></div><p>&copy; EverythingConvert.com All rights reserved (2026)</p><div class="language-menu"><button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button><div class="language-dropdown"><button type="button" data-language="en">English</button><button type="button" data-language="ko">한국어</button><button type="button" data-language="de">Deutsch</button><button type="button" data-language="es">Español</button><button type="button" data-language="fr">Français</button></div></div></div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../supabase-config.js"></script><script src="../auth.js?v=auth-20260616c"></script><script src="../conversion-history.js?v=history-20260531a"></script><script src="../tools-menu.js?v=nav-20260620c"></script><script src="../language-menu.js?v=lang-20260620a"></script><script src="../header-language.js?v=headerlang-20260616a"></script><script src="../assets/developer-tools.js?v=devtools-20260611b"></script><script src="../static-i18n.js"></script>
 </body>

@@ -23,6 +23,93 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"JSON Formatter and Validator","applicationCategory":"DeveloperApplication","operatingSystem":"Web","url":"https://www.everythingconvert.com/json%20formatter/json-formatter.html","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Format, minify, and validate JSON in your browser."}</script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "JSON Formatter and Validator",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "url": "https://www.everythingconvert.com/json%20formatter/json-formatter.html",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "description": "Format, beautify, minify, and validate JSON online, instantly and in your browser."
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.everythingconvert.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Developer Tools",
+              "item": "https://www.everythingconvert.com/#tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "JSON Formatter"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is the JSON formatter free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Formatting, minifying, and validating JSON is completely free with no sign-up required."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my data safe to paste?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Everything runs in your browser and nothing is sent to a server, so sensitive responses and config never leave your device."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can it validate JSON, not just format it?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. It checks the syntax and points out where the JSON is invalid so you can fix it quickly."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can it minify JSON too?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. You can beautify JSON for reading or minify it to the smallest size for transfer."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why does my JSON fail to parse?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The most common causes are trailing commas, single quotes, unquoted keys, and missing brackets. The validator highlights the spot."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 </head>
 <body class="premium-subpage ec-tool-page developer-utility-page" data-dev-tool="json-formatter">
   <header id="ec-header-inject"></header>
@@ -49,7 +136,68 @@
     </section>
     <section class="dev-info-grid"><article><i class="fa-solid fa-code"></i><strong>Readable JSON</strong><span>Indent messy JSON so APIs, logs, and settings files are easier to inspect.</span></article><article><i class="fa-solid fa-compress"></i><strong>Minify for production</strong><span>Remove extra whitespace when you need compact JSON for transport or storage.</span></article><article><i class="fa-solid fa-shield-halved"></i><strong>Private by design</strong><span>Your JSON is processed locally in your browser and is not uploaded.</span></article></section>
     <section class="dev-guide"><article class="dev-guide-panel"><h2>How to use this JSON formatter</h2><ol><li>Paste JSON or upload a .json file.</li><li>Choose Format, Minify, or Validate.</li><li>Copy or download the result when the JSON is ready.</li></ol></article><article class="dev-guide-panel"><h2>FAQ</h2><details><summary>Does it fix invalid JSON automatically?</summary><p>No. It shows a syntax error so you can correct the original data safely.</p></details><details><summary>Is my JSON uploaded?</summary><p>No. The formatting and validation happen in your browser.</p></details><details><summary>Can I format API responses?</summary><p>Yes. Paste a JSON response from an API to make it easier to read.</p></details></article></section>
-  </main>
+  
+  <section class="ec-info-grid" data-static>
+    <article class="ec-info-panel">
+      <h2 data-ko="JSON을 포맷하는 방법">How to format JSON</h2>
+      <ol class="ec-step-list">
+        <li><b>1</b><div><strong data-ko="JSON 붙여넣기">Paste your JSON</strong><span data-ko="원본 또는 압축된 JSON을 입력란에 넣으세요.">Drop raw or minified JSON into the input box.</span></div></li>
+        <li><b>2</b><div><strong data-ko="포맷 또는 검증">Format or validate</strong><span data-ko="깔끔한 들여쓰기로 정리하거나, 검증기로 문법이 깨진 정확한 위치를 확인하세요.">Beautify it with clean indentation, or let the validator point out exactly where the syntax breaks.</span></div></li>
+        <li><b>3</b><div><strong data-ko="결과 복사">Copy the result</strong><span data-ko="포맷되거나 압축된 JSON을 한 번 클릭으로 복사해 코드에 사용하세요.">Copy the formatted or minified JSON with one click to use in your code.</span></div></li>
+      </ol>
+    </article>
+    <article class="ec-info-panel">
+      <h2 data-ko="이 JSON 포매터를 쓰는 이유">Why use this JSON formatter</h2>
+      <ul class="ec-check-list">
+        <li><i class="fa-solid fa-check"></i><span data-ko="보기 좋게·압축·검증을 한곳에서">Beautify, minify, and validate in one place</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="문제 지점을 짚어 주는 명확한 오류 메시지">Clear error messages that point to the problem</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="브라우저에서 처리 &amp;mdash; 데이터가 업로드되지 않음">Runs in your browser &mdash; your data is never uploaded</span></li>
+        <li><i class="fa-solid fa-check"></i><span data-ko="무료, 가입 불필요, 설치 불필요">Free, with no sign-up and nothing to install</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="ec-seo-guide" data-static>
+    <div class="ec-guide-copy">
+      <p class="ec-guide-kicker" data-ko="개발자 도구">Developer Tools</p>
+      <h2 data-ko="브라우저에서 JSON 포맷·검증">Format and validate JSON in your browser</h2>
+      <p data-ko="API나 로그에서 받은 원본 JSON은 흔히 읽기 힘든 한 줄입니다. 이 포매터는 들여쓰기로 보기 좋게 정리해 구조를 한눈에 파악하게 하고, 빠진 쉼표나 괄호를 찾도록 문법 오류를 표시하며, 가장 작은 페이로드가 필요할 때 다시 압축(minify)합니다. 모든 처리가 브라우저에서 이뤄지므로 붙여넣는 데이터(API 응답·설정 포함)가 기기를 떠나지 않습니다.">Raw JSON from an API or a log is often a single unreadable line. This formatter indents and beautifies it so the structure is easy to scan, flags syntax errors so you can find the missing comma or bracket, and can minify it again when you need the smallest possible payload. It runs entirely in your browser, so the data you paste, including API responses and config, never leaves your device.</p>
+    </div>
+    <div class="ec-guide-grid">
+      <article>
+        <i class="fa-solid fa-file-circle-check"></i>
+        <h3 data-ko="최상의 결과를 위해">Best results</h3>
+        <ul>
+          <li data-ko="API 응답을 읽기 전에 포맷">Format API responses before reading them</li>
+          <li data-ko="설정 파일에 붙여넣기 전에 검증">Validate before pasting JSON into config files</li>
+          <li data-ko="가장 작은 페이로드가 필요할 때 압축">Minify when you need the smallest payload</li>
+        </ul>
+      </article>
+      <article>
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <h3 data-ko="자주 겪는 문제 해결">Common fixes</h3>
+        <ul>
+          <li data-ko="잘못된 JSON인가요? 끝쉼표와 따옴표 없는 키를 확인하세요">Invalid JSON? Check for trailing commas and unquoted keys</li>
+          <li data-ko="숫자가 이상한가요? 매우 큰 정수는 정밀도를 잃을 수 있습니다">Numbers look wrong? Very large integers can lose precision</li>
+          <li data-ko="문자가 깨지나요? 원본이 UTF-8인지 확인하세요">Broken characters? Make sure the source is UTF-8</li>
+        </ul>
+      </article>
+      <article>
+        <i class="fa-solid fa-user-shield"></i>
+        <h3 data-ko="설계부터 프라이버시 우선">Private by design</h3>
+        <p data-ko="포맷과 검증은 클라이언트 측 자바스크립트로 브라우저에서 전부 실행됩니다. JSON은 업로드·저장·공유되지 않으므로 API 응답과 설정 데이터가 기기에 그대로 남습니다.">Formatting and validation run entirely in your browser using client-side JavaScript. Your JSON is never uploaded, stored, or shared, so API responses and config data stay on your device.</p>
+      </article>
+    </div>
+    <div class="ec-faq-list">
+      <h2 data-ko="자주 묻는 질문">Frequently asked questions</h2>
+      <details><summary data-ko="JSON 포매터는 무료인가요?">Is the JSON formatter free?</summary><p data-ko="네. JSON 포맷·압축·검증은 가입 없이 완전 무료입니다.">Yes. Formatting, minifying, and validating JSON is completely free with no sign-up required.</p></details>
+      <details><summary data-ko="붙여넣은 데이터가 안전한가요?">Is my data safe to paste?</summary><p data-ko="네. 모든 것이 브라우저에서 실행되고 서버로 전송되지 않으므로 민감한 응답과 설정이 기기를 떠나지 않습니다.">Yes. Everything runs in your browser and nothing is sent to a server, so sensitive responses and config never leave your device.</p></details>
+      <details><summary data-ko="포맷뿐 아니라 검증도 되나요?">Can it validate JSON, not just format it?</summary><p data-ko="네. 문법을 확인하고 JSON이 잘못된 위치를 짚어 빠르게 고칠 수 있게 합니다.">Yes. It checks the syntax and points out where the JSON is invalid so you can fix it quickly.</p></details>
+      <details><summary data-ko="JSON 압축도 되나요?">Can it minify JSON too?</summary><p data-ko="네. 읽기용으로 보기 좋게 만들거나 전송용으로 가장 작은 크기로 압축할 수 있습니다.">Yes. You can beautify JSON for reading or minify it to the smallest size for transfer.</p></details>
+      <details><summary data-ko="내 JSON이 왜 파싱에 실패하나요?">Why does my JSON fail to parse?</summary><p data-ko="가장 흔한 원인은 끝쉼표, 작은따옴표, 따옴표 없는 키, 빠진 괄호입니다. 검증기가 해당 지점을 표시합니다.">The most common causes are trailing commas, single quotes, unquoted keys, and missing brackets. The validator highlights the spot.</p></details>
+    </div>
+  </section>
+</main>
   <footer class="site-footer home-footer"><div class="footer-legal-row"><a href="../about.html">About Us</a><a href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a href="../privacy.html">Privacy</a><a href="../terms.html">Terms</a><a href="../security.html">Security and Compliance</a><a href="#cookie-settings">Cookie Settings</a><a href="../contact.html">Contact</a></div><div class="footer-bottom"><div class="footer-logo"><img class="brand-icon" src="../favicon.svg" alt="" width="24" height="24"><span>EverythingConvert.com</span></div><p>&copy; EverythingConvert.com All rights reserved (2026)</p><div class="language-menu"><button class="language-toggle" type="button" aria-expanded="false"><i class="fa-solid fa-globe"></i><span data-language-current>English</span></button><div class="language-dropdown"><button type="button" data-language="en">English</button><button type="button" data-language="ko">한국어</button><button type="button" data-language="de">Deutsch</button><button type="button" data-language="es">Español</button><button type="button" data-language="fr">Français</button></div></div></div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../supabase-config.js"></script><script src="../auth.js?v=auth-20260616c"></script><script src="../conversion-history.js?v=history-20260531a"></script><script src="../tools-menu.js?v=nav-20260620c"></script><script src="../language-menu.js?v=lang-20260620a"></script><script src="../header-language.js?v=headerlang-20260616a"></script><script src="../assets/developer-tools.js?v=devtools-20260611b"></script><script src="../static-i18n.js"></script>
 </body>
