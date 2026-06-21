@@ -475,6 +475,7 @@
               <a href="${prefix}pdf tools/pdf-tools.html?mode=organize"><span class="tool-emoji pdf">&#128450;</span><span>Organize PDF</span></a>
               <a href="${prefix}pdf watermark/pdf-watermark.html"><span class="tool-emoji pdf">&#128737;</span><span>Watermark PDF</span></a>
               <a href="${prefix}pdf annotate/pdf-annotate.html"><span class="tool-emoji pdf">&#9999;</span><span>Add Text to PDF</span></a>
+              <a href="${prefix}pdf password/pdf-password.html"><span class="tool-emoji pdf">&#128274;</span><span>Protect &amp; Unlock PDF</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-group-title"><i class="fa-regular fa-image"></i> Image</div>
@@ -537,6 +538,7 @@
               <a href="${prefix}pdf tools/pdf-tools.html?mode=organize"><span class="tool-emoji pdf">&#128450;</span><span>Organize PDF</span></a>
               <a href="${prefix}pdf watermark/pdf-watermark.html"><span class="tool-emoji pdf">&#128737;</span><span>Watermark PDF</span></a>
               <a href="${prefix}pdf annotate/pdf-annotate.html"><span class="tool-emoji pdf">&#9999;</span><span>Add Text to PDF</span></a>
+              <a href="${prefix}pdf password/pdf-password.html"><span class="tool-emoji pdf">&#128274;</span><span>Protect &amp; Unlock PDF</span></a>
             </div>
             <div class="tools-group">
               <div class="tools-subgroup-title"><i class="fa-solid fa-book"></i> Office & Ebooks</div>
