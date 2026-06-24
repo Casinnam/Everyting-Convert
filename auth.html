@@ -15,14 +15,88 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Two halves joined into one rounded card, like the reference:
+           tinted aside on the left, the auth card on the right. */
+        .auth-layout {
+            width: min(1040px, 100%);
+            display: grid;
+            grid-template-columns: 1.02fr 0.98fr;
+            background: #fff;
+            border: 1px solid var(--sub-line, #e2e8f0);
+            border-radius: 22px;
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.10);
+            overflow: hidden;
+        }
+
+        .auth-aside {
+            min-width: 0;
+            background: linear-gradient(160deg, #eef0ff 0%, #f3eefe 100%);
+            padding: clamp(1.75rem, 3vw, 2.75rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-aside .subpage-kicker {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-feature-list {
+            display: grid;
+            gap: 0.9rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .auth-feature {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.7rem;
+            align-items: start;
+        }
+
+        .auth-feature-icon {
+            color: var(--primary);
+            font-size: 1.05rem;
+            line-height: 1.45;
+            flex-shrink: 0;
+        }
+
+        .auth-feature-text strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.08rem;
+        }
+
+        .auth-feature-text span {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
         .auth-shell {
-            width: min(480px, 100%);
-            background: var(--card-bg);
-            border: 1px solid rgba(47, 38, 18, 0.16);
-            border-radius: 8px;
-            padding: 2rem;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            width: 100%;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            padding: clamp(1.75rem, 3vw, 2.75rem);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        @media (max-width: 880px) {
+            .auth-layout {
+                grid-template-columns: 1fr;
+            }
+            .auth-aside {
+                order: 2;
+            }
+            .auth-shell {
+                order: 1;
+            }
         }
 
         [hidden] {
@@ -287,11 +361,22 @@
             color: var(--text-main);
         }
 
-        /* Login page only: the shared 4rem hero title is too large here. */
-        .hero-title {
-            font-size: clamp(1.7rem, 4.5vw, 2.6rem);
-            line-height: 1.2;
-            margin-bottom: 1rem;
+        /* Login page only: the shared 4rem hero title is far too large beside
+           the auth card. Scope it tightly so it beats styles.css and stays small. */
+        .auth-aside .hero-title {
+            font-size: clamp(1.55rem, 2.3vw, 2.05rem);
+            font-weight: 800;
+            line-height: 1.32;
+            letter-spacing: -0.015em;
+            margin-bottom: 0.8rem;
+            word-break: keep-all;
+        }
+
+        .auth-aside .hero-subtitle {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            max-width: 40ch;
+            margin-bottom: 1.75rem;
         }
     </style>
 </head>
@@ -371,11 +456,59 @@
     </header>
 
     <main class="main-container">
-                <section class="hero">
-            <div class="subpage-kicker"><i class="fa-solid fa-user-shield"></i> EverythingConvert Account</div>
-            <h1 class="hero-title">Welcome to <span class="gradient-text">EverythingConvert</span></h1>
-            <p class="hero-subtitle">Log in or create a free account to unlock more daily conversions, free AI credits, and a saved history of everything you convert — on any device, nothing to install.</p>
-        </section>
+      <div class="auth-layout">
+        <aside class="auth-aside">
+            <div id="asideGuest">
+                <div class="subpage-kicker"><i class="fa-solid fa-user-shield"></i> <span data-i18n-key="accountKicker">EverythingConvert Account</span></div>
+                <h1 class="hero-title">Welcome to <span class="gradient-text">EverythingConvert</span></h1>
+                <p class="hero-subtitle">Log in or create a free account to unlock more daily conversions, free AI credits, and a saved history of everything you convert — on any device, nothing to install.</p>
+                <ul class="auth-feature-list">
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="featPrivateTitle">Private by design</strong><span data-i18n-key="featPrivateBody">Most tools run entirely in your browser — your files are never uploaded to a server.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="featLimitTitle">More free conversions</strong><span data-i18n-key="featLimitBody">Free accounts get 10 conversions a day — double the guest limit.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="featCreditsTitle">Free AI credits</strong><span data-i18n-key="featCreditsBody">Get monthly AI credits for our smart, AI-powered tools.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="featHistoryTitle">History that follows you</strong><span data-i18n-key="featHistoryBody">Your conversion history syncs across every device. Nothing to install.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="featToolsTitle">40+ tools in one place</strong><span data-i18n-key="featToolsBody">PDF, image, video, audio, and document tools — all under one account.</span></span>
+                    </li>
+                </ul>
+            </div>
+            <div id="asideMember" hidden>
+                <div class="subpage-kicker"><i class="fa-solid fa-circle-check"></i> <span data-i18n-key="signedInKicker">You're signed in</span></div>
+                <h2 class="hero-title"><span data-i18n-key="welcomeBack">Welcome back</span><span id="asideMemberName"></span></h2>
+                <p class="hero-subtitle" data-i18n-key="memberAsideSub">Manage your account, track your AI credits, and pick up right where you left off.</p>
+                <ul class="auth-feature-list">
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="mFeatPrivateTitle">Your files stay private</strong><span data-i18n-key="mFeatPrivateBody">Every conversion still runs right inside your browser.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="mFeatPerksTitle">Member perks active</strong><span data-i18n-key="mFeatPerksBody">More daily conversions plus monthly AI credits on your account.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="mFeatHistoryTitle">Your conversion history</strong><span data-i18n-key="mFeatHistoryBody">Review and re-download anything from My Conversions.</span></span>
+                    </li>
+                    <li class="auth-feature">
+                        <span class="auth-feature-icon"><i class="fa-solid fa-circle-check"></i></span>
+                        <span class="auth-feature-text"><strong data-i18n-key="mFeatProTitle">Go unlimited with Pro</strong><span data-i18n-key="mFeatProBody">Unlimited conversions, no ads, and 300 AI credits every month.</span></span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
 
                 <section class="auth-shell">
             <div class="auth-tabs">
@@ -421,9 +554,9 @@
             </form>
             <div class="account-panel" id="accountPanel">
                 <div class="account-card">
-                    <div>Display name: <strong id="accountName">-</strong></div>
-                    <div>Membership level: <strong id="accountPlan" data-no-i18n>-</strong></div>
-                    <div>AI credits: <strong id="accountCredits" data-no-i18n>-</strong> <a href="pricing.html#credit-packs" style="font-weight:700;color:#2563eb;text-decoration:none;margin-left:.4rem;">Buy more</a></div>
+                    <div data-i18n-key="displayName">Display name: <strong id="accountName">-</strong></div>
+                    <div data-i18n-key="membershipLevel">Membership level: <strong id="accountPlan" data-no-i18n>-</strong></div>
+                    <div data-i18n-key="aiCreditsLabel">AI credits: <strong id="accountCredits" data-no-i18n>-</strong> <a href="pricing.html#credit-packs" data-i18n-key="buyMore" style="font-weight:700;color:#2563eb;text-decoration:none;margin-left:.4rem;">Buy more</a></div>
                     <div id="accountRenewalRow" data-no-i18n style="display:none;margin-top:.15rem;color:#1e3a8a;font-weight:700;"></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
@@ -438,9 +571,9 @@
                 </div>
                 <div class="account-actions">
                     <a class="account-link" href="index.html#tools">Go to tools</a>
-                    <a class="account-link secondary" href="my-conversions.html">My Conversions</a>
-                    <a class="account-link secondary" href="support.html" data-ko="구독 관리">Manage subscription</a>
-                    <a class="account-link secondary" href="pricing.html">Upgrade</a>
+                    <a class="account-link secondary" href="my-conversions.html" data-i18n-key="myConversions">My Conversions</a>
+                    <a class="account-link secondary" href="support.html" data-i18n-key="manageSubscription">Manage subscription</a>
+                    <a class="account-link secondary" href="pricing.html" data-i18n-key="upgrade">Upgrade</a>
                     <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">Admin page</a>
                     <a class="account-link secondary" href="admin-blog.html" id="blogLink" style="display:none;">Write Blog</a>
                 </div>
@@ -452,6 +585,7 @@
                 </div>
             </div>
         </section>
+      </div>
     </main>
 
     <footer class="site-footer">
@@ -481,7 +615,7 @@
     <script src="supabase-config.js?v=auth-20260522d"></script>
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260620d"></script>
-    <script src="language-menu.js?v=lang-20260620a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
+    <script src="language-menu.js?v=lang-20260623a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
     <script src="ai-credits.js?v=credits-20260613d"></script>
     <script>
         let mode = 'login';
@@ -505,6 +639,17 @@
         const accountPlan = document.getElementById('accountPlan');
         const accountCredits = document.getElementById('accountCredits');
         const accountHint = document.getElementById('accountHint');
+        const asideGuest = document.getElementById('asideGuest');
+        const asideMember = document.getElementById('asideMember');
+        const asideMemberName = document.getElementById('asideMemberName');
+
+        function setAsideMode(loggedIn, name) {
+            if (asideGuest) asideGuest.hidden = loggedIn;
+            if (asideMember) asideMember.hidden = !loggedIn;
+            if (loggedIn && asideMemberName) {
+                asideMemberName.textContent = name ? ', ' + name : '';
+            }
+        }
 
         let creditsLoaded = false;
         let lastCreditBalance = null;
@@ -903,6 +1048,7 @@
             authForm.hidden = true;
             authTabs.hidden = true;
             accountPanel.classList.add('visible');
+            setAsideMode(true, cached.username);
             delete accountName.dataset.i18nKey;
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = cached.username;
@@ -971,6 +1117,7 @@
             authForm.hidden = loggedIn;
             authTabs.hidden = loggedIn;
             accountPanel.classList.toggle('visible', loggedIn);
+            setAsideMode(loggedIn, loggedIn ? auth.displayName() : '');
 
             if (!loggedIn) return;
 
