@@ -733,6 +733,30 @@
     nextPage.addEventListener('click', () => { if (current < total) { current++; renderPage(); } });
     downloadBtn.addEventListener('click', download);
     stageWrap.addEventListener('pointerdown', (e) => { if (e.target.classList.contains('an-overlay') || e.target.classList.contains('an-stage') || e.target.tagName === 'CANVAS') select(null); });
+
+    // Pick up a PDF handed off from another tool (e.g. Excel to PDF → Add text),
+    // stashed as a Blob in IndexedDB to avoid sessionStorage's string quota.
+    (function loadHandoffPdf() {
+      let req;
+      try { req = indexedDB.open('ec_handoff', 1); } catch (e) { return; }
+      req.onupgradeneeded = () => { try { req.result.createObjectStore('files'); } catch (e) {} };
+      req.onsuccess = () => {
+        const db = req.result;
+        let store;
+        try { store = db.transaction('files', 'readwrite').objectStore('files'); } catch (e) { db.close(); return; }
+        const getReq = store.get('pdf');
+        getReq.onsuccess = () => {
+          const rec = getReq.result;
+          if (rec && rec.blob) {
+            try { store.delete('pdf'); } catch (e) {}
+            try { loadFile(new File([rec.blob], rec.name || 'document.pdf', { type: 'application/pdf' })); } catch (e) {}
+          }
+          db.close();
+        };
+        getReq.onerror = () => db.close();
+      };
+      req.onerror = () => {};
+    })();
   })();
   </script>
   <script src="../static-i18n.js"></script>

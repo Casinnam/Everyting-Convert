@@ -8,9 +8,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Excel to PDF Converter - EverythingConvert</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <!-- SEO:START -->
     <meta name="description" content="Convert Excel spreadsheets to PDF online with EverythingConvert.">
@@ -145,7 +145,7 @@
   .drop-zone:hover,.drop-zone.dragover { border-color:var(--accent); }
   input,select,button { font:inherit; }
   input[type=file] { display:none; }
-  .controls { display:grid; grid-template-columns:1fr auto; gap:1rem; align-items:end; }
+  .controls { display:grid; grid-template-columns:1fr 1fr auto; gap:1rem; align-items:end; }
   label { display:grid; gap:.4rem; color:var(--muted); font-weight:700; }
   select { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:.8rem; }
   .primary-btn { border:0; border-radius:8px; padding:.9rem 1.25rem; background:var(--accent); color:white; font-weight:800; cursor:pointer; }
@@ -248,6 +248,11 @@
     <div class="drop-zone" id="dropZone"><i class="fa-regular fa-file-excel"></i><p>Click or drop an Excel/CSV file here</p><input id="fileInput" type="file" accept=".xlsx,.xls,.csv"></div>
     <div class="controls">
       <label>Sheet<select id="sheetSelect" disabled></select></label>
+      <label><span data-ko="용지">Paper</span><select id="paperSelect">
+        <option value="a4">A4</option>
+        <option value="letter">Letter</option>
+        <option value="fit">Fit to content</option>
+      </select></label>
       <button class="primary-btn" id="convertBtn" disabled>Convert to PDF</button>
     </div>
     <div class="status" id="status">No file selected.</div>
@@ -384,20 +389,51 @@
 <script src="../language-menu.js?v=lang-20260620a"></script><script src="../header-language.js?v=headerlang-20260616a"></script>
 <script src="../tool-language.js?v=toollang-20260616a"></script>
 <script>
-  let workbook = null;
+  // ExcelJS-based engine: preserves cell fills, fonts, borders, merged cells,
+  // column widths and embedded images (logos) by mirroring the sheet into a
+  // styled HTML table, then rasterising to PDF via html2canvas. .xls (legacy
+  // binary) and .csv fall back to a values-only table through SheetJS.
+  let ecWorkbook = null;   // ExcelJS workbook (.xlsx) — rich rendering
+  let xlsxWb = null;       // SheetJS workbook (.xls) — values-only fallback
+  let csvRows = null;      // parsed CSV rows — values-only
+  let sheetNames = [];     // option index -> sheet name (xlsx/xls)
+  let renderMode = null;   // 'rich' | 'xls' | 'csv'
   let currentFile = null;
+  let busy = false;
+  let previewTimer = null;
   const fileInput = document.getElementById('fileInput');
   const dropZone = document.getElementById('dropZone');
   const sheetSelect = document.getElementById('sheetSelect');
+  const paperSelect = document.getElementById('paperSelect');
   const convertBtn = document.getElementById('convertBtn');
   const statusEl = document.getElementById('status');
   function setStatus(text) { statusEl.textContent = text; }
+  // Hand the generated PDF off to the Add-text editor. PDFs can be several MB,
+  // which blows sessionStorage's ~5MB string quota, so stash the Blob in
+  // IndexedDB (binary-native, large quota) and let the editor pick it up.
+  function openInTextEditor(doc, base) {
+    const fail = e => setStatus('Could not open the text editor: ' + (e && e.message ? e.message : e));
+    try {
+      const blob = doc.output('blob');
+      const req = indexedDB.open('ec_handoff', 1);
+      req.onupgradeneeded = () => { try { req.result.createObjectStore('files'); } catch (e) {} };
+      req.onsuccess = () => {
+        const db = req.result;
+        let tx;
+        try { tx = db.transaction('files', 'readwrite'); } catch (e) { db.close(); return fail(e); }
+        tx.objectStore('files').put({ name: base + '.pdf', blob }, 'pdf');
+        tx.oncomplete = () => { db.close(); window.location.href = '../pdf annotate/pdf-annotate.html'; };
+        tx.onerror = () => { db.close(); fail(tx.error); };
+      };
+      req.onerror = () => fail(req.error);
+    } catch (e) { fail(e); }
+  }
   // Show the converted PDF as a limit-gated download card instead of auto-saving.
   function presentResult(doc, base) {
     const ul = window.EverythingConvertUsageLimit;
     if (ul && ul.showDownloadCard) {
       setStatus('');
-      ul.showDownloadCard({
+      const card = ul.showDownloadCard({
         mount: document.querySelector('.tool-card'),
         title: 'Conversion complete — your PDF is ready',
         titleKo: '변환 완료 — PDF가 준비되었습니다',
@@ -406,91 +442,25 @@
         download: () => doc.save(`${base}.pdf`),
         hide: [convertBtn]
       });
+      // Add a secondary "Add text to PDF" action that opens our annotate editor.
+      if (card && card.el) {
+        const row = card.el.querySelector('.ec-download-actions');
+        if (row && !row.querySelector('[data-ec-addtext]')) {
+          const isKo = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) === 'ko';
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'ec-download-btn ec-download-btn-alt';
+          btn.setAttribute('data-ec-addtext', '');
+          btn.innerHTML = '<i class="fa-solid fa-pen"></i> <span data-ko="PDF에 텍스트 추가">' + (isKo ? 'PDF에 텍스트 추가' : 'Add text to PDF') + '</span>';
+          btn.addEventListener('click', () => openInTextEditor(doc, base));
+          row.appendChild(btn);
+        }
+      }
     } else {
       doc.save(`${base}.pdf`);
       setStatus('PDF download started.');
     }
   }
-  async function loadFile(file) {
-    currentFile = file;
-    if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) {
-      window.EverythingConvertUsageLimit.clearDownloadCard('.tool-card');
-    }
-    convertBtn.style.display = '';
-    setStatus('Reading workbook...');
-    const data = await file.arrayBuffer();
-    workbook = XLSX.read(data, { type: 'array' });
-    sheetSelect.innerHTML = workbook.SheetNames.map(name => `<option value="${name}">${name}</option>`).join('');
-    sheetSelect.disabled = false;
-    convertBtn.disabled = false;
-    setStatus(`${file.name} loaded. Choose a sheet and convert.`);
-  }
-  function rowsFromSheet() {
-    const ws = workbook.Sheets[sheetSelect.value];
-    if (!ws || !ws['!ref']) return [];
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    const rows = XLSX.utils.sheet_to_json(ws, {
-      header: 1,
-      raw: false,
-      blankrows: true,
-      defval: '',
-      range,
-    });
-
-    const rowHasValue = row => row.some(cell => String(cell || '').trim());
-    const usedRows = rows
-      .map(row => Array.from({ length: range.e.c - range.s.c + 1 }, (_, index) => row[index] || ''))
-      .filter(rowHasValue);
-
-    let lastColumn = 0;
-    usedRows.forEach(row => {
-      row.forEach((cell, index) => {
-        if (String(cell || '').trim()) lastColumn = Math.max(lastColumn, index);
-      });
-    });
-
-    return usedRows.map(row => row.slice(0, lastColumn + 1));
-  }
-
-  function countFilled(row) {
-    return row.filter(cell => String(cell || '').trim()).length;
-  }
-
-  function splitSheetRows(rows) {
-    let headerIndex = rows.findIndex(row => countFilled(row) >= 2);
-    if (headerIndex < 0) headerIndex = 0;
-
-    const titleRows = rows.slice(0, headerIndex)
-      .map(row => row.filter(cell => String(cell || '').trim()).join(' '))
-      .filter(Boolean);
-    const headers = rows[headerIndex].map(cell => String(cell || '').trim());
-    const body = rows.slice(headerIndex + 1).map(row => row.map(cell => String(cell || '').trim()));
-
-    if (!headers.some(Boolean) && body.length) {
-      return {
-        titleRows,
-        headers: body[0].map((_, index) => `Column ${index + 1}`),
-        body,
-      };
-    }
-
-    if (!headers[0]) headers[0] = 'Item';
-    if (!headers[headers.length - 1] && body.some(row => String(row[headers.length - 1] || '').trim())) {
-      headers[headers.length - 1] = 'Total';
-    }
-
-    return { titleRows, headers, body };
-  }
-
-  function looksNumeric(value) {
-    const text = String(value || '').replace(/,/g, '').trim();
-    return text !== '' && !Number.isNaN(Number(text));
-  }
-
-  function hasCjkText(rows) {
-    return rows.some(row => row.some(cell => /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af\u3040-\u30ff\u3400-\u9fff]/.test(String(cell || ''))));
-  }
-
   function escapeHtml(value) {
     return String(value == null ? '' : value)
       .replace(/&/g, '&amp;')
@@ -500,139 +470,437 @@
       .replace(/'/g, '&#39;');
   }
 
-  function buildRenderedPage(table, bodyRows, pageNumber, totalChunks) {
-    const titleText = table.titleRows.join('  ');
-    const page = document.createElement('div');
-    page.className = 'pdf-render-page';
-    page.innerHTML = `
-      <div class="pdf-render-title">${escapeHtml(sheetSelect.value)}</div>
-      ${titleText ? `<div class="pdf-render-subtitle">${escapeHtml(titleText)}</div>` : ''}
-      <table class="pdf-render-table">
-        <thead><tr>${table.headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr></thead>
-        <tbody>
-          ${bodyRows.map(row => `<tr>${table.headers.map((_, index) => {
-            const value = row[index] || '';
-            const align = looksNumeric(value) ? ' style="text-align:right"' : '';
-            return `<td${align}>${escapeHtml(value)}</td>`;
-          }).join('')}</tr>`).join('')}
-        </tbody>
-      </table>
-      <div style="position:absolute;right:28px;bottom:18px;color:#64748b;font-size:11px;">${pageNumber} / ${totalChunks}</div>
-    `;
-    return page;
+  function looksNumeric(value) {
+    const text = String(value == null ? '' : value).replace(/,/g, '').trim();
+    return text !== '' && !Number.isNaN(Number(text));
   }
 
-  async function convertCjkToImagePdf(table) {
-    if (!window.html2canvas) throw new Error('html2canvas is not available');
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const rowsPerPage = table.headers.length > 10 ? 18 : 24;
-    const chunks = [];
-    for (let index = 0; index < table.body.length; index += rowsPerPage) {
-      chunks.push(table.body.slice(index, index + rowsPerPage));
+  // \u2500\u2500 A lightweight on-page preview so users see the result before downloading \u2500\u2500
+  function previewBox() {
+    let box = document.getElementById('xlPreview');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'xlPreview';
+      box.style.cssText = 'margin-top:1rem;border:1px solid var(--border);border-radius:10px;background:#f1f5f9;padding:12px;max-height:420px;overflow:auto;display:none;';
+      const card = document.querySelector('.tool-card');
+      if (card) card.appendChild(box);
     }
-    if (!chunks.length) chunks.push([]);
+    return box;
+  }
+  function clearPreview() {
+    const box = document.getElementById('xlPreview');
+    if (box) { box.innerHTML = ''; box.style.display = 'none'; }
+  }
+  async function renderPreview() {
+    const box = previewBox();
+    let built;
+    try { built = buildContainer(); } catch (e) { clearPreview(); return; }
+    if (!built) { clearPreview(); return; }
+    const { container, imgPromises } = built;
+    // Scale the full-width sheet down to fit the preview box.
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'transform-origin:top left;';
+    container.style.boxShadow = '0 1px 4px rgba(15,23,42,.12)';
+    wrap.appendChild(container);
+    box.innerHTML = '';
+    box.appendChild(wrap);
+    box.style.display = '';
+    if (imgPromises && imgPromises.length) { try { await Promise.all(imgPromises); } catch (e) {} }
+    const totalW = container.offsetWidth || 1;
+    const avail = box.clientWidth - 4;
+    const scale = Math.min(1, avail / totalW);
+    wrap.style.transform = `scale(${scale})`;
+    wrap.style.width = totalW + 'px';
+    wrap.style.height = (container.offsetHeight * scale) + 'px';
+    container.style.cursor = 'default';
+  }
+  function schedulePreview() {
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => { renderPreview().catch(() => {}); }, 60);
+  }
 
-    const stage = document.createElement('div');
-    stage.className = 'pdf-render-stage';
-    document.body.appendChild(stage);
+  // \u2500\u2500 CSV parsing (values-only fallback) \u2500\u2500
+  function parseCsv(text) {
+    const rows = []; let row = [], cur = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ',') { row.push(cur); cur = ''; }
+      else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+      else if (ch === '\r') { /* skip */ }
+      else cur += ch;
+    }
+    if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
 
+  // \u2500\u2500 Style helpers (ExcelJS) \u2500\u2500
+  function argbToCss(color) {
+    if (!color) return null;
+    const v = typeof color === 'string' ? color : color.argb;
+    if (!v) return null;                 // theme/indexed-only colours are skipped
+    if (v.length === 8) return '#' + v.slice(2);
+    if (v.length === 6) return '#' + v;
+    return null;
+  }
+  function borderCss(side) {
+    if (!side || !side.style) return '0';
+    const style = side.style;
+    const width = style === 'thick' ? '3px' : (style === 'medium' || style === 'mediumDashed') ? '2px' : '1px';
+    const kind = style === 'double' ? 'double' : (style === 'dotted' ? 'dotted' : (/dash/i.test(style) ? 'dashed' : 'solid'));
+    return `${width} ${kind} ${argbToCss(side.color) || '#000'}`;
+  }
+  function colToNum(letters) { let n = 0; for (const ch of letters) n = n * 26 + (ch.charCodeAt(0) - 64); return n; }
+  function parseRef(ref) { const m = ref.match(/^([A-Z]+)(\d+)$/); return m ? { c: colToNum(m[1]), r: parseInt(m[2], 10) } : null; }
+  function colWidthToPx(w) { return w == null ? 64 : Math.max(2, Math.round(w * 7 + 5)); }
+  function rowHeightToPx(h) { return h == null ? 20 : Math.max(6, Math.round(h * 96 / 72)); }
+
+  // For merged cells, the outer right/bottom border lives on the edge
+  // constituent cells, not the top-left master — so pull them from there.
+  function cellStyle(cell, rightCell, bottomCell) {
+    const b = cell.border || {};
+    const rb = (((rightCell || cell).border) || {}).right;
+    const bb = (((bottomCell || cell).border) || {}).bottom;
+    const s = [
+      'border-top:' + borderCss(b.top),
+      'border-right:' + borderCss(rb),
+      'border-bottom:' + borderCss(bb),
+      'border-left:' + borderCss(b.left),
+      'padding:1px 4px', 'overflow:hidden',
+    ];
+    const fill = cell.fill;
+    if (fill && fill.type === 'pattern' && fill.pattern === 'solid') {
+      const bg = argbToCss(fill.fgColor);
+      if (bg) s.push('background-color:' + bg);
+    }
+    const f = cell.font || {};
+    s.push('font-size:' + (f.size ? f.size : 11) + 'pt');
+    if (f.bold) s.push('font-weight:700');
+    if (f.italic) s.push('font-style:italic');
+    if (f.underline) s.push('text-decoration:underline');
+    const fc = argbToCss(f.color);
+    if (fc) s.push('color:' + fc);
+    if (f.name) s.push("font-family:'" + f.name + "','Noto Sans KR','Malgun Gothic',Arial,sans-serif");
+    const al = cell.alignment || {};
+    let h = al.horizontal;
+    if (h === 'fill' || h === 'distributed') h = 'left';
+    if (h === 'centerContinuous') h = 'center';
+    if (!h) h = typeof cell.value === 'number' ? 'right' : 'left';
+    s.push('text-align:' + h);
+    const v = al.vertical;
+    s.push('vertical-align:' + (v === 'middle' ? 'middle' : v === 'top' ? 'top' : 'bottom'));
+    s.push(al.wrapText ? 'white-space:normal;overflow-wrap:anywhere' : 'white-space:nowrap');
+    return s.join(';');
+  }
+  // Safe display text: ExcelJS's cell.text getter can throw (null.toString) on
+  // dates / formula results with no cached value, so derive from cell.value.
+  function cellText(cell) {
+    let v;
+    try { v = cell.value; } catch (e) { return ''; }
+    if (v == null) return '';
+    if (typeof v !== 'object') return String(v);
+    if (v instanceof Date) { try { const t = cell.text; if (t != null) return String(t); } catch (e) {} return v.toISOString().slice(0, 10); }
+    if (Array.isArray(v.richText)) return v.richText.map(rt => (rt && rt.text) || '').join('');
+    if (v.text != null) return String(v.text);            // hyperlink
+    if (v.result != null) return String(v.result);        // formula (cached result)
+    if (v.error != null) return String(v.error);          // error value
+    if (v.formula != null) return '';                     // formula, no cached result
+    try { const t = cell.text; return t == null ? '' : String(t); } catch (e) { return ''; }
+  }
+  function cellHtml(cell) {
+    return escapeHtml(cellText(cell)).replace(/\r?\n/g, '<br>');
+  }
+  // A cell is "inked" if it carries any visible mark — text, a border, or a
+  // solid fill — so empty-but-bordered form rows are kept, not trimmed away.
+  function cellBorderVisible(cell) {
+    const b = cell && cell.border; if (!b) return false;
+    return !!((b.top && b.top.style) || (b.bottom && b.bottom.style) || (b.left && b.left.style) || (b.right && b.right.style));
+  }
+  function cellFilled(cell) {
+    const f = cell && cell.fill;
+    return !!(f && f.type === 'pattern' && f.pattern === 'solid' && f.fgColor);
+  }
+  function cellHasInk(cell) {
+    return cellText(cell).trim() !== '' || cellBorderVisible(cell) || cellFilled(cell);
+  }
+
+  // Bounding box of a sheet's print area ("A1:H28" / "$A$1:$H$28[,...]"), or null.
+  function parsePrintArea(ws) {
     try {
-      for (let index = 0; index < chunks.length; index += 1) {
-        stage.innerHTML = '';
-        stage.appendChild(buildRenderedPage(table, chunks[index], index + 1, chunks.length));
-        const canvas = await html2canvas(stage.firstElementChild, {
-          backgroundColor: '#ffffff',
-          scale: 2,
-          useCORS: true,
-          logging: false,
-        });
-        const image = canvas.toDataURL('image/jpeg', 0.92);
-        if (index > 0) doc.addPage('a4', 'landscape');
-        doc.addImage(image, 'JPEG', 0, 0, pageWidth, pageHeight);
+      const pa = ws.pageSetup && ws.pageSetup.printArea;
+      if (!pa) return null;
+      let minR = Infinity, minC = Infinity, maxR = -Infinity, maxC = -Infinity;
+      String(pa).split(/[,&]/).forEach(part => {
+        const seg = part.replace(/\$/g, '').trim(); if (!seg) return;
+        const ab = seg.split(':');
+        const a = parseRef(ab[0]), z = parseRef(ab[1] || ab[0]);
+        if (!a || !z) return;
+        minR = Math.min(minR, a.r, z.r); maxR = Math.max(maxR, a.r, z.r);
+        minC = Math.min(minC, a.c, z.c); maxC = Math.max(maxC, a.c, z.c);
+      });
+      return isFinite(minR) ? { startR: minR, startC: minC, endR: maxR, endC: maxC } : null;
+    } catch (e) { return null; }
+  }
+
+  // \u2500\u2500 Rich (.xlsx) renderer: styled table + embedded-image overlay \u2500\u2500
+  function buildSheetContainer(ws) {
+    const capCol = Math.min(Math.max(ws.columnCount || 1, 1), 256);
+    const capRow = Math.min(Math.max(ws.rowCount || 1, 1), 5000);
+
+    // Pull images up-front so trimming keeps their anchors inside the bounds.
+    let images = []; try { images = ws.getImages() || []; } catch (e) {}
+
+    // Prefer the sheet's print area \u2014 that is exactly "what's on one page" in
+    // Excel. Otherwise trim trailing empty rows/cols so stray formatted-but-blank
+    // cells don't spill onto a near-empty extra page.
+    let startR = 1, startC = 1, maxRow = capRow, maxCol = capCol;
+    const pa = parsePrintArea(ws);
+    if (pa) {
+      startR = Math.max(1, pa.startR); startC = Math.max(1, pa.startC);
+      maxRow = Math.min(capRow, pa.endR); maxCol = Math.min(capCol, pa.endC);
+    } else {
+      // Keep rows/cols that carry any visible mark (text, border or fill) so
+      // empty-but-bordered form rows below the last text aren't lost.
+      let lastR = 1;
+      for (let r = capRow; r >= 1; r--) { const row = ws.getRow(r); let f = false; for (let c = 1; c <= capCol; c++) { if (cellHasInk(row.getCell(c))) { f = true; break; } } if (f) { lastR = r; break; } }
+      let lastC = 1;
+      for (let c = capCol; c >= 1; c--) { let f = false; for (let r = 1; r <= lastR; r++) { if (cellHasInk(ws.getRow(r).getCell(c))) { f = true; break; } } if (f) { lastC = c; break; } }
+      images.forEach(im => { const br = im.range && im.range.br; if (br) { lastR = Math.max(lastR, Math.ceil(br.row)); lastC = Math.max(lastC, Math.ceil(br.col)); } });
+      maxRow = Math.min(capRow, Math.max(1, lastR));
+      maxCol = Math.min(capCol, Math.max(1, lastC));
+    }
+    if (maxRow < startR) maxRow = startR;
+    if (maxCol < startC) maxCol = startC;
+
+    const defColW = ws.properties && ws.properties.defaultColWidth;
+    const defRowH = ws.properties && ws.properties.defaultRowHeight;
+    const colPx = [], rowPx = [];
+    for (let c = startC; c <= maxCol; c++) { const w = ws.getColumn(c).width; colPx.push(colWidthToPx(w != null ? w : defColW)); }
+    for (let r = startR; r <= maxRow; r++) { const h = ws.getRow(r).height; rowPx.push(rowHeightToPx(h != null ? h : defRowH)); }
+
+    const covered = new Set(), spanMap = {};
+    const merges = (ws.model && ws.model.merges) || [];
+    merges.forEach(ref => {
+      const parts = String(ref).split(':'); if (parts.length !== 2) return;
+      const a = parseRef(parts[0]), z = parseRef(parts[1]); if (!a || !z) return;
+      if (a.r > maxRow || a.c > maxCol || z.r < startR || z.c < startC) return;   // outside window
+      const ar = Math.max(a.r, startR), ac = Math.max(a.c, startC);               // clamp to window
+      const er = Math.min(z.r, maxRow), ec = Math.min(z.c, maxCol);
+      spanMap[ar + ',' + ac] = { rowspan: er - ar + 1, colspan: ec - ac + 1 };
+      for (let r = ar; r <= er; r++) for (let c = ac; c <= ec; c++) { if (r === ar && c === ac) continue; covered.add(r + ',' + c); }
+    });
+
+    let html = '<table style="border-collapse:collapse;table-layout:fixed;font-family:Calibri,\'Segoe UI\',\'Noto Sans KR\',\'Malgun Gothic\',Arial,sans-serif">';
+    html += '<colgroup>' + colPx.map(w => '<col style="width:' + w + 'px">').join('') + '</colgroup>';
+    for (let r = startR; r <= maxRow; r++) {
+      const row = ws.getRow(r);
+      html += '<tr style="height:' + rowPx[r - startR] + 'px">';
+      for (let c = startC; c <= maxCol; c++) {
+        if (covered.has(r + ',' + c)) continue;
+        const cell = row.getCell(c);
+        const sp = spanMap[r + ',' + c];
+        const spanAttr = sp ? (' colspan="' + sp.colspan + '" rowspan="' + sp.rowspan + '"') : '';
+        let rightCell = cell, bottomCell = cell;
+        if (sp) {
+          rightCell = ws.getRow(r).getCell(c + sp.colspan - 1);          // top-right of merge
+          bottomCell = ws.getRow(r + sp.rowspan - 1).getCell(c);          // bottom-left of merge
+        }
+        html += '<td' + spanAttr + ' style="' + cellStyle(cell, rightCell, bottomCell) + '">' + cellHtml(cell) + '</td>';
       }
-    } finally {
-      stage.remove();
+      html += '</tr>';
+    }
+    html += '</table>';
+
+    const totalW = colPx.reduce((a, b) => a + b, 0);
+    const container = document.createElement('div');
+    // A few px of right/bottom padding so border-collapse edge lines aren't clipped.
+    container.style.cssText = 'position:relative;display:inline-block;background:#ffffff;padding:0 3px 3px 0;width:' + totalW + 'px';
+    container.innerHTML = html;
+
+    // Overlay embedded images (logos). Anchors are absolute 0-based; the render
+    // window starts at (startC, startR) (1-based), so shift into local space.
+    const urls = [], imgPromises = [];
+    const colLeft = [0]; for (let i = 0; i < colPx.length; i++) colLeft.push(colLeft[i] + colPx[i]);
+    const rowTop = [0]; for (let i = 0; i < rowPx.length; i++) rowTop.push(rowTop[i] + rowPx[i]);
+    const xAt = fc => { const local = Math.max(0, fc - (startC - 1)); const i = Math.floor(local); const fr = local - i; return (colLeft[Math.min(i, colLeft.length - 1)] || 0) + fr * (colPx[Math.min(i, colPx.length - 1)] || 0); };
+    const yAt = fr0 => { const local = Math.max(0, fr0 - (startR - 1)); const i = Math.floor(local); const fr = local - i; return (rowTop[Math.min(i, rowTop.length - 1)] || 0) + fr * (rowPx[Math.min(i, rowPx.length - 1)] || 0); };
+    images.forEach(im => {
+      try {
+        const media = ecWorkbook.getImage(parseInt(im.imageId, 10));
+        if (!media || !media.buffer) return;
+        const ext = media.extension || 'png';
+        const url = URL.createObjectURL(new Blob([media.buffer], { type: 'image/' + ext }));
+        urls.push(url);
+        const rg = im.range || {};
+        const left = xAt((rg.tl && rg.tl.col) || 0), top = yAt((rg.tl && rg.tl.row) || 0);
+        let w, h;
+        if (rg.br) { w = xAt(rg.br.col) - left; h = yAt(rg.br.row) - top; }
+        else if (rg.ext) { w = rg.ext.width / 9525; h = rg.ext.height / 9525; }
+        else { w = 120; h = 120; }
+        const el = document.createElement('img');
+        el.src = url;
+        el.style.cssText = 'position:absolute;left:' + left + 'px;top:' + top + 'px;width:' + w + 'px;height:' + h + 'px;object-fit:fill;';
+        container.appendChild(el);
+        imgPromises.push(new Promise(res => { el.onload = res; el.onerror = res; }));
+      } catch (e) {}
+    });
+    return { container, imgPromises, urls };
+  }
+
+  // \u2500\u2500 Values-only renderer (.xls / .csv) \u2500\u2500
+  function buildValuesContainer(rows) {
+    rows = rows || [];
+    const maxC = Math.max(1, ...rows.map(r => (r ? r.length : 0)));
+    let html = '<table style="border-collapse:collapse;table-layout:fixed;font-family:Calibri,Arial,sans-serif;font-size:11pt">';
+    html += '<colgroup>' + Array(maxC).fill('<col style="width:120px">').join('') + '</colgroup>';
+    rows.forEach(r => {
+      html += '<tr style="height:20px">';
+      for (let c = 0; c < maxC; c++) {
+        const v = (r && r[c] != null) ? r[c] : '';
+        html += '<td style="border:1px solid #cbd5e1;padding:1px 5px;overflow:hidden;white-space:nowrap;text-align:' + (looksNumeric(v) ? 'right' : 'left') + '">' + escapeHtml(String(v)) + '</td>';
+      }
+      html += '</tr>';
+    });
+    html += '</table>';
+    const container = document.createElement('div');
+    container.style.cssText = 'position:relative;display:inline-block;background:#ffffff';
+    container.innerHTML = html;
+    return { container, imgPromises: [], urls: [] };
+  }
+
+  // Build the right container for the current file/sheet selection.
+  function buildContainer() {
+    if (renderMode === 'rich') {
+      const ws = ecWorkbook && ecWorkbook.worksheets[+sheetSelect.value];
+      if (!ws || (ws.rowCount === 0 && ws.columnCount === 0)) return null;
+      return buildSheetContainer(ws);
+    }
+    if (renderMode === 'xls') {
+      const name = sheetNames[+sheetSelect.value];
+      const ws = xlsxWb.Sheets[name];
+      const rows = ws ? XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: '' }) : [];
+      return buildValuesContainer(rows);
+    }
+    if (renderMode === 'csv') return buildValuesContainer(csvRows);
+    return null;
+  }
+
+  function canvasToPdf(canvas, paper) {
+    const { jsPDF } = window.jspdf;
+    const cw = canvas.width, ch = canvas.height;
+    const landscape = cw >= ch;
+
+    // "Fit to content": page exactly the size of the sheet — one page, no empty
+    // margins (canvas is rendered at scale 2, so px → pt is cw/2 * 72/96).
+    if (paper === 'fit') {
+      const pad = 10;
+      const wpt = Math.max(72, cw * 0.375), hpt = Math.max(72, ch * 0.375);
+      const fdoc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: [wpt + pad * 2, hpt + pad * 2] });
+      fdoc.addImage(canvas.toDataURL('image/png'), 'PNG', pad, pad, wpt, hpt);
+      return fdoc;
+    }
+
+    const format = paper === 'letter' ? 'letter' : 'a4';
+    const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format });
+    const pw = doc.internal.pageSize.getWidth(), ph = doc.internal.pageSize.getHeight();
+    const margin = 18, availW = pw - margin * 2, availH = ph - margin * 2;
+    const scaleW = availW / cw;
+    const heightAtW = ch * scaleW;
+
+    // Fit the whole sheet on ONE page when it isn't dramatically taller than a
+    // page (absorbs small overflows instead of spilling onto a near-empty page).
+    if (heightAtW <= availH * 1.3) {
+      const scale = Math.min(scaleW, availH / ch);
+      const w = cw * scale, h = ch * scale;
+      const x = margin + (availW - w) / 2;       // centre horizontally, top-aligned
+      doc.addImage(canvas.toDataURL('image/png'), 'PNG', x, margin, w, h);
+      return doc;
+    }
+
+    // Genuinely tall sheet: paginate by width.
+    const scale = scaleW;
+    const pageSrcH = Math.max(1, Math.floor(availH / scale));
+    let y = 0, first = true;
+    while (y < ch) {
+      const sliceH = Math.min(pageSrcH, ch - y);
+      const tmp = document.createElement('canvas');
+      tmp.width = cw; tmp.height = sliceH;
+      const ctx = tmp.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, cw, sliceH);
+      ctx.drawImage(canvas, 0, y, cw, sliceH, 0, 0, cw, sliceH);
+      if (!first) doc.addPage(format, landscape ? 'landscape' : 'portrait');
+      doc.addImage(tmp.toDataURL('image/png'), 'PNG', margin, margin, availW, sliceH * scale);
+      y += sliceH; first = false;
     }
     return doc;
   }
 
-  async function convertToPdf() {
-    if (!workbook) return;
-    const rows = rowsFromSheet();
-    if (!rows.length) { setStatus('The selected sheet is empty.'); return; }
-    const table = splitSheetRows(rows);
-    const { jsPDF } = window.jspdf;
-    const base = currentFile ? currentFile.name.replace(/\.(xlsx|xls|csv)$/i, '') : 'excel';
-
-    if (hasCjkText(rows)) {
-      try {
-        setStatus('Korean or CJK text detected. Rendering with browser fonts...');
-        const doc = await convertCjkToImagePdf(table);
-        presentResult(doc, base);
-      } catch (error) {
-        setStatus('Korean PDF rendering failed. Please try again.');
-      }
-      return;
+  async function loadFile(file) {
+    currentFile = file;
+    if (window.EverythingConvertUsageLimit && window.EverythingConvertUsageLimit.clearDownloadCard) {
+      window.EverythingConvertUsageLimit.clearDownloadCard('.tool-card');
     }
-
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const margin = 24;
-
-    doc.setFontSize(16);
-    doc.text(sheetSelect.value, margin, 34);
-    doc.setFontSize(10);
-    const titleText = table.titleRows.join('  ');
-    if (titleText) doc.text(titleText, margin, 50, { maxWidth: pageWidth - margin * 2 });
-
-    const head = [table.headers];
-    const body = table.body;
-    const columnStyles = {};
-    table.headers.forEach((_, columnIndex) => {
-      const values = body.map(row => row[columnIndex]);
-      const numericCount = values.filter(looksNumeric).length;
-      if (numericCount && numericCount >= Math.max(1, values.filter(Boolean).length * 0.6)) {
-        columnStyles[columnIndex] = { halign: 'right' };
+    clearPreview();
+    convertBtn.style.display = '';
+    setStatus('Reading workbook...');
+    ecWorkbook = null; xlsxWb = null; csvRows = null; sheetNames = []; renderMode = null;
+    const lower = file.name.toLowerCase();
+    try {
+      if (lower.endsWith('.csv')) {
+        csvRows = parseCsv(await file.text());
+        renderMode = 'csv';
+        sheetSelect.innerHTML = '<option value="0">' + escapeHtml(file.name) + '</option>';
+      } else if (lower.endsWith('.xls')) {
+        // Legacy binary format: ExcelJS cannot parse it \u2014 values-only via SheetJS.
+        xlsxWb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+        sheetNames = xlsxWb.SheetNames.slice();
+        renderMode = 'xls';
+        sheetSelect.innerHTML = sheetNames.map((n, i) => '<option value="' + i + '">' + escapeHtml(n) + '</option>').join('');
+      } else {
+        ecWorkbook = new ExcelJS.Workbook();
+        await ecWorkbook.xlsx.load(await file.arrayBuffer());
+        sheetNames = ecWorkbook.worksheets.map(ws => ws.name);
+        renderMode = 'rich';
+        sheetSelect.innerHTML = sheetNames.map((n, i) => '<option value="' + i + '">' + escapeHtml(n) + '</option>').join('');
       }
-    });
-
-    if (doc.autoTable) {
-      doc.autoTable({
-        head,
-        body,
-        startY: titleText ? 68 : 56,
-        margin: { left: margin, right: margin },
-        tableWidth: 'auto',
-        styles: {
-          fontSize: table.headers.length > 10 ? 6 : 8,
-          cellPadding: 2,
-          overflow: 'linebreak',
-          lineWidth: 0.2,
-          lineColor: [210, 200, 180],
-        },
-        headStyles: {
-          fillColor: [118, 85, 10],
-          textColor: [255, 255, 255],
-          halign: 'center',
-        },
-        alternateRowStyles: { fillColor: [255, 251, 238] },
-        columnStyles,
-        horizontalPageBreak: true,
-        horizontalPageBreakRepeat: 0,
-        didDrawPage: data => {
-          doc.setFontSize(8);
-          doc.text(String(doc.internal.getNumberOfPages()), pageWidth - margin, doc.internal.pageSize.getHeight() - 12, { align: 'right' });
-        },
-      });
-    } else {
-      doc.setFontSize(9);
-      rows.slice(0, 36).forEach((row, index) => doc.text(row.join('   '), 40, 60 + index * 14));
+      sheetSelect.disabled = false;
+      convertBtn.disabled = false;
+      setStatus(`${file.name} loaded. Choose a sheet and convert.`);
+      schedulePreview();
+    } catch (e) {
+      setStatus('Could not read this file: ' + (e && e.message ? e.message : e));
     }
-    presentResult(doc, base);
   }
+
+  async function convertToPdf() {
+    if (busy || !renderMode) return;
+    busy = true; convertBtn.disabled = true;
+    const base = currentFile ? currentFile.name.replace(/\.(xlsx|xls|csv)$/i, '') : 'excel';
+    setStatus('Rendering PDF...');
+    let built;
+    try { built = buildContainer(); } catch (e) { setStatus('Could not render this sheet: ' + e.message); busy = false; convertBtn.disabled = false; return; }
+    if (!built) { setStatus('The selected sheet is empty.'); busy = false; convertBtn.disabled = false; return; }
+    const { container, imgPromises, urls } = built;
+    document.body.appendChild(container);
+    container.style.position = 'absolute'; container.style.left = '-100000px'; container.style.top = '0';
+    try {
+      if (imgPromises && imgPromises.length) await Promise.all(imgPromises);
+      const canvas = await html2canvas(container, { backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false });
+      container.remove(); urls.forEach(u => URL.revokeObjectURL(u));
+      const doc = canvasToPdf(canvas, paperSelect ? paperSelect.value : 'a4');
+      presentResult(doc, base);
+    } catch (e) {
+      container.remove(); urls.forEach(u => URL.revokeObjectURL(u));
+      setStatus('PDF rendering failed: ' + (e && e.message ? e.message : e));
+    } finally {
+      busy = false; convertBtn.disabled = false;
+    }
+  }
+
+  sheetSelect.addEventListener('change', schedulePreview);
   dropZone.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('dragover', event => { event.preventDefault(); dropZone.classList.add('dragover'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
