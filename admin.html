@@ -429,6 +429,27 @@
                 <div class="admin-table-wrap" id="usageByTool"><div class="empty-state">Loading usage…</div></div>
             </section>
 
+            <section class="admin-panel" id="reviewsPanel">
+                <div class="admin-toolbar">
+                    <div class="admin-status" style="font-weight:800;color:var(--text,#0f172a);">User reviews &amp; comments (private)</div>
+                    <select id="reviewRange" class="admin-range">
+                        <option value="1">Today</option>
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="365">Last year</option>
+                    </select>
+                </div>
+                <div class="admin-stats" id="reviewStats">
+                    <div class="stat-card"><span>Total reviews</span><strong id="rTotal">-</strong></div>
+                    <div class="stat-card"><span>Avg rating</span><strong id="rAvg">-</strong></div>
+                    <div class="stat-card"><span>With comment</span><strong id="rComments">-</strong></div>
+                    <div class="stat-card"><span>Tools rated</span><strong id="rTools">-</strong></div>
+                </div>
+                <div class="admin-table-wrap" id="reviewsByTool" style="margin-bottom:1rem;"><div class="empty-state">Loading ratings…</div></div>
+                <div class="admin-table-wrap" id="reviewsList"><div class="empty-state">Loading comments…</div></div>
+            </section>
+
             <section class="admin-panel db-note">
                 <strong>Database note:</strong> EverythingConvert is already using Supabase as the site database. Supabase is PostgreSQL-based, so it fills the same role MySQL would here: storing members, plans, roles, and future payment or conversion records. The setup SQL lives in <code>supabase-setup.sql</code>.
             </section>
@@ -755,6 +776,7 @@
                 adminStatus.textContent = `${EverythingConvertAuth.displayName()} | Admin | ${allProfiles.length} members`;
                 renderProfiles(filteredProfiles());
                 loadToolUsage();
+                loadReviews();
             } catch (error) {
                 adminStatus.textContent = 'Failed to load members';
                 renderEmpty(error.message);
@@ -811,6 +833,83 @@
                 wrap.innerHTML = '<div class="empty-state">Could not load usage: ' + escapeHtml(error.message || 'error') + '</div>';
             }
         }
+
+        function starsText(n) {
+            const r = Math.round(Number(n) || 0);
+            return '★★★★★'.slice(0, r) + '☆☆☆☆☆'.slice(0, 5 - r);
+        }
+
+        async function loadReviews() {
+            const client = EverythingConvertAuth.state && EverythingConvertAuth.state.client;
+            const summaryWrap = document.getElementById('reviewsByTool');
+            const listWrap = document.getElementById('reviewsList');
+            const rangeEl = document.getElementById('reviewRange');
+            if (!client || !summaryWrap || !listWrap || !rangeEl) return;
+            const days = parseInt(rangeEl.value, 10) || 30;
+            summaryWrap.innerHTML = '<div class="empty-state">Loading ratings…</div>';
+            listWrap.innerHTML = '<div class="empty-state">Loading comments…</div>';
+            try {
+                const [statsRes, listRes] = await Promise.all([
+                    client.rpc('admin_tool_review_stats', { p_days: days }),
+                    client.rpc('admin_tool_reviews', { p_days: days, p_limit: 200 }),
+                ]);
+                if (statsRes.error) throw statsRes.error;
+                if (listRes.error) throw listRes.error;
+                const stats = statsRes.data || [];
+                const list = listRes.data || [];
+
+                const totalReviews = stats.reduce((s, t) => s + (Number(t.reviews) || 0), 0);
+                const weighted = stats.reduce((s, t) => s + (Number(t.avg_rating) || 0) * (Number(t.reviews) || 0), 0);
+                const withComment = stats.reduce((s, t) => s + (Number(t.with_comment) || 0), 0);
+                const setNum = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+                setNum('rTotal', totalReviews.toLocaleString());
+                setNum('rAvg', totalReviews ? (weighted / totalReviews).toFixed(2) : '-');
+                setNum('rComments', withComment.toLocaleString());
+                setNum('rTools', stats.length);
+
+                if (!stats.length) {
+                    summaryWrap.innerHTML = '<div class="empty-state">No reviews recorded yet for this period.</div>';
+                } else {
+                    summaryWrap.innerHTML = '<table class="usage-table"><thead><tr><th>Tool</th><th>Avg</th><th>Reviews</th><th>Comments</th></tr></thead><tbody>' +
+                        stats.map((t) => '<tr><td>' + escapeHtml(prettyToolName(t.tool_id)) + '</td><td title="' + (Number(t.avg_rating) || 0) + '">' + starsText(t.avg_rating) + ' ' + (Number(t.avg_rating) || 0) + '</td><td>' + Number(t.reviews).toLocaleString() + '</td><td>' + Number(t.with_comment).toLocaleString() + '</td></tr>').join('') +
+                        '</tbody></table>';
+                }
+
+                const withText = list.filter((r) => r.comment && String(r.comment).trim());
+                if (!withText.length) {
+                    listWrap.innerHTML = '<div class="empty-state">No written comments in this period.</div>';
+                } else {
+                    listWrap.innerHTML = '<table class="usage-table"><thead><tr><th>When</th><th>Tool</th><th>Rating</th><th>Comment</th><th>By</th><th></th></tr></thead><tbody>' +
+                        withText.map((r) => {
+                            const when = new Date(r.created_at).toLocaleDateString();
+                            const dim = r.hidden ? ' style="opacity:.45;"' : '';
+                            const act = r.hidden ? 'Unhide' : 'Hide';
+                            return '<tr' + dim + '><td>' + escapeHtml(when) + '</td><td>' + escapeHtml(prettyToolName(r.tool_id)) + '</td><td>' + starsText(r.rating) + '</td><td style="white-space:normal;max-width:340px;">' + escapeHtml(r.comment) + '</td><td>' + escapeHtml(r.account_type || '') + '</td><td><button class="admin-button" data-hide-review="' + r.id + '" data-hidden="' + (r.hidden ? '1' : '0') + '">' + act + '</button></td></tr>';
+                        }).join('') + '</tbody></table>';
+                }
+            } catch (error) {
+                summaryWrap.innerHTML = '<div class="empty-state">Could not load reviews: ' + escapeHtml(error.message || 'error') + '</div>';
+                listWrap.innerHTML = '';
+            }
+        }
+
+        document.getElementById('reviewsList').addEventListener('click', async (event) => {
+            const btn = event.target.closest('[data-hide-review]');
+            if (!btn) return;
+            const client = EverythingConvertAuth.state && EverythingConvertAuth.state.client;
+            if (!client) return;
+            const id = btn.getAttribute('data-hide-review');
+            const makeHidden = btn.getAttribute('data-hidden') !== '1';
+            btn.disabled = true;
+            try {
+                const { error } = await client.rpc('admin_set_review_hidden', { p_id: id, p_hidden: makeHidden });
+                if (error) throw error;
+                loadReviews();
+            } catch (error) {
+                alert('Could not update review: ' + (error.message || 'error'));
+                btn.disabled = false;
+            }
+        });
 
         async function saveProfile(row) {
             const authState = EverythingConvertAuth.state;
@@ -955,6 +1054,7 @@
 
         refreshBtn.addEventListener('click', loadProfiles);
         document.getElementById('usageRange').addEventListener('change', loadToolUsage);
+        document.getElementById('reviewRange').addEventListener('change', loadReviews);
         [searchInput, planFilter, roleFilter].forEach((control) => {
             control.addEventListener('input', () => renderProfiles(filteredProfiles()));
             control.addEventListener('change', () => renderProfiles(filteredProfiles()));

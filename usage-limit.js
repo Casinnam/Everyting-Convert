@@ -585,8 +585,118 @@
       .ec-download-btn-alt:hover { background:#475569; border-color:#475569; color:#fff; }
       .ec-reset-btn { display:block; margin:1.25rem auto 0; padding:.55rem 1.4rem; background:none; border:1px solid #e2e8f0; color:#64748b; font-family:inherit; font-size:.8rem; letter-spacing:1px; text-transform:uppercase; border-radius:6px; cursor:pointer; transition:all .2s; }
       .ec-reset-btn:hover { border-color:#0f172a; color:#0f172a; }
+      .ec-review { margin:1.5rem auto 0; padding-top:1.25rem; border-top:1px solid #eef2f7; max-width:420px; }
+      .ec-review-q { font-size:.92rem; color:#475569; font-weight:600; }
+      .ec-stars { display:inline-flex; gap:6px; margin-top:.6rem; }
+      .ec-star { font-size:1.6rem; line-height:1; color:#cbd5e1; cursor:pointer; transition:color .12s, transform .12s; background:none; border:none; padding:2px; }
+      .ec-star:hover { transform:scale(1.12); }
+      .ec-star.on { color:#f59e0b; }
+      .ec-review-comment { display:none; width:100%; box-sizing:border-box; margin-top:.85rem; padding:.6rem .75rem; border:1px solid #e2e8f0; border-radius:8px; font-family:inherit; font-size:.9rem; resize:vertical; min-height:54px; }
+      .ec-review-send { display:none; margin-top:.7rem; padding:.5rem 1.4rem; background:#0f172a; color:#fff; border:none; border-radius:8px; font-family:inherit; font-weight:700; font-size:.85rem; cursor:pointer; }
+      .ec-review-send:disabled { opacity:.6; cursor:default; }
+      .ec-review-thanks { margin-top:.6rem; font-size:.9rem; color:#166534; font-weight:600; }
     `;
     document.head.appendChild(style);
+  }
+
+  // Best-effort tool id for a review: an explicit body[data-tool-id] wins;
+  // otherwise derive a clean slug from the page's directory (e.g.
+  // "/pdf to powerpoint/index.html" -> "pdf-to-powerpoint").
+  function resolveToolId() {
+    if (typeof document === 'undefined') return 'unknown';
+    const explicit = document.body && document.body.getAttribute('data-tool-id');
+    if (explicit && explicit.trim()) return explicit.trim().slice(0, 64);
+    try {
+      const parts = (window.location.pathname || '').split('/').filter(Boolean);
+      while (parts.length && /\.(html?|php)$/i.test(parts[parts.length - 1])) parts.pop();
+      const dir = parts.length ? parts[parts.length - 1] : '';
+      const slug = decodeURIComponent(dir).trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      if (slug) return slug.slice(0, 64);
+    } catch (e) { /* ignore */ }
+    return (document.title || 'unknown').slice(0, 64);
+  }
+
+  // Submit one review to the backend. Fire-and-forget; never throws to the card.
+  async function submitToolReview(toolId, rating, comment) {
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      const token = (window.EverythingConvertAuth && window.EverythingConvertAuth.state
+        && window.EverythingConvertAuth.state.session && window.EverythingConvertAuth.state.session.access_token) || '';
+      if (token) headers.Authorization = `Bearer ${token}`;
+      await fetch('/api/tool-review', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ tool_id: toolId, rating, comment: comment || '' }),
+      });
+    } catch (e) { /* swallow — a review must never disrupt the user */ }
+  }
+
+  // Build the "How was it?" star-rating widget appended under the download card.
+  // Stars + an optional short comment (revealed after the first star). On submit
+  // it POSTs to /api/tool-review and is replaced with a thank-you line. Shown at
+  // most once per tool per browser (localStorage flag).
+  function buildReviewWidget(pick) {
+    if (typeof document === 'undefined') return null;
+    const toolId = resolveToolId();
+    const flagKey = 'ec_reviewed_' + toolId;
+    try { if (localStorage.getItem(flagKey)) return null; } catch (e) { /* ignore */ }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'ec-review';
+
+    const q = document.createElement('div');
+    q.className = 'ec-review-q';
+    q.textContent = pick('How was this tool?', '이 도구는 어떠셨나요?');
+
+    const stars = document.createElement('div');
+    stars.className = 'ec-stars';
+    let chosen = 0;
+    const starEls = [];
+    function paint(n) { starEls.forEach((s, i) => s.classList.toggle('on', i < n)); }
+    for (let i = 1; i <= 5; i++) {
+      const s = document.createElement('button');
+      s.type = 'button';
+      s.className = 'ec-star';
+      s.textContent = '★';
+      s.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : ''));
+      s.addEventListener('mouseenter', () => paint(i));
+      s.addEventListener('click', () => {
+        chosen = i;
+        paint(i);
+        comment.style.display = 'block';
+        send.style.display = 'inline-block';
+      });
+      starEls.push(s);
+      stars.appendChild(s);
+    }
+    stars.addEventListener('mouseleave', () => paint(chosen));
+
+    const comment = document.createElement('textarea');
+    comment.className = 'ec-review-comment';
+    comment.maxLength = 500;
+    comment.placeholder = pick('Add a comment (optional)', '한마디 남겨주세요 (선택)');
+
+    const send = document.createElement('button');
+    send.type = 'button';
+    send.className = 'ec-review-send';
+    send.textContent = pick('Send', '보내기');
+    send.addEventListener('click', async () => {
+      if (!chosen) return;
+      send.disabled = true;
+      try { localStorage.setItem(flagKey, '1'); } catch (e) { /* ignore */ }
+      submitToolReview(toolId, chosen, comment.value);
+      wrap.innerHTML = '';
+      const thanks = document.createElement('div');
+      thanks.className = 'ec-review-thanks';
+      thanks.textContent = pick('Thanks for your feedback!', '소중한 의견 감사합니다!');
+      wrap.appendChild(thanks);
+    });
+
+    wrap.appendChild(q);
+    wrap.appendChild(stars);
+    wrap.appendChild(comment);
+    wrap.appendChild(send);
+    return wrap;
   }
 
   // opts: { mount, title, titleKo, downloadLabel, downloadLabelKo, token, download,
@@ -678,6 +788,10 @@
     card.appendChild(title);
     card.appendChild(actions);
     card.appendChild(reset);
+    if (opts.review !== false) {
+      const review = buildReviewWidget(pick);
+      if (review) card.appendChild(review);
+    }
     card.style.display = '';
     hideEls.forEach((el) => { el.style.display = 'none'; });
     return { el: card, hide() { card.style.display = 'none'; hideEls.forEach((e) => { e.style.display = ''; }); } };
