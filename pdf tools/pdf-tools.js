@@ -549,11 +549,18 @@
   }
 
   function ensureWorker() {
-    if (window.pdfjsLib && !window.__ecPdfWorkerSet) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      window.__ecPdfWorkerSet = true;
+    if (!window.pdfjsLib || window.__ecPdfWorkerSet) return;
+    const workerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    // A classic Worker can't be created from a cross-origin URL directly, so we
+    // wrap the CDN worker in a same-origin blob that importScripts() it. This is
+    // the reliable way to give pdf.js a real worker from a CDN.
+    try {
+      const blob = new Blob(["importScripts('" + workerUrl + "');"], { type: 'application/javascript' });
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
+    } catch (error) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
     }
+    window.__ecPdfWorkerSet = true;
   }
 
   // Compact a sorted list of 1-based page numbers into "1-3,5,8-9".
@@ -787,8 +794,18 @@
         state.thumbFileRef = file;
       }
     } catch (error) {
-      // Encrypted or unreadable PDF: hide the grid, manual input still works.
-      els.thumbs.hidden = true;
+      // Protected/unreadable PDF: pdf.js can't render it, but manual page entry
+      // still works. Show a hint instead of failing silently.
+      if (token !== state.thumbToken) return;
+      els.thumbs.hidden = false;
+      els.thumbs.classList.remove('mode-remove', 'mode-extract', 'mode-organize');
+      const protectedPdf = error && error.name === 'PasswordException';
+      els.thumbs.innerHTML =
+        '<p class="pdf-thumb-hint">' +
+        (protectedPdf
+          ? 'This PDF is password-protected, so a page preview can’t be shown. You can still enter page numbers below.'
+          : 'Page preview isn’t available for this PDF. You can still enter page numbers below.') +
+        '</p>';
       return;
     }
     if (token !== state.thumbToken) return;
@@ -860,7 +877,12 @@
       button.addEventListener('click', () => setMode(button.dataset.modeButton));
     });
 
-    els.dropZone.addEventListener('click', () => els.fileInput.click());
+    els.dropZone.addEventListener('click', (event) => {
+      // The "Choose File" label already opens the picker natively; without this
+      // guard the bubbled drop-zone click triggers it a second time (two dialogs).
+      if (event.target.closest('.ec-choose-file')) return;
+      els.fileInput.click();
+    });
     els.dropZone.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();

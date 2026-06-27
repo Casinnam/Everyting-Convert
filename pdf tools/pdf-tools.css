@@ -265,6 +265,16 @@
   background: #16a34a;
 }
 
+.pdf-tools-page .pdf-thumb-hint {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1.1rem 0.9rem;
+  text-align: center;
+  color: #64748b;
+  font-weight: 750;
+  font-size: 0.9rem;
+}
+
 /* Organize mode: draggable, reorderable cells */
 .pdf-tools-page .pdf-page-thumbs.mode-organize .pdf-thumb {
   cursor: grab;
