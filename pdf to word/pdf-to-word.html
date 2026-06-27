@@ -1009,6 +1009,12 @@
     <p style="margin-top: 1rem; color: var(--muted); font-size: 0.85rem;">
       <span id="resultsNote">This tool extracts text from PDFs and builds a Word document. Scanned image PDFs may require OCR for best results.</span>
     </p>
+    <div id="wordPreview" class="word-preview" style="display:none;"></div>
+    <style>
+      .word-preview { margin-top: 1rem; max-height: 480px; overflow: auto; border: 1px solid var(--border, #e2e8f0); border-radius: 10px; background: #eef2f7; }
+      .word-preview .docx-wrapper { background: #eef2f7 !important; padding: 14px !important; }
+      .word-preview-hint { padding: 1.1rem; text-align: center; color: var(--muted, #64748b); font-size: 0.9rem; }
+    </style>
     <div class="download-fallback" id="downloadFallback">
       If the download does not start in this browser, use this direct link:
       <a id="manualDownloadLink" href="#" download>Download Word file</a>
@@ -1177,6 +1183,59 @@
   function ecConfirm(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.confirm(m, o) : Promise.resolve(window.confirm(m)); }
   function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
 
+  // ── Result preview (renders the generated .docx) ─────────────────────────
+  // docx-preview is lazy-loaded only when a result is ready, so the page stays
+  // light. Both libraries claim window.docx, so we preserve the docx *builder*
+  // (used to create the .docx) and expose the preview renderer as window.docxPreview.
+  let _docxPreviewPromise = null;
+  function ecLoadScript(src) {
+    return new Promise(function (res, rej) { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = function () { rej(new Error('Failed to load ' + src)); }; document.head.appendChild(s); });
+  }
+  function ensureDocxPreview() {
+    if (window.docxPreview) return Promise.resolve(window.docxPreview);
+    if (!_docxPreviewPromise) {
+      _docxPreviewPromise = (async function () {
+        if (!window.JSZip) await ecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+        const builder = window.docx;                 // the docx *creation* library
+        await ecLoadScript('https://cdn.jsdelivr.net/npm/docx-preview@0.3.5/dist/docx-preview.min.js');
+        window.docxPreview = window.docx;            // docx-preview overwrote window.docx
+        window.docx = builder;                       // restore the builder for future conversions
+        return window.docxPreview;
+      })();
+    }
+    return _docxPreviewPromise;
+  }
+  function clearWordPreview() {
+    const box = document.getElementById('wordPreview');
+    if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+  }
+  async function renderWordPreview(blob) {
+    const box = document.getElementById('wordPreview');
+    if (!box || !blob) return;
+    box.style.display = '';
+    box.innerHTML = '<div class="word-preview-hint">Rendering preview…</div>';
+    try {
+      const dp = await ensureDocxPreview();
+      const buf = await blob.arrayBuffer();
+      const inner = document.createElement('div');
+      box.innerHTML = '';
+      box.appendChild(inner);
+      await dp.renderAsync(buf, inner, null, {
+        className: 'docx', inWrapper: true, ignoreWidth: false, ignoreHeight: false,
+        breakPages: true, renderHeaders: true, renderFooters: true, useBase64URL: true
+      });
+      // Scale the fixed-width docx pages down to fit the preview box (zoom reflows
+      // so there's no leftover whitespace).
+      try {
+        const natural = inner.scrollWidth;
+        const avail = box.clientWidth - 2;
+        if (natural > avail && natural > 0) inner.style.zoom = (avail / natural);
+      } catch (e) { /* fit is best-effort */ }
+    } catch (e) {
+      box.innerHTML = '<div class="word-preview-hint">Preview unavailable — your download is ready below.</div>';
+    }
+  }
+
   let pdfDoc = null;
   let currentFile = null;
   let currentWordBlob = null;
@@ -1272,6 +1331,7 @@
     document.getElementById('progressSection').classList.add('visible');
     document.getElementById('resultsSection').classList.remove('visible');
     document.getElementById('resetArea').classList.remove('visible');
+    clearWordPreview();
 
     try {
       const blob = conversionMode === 'layout'
@@ -1293,6 +1353,7 @@
         document.getElementById('pageCount').textContent = pages.length;
         updateResultsCopy(conversionMode, pages.length);
         document.getElementById('resetArea').classList.add('visible');
+        renderWordPreview(currentWordBlob);
       }, 400);
 
     } catch (e) {
@@ -1606,6 +1667,7 @@
     document.getElementById('resultsSection').classList.remove('visible');
     document.getElementById('downloadFallback').classList.remove('visible');
     document.getElementById('resetArea').classList.remove('visible');
+    clearWordPreview();
     document.getElementById('pageRange').value = 'all';
     document.getElementById('customPageInput').style.display = 'none';
     document.getElementById('includePageNum').checked = true;
@@ -1706,6 +1768,7 @@
             const rn = el('resultsNote'); if (rn) rn.textContent = 'Editable Word with the original layout (Adobe).' + (bal ? ' Credits left: ' + bal + '.' : '');
             const rs = el('resultsSection'); if (rs) rs.classList.add('visible');
             const ra = el('resetArea'); if (ra) ra.classList.add('visible');
+            if (typeof renderWordPreview === 'function') renderWordPreview(blob);
           }, 400);
           hqDone();
         } else {
