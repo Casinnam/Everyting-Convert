@@ -114,6 +114,11 @@
   const state = {
     mode: 'merge',
     files: [],
+    selectedPages: new Set(),
+    pdfjsDoc: null,
+    thumbFileRef: null,
+    thumbToken: 0,
+    thumbObserver: null,
   };
 
   const els = {};
@@ -330,6 +335,10 @@
     }
 
     els.options.innerHTML = html;
+
+    if (state.mode === 'remove' || state.mode === 'extract') {
+      wireRangeInput();
+    }
   }
 
   function setMode(nextMode) {
@@ -362,6 +371,8 @@
     const url = new URL(window.location.href);
     url.searchParams.set('mode', state.mode);
     window.history.replaceState({}, '', url);
+
+    refreshThumbs();
   }
 
   function addFiles(fileList) {
@@ -375,8 +386,12 @@
     }
 
     state.files = modes[state.mode].multiple ? incoming : incoming.slice(0, 1);
+    // A new file invalidates any prior page selection and cached pdf.js doc.
+    state.selectedPages = new Set();
+    state.thumbFileRef = null;
     renderFileList();
     resetResultCard();
+    refreshThumbs();
     setStatus(`${state.files.length} PDF file${state.files.length > 1 ? 's' : ''} ready.`, 'success');
   }
 
@@ -513,11 +528,193 @@
     }
   }
 
+  // ---- Page thumbnail preview (Remove / Extract) ----------------------------
+  // These modes let the user pick pages visually instead of typing numbers.
+  // Clicking a thumbnail toggles selection and rewrites the page-range input;
+  // typing in the input re-highlights the thumbnails (two-way sync).
+
+  function selectableMode() {
+    return state.mode === 'remove' || state.mode === 'extract';
+  }
+
+  function ensureWorker() {
+    if (window.pdfjsLib && !window.__ecPdfWorkerSet) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      window.__ecPdfWorkerSet = true;
+    }
+  }
+
+  // Compact a sorted list of 1-based page numbers into "1-3,5,8-9".
+  function formatRanges(pages) {
+    if (!pages.length) return '';
+    const parts = [];
+    let start = pages[0];
+    let prev = pages[0];
+    for (let i = 1; i <= pages.length; i += 1) {
+      const cur = pages[i];
+      if (cur === prev + 1) { prev = cur; continue; }
+      parts.push(start === prev ? `${start}` : `${start}-${prev}`);
+      start = cur;
+      prev = cur;
+    }
+    return parts.join(',');
+  }
+
+  // Lenient parse (ignores invalid/out-of-range bits) for live input → selection.
+  function parseSelection(value, pageCount) {
+    const set = new Set();
+    (value || '').split(',').forEach((raw) => {
+      const part = raw.trim();
+      const range = part.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (range) {
+        let s = Number(range[1]);
+        let e = Number(range[2]);
+        if (s > e) [s, e] = [e, s];
+        for (let p = s; p <= e; p += 1) if (p >= 1 && p <= pageCount) set.add(p);
+      } else if (/^\d+$/.test(part)) {
+        const p = Number(part);
+        if (p >= 1 && p <= pageCount) set.add(p);
+      }
+    });
+    return set;
+  }
+
+  function syncInputFromSelection() {
+    const input = qs('#pageRange');
+    if (input) input.value = formatRanges([...state.selectedPages].sort((a, b) => a - b));
+  }
+
+  function applySelectionHighlight() {
+    if (!els.thumbs) return;
+    els.thumbs.querySelectorAll('.pdf-thumb').forEach((cell) => {
+      cell.classList.toggle('selected', state.selectedPages.has(Number(cell.dataset.page)));
+    });
+  }
+
+  function togglePage(pageNum) {
+    if (state.selectedPages.has(pageNum)) state.selectedPages.delete(pageNum);
+    else state.selectedPages.add(pageNum);
+    syncInputFromSelection();
+    applySelectionHighlight();
+  }
+
+  function wireRangeInput() {
+    const input = qs('#pageRange');
+    if (!input) return;
+    input.addEventListener('input', () => {
+      const count = state.pdfjsDoc ? state.pdfjsDoc.numPages : 1e9;
+      state.selectedPages = parseSelection(input.value, count);
+      applySelectionHighlight();
+    });
+  }
+
+  function clearThumbs() {
+    state.thumbToken += 1;
+    if (state.thumbObserver) {
+      state.thumbObserver.disconnect();
+      state.thumbObserver = null;
+    }
+    if (els.thumbs) {
+      els.thumbs.hidden = true;
+      els.thumbs.innerHTML = '';
+    }
+  }
+
+  function refreshThumbs() {
+    if (selectableMode() && state.files.length && window.pdfjsLib) {
+      renderThumbGrid();
+    } else {
+      clearThumbs();
+    }
+  }
+
+  async function renderThumbCanvas(cell, pageNum, token) {
+    try {
+      const page = await state.pdfjsDoc.getPage(pageNum);
+      if (token !== state.thumbToken) return;
+      const base = page.getViewport({ scale: 1 });
+      const scale = (150 * (window.devicePixelRatio || 1)) / base.width;
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+      if (token !== state.thumbToken) return;
+      const skeleton = cell.querySelector('.pdf-thumb-skeleton');
+      if (skeleton) skeleton.replaceWith(canvas);
+      else cell.prepend(canvas);
+    } catch (error) {
+      /* keep the skeleton if a single page fails to render */
+    }
+  }
+
+  function setupLazyRender(token) {
+    if (state.thumbObserver) state.thumbObserver.disconnect();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        renderThumbCanvas(entry.target, Number(entry.target.dataset.page), token);
+      });
+    }, { root: els.thumbs, rootMargin: '250px' });
+    state.thumbObserver = observer;
+    els.thumbs.querySelectorAll('.pdf-thumb').forEach((cell) => observer.observe(cell));
+  }
+
+  async function renderThumbGrid() {
+    const token = ++state.thumbToken;
+    const file = state.files[0];
+    if (!file) { clearThumbs(); return; }
+
+    els.thumbs.hidden = false;
+    els.thumbs.innerHTML = '';
+    els.thumbs.classList.toggle('mode-remove', state.mode === 'remove');
+    els.thumbs.classList.toggle('mode-extract', state.mode === 'extract');
+
+    try {
+      if (state.thumbFileRef !== file) {
+        ensureWorker();
+        const bytes = await file.arrayBuffer();
+        if (token !== state.thumbToken) return;
+        state.pdfjsDoc = await window.pdfjsLib.getDocument({ data: bytes }).promise;
+        state.thumbFileRef = file;
+      }
+    } catch (error) {
+      // Encrypted or unreadable PDF: hide the grid, manual input still works.
+      els.thumbs.hidden = true;
+      return;
+    }
+    if (token !== state.thumbToken) return;
+
+    const markIcon = state.mode === 'remove' ? 'fa-xmark' : 'fa-check';
+    const fragment = document.createDocumentFragment();
+    for (let n = 1; n <= state.pdfjsDoc.numPages; n += 1) {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'pdf-thumb';
+      cell.dataset.page = String(n);
+      cell.title = `Page ${n}`;
+      cell.innerHTML =
+        '<div class="pdf-thumb-skeleton"></div>' +
+        `<span class="pdf-thumb-mark"><i class="fa-solid ${markIcon}"></i></span>` +
+        `<span class="pdf-thumb-num">${n}</span>`;
+      cell.addEventListener('click', () => togglePage(n));
+      fragment.appendChild(cell);
+    }
+    els.thumbs.appendChild(fragment);
+
+    syncInputFromSelection();
+    applySelectionHighlight();
+    setupLazyRender(token);
+  }
+
   function init() {
     els.dropZone = qs('#dropZone');
     els.fileInput = qs('#fileInput');
     els.fileList = qs('#fileList');
     els.options = qs('#optionsPanel');
+    els.thumbs = qs('#pageThumbs');
     els.convert = qs('#convertBtn');
     els.status = qs('#statusText');
 
