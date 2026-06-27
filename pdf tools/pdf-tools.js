@@ -115,6 +115,7 @@
     mode: 'merge',
     files: [],
     selectedPages: new Set(),
+    pageOrder: [],
     pdfjsDoc: null,
     thumbFileRef: null,
     thumbToken: 0,
@@ -336,7 +337,7 @@
 
     els.options.innerHTML = html;
 
-    if (state.mode === 'remove' || state.mode === 'extract') {
+    if (state.mode === 'remove' || state.mode === 'extract' || state.mode === 'organize') {
       wireRangeInput();
     }
   }
@@ -386,8 +387,9 @@
     }
 
     state.files = modes[state.mode].multiple ? incoming : incoming.slice(0, 1);
-    // A new file invalidates any prior page selection and cached pdf.js doc.
+    // A new file invalidates any prior page selection/order and cached pdf.js doc.
     state.selectedPages = new Set();
+    state.pageOrder = [];
     state.thumbFileRef = null;
     renderFileList();
     resetResultCard();
@@ -528,13 +530,22 @@
     }
   }
 
-  // ---- Page thumbnail preview (Remove / Extract) ----------------------------
-  // These modes let the user pick pages visually instead of typing numbers.
-  // Clicking a thumbnail toggles selection and rewrites the page-range input;
-  // typing in the input re-highlights the thumbnails (two-way sync).
+  // ---- Page thumbnail preview (Remove / Extract / Organize) -----------------
+  // These modes let the user work with pages visually instead of typing numbers.
+  // Remove/Extract: clicking a thumbnail toggles selection and rewrites the
+  // page-range input. Organize: dragging (or ◀ ▶) reorders thumbnails and
+  // rewrites the page-order input. All stay in two-way sync with the input.
 
   function selectableMode() {
     return state.mode === 'remove' || state.mode === 'extract';
+  }
+
+  function organizeMode() {
+    return state.mode === 'organize';
+  }
+
+  function previewMode() {
+    return selectableMode() || organizeMode();
   }
 
   function ensureWorker() {
@@ -599,14 +610,108 @@
     applySelectionHighlight();
   }
 
-  function wireRangeInput() {
-    const input = qs('#pageRange');
-    if (!input) return;
-    input.addEventListener('input', () => {
-      const count = state.pdfjsDoc ? state.pdfjsDoc.numPages : 1e9;
-      state.selectedPages = parseSelection(input.value, count);
-      applySelectionHighlight();
+  // ---- Organize: drag-to-reorder -------------------------------------------
+  // The grid's visual order is the new page order. Dragging (or the ◀ ▶
+  // buttons) rewrites state.pageOrder and the #pageOrder input; typing in the
+  // input re-orders the existing thumbnails without re-rendering.
+
+  // Order-preserving parse: "3,1,2,4-6" -> [3,1,2,4,5,6] (keeps duplicates).
+  function parseOrder(value, pageCount) {
+    const order = [];
+    (value || '').split(',').forEach((raw) => {
+      const part = raw.trim();
+      const range = part.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (range) {
+        const s = Number(range[1]);
+        const e = Number(range[2]);
+        const step = s <= e ? 1 : -1;
+        for (let p = s; step > 0 ? p <= e : p >= e; p += step) {
+          if (p >= 1 && p <= pageCount) order.push(p);
+        }
+      } else if (/^\d+$/.test(part)) {
+        const p = Number(part);
+        if (p >= 1 && p <= pageCount) order.push(p);
+      }
     });
+    return order;
+  }
+
+  function syncOrderInput() {
+    const input = qs('#pageOrder');
+    if (input) input.value = formatRanges(state.pageOrder);
+  }
+
+  // Rebuild state.pageOrder from the live DOM order of thumbnail cells.
+  function readOrderFromDom() {
+    state.pageOrder = [...els.thumbs.querySelectorAll('.pdf-thumb')]
+      .map((cell) => Number(cell.dataset.page));
+    syncOrderInput();
+  }
+
+  // Move existing cells to match state.pageOrder (no canvas re-render).
+  function applyOrganizeOrder() {
+    if (!els.thumbs) return;
+    const map = new Map();
+    els.thumbs.querySelectorAll('.pdf-thumb').forEach((cell) => {
+      map.set(Number(cell.dataset.page), cell);
+    });
+    state.pageOrder.forEach((page) => {
+      const cell = map.get(page);
+      if (cell) els.thumbs.appendChild(cell);
+    });
+  }
+
+  function moveCell(cell, direction) {
+    if (direction < 0 && cell.previousElementSibling) {
+      els.thumbs.insertBefore(cell, cell.previousElementSibling);
+    } else if (direction > 0 && cell.nextElementSibling) {
+      els.thumbs.insertBefore(cell.nextElementSibling, cell);
+    }
+    readOrderFromDom();
+  }
+
+  function setupOrganizeDrag(token) {
+    let dragged = null;
+    els.thumbs.querySelectorAll('.pdf-thumb').forEach((cell) => {
+      cell.draggable = true;
+      cell.addEventListener('dragstart', () => {
+        dragged = cell;
+        cell.classList.add('dragging');
+      });
+      cell.addEventListener('dragend', () => {
+        cell.classList.remove('dragging');
+        dragged = null;
+        if (token === state.thumbToken) readOrderFromDom();
+      });
+      cell.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        if (!dragged || dragged === cell) return;
+        const box = cell.getBoundingClientRect();
+        const before = event.clientX < box.left + box.width / 2;
+        els.thumbs.insertBefore(dragged, before ? cell : cell.nextElementSibling);
+      });
+    });
+  }
+
+  function wireRangeInput() {
+    if (selectableMode()) {
+      const input = qs('#pageRange');
+      if (!input) return;
+      input.addEventListener('input', () => {
+        const count = state.pdfjsDoc ? state.pdfjsDoc.numPages : 1e9;
+        state.selectedPages = parseSelection(input.value, count);
+        applySelectionHighlight();
+      });
+    } else if (organizeMode()) {
+      const input = qs('#pageOrder');
+      if (!input) return;
+      input.addEventListener('input', () => {
+        const count = state.pdfjsDoc ? state.pdfjsDoc.numPages : 0;
+        if (!count) return;
+        state.pageOrder = parseOrder(input.value, count);
+        applyOrganizeOrder();
+      });
+    }
   }
 
   function clearThumbs() {
@@ -622,7 +727,7 @@
   }
 
   function refreshThumbs() {
-    if (selectableMode() && state.files.length && window.pdfjsLib) {
+    if (previewMode() && state.files.length && window.pdfjsLib) {
       renderThumbGrid();
     } else {
       clearThumbs();
@@ -671,6 +776,7 @@
     els.thumbs.innerHTML = '';
     els.thumbs.classList.toggle('mode-remove', state.mode === 'remove');
     els.thumbs.classList.toggle('mode-extract', state.mode === 'extract');
+    els.thumbs.classList.toggle('mode-organize', state.mode === 'organize');
 
     try {
       if (state.thumbFileRef !== file) {
@@ -687,9 +793,41 @@
     }
     if (token !== state.thumbToken) return;
 
+    const pageCount = state.pdfjsDoc.numPages;
+
+    if (organizeMode()) {
+      // Start from the natural order (or a valid retained order) and let the
+      // user drag pages around; the input is prefilled so it works immediately.
+      if (state.pageOrder.length !== pageCount) {
+        state.pageOrder = Array.from({ length: pageCount }, (_, i) => i + 1);
+      }
+      const fragment = document.createDocumentFragment();
+      state.pageOrder.forEach((page) => {
+        const cell = document.createElement('div');
+        cell.className = 'pdf-thumb';
+        cell.dataset.page = String(page);
+        cell.title = `Page ${page} — drag to reorder`;
+        cell.innerHTML =
+          '<div class="pdf-thumb-skeleton"></div>' +
+          '<span class="pdf-thumb-num">' + page + '</span>' +
+          '<span class="pdf-thumb-move">' +
+            '<button type="button" class="pdf-move-left" aria-label="Move left"><i class="fa-solid fa-chevron-left"></i></button>' +
+            '<button type="button" class="pdf-move-right" aria-label="Move right"><i class="fa-solid fa-chevron-right"></i></button>' +
+          '</span>';
+        cell.querySelector('.pdf-move-left').addEventListener('click', () => moveCell(cell, -1));
+        cell.querySelector('.pdf-move-right').addEventListener('click', () => moveCell(cell, 1));
+        fragment.appendChild(cell);
+      });
+      els.thumbs.appendChild(fragment);
+      syncOrderInput();
+      setupOrganizeDrag(token);
+      setupLazyRender(token);
+      return;
+    }
+
     const markIcon = state.mode === 'remove' ? 'fa-xmark' : 'fa-check';
     const fragment = document.createDocumentFragment();
-    for (let n = 1; n <= state.pdfjsDoc.numPages; n += 1) {
+    for (let n = 1; n <= pageCount; n += 1) {
       const cell = document.createElement('button');
       cell.type = 'button';
       cell.className = 'pdf-thumb';

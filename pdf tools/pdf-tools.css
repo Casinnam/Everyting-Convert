@@ -265,6 +265,51 @@
   background: #16a34a;
 }
 
+/* Organize mode: draggable, reorderable cells */
+.pdf-tools-page .pdf-page-thumbs.mode-organize .pdf-thumb {
+  cursor: grab;
+}
+
+.pdf-tools-page .pdf-page-thumbs.mode-organize .pdf-thumb:active {
+  cursor: grabbing;
+}
+
+.pdf-tools-page .pdf-page-thumbs.mode-organize .pdf-thumb.dragging {
+  opacity: 0.45;
+  border-color: rgba(37, 99, 235, 0.5);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+}
+
+.pdf-tools-page .pdf-thumb-move {
+  display: none;
+  gap: 0.3rem;
+}
+
+.pdf-tools-page .pdf-page-thumbs.mode-organize .pdf-thumb-move {
+  display: flex;
+}
+
+.pdf-tools-page .pdf-thumb-move button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 7px;
+  background: #fff;
+  color: #475569;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.pdf-tools-page .pdf-thumb-move button:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: #1e3a8a;
+}
+
 @media (max-width: 760px) {
   .pdf-tools-page .pdf-tools-layout {
     grid-template-columns: 1fr;
