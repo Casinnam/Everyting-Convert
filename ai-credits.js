@@ -57,6 +57,14 @@
     return '';
   }
 
+  // Reliable async login check. The sync isLoggedIn() reads only the auth-state
+  // snapshot, which isn't hydrated yet right after a page load or a post-login
+  // redirect — so a logged-in user can be wrongly bounced to the login screen
+  // (and then bounced back by auth.html, looping). Prefer this for nav gates.
+  async function ensureLoggedIn() {
+    return !!(await resolveToken());
+  }
+
   // Returns the user's credit balance (number), or null when logged out / on error.
   // Calls the ai_credit_balance RPC over REST with the explicitly resolved user
   // token (same reliable pattern as redeem/spend). client.rpc() did not always
@@ -184,5 +192,5 @@
     }
   }
 
-  window.EverythingConvertCredits = { getBalance, redeem, spend, buyPack, isLoggedIn, PACKS };
+  window.EverythingConvertCredits = { getBalance, redeem, spend, buyPack, isLoggedIn, ensureLoggedIn, PACKS };
 })();

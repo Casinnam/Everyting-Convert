@@ -334,7 +334,7 @@
   <script src="../supabase-config.js"></script>
   <script src="../ec-modal.js?v=ecmodal-20260626a"></script>
   <script src="../auth.js?v=auth-20260616c"></script>
-  <script src="../ai-credits.js?v=credits-20260613d"></script>
+  <script src="../ai-credits.js?v=credits-20260627a"></script>
   <script src="../usage-limit.js?v=usage-20260626a"></script>
   <script src="../tools-menu.js?v=nav-20260620d"></script>
   <script src="../language-menu.js?v=lang-20260620a"></script><script src="../header-language.js?v=headerlang-20260616a"></script>
@@ -598,7 +598,12 @@
 
     async function runAi(pages) {
       const credits = window.EverythingConvertCredits;
-      if (!credits || !credits.isLoggedIn()) {
+      // Use the reliable async login check; the sync isLoggedIn() can read a
+      // not-yet-hydrated snapshot right after a post-login redirect and bounce a
+      // logged-in user back to auth.html, which then redirects here → an endless
+      // login ⇄ page loop. Fall back to the sync check for any stale ai-credits.js.
+      const loggedIn = credits && (credits.ensureLoggedIn ? await credits.ensureLoggedIn() : credits.isLoggedIn());
+      if (!loggedIn) {
         if (await ecConfirm('AI text slides need an account (you get 10 free credits). Go to login now?')) {
           window.location.href = '../auth.html?next=' + encodeURIComponent('pdf to powerpoint/pdf-to-powerpoint.html');
         }
