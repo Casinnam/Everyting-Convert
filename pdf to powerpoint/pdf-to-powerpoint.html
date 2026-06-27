@@ -461,6 +461,38 @@
 
     function downloadName() { return (pdfName.replace(/\.pdf$/i, '') || 'presentation') + '.pptx'; }
 
+    // pptxgenjs builds the .pptx with JSZip, which emits explicit directory
+    // entries and does NOT guarantee [Content_Types].xml is the first part.
+    // Strict OPC readers (notably PowerPoint 2007/2010) then refuse the file with
+    // "unreadable content" and offer to repair it. Re-pack the zip the way native
+    // Office does: [Content_Types].xml first, no directory entries.
+    async function normalizePptxBlob(blob) {
+      try {
+        const ul = window.EverythingConvertUsageLimit;
+        const JSZipCtor = window.JSZip || (ul && ul.loadJSZip ? await ul.loadJSZip() : null);
+        if (!JSZipCtor) return blob; // can't normalize — ship the original rather than fail
+        const src = await JSZipCtor.loadAsync(blob);
+        const CT = '[Content_Types].xml';
+        const names = [];
+        src.forEach((path, file) => { if (!file.dir) names.push(path); });
+        // [Content_Types].xml first; everything else keeps pptxgenjs's order (stable sort).
+        names.sort((a, b) => (a === CT ? -1 : b === CT ? 1 : 0));
+        const out = new JSZipCtor();
+        for (const path of names) {
+          const data = await src.file(path).async('uint8array');
+          out.file(path, data, { createFolders: false }); // no implicit folder entries
+        }
+        return await out.generateAsync({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+          compression: 'DEFLATE',
+          compressionOptions: { level: 6 },
+        });
+      } catch (e) {
+        return blob; // never block the download on a normalization hiccup
+      }
+    }
+
     // ── Free: one picture slide per page ──
     async function runImage(pages) {
       const pptx = new PptxGenJS();
@@ -478,7 +510,7 @@
       }
       setProgress('Building PowerPoint…', 96);
       // Free path: defer the actual download behind the daily limit gate.
-      const blob = await pptx.write({ outputType: 'blob' });
+      const blob = await normalizePptxBlob(await pptx.write({ outputType: 'blob' }));
       presentResult(blob, downloadName());
     }
 
@@ -606,7 +638,10 @@
         addTextSlide(pptx, pageNum, full.data.result);
       }
       setProgress('Building PowerPoint…', 96);
-      await pptx.writeFile({ fileName: downloadName() });
+      const blob = await normalizePptxBlob(await pptx.write({ outputType: 'blob' }));
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = downloadName(); a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
       return true;
     }
 
