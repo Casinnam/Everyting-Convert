@@ -13,10 +13,10 @@ assert(
 
 // Cost is computed server-side, never trusted from the client.
 assert(
-  fn.includes("if (tool === 'remove-bg') return 25;") &&
+  fn.includes("if (tool === 'remove-bg') return 15;") &&
     fn.includes("if (tool === 'transcription')") &&
     fn.includes('Math.max(5, minutes)'),
-  'ai-redeem-credit should price remove-bg at 25 and transcription at 1/min (min 5), computed server-side.',
+  'ai-redeem-credit should price remove-bg at 15 and transcription at 1/min (min 5), computed server-side.',
 );
 
 // Spends atomically and only unlocks the job when the spend is allowed.

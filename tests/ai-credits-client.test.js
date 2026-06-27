@@ -32,7 +32,7 @@ assert(
   'pricing.html should render the four credit packs, a balance line, and load ai-credits.js.',
 );
 assert(
-  pricing.includes('25 credits per HD image') && pricing.includes('1 credit per minute'),
+  pricing.includes('15 credits per HD image') && pricing.includes('1 credit per minute'),
   'pricing.html should explain what credits unlock.',
 );
 

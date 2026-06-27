@@ -7,7 +7,7 @@
 // POST body (JSON): { job_id: string }   + Bearer JWT
 //
 // Credit cost per tool:
-//   remove-bg      → 25 credits (flat)
+//   remove-bg      → 15 credits (flat)
 //   transcription  → 1 credit per started minute, minimum 5
 //
 // Required secrets:
@@ -92,7 +92,7 @@ async function spendCredits(userId: string, cost: number, tool: string, ref: str
 // Credit cost for a job, derived server-side from its tool and preview data.
 function creditCost(job: Record<string, unknown>): number {
   const tool = job.tool as string;
-  if (tool === 'remove-bg') return 25;
+  if (tool === 'remove-bg') return 15;
   if (tool === 'transcription') {
     const preview = (job.preview_data ?? {}) as Record<string, unknown>;
     const seconds = Number(preview.total_duration ?? 0);

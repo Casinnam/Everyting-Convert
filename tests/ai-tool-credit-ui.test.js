@@ -29,9 +29,9 @@ Object.keys(pages).forEach((rel) => {
   assert(html.includes('id="payBtn"'), `${rel} should keep the one-time Stripe pay button.`);
 });
 
-// Background removal is a flat 25-credit cost on the client display.
+// Background removal is a flat 15-credit cost on the client display.
 const bg = fs.readFileSync(path.join(root, 'ai tools/background-remover/index.html'), 'utf8');
-assert(bg.includes('CREDIT_COST = 25'), 'background-remover should show a 25-credit cost.');
+assert(bg.includes('CREDIT_COST = 15'), 'background-remover should show a 15-credit cost.');
 
 // Transcription cost scales with duration (1/min, min 5).
 const tr = fs.readFileSync(path.join(root, 'ai tools/transcription/index.html'), 'utf8');
