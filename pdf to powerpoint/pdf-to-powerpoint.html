@@ -461,11 +461,31 @@
 
     function downloadName() { return (pdfName.replace(/\.pdf$/i, '') || 'presentation') + '.pptx'; }
 
-    // pptxgenjs builds the .pptx with JSZip, which emits explicit directory
-    // entries and does NOT guarantee [Content_Types].xml is the first part.
-    // Strict OPC readers (notably PowerPoint 2007/2010) then refuse the file with
-    // "unreadable content" and offer to repair it. Re-pack the zip the way native
-    // Office does: [Content_Types].xml first, no directory entries.
+    // pptxgenjs emits <p:presentation>'s children out of schema order — it puts
+    // <p:sldIdLst> BEFORE <p:notesMasterIdLst>, but ECMA-376 CT_Presentation
+    // requires notesMasterIdLst first. Strict readers (PowerPoint 2007/2010)
+    // reject the out-of-order sequence with "unreadable content" + a repair
+    // prompt. Reorder the root's children to the canonical schema sequence.
+    function fixPresentationOrder(xml) {
+      try {
+        const ORDER = ['sldMasterIdLst', 'notesMasterIdLst', 'handoutMasterIdLst', 'sldIdLst', 'sldSz', 'notesSz', 'smartTags', 'embeddedFontLst', 'custShowLst', 'photoAlbum', 'custDataLst', 'kinsoku', 'defaultTextStyle', 'modifyVerifier', 'extLst'];
+        const doc = new DOMParser().parseFromString(xml, 'application/xml');
+        if (doc.getElementsByTagName('parsererror').length) return xml;
+        const root = doc.documentElement;
+        const kids = Array.from(root.children);
+        const rank = (el) => { const i = ORDER.indexOf(el.localName); return i === -1 ? ORDER.length : i; };
+        const sorted = kids.slice().sort((a, b) => rank(a) - rank(b)); // stable
+        if (kids.every((el, i) => el === sorted[i])) return xml; // already in order
+        sorted.forEach((el) => root.appendChild(el)); // appendChild moves nodes into order
+        const ser = new XMLSerializer().serializeToString(doc);
+        return ser.startsWith('<?xml') ? ser : '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n' + ser;
+      } catch (e) { return xml; }
+    }
+
+    // pptxgenjs also builds the .pptx with JSZip, which emits explicit directory
+    // entries and does NOT guarantee [Content_Types].xml is the first part — also
+    // disliked by strict OPC readers. Re-pack the zip the native way too:
+    // [Content_Types].xml first, no directory entries, and the fixed presentation.
     async function normalizePptxBlob(blob) {
       try {
         const ul = window.EverythingConvertUsageLimit;
@@ -479,6 +499,10 @@
         names.sort((a, b) => (a === CT ? -1 : b === CT ? 1 : 0));
         const out = new JSZipCtor();
         for (const path of names) {
+          if (path === 'ppt/presentation.xml') {
+            out.file(path, fixPresentationOrder(await src.file(path).async('string')), { createFolders: false });
+            continue;
+          }
           const data = await src.file(path).async('uint8array');
           out.file(path, data, { createFolders: false }); // no implicit folder entries
         }
