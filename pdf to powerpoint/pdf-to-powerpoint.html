@@ -203,6 +203,7 @@
           <label for="ppMode" data-ko="변환 모드">Conversion mode</label>
           <select id="ppMode">
             <option value="image" data-ko="이미지 슬라이드 (무료)">Image slides (free)</option>
+            <option value="text" data-ko="편집 가능한 텍스트 슬라이드 (무료)">Editable text slides (free)</option>
             <option value="ai" data-ko="AI 편집 텍스트 슬라이드 (페이지당 2크레딧)">AI editable-text slides (2 credits/page)</option>
           </select>
         </div>
@@ -365,11 +366,21 @@
     function hideProgress() { progress.classList.remove('show'); progressFill.style.width = '0'; }
 
     function updateModeNote() {
-      const ai = ppMode.value === 'ai';
-      modeNote.classList.toggle('ai', ai);
-      modeNote.textContent = ai
-        ? 'AI reads each page and builds editable text slides — best for documents you want to edit. 2 credits per page, charged only after you confirm. New accounts get 10 free credits.'
-        : 'Each PDF page becomes a high-resolution picture slide. Free and processed in your browser.';
+      const m = ppMode.value;
+      modeNote.classList.toggle('ai', m === 'ai');
+      let en, ko;
+      if (m === 'ai') {
+        en = 'AI reads each page image and builds editable text slides — best for scanned or picture-based PDFs (e.g. NotebookLM). 2 credits per page, charged only after you confirm. New accounts get 10 free credits.';
+        ko = 'AI가 각 페이지 이미지를 읽어 편집 가능한 텍스트 슬라이드를 만듭니다 — 스캔본이나 이미지형 PDF(예: NotebookLM)에 적합. 페이지당 2크레딧, 확인 후에만 차감. 신규 계정은 10크레딧 무료.';
+      } else if (m === 'text') {
+        en = 'Rebuilds each page as editable text boxes placed like the original — free, in your browser. Works only for PDFs that already contain real text (not scanned/image PDFs).';
+        ko = '각 페이지를 원본 위치 그대로의 편집 가능한 텍스트 상자로 재구성합니다 — 무료, 브라우저에서 처리. 실제 텍스트가 들어있는 PDF에서만 동작(스캔·이미지 PDF는 불가).';
+      } else {
+        en = 'Each PDF page becomes a high-resolution picture slide — an exact copy. Free and processed in your browser.';
+        ko = '각 PDF 페이지가 고해상도 그림 슬라이드(원본 그대로)가 됩니다. 무료이며 브라우저에서 처리됩니다.';
+      }
+      modeNote.textContent = en;
+      modeNote.setAttribute('data-ko', ko);
       // Let tool-language re-apply data-ko/i18n on the freshly set text.
       try { window.dispatchEvent(new CustomEvent('everything-language-change')); } catch (e) {}
     }
@@ -547,6 +558,74 @@
       } else { doSave(); }
     }
 
+    // ── Free: editable text slides rebuilt from the PDF's own text layer ──
+    // Image/scanned PDFs (e.g. NotebookLM exports each slide as one flat image)
+    // carry no extractable text, so this only works when a text layer exists.
+    async function hasTextLayer(pages) {
+      for (const pn of pages.slice(0, 3)) {
+        const page = await pdfDoc.getPage(pn);
+        const tc = await page.getTextContent();
+        if (tc.items.some((it) => (it.str || '').trim())) return true;
+      }
+      return false;
+    }
+
+    // Group pdf.js text items into lines and return positioned, editable boxes
+    // (inches, top-left origin) that mirror the original layout.
+    function buildLines(items, pageW, pageH) {
+      const median = (a) => { a = a.slice().sort((x, y) => x - y); return a[Math.floor(a.length / 2)] || 12; };
+      const arr = items
+        .map((it) => { const t = it.transform; const sz = Math.hypot(t[2], t[3]) || it.height || 12; return { str: it.str || '', x: t[4], y: t[5], w: it.width || 0, sz }; })
+        .filter((it) => it.str.length);
+      arr.sort((a, b) => (b.y - a.y) || (a.x - b.x)); // top-to-bottom, then left-to-right
+      const lines = []; let cur = null;
+      for (const it of arr) {
+        if (!cur || Math.abs(it.y - cur.y0) > Math.max(2, it.sz * 0.6)) { cur = { y0: it.y, items: [it] }; lines.push(cur); }
+        else cur.items.push(it);
+      }
+      return lines.map((L) => {
+        L.items.sort((a, b) => a.x - b.x);
+        let text = '', prevR = null;
+        for (const it of L.items) {
+          if (prevR !== null) { const gap = it.x - prevR; if (gap > it.sz * 0.25 && !text.endsWith(' ')) text += ' '; }
+          text += it.str; prevR = it.x + it.w;
+        }
+        const minX = L.items[0].x, sz = median(L.items.map((i) => i.sz));
+        const topPt = pageH - L.y0 - sz * 0.9; // baseline (bottom-up) → box top (top-down)
+        return { text: xmlSafe(text.trim()), xIn: minX / 72, yIn: Math.max(0, topPt / 72), wIn: Math.max(0.5, (pageW - minX) / 72 - 0.05), hIn: Math.max(0.25, sz * 1.35 / 72), sz: Math.max(6, Math.round(sz)) };
+      }).filter((L) => L.text);
+    }
+
+    async function runText(pages) {
+      if (!(await hasTextLayer(pages))) {
+        const ko = (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get && window.EverythingConvertLanguage.get()) === 'ko';
+        setStatus(ko
+          ? '이 PDF는 이미지형(스캔본 또는 NotebookLM처럼 그림으로 내보낸 PDF)이라 편집할 텍스트가 없습니다. 원본 그대로면 “이미지 슬라이드”, 글자를 뽑으려면 “AI 편집 텍스트 슬라이드”를 사용하세요.'
+          : 'This PDF is image-based (scanned, or exported as pictures like NotebookLM), so there is no text to make editable. Use “Image slides” for an exact copy, or “AI editable-text slides” to OCR the text.', 'err');
+        return false;
+      }
+      const pptx = new PptxGenJS();
+      const first = await pdfDoc.getPage(pages[0]);
+      const fv = first.getViewport({ scale: 1 });
+      const win = Math.min(56, fv.width / 72), hin = Math.min(56, fv.height / 72);
+      pptx.defineLayout({ name: 'PDFTEXT', width: win, height: hin });
+      pptx.layout = 'PDFTEXT';
+      for (let i = 0; i < pages.length; i++) {
+        setProgress(`Rebuilding page ${pages[i]} (${i + 1}/${pages.length})…`, Math.round((i / pages.length) * 92));
+        const page = await pdfDoc.getPage(pages[i]);
+        const vp = page.getViewport({ scale: 1 });
+        const tc = await page.getTextContent();
+        const slide = pptx.addSlide();
+        for (const L of buildLines(tc.items, vp.width, vp.height)) {
+          slide.addText(L.text, { x: L.xIn, y: L.yIn, w: L.wIn, h: L.hIn, fontSize: L.sz, color: '111111', align: 'left', valign: 'top', margin: 0 });
+        }
+      }
+      setProgress('Building PowerPoint…', 96);
+      const blob = await normalizePptxBlob(await pptx.write({ outputType: 'blob' }));
+      presentResult(blob, downloadName());
+      return true;
+    }
+
     // ── AI: editable text slides via ai-ocr (credit-based) ──
     async function aiOcr(payload) {
       const res = await fetch(`${AI_FUNC}/ai-ocr`, {
@@ -691,6 +770,7 @@
       try {
         let ok = true;
         if (ppMode.value === 'ai') ok = await runAi(pages);
+        else if (ppMode.value === 'text') ok = await runText(pages);
         else await runImage(pages);
         if (ok) {
           setProgress('Done!', 100);
