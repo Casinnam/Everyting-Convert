@@ -577,6 +577,13 @@
       return { title, body };
     }
 
+    // AI mode pairs each page: a full-bleed image slide (visual reference) +
+    // an editable-text slide. LAYOUT_WIDE is 13.333 x 7.5in.
+    function addImageSlide(pptx, img) {
+      const slide = pptx.addSlide();
+      placeContain(slide, img.dataUrl, img.w, img.h, 13.333, 7.5);
+    }
+
     function addTextSlide(pptx, pageNum, result) {
       const { title, body } = resultToSlideContent(result);
       const slide = pptx.addSlide();
@@ -635,7 +642,8 @@
         const img = await rasterizePage(pageNum, 1.8);
         const full = await aiOcr({ mode: 'full', job_id: jobId, page_index: i, image: img.dataUrl });
         if (!full.ok) throw new Error(full.data.error || `AI failed on page ${pageNum}.`);
-        addTextSlide(pptx, pageNum, full.data.result);
+        addImageSlide(pptx, img);                        // ① original page (visual reference)
+        addTextSlide(pptx, pageNum, full.data.result);   // ② editable text
       }
       setProgress('Building PowerPoint…', 96);
       const blob = await normalizePptxBlob(await pptx.write({ outputType: 'blob' }));
