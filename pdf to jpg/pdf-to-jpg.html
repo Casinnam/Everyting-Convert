@@ -1148,6 +1148,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../supabase-config.js"></script>
+<script src="../ec-modal.js?v=ecmodal-20260626a"></script>
 <script src="../auth.js?v=auth-20260616c"></script>
 <script src="../usage-limit.js"></script>
 <script src="../tools-menu.js?v=nav-20260620d"></script>
@@ -1156,6 +1157,8 @@
 <script>
   // PDF.js setup
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  // Site-styled dialogs (fall back to native if ec-modal.js isn't present).
+  function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
 
   let pdfDoc = null;
   let currentFile = null;
@@ -1181,7 +1184,7 @@
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type === 'application/pdf') loadFile(file);
-    else alert('Please upload a PDF file.');
+    else ecAlert('Please upload a PDF file.');
   });
 
   document.getElementById('fileInput').addEventListener('change', e => {
@@ -1336,7 +1339,7 @@
         setTimeout(() => URL.revokeObjectURL(url), 3000);
       } catch (e) {
         console.error('ZIP creation error:', e);
-        alert('ZIP creation failed. Please use each page download button instead.');
+        ecAlert('ZIP creation failed. Please use each page download button instead.');
       }
 
       btn.textContent = 'Download all';

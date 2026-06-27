@@ -551,6 +551,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="ec-modal.js?v=ecmodal-20260626a"></script>
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260620d"></script>
     <script src="language-menu.js?v=lang-20260620a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
@@ -558,6 +559,7 @@
     <script src="ai-credits.js?v=credits-20260613d"></script>
     <script>
         (function () {
+            function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
             const button = document.getElementById('proCheckoutButton');
             const status = document.getElementById('billingStatus');
             if (!button || !status) return;
@@ -713,7 +715,7 @@
                             error_message: message.slice(0, 120),
                         });
                     }
-                    window.alert('Checkout error: ' + message);
+                    ecAlert('Checkout error: ' + message);
                 }
             }
 

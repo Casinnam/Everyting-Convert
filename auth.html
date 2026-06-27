@@ -1343,11 +1343,12 @@
                 if (currentUsername.toLowerCase() !== username.toLowerCase()) {
                     await auth.updateUsername(username);
                 }
-                usernameMessage.textContent = 'User ID saved. Moving to the home page...';
+                usernameMessage.textContent = redirectTarget ? 'User ID saved. Returning to your work...' : 'User ID saved. Moving to the home page...';
                 usernameMessage.className = 'auth-message success';
                 updateAccountView();
-                setTimeout(() => {
-                    window.location.href = 'index.html';
+                setTimeout(async () => {
+                    // Return new sign-ups to the page they came from (next=), else home.
+                    if (!(await handleRedirectAfterAuth(auth))) window.location.href = 'index.html';
                 }, 700);
             } catch (error) {
                 usernameMessage.textContent = friendlyAuthError(error);

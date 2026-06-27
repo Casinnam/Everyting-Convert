@@ -10,6 +10,7 @@
 <title>Word to PDF Converter - EverythingConvert</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.5/dist/docx-preview.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- SEO:START -->
@@ -352,6 +353,140 @@
   function resetResult(){ lastPdf = null; lastPdfName = ''; resultCounted = false; if (resultsSection) resultsSection.style.display = 'none'; }
   function setFile(file){ currentFile = file; convertBtn.style.display = ''; convertBtn.disabled = false; resetResult(); setStatus(`${file.name} selected.`); }
   function resetAll(){ currentFile = null; resetResult(); convertBtn.style.display = ''; convertBtn.disabled = true; fileInput.value = ''; setStatus('No file selected.'); }
+  // ── Word charts (DrawingML) → Chart.js ──────────────────────────────────
+  // docx-preview can't draw live chart objects, so it emits an empty box sized
+  // from the drawing's extent. We parse word/charts/chartN.xml, render the
+  // common chart types with Chart.js, and drop the image into that box.
+  const CHART_NS = 'http://schemas.openxmlformats.org/drawingml/2006/chart';
+  const REL_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  function hexA(hex, a){ const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if(!m) return 'rgba(68,114,196,' + a + ')'; const n = parseInt(m[1], 16); return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')'; }
+  function parseChart(xml){
+    const doc = new DOMParser().parseFromString(xml, 'application/xml');
+    const els = (parent, local) => parent ? Array.from(parent.getElementsByTagNameNS(CHART_NS, local)) : [];
+    const plot = els(doc, 'plotArea')[0];
+    if(!plot) return null;
+    const typeMap = { barChart:'bar', lineChart:'line', pieChart:'pie', doughnutChart:'doughnut', areaChart:'area', radarChart:'radar' };
+    let groupEl = null, kind = null;
+    for(const k in typeMap){ const e = els(plot, k)[0]; if(e){ groupEl = e; kind = typeMap[k]; break; } }
+    if(!groupEl) return null;                       // unsupported type (scatter, combo, …)
+    const barDirEl = els(groupEl, 'barDir')[0];
+    const barDir = barDirEl ? barDirEl.getAttribute('val') : null;
+    function readPts(ser, tag){
+      const node = els(ser, tag)[0]; if(!node) return [];
+      const cache = els(node, 'numCache')[0] || els(node, 'strCache')[0] || node;
+      const arr = [];
+      els(cache, 'pt').forEach(p => { const idx = parseInt(p.getAttribute('idx') || '0', 10); const v = els(p, 'v')[0]; arr[idx] = v ? v.textContent : ''; });
+      for(let i = 0; i < arr.length; i++) if(arr[i] === undefined) arr[i] = '';
+      return arr;
+    }
+    function serName(ser, i){ const tx = els(ser, 'tx')[0]; if(tx){ const v = els(tx, 'v')[0]; if(v) return v.textContent; } return 'Series ' + (i + 1); }
+    function serColor(ser){ const sp = els(ser, 'spPr')[0]; if(sp){ const c = sp.getElementsByTagNameNS('http://schemas.openxmlformats.org/drawingml/2006/main', 'srgbClr')[0]; if(c) return '#' + c.getAttribute('val'); } return null; }
+    let labels = []; const datasets = [];
+    els(groupEl, 'ser').forEach((ser, i) => {
+      const cats = readPts(ser, 'cat'); if(cats.length > labels.length) labels = cats;
+      const vals = readPts(ser, 'val').map(v => v === '' ? null : Number(v));
+      datasets.push({ label: serName(ser, i), data: vals, color: serColor(ser) });
+    });
+    if(!datasets.length) return null;
+    return { kind, barDir, labels, datasets };
+  }
+  function toChartConfig(p){
+    const palette = ['#4472C4','#ED7D31','#A5A5A5','#FFC000','#5B9BD5','#70AD47','#264478','#9E480E','#636363','#997300'];
+    const isPie = p.kind === 'pie' || p.kind === 'doughnut';
+    const opts = { responsive:false, maintainAspectRatio:false, animation:false, devicePixelRatio:1,
+      plugins:{ legend:{ display: isPie || p.datasets.length > 1, position: isPie ? 'right' : 'top' } } };
+    let type = p.kind, data;
+    if(isPie){
+      const ds = p.datasets[0] || { data:[] };
+      data = { labels:p.labels, datasets:[{ data:ds.data, backgroundColor:p.labels.map((_, i) => palette[i % palette.length]) }] };
+    } else {
+      const area = p.kind === 'area'; if(area) type = 'line';
+      data = { labels:p.labels, datasets:p.datasets.map((d, i) => {
+        const col = d.color || palette[i % palette.length];
+        const o = { label:d.label, data:d.data, borderColor:col, borderWidth:(type === 'line' || type === 'radar') ? 2 : 1, backgroundColor:col };
+        if(type === 'line' && !area){ o.fill = false; o.pointRadius = 2; }
+        if(area){ o.fill = true; o.backgroundColor = hexA(col, 0.3); o.pointRadius = 0; }
+        return o;
+      }) };
+      if(type === 'bar' && barDirIsBar(p)) opts.indexAxis = 'y';
+    }
+    return { type: (type === 'area' ? 'line' : type), data, options: opts };
+  }
+  function barDirIsBar(p){ return p.barDir === 'bar'; }
+  async function renderChartPng(cfg, wPt, hPt){
+    const wpx = Math.max(120, Math.round((wPt || 320) * 96 / 72)), hpx = Math.max(90, Math.round((hPt || 200) * 96 / 72));
+    const scale = 2;
+    const holder = document.createElement('div');
+    holder.style.cssText = 'position:fixed;left:-100000px;top:0;background:#fff;width:' + wpx + 'px;height:' + hpx + 'px;';
+    const canvas = document.createElement('canvas');
+    canvas.width = wpx * scale; canvas.height = hpx * scale;
+    canvas.style.width = wpx + 'px'; canvas.style.height = hpx + 'px';
+    holder.appendChild(canvas); document.body.appendChild(holder);
+    const prevFont = window.Chart.defaults.font.size;
+    window.Chart.defaults.font.size = 12 * scale;
+    let url = '';
+    try {
+      const chart = new window.Chart(canvas.getContext('2d'), cfg);
+      await new Promise(r => setTimeout(r, 80));
+      url = canvas.toDataURL('image/png');
+      chart.destroy();
+    } finally {
+      window.Chart.defaults.font.size = prevFont;
+      holder.remove();
+    }
+    return url;
+  }
+  async function injectDocxCharts(arrayBuffer, renderHost){
+    if(!window.JSZip || !window.Chart) return 0;
+    let zip; try { zip = await window.JSZip.loadAsync(arrayBuffer); } catch(e){ return 0; }
+    const docFile = zip.file('word/document.xml'); if(!docFile) return 0;
+    const dd = new DOMParser().parseFromString(await docFile.async('string'), 'application/xml');
+    const chartEls = Array.from(dd.getElementsByTagNameNS(CHART_NS, 'chart'));
+    if(!chartEls.length) return 0;
+    const relMap = {};
+    const relsFile = zip.file('word/_rels/document.xml.rels');
+    if(relsFile){ const rx = new DOMParser().parseFromString(await relsFile.async('string'), 'application/xml'); Array.from(rx.getElementsByTagName('Relationship')).forEach(r => relMap[r.getAttribute('Id')] = r.getAttribute('Target')); }
+    const infos = [];
+    for(const ce of chartEls){
+      const relId = ce.getAttributeNS(REL_NS, 'id') || ce.getAttribute('r:id'); if(!relId) continue;
+      const target = relMap[relId]; if(!target) continue;
+      const path = target.charAt(0) === '/' ? target.slice(1) : 'word/' + target;
+      const cf = zip.file(path); if(!cf) continue;
+      let parsed; try { parsed = parseChart(await cf.async('string')); } catch(e){ parsed = null; }
+      if(!parsed) continue;
+      let anc = ce; while(anc && !(anc.localName === 'inline' || anc.localName === 'anchor')) anc = anc.parentNode;
+      let wPt = 320, hPt = 200;
+      if(anc){ const ext = Array.from(anc.getElementsByTagNameNS('*', 'extent'))[0]; if(ext){ wPt = (parseInt(ext.getAttribute('cx')) || 0) / 12700 || wPt; hPt = (parseInt(ext.getAttribute('cy')) || 0) / 12700 || hPt; } }
+      infos.push({ parsed, wPt, hPt });
+    }
+    if(!infos.length) return 0;
+    // Empty drawing boxes docx-preview left behind (no children, sized inline-block).
+    const placeholders = Array.from(renderHost.querySelectorAll('div')).filter(d => {
+      if(d.children.length || (d.textContent || '').trim()) return false;
+      const s = d.style; return s.display === 'inline-block' && s.width && s.height && !d.dataset.ecChartFilled;
+    });
+    const used = new Set(); let filled = 0;
+    for(const info of infos){
+      // Greedy match to the closest-sized free placeholder (robust to ordering).
+      let best = -1, bestD = Infinity;
+      placeholders.forEach((ph, idx) => {
+        if(used.has(idx)) return;
+        const d = Math.abs((parseFloat(ph.style.width) || 0) - info.wPt) + Math.abs((parseFloat(ph.style.height) || 0) - info.hPt);
+        if(d < bestD){ bestD = d; best = idx; }
+      });
+      if(best < 0) break;
+      used.add(best);
+      try {
+        const url = await renderChartPng(toChartConfig(info.parsed), info.wPt, info.hPt);
+        const ph = placeholders[best];
+        const img = document.createElement('img');
+        img.src = url; img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
+        ph.appendChild(img); ph.dataset.ecChartFilled = '1'; filled++;
+      } catch(e){ /* skip this chart */ }
+    }
+    return filled;
+  }
+
   async function convert(){
     if(!currentFile) return;
     convertBtn.disabled = true;
@@ -391,6 +526,15 @@
         renderFooters: true,
         useBase64URL: true
       });
+
+      // Charts are live data objects docx-preview can't draw (it leaves an empty
+      // box). Render the common types with Chart.js and place them. Best-effort:
+      // a chart failure must never block the document conversion.
+      try {
+        setStatus('Rendering charts...');
+        const n = await injectDocxCharts(arrayBuffer, renderHost);
+        if (n) setStatus(`Rendered ${n} chart${n > 1 ? 's' : ''}, building PDF...`);
+      } catch (e) { /* ignore — unsupported/edge charts simply stay blank */ }
 
       // Each rendered page is a "<section class='docx'>". Fall back to the whole
       // wrapper so a single-page (or oddly-classed) render still produces output.

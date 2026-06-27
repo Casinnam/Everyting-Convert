@@ -496,10 +496,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="ec-modal.js?v=ecmodal-20260626a"></script>
     <script src="auth.js?v=auth-20260616c"></script>
     <script src="tools-menu.js?v=nav-20260620d"></script>
     <script src="language-menu.js?v=lang-20260620a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
     <script>
+        function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
         const adminStatus = document.getElementById('adminStatus');
         const tableWrap = document.getElementById('tableWrap');
         const refreshBtn = document.getElementById('refreshBtn');
@@ -906,7 +908,7 @@
                 if (error) throw error;
                 loadReviews();
             } catch (error) {
-                alert('Could not update review: ' + (error.message || 'error'));
+                ecAlert('Could not update review: ' + (error.message || 'error'));
                 btn.disabled = false;
             }
         });
@@ -949,7 +951,7 @@
                 adminStatus.textContent = 'Saved.';
                 renderProfiles(filteredProfiles());
             } catch (error) {
-                alert('Save failed: ' + error.message);
+                ecAlert('Save failed: ' + error.message);
             } finally {
                 button.disabled = false;
                 button.textContent = 'Save';

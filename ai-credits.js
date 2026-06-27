@@ -3,6 +3,8 @@
 // window.EverythingConvertCredits with: getBalance(), redeem(jobId),
 // buyPack(packKey), isLoggedIn(). Requires supabase-config.js + auth.js.
 (function () {
+  // Site-styled alert (falls back to native where ec-modal.js isn't loaded).
+  function ecAlert(m) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m) : Promise.resolve(window.alert(m)); }
   const FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
   const ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
 
@@ -175,10 +177,10 @@
       if (data.checkout_url) {
         window.location.href = data.checkout_url;
       } else {
-        alert(data.error || 'Could not start checkout. Please try again.');
+        ecAlert(data.error || 'Could not start checkout. Please try again.');
       }
     } catch (error) {
-      alert('Network error. Please try again.');
+      ecAlert('Network error. Please try again.');
     }
   }
 

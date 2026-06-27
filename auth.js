@@ -1,4 +1,6 @@
 (function () {
+  // Site-styled alert (falls back to native where ec-modal.js isn't loaded).
+  function ecAlert(m) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m) : Promise.resolve(window.alert(m)); }
   const config = window.EVERYTHING_CONVERT_SUPABASE || {};
   const missingConfig =
     !config.url ||
@@ -548,11 +550,11 @@
 
   function requireLogin(message) {
     if (state.missingConfig) {
-      alert('Supabase 설정이 필요합니다. supabase-config.js에 프로젝트 URL과 anon key를 입력해 주세요.');
+      ecAlert('Supabase 설정이 필요합니다. supabase-config.js에 프로젝트 URL과 anon key를 입력해 주세요.');
       return false;
     }
     if (!state.user) {
-      alert(message || '로그인이 필요한 기능입니다.');
+      ecAlert(message || '로그인이 필요한 기능입니다.');
       window.location.href = getAuthPath();
       return false;
     }
@@ -562,7 +564,7 @@
   function requirePro(message) {
     if (!requireLogin(message || '프로 회원만 사용할 수 있는 기능입니다.')) return false;
     if (!isPro()) {
-      alert('표 감지 강화형은 Pro 회원 전용입니다. Supabase profiles 테이블에서 plan을 pro로 변경하면 사용할 수 있습니다.');
+      ecAlert('표 감지 강화형은 Pro 회원 전용입니다. Supabase profiles 테이블에서 plan을 pro로 변경하면 사용할 수 있습니다.');
       return false;
     }
     return true;
@@ -571,7 +573,7 @@
   function requireAdmin(message) {
     if (!requireLogin(message || '관리자만 사용할 수 있는 기능입니다.')) return false;
     if (!isAdmin()) {
-      alert('관리자 권한이 필요합니다.');
+      ecAlert('관리자 권한이 필요합니다.');
       return false;
     }
     return true;
@@ -682,7 +684,7 @@
       logoutButton.innerHTML = originalText;
       logoutButton.style.pointerEvents = '';
       logoutButton.style.opacity = '1';
-      alert('로그아웃 실패: ' + error.message);
+      ecAlert('로그아웃 실패: ' + error.message);
     }
   });
 

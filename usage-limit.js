@@ -1,4 +1,6 @@
 (function () {
+  // Site-styled alert (falls back to native where ec-modal.js isn't loaded).
+  function ecAlert(m) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m) : Promise.resolve(window.alert(m)); }
   const DEFAULT_LIMIT = 5;
   const COUNT_PREFIX = 'everything_convert_usage_count_';
   const DEFAULT_ID_KEY = 'everything_convert_usage_identity';
@@ -760,7 +762,7 @@
           'Download .zip', 'ZIP으로 받기',
           'fa-file-zipper', async () => {
             try { await zipAndDownload(files, zipName); }
-            catch (e) { window.alert('ZIP creation failed. Please use the individual downloads instead.'); throw e; }
+            catch (e) { ecAlert('ZIP creation failed. Please use the individual downloads instead.'); throw e; }
           }, token, true));
       } else if (files.length === 1) {
         const one = files[0];

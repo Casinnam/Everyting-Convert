@@ -1164,6 +1164,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../supabase-config.js"></script>
+<script src="../ec-modal.js?v=ecmodal-20260626a"></script>
 <script src="../auth.js?v=auth-20260616c"></script>
 <script src="../usage-limit.js"></script>
 <script src="../tools-menu.js?v=nav-20260620d"></script>
@@ -1171,6 +1172,10 @@
 <script src="../tool-language.js?v=toollang-20260616a"></script>
 <script>
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  // Site-styled dialogs (fall back to native if ec-modal.js isn't present).
+  function ecConfirm(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.confirm(m, o) : Promise.resolve(window.confirm(m)); }
+  function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
 
   let pdfDoc = null;
   let currentFile = null;
@@ -1197,7 +1202,7 @@
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type === 'application/pdf') loadFile(file);
-    else alert('Please upload a PDF file.');
+    else ecAlert('Please upload a PDF file.');
   });
 
   document.getElementById('fileInput').addEventListener('change', e => {
@@ -1206,7 +1211,7 @@
 
   async function loadFile(file) {
     if (!window.pdfjsLib) {
-      alert('PDF.js could not be loaded. Check your internet connection and try again.');
+      ecAlert('PDF.js could not be loaded. Check your internet connection and try again.');
       return;
     }
 
@@ -1255,7 +1260,7 @@
     if (!pdfDoc) return;
 
     if (!window.docx) {
-      alert('The Word conversion library could not be loaded. Check your internet connection and try again.');
+      ecAlert('The Word conversion library could not be loaded. Check your internet connection and try again.');
       return;
     }
 
@@ -1292,7 +1297,7 @@
 
     } catch (e) {
       console.error(e);
-      alert('An error occurred during conversion: ' + e.message);
+      ecAlert('An error occurred during conversion: ' + e.message);
       resetAll();
     }
   }
@@ -1615,6 +1620,8 @@
     var hqBusy = false;
     var hqTimer = null;
     function el(id) { return document.getElementById(id); }
+    function ecConfirm(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.confirm(m, o) : Promise.resolve(window.confirm(m)); }
+    function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
     async function hqToken() {
       const st = (window.EverythingConvertAuth && window.EverythingConvertAuth.state) || {};
       if (st.session && st.session.access_token) return st.session.access_token;
@@ -1663,11 +1670,11 @@
     }
     function hqStop() { if (hqTimer) { clearInterval(hqTimer); hqTimer = null; } }
     function hqDone() { hqStop(); hqBusy = false; var c = el('hqCard'); if (c) c.classList.remove('busy'); }
-    function hqFail(msg) { hqStop(); const ps = el('progressSection'); if (ps) ps.classList.remove('visible'); hqDone(); if (msg) alert(msg); }
+    function hqFail(msg) { hqStop(); const ps = el('progressSection'); if (ps) ps.classList.remove('visible'); hqDone(); if (msg) ecAlert(msg); }
     window.startHighQualityConversion = async function () {
       if (hqBusy) return; // ignore repeat clicks while a conversion is running
       const file = (typeof currentFile !== 'undefined' && currentFile) || null;
-      if (!file) { alert('Please choose a PDF first.'); return; }
+      if (!file) { ecAlert('Please choose a PDF first.'); return; }
       if (!(await hqConfirm())) return; // "5 credits will be deducted" — confirm first
       hqBusy = true;
       const card = el('hqCard'); if (card) card.classList.add('busy');
@@ -1703,7 +1710,7 @@
           hqDone();
         } else {
           const data = await res.json().catch(function () { return {}; });
-          if (data.code === 'insufficient_credits') { hqFail(''); if (confirm('Not enough credits (needs 5). Go to buy credits?')) window.location.href = '../pricing.html#credit-packs'; }
+          if (data.code === 'insufficient_credits') { hqFail(''); if (await ecConfirm('Not enough credits (needs 5). Go to buy credits?')) window.location.href = '../pricing.html#credit-packs'; }
           else if (data.code === 'login_required') { hqFail(''); window.location.href = '../auth.html'; }
           else if (data.code === 'not_configured') { hqFail('High-quality conversion is not available yet.'); }
           else { hqFail(data.error || 'Conversion failed. Please try again.'); }

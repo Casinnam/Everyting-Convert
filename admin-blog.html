@@ -174,11 +174,15 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
   <script src="supabase-config.js"></script>
+  <script src="ec-modal.js?v=ecmodal-20260626a"></script>
   <script src="auth.js?v=auth-20260616c"></script>
   <script src="tools-menu.js?v=nav-20260620d"></script>
   <script src="language-menu.js?v=lang-20260620a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
   <script>
   (function () {
+    // Site-styled dialogs (fall back to native if ec-modal.js isn't present).
+    function ecConfirm(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.confirm(m, o) : Promise.resolve(window.confirm(m)); }
+    function ecPrompt(m, d) { return window.EverythingConvertUI ? window.EverythingConvertUI.prompt(m, d) : Promise.resolve(window.prompt(m, d)); }
     const FUNC = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
     const ANON = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
     const LANGS = ['ko', 'en', 'de', 'es', 'fr'];
@@ -304,7 +308,7 @@
       setMsg('Uploading image…');
       try {
         const url = await uploadImage(file);
-        const alt = window.prompt('Image description (alt text):', file.name.replace(/\.[^.]+$/, '')) || '';
+        const alt = (await ecPrompt('Image description (alt text):', file.name.replace(/\.[^.]+$/, ''))) || '';
         const md = '\n![' + alt + '](' + url + ')\n';
         const ta = els.body; const pos = ta.selectionStart || ta.value.length;
         ta.value = ta.value.slice(0, pos) + md + ta.value.slice(pos);
@@ -394,7 +398,7 @@
     }
     async function removePost() {
       if (!editingGroupId) return;
-      if (!window.confirm('Delete this post and all its language versions permanently?')) return;
+      if (!(await ecConfirm('Delete this post and all its language versions permanently?', { title: 'Delete post', tone: 'danger' }))) return;
       setMsg('Deleting…');
       try {
         const r = await client.from('blog_posts').delete().eq('group_id', editingGroupId);
@@ -433,7 +437,7 @@
     }
 
     async function deleteFromList(groupId, slug) {
-      if (!window.confirm('Delete this post and all its language versions permanently?')) return;
+      if (!(await ecConfirm('Delete this post and all its language versions permanently?', { title: 'Delete post', tone: 'danger' }))) return;
       setMsg('Deleting…');
       try {
         const q = groupId ? client.from('blog_posts').delete().eq('group_id', groupId) : client.from('blog_posts').delete().eq('slug', slug);
