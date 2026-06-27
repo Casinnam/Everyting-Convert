@@ -550,16 +550,11 @@
 
   function ensureWorker() {
     if (!window.pdfjsLib || window.__ecPdfWorkerSet) return;
-    const workerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    // A classic Worker can't be created from a cross-origin URL directly, so we
-    // wrap the CDN worker in a same-origin blob that importScripts() it. This is
-    // the reliable way to give pdf.js a real worker from a CDN.
-    try {
-      const blob = new Blob(["importScripts('" + workerUrl + "');"], { type: 'application/javascript' });
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
-    } catch (error) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
-    }
+    // Self-hosted worker (same folder as this page). A same-origin worker avoids
+    // two live-only failures: browsers block cross-origin classic workers, and
+    // our service worker caches cross-origin CDN scripts as opaque responses that
+    // break importScripts. Path is relative so it also works from file://.
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
     window.__ecPdfWorkerSet = true;
   }
 
