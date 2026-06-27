@@ -335,6 +335,7 @@
   <script src="../ec-modal.js?v=ecmodal-20260626a"></script>
   <script src="../auth.js?v=auth-20260616c"></script>
   <script src="../ai-credits.js?v=credits-20260613d"></script>
+  <script src="../usage-limit.js?v=usage-20260626a"></script>
   <script src="../tools-menu.js?v=nav-20260620d"></script>
   <script src="../language-menu.js?v=lang-20260620a"></script><script src="../header-language.js?v=headerlang-20260616a"></script>
   <script src="../tool-language.js?v=toollang-20260616a"></script>
@@ -501,6 +502,28 @@
       return { ok: res.ok, status: res.status, data };
     }
 
+    // Strip characters that are illegal in XML 1.0. PDF/OCR text often carries
+    // control chars (form-feed 0x0C, vertical-tab 0x0B, NUL, etc.) and lone
+    // surrogates; pptxgenjs writes them straight into slide XML, which makes
+    // PowerPoint flag the .pptx as "unreadable content" and drop the text on repair.
+    function xmlSafe(s) {
+      if (s == null) return '';
+      s = String(s);
+      let out = '';
+      for (let i = 0; i < s.length; i++) {
+        const c = s.charCodeAt(i);
+        if (c === 0x9 || c === 0xA || c === 0xD || (c >= 0x20 && c <= 0xD7FF) || (c >= 0xE000 && c <= 0xFFFD)) {
+          out += s[i];
+        } else if (c >= 0xD800 && c <= 0xDBFF) {
+          const n = s.charCodeAt(i + 1);
+          if (n >= 0xDC00 && n <= 0xDFFF) { out += s[i] + s[i + 1]; i++; }
+          // else: drop lone high surrogate
+        }
+        // else: drop control chars / lone low surrogates / other illegal scalars
+      }
+      return out;
+    }
+
     function resultToSlideContent(result) {
       const md = (result && (result.markdown || result.plain_text)) || '';
       const lines = String(md).split('\n');
@@ -514,8 +537,10 @@
         const isBullet = /^[-*+]\s+/.test(l) || /^\d+\.\s+/.test(l);
         const clean = l.replace(/^#{1,6}\s+/, '').replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '').replace(/\|/g, ' ').trim();
         if (!clean) continue;
-        if (heading && !foundTitle) { title = clean; foundTitle = true; continue; }
-        body.push({ text: clean, bullet: isBullet });
+        const safe = xmlSafe(clean);
+        if (!safe.trim()) continue;
+        if (heading && !foundTitle) { title = safe; foundTitle = true; continue; }
+        body.push({ text: safe, bullet: isBullet });
       }
       return { title, body };
     }
