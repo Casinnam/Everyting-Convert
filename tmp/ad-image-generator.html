@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EverythingConvert — Google Ads 이미지 생성기 (로컬 전용)</title>
+<style>
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:2rem; }
+  h1 { font-size:1.3rem; margin:0 0 .3rem; }
+  p.sub { color:#94a3b8; margin:0 0 1.5rem; line-height:1.6; }
+  .bar { margin-bottom:1.5rem; }
+  button.all { background:linear-gradient(135deg,#3b82f6,#7c3aed); color:#fff; border:0; border-radius:10px; padding:.7rem 1.3rem; font-weight:800; font-size:1rem; cursor:pointer; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.4rem; }
+  .item { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:1rem; }
+  .item h3 { margin:0 0 .2rem; font-size:.95rem; }
+  .item small { color:#94a3b8; }
+  .item canvas { width:100%; height:auto; border-radius:8px; margin:.7rem 0; display:block; background:#000; }
+  .item button { width:100%; background:#334155; color:#fff; border:0; border-radius:8px; padding:.55rem; font-weight:700; cursor:pointer; }
+  .item button:hover { background:#475569; }
+</style>
+</head>
+<body>
+  <h1>EverythingConvert — Google Ads 이미지 생성기</h1>
+  <p class="sub">로컬 전용 도구입니다(사이트에 배포하지 마세요). 비율별 7장: 가로 1200×628 ×2, 정사각 1200×1200 ×3, 세로 960×1200 ×2.<br>각 카드의 다운로드 또는 위의 <b>전체 다운로드</b>를 누르면 Google Ads에 그대로 올릴 PNG가 저장됩니다.</p>
+  <div class="bar"><button class="all" id="downloadAll">⬇ 전체 다운로드 (7장)</button></div>
+  <div class="grid" id="grid"></div>
+
+<script>
+(function () {
+  // Brand gradients (blue→purple family) with slight variety for asset diversity.
+  const G = [
+    ['#2563eb', '#7c3aed'],
+    ['#3b82f6', '#6366f1'],
+    ['#6d28d9', '#db2777'],
+    ['#0ea5e9', '#2563eb'],
+  ];
+  // 7 creatives. headline = array of lines; keep short for legibility.
+  const ITEMS = [
+    { name:'landscape-1', w:1200, h:628, g:0, head:['Convert files privately'], sub:'PDF · Image · Video — in your browser' },
+    { name:'landscape-2', w:1200, h:628, g:1, head:['Your files never','leave your browser'], sub:'Free online file converter' },
+    { name:'square-1', w:1200, h:1200, g:0, head:['No upload.','No sign-up.'], sub:'100% private file conversion' },
+    { name:'square-2', w:1200, h:1200, g:3, head:['Free PDF','converter'], sub:'Word · Excel · JPG · in your browser' },
+    { name:'square-3', w:1200, h:1200, g:2, head:['Password-protect','PDF, free'], sub:'AES-256 encryption · in your browser' },
+    { name:'portrait-1', w:960, h:1200, g:1, head:['Private','file','converter'], sub:'Files never leave your device' },
+    { name:'portrait-2', w:960, h:1200, g:2, head:['Merge · Split','Compress PDF'], sub:'Free · No watermark · No install' },
+  ];
+  const PILL = 'No upload · 100% in your browser';
+  const BRAND = 'EverythingConvert';
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function draw(cv, item) {
+    const { w, h } = item;
+    cv.width = w; cv.height = h;
+    const ctx = cv.getContext('2d');
+    const [c1, c2] = G[item.g];
+    // background gradient
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, c1); grad.addColorStop(1, c2);
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+    // soft orbs for depth
+    ctx.globalAlpha = 0.16; ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(w * 0.88, h * 0.12, Math.min(w, h) * 0.34, 0, 7); ctx.fill();
+    ctx.globalAlpha = 0.10;
+    ctx.beginPath(); ctx.arc(w * 0.08, h * 0.92, Math.min(w, h) * 0.4, 0, 7); ctx.fill();
+    ctx.globalAlpha = 1;
+
+    const pad = Math.round(w * 0.075);
+    // brand wordmark (top-left): rounded square + name
+    const logoS = Math.round(Math.min(w, h) * 0.055);
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    roundRect(ctx, pad, pad, logoS, logoS, logoS * 0.28); ctx.fill();
+    ctx.fillStyle = c1; ctx.font = `900 ${Math.round(logoS * 0.6)}px 'Arial Black', system-ui, sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('E', pad + logoS / 2, pad + logoS / 2 + 1);
+    ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(255,255,255,.95)';
+    ctx.font = `800 ${Math.round(logoS * 0.62)}px 'Segoe UI', system-ui, sans-serif`;
+    ctx.fillText(BRAND, pad + logoS * 1.35, pad + logoS / 2 + 1);
+
+    // headline (big, bold, centered vertically-ish)
+    const hl = item.head;
+    const headPx = Math.round((w === h ? w : Math.min(w, h)) * (hl.length >= 3 ? 0.135 : 0.115));
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `900 ${headPx}px 'Arial Black', 'Helvetica Neue', system-ui, sans-serif`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const lineH = headPx * 1.06;
+    const blockH = lineH * hl.length;
+    let y = h * 0.52 - blockH / 2 + headPx;
+    hl.forEach((line) => { ctx.fillText(line, pad, y); y += lineH; });
+
+    // sub line
+    ctx.fillStyle = 'rgba(255,255,255,.92)';
+    const subPx = Math.round(headPx * 0.30);
+    ctx.font = `600 ${subPx}px 'Segoe UI', system-ui, sans-serif`;
+    ctx.fillText(item.sub, pad, y + subPx * 0.6);
+
+    // pill (bottom-left): "No upload · In your browser"
+    const pillPx = Math.round(Math.min(w, h) * 0.034);
+    ctx.font = `800 ${pillPx}px 'Segoe UI', system-ui, sans-serif`;
+    const tw = ctx.measureText(PILL).width;
+    const pillH = pillPx * 2.1, pillW = tw + pillPx * 2.2;
+    const py = h - pad - pillH;
+    ctx.fillStyle = 'rgba(255,255,255,.16)';
+    roundRect(ctx, pad, py, pillW, pillH, pillH / 2); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.textBaseline = 'middle';
+    ctx.fillText(PILL, pad + pillPx * 1.1, py + pillH / 2 + 1);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  function downloadCanvas(cv, name) {
+    cv.toBlob((blob) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `everythingconvert-ad-${name}.png`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    }, 'image/png');
+  }
+
+  const grid = document.getElementById('grid');
+  const canvases = [];
+  ITEMS.forEach((item) => {
+    const card = document.createElement('div'); card.className = 'item';
+    const ratio = item.w === item.h ? '1:1 정사각' : (item.w > item.h ? '1.91:1 가로' : '4:5 세로');
+    card.innerHTML = `<h3>${item.name}</h3><small>${item.w}×${item.h} · ${ratio}</small>`;
+    const cv = document.createElement('canvas');
+    draw(cv, item);
+    card.appendChild(cv);
+    const btn = document.createElement('button');
+    btn.textContent = '⬇ 다운로드';
+    btn.onclick = () => downloadCanvas(cv, item.name);
+    card.appendChild(btn);
+    grid.appendChild(card);
+    canvases.push([cv, item.name]);
+  });
+
+  document.getElementById('downloadAll').onclick = () => {
+    canvases.forEach(([cv, name], i) => setTimeout(() => downloadCanvas(cv, name), i * 350));
+  };
+})();
+</script>
+</body>
+</html>
