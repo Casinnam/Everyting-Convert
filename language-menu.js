@@ -378,6 +378,7 @@
     statDaily: { en: 'Free downloads left today', ko: '오늘 남은 무료 다운로드', de: 'Heute verbleibende Gratis-Downloads', es: 'Descargas gratis hoy', fr: 'Téléchargements gratuits restants aujourd’hui' },
     statUnlimited: { en: 'Unlimited', ko: '무제한', de: 'Unbegrenzt', es: 'Ilimitado', fr: 'Illimité' },
     dashboardHeading: { en: 'Account overview', ko: '계정 한눈에 보기', de: 'Kontoübersicht', es: 'Resumen de la cuenta', fr: 'Aperçu du compte' },
+    goToTools: { en: 'Go to tools', ko: '도구로 이동', de: 'Zu den Tools', es: 'Ir a las herramientas', fr: 'Aller aux outils' },
     myConversions: { en: 'My Conversions', ko: '내 변환 기록', de: 'Meine Konvertierungen', es: 'Mis conversiones', fr: 'Mes conversions' },
     manageSubscription: { en: 'Manage subscription', ko: '구독 관리', de: 'Abo verwalten', es: 'Gestionar suscripción', fr: 'Gérer l’abonnement' },
     upgrade: { en: 'Upgrade', ko: '업그레이드', de: 'Upgrade', es: 'Mejorar', fr: 'Améliorer' },

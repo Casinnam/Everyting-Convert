@@ -424,6 +424,17 @@
         .dash-cta { font-size: 0.82rem; font-weight: 800; color: #2563eb; text-decoration: none; }
         .dash-cta:hover { text-decoration: underline; }
 
+        /* Once logged in, drop the marketing aside and let the account panel span
+           the page as a single wide dashboard column (the aside still shows the
+           benefits to logged-out visitors). */
+        .auth-layout.dashboard-mode { grid-template-columns: 1fr; width: min(1200px, 100%); }
+        .auth-layout.dashboard-mode .auth-aside { display: none; }
+        .auth-layout.dashboard-mode .auth-shell { padding: clamp(1.75rem, 3.5vw, 3rem); }
+        .dash-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: .2rem; }
+        .dash-title { font-size: clamp(1.5rem, 3vw, 2.05rem); font-weight: 900; color: var(--text-main); margin: 0; line-height: 1.15; }
+        .dash-title #dashName { color: var(--primary); }
+        .dash-sub { margin: .3rem 0 0; color: var(--text-muted); font-size: .95rem; font-weight: 600; }
+
         /* Summer-sale floating bookmark (same as the home page) so the promo is
            reachable from the login/account screen too. */
         .summer-fab { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 1200;
@@ -640,6 +651,13 @@
                 <div class="auth-message" id="authMessage"></div>
             </form>
             <div class="account-panel" id="accountPanel">
+                <div class="dash-head">
+                    <div>
+                        <h2 class="dash-title"><span data-i18n-key="welcomeBack">Welcome back</span><span id="dashName"></span></h2>
+                        <p class="dash-sub" data-i18n-key="dashboardHeading">Account overview</p>
+                    </div>
+                    <a class="account-link" href="index.html#tools" data-i18n-key="goToTools">Go to tools</a>
+                </div>
                 <div class="dash-stats">
                     <div class="dash-stat">
                         <span class="dash-ic dash-ic-plan"><i class="fa-solid fa-crown"></i></span>
@@ -810,29 +828,41 @@
         }
 
         // Daily free-download allowance card. Pro = unlimited; free = "left / limit".
+        // Cached after the first resolve (like credits) so repeated
+        // updateAccountView() calls don't reset it to "Checking…" and flicker.
+        let dailyLoaded = false;
+        let lastDailyUsage = null;
+        function renderDaily(accountDaily, usage) {
+            const unlimited = { en: 'Unlimited', ko: '무제한', de: 'Unbegrenzt', es: 'Ilimitado', fr: 'Illimité' };
+            if (usage.unlimited || usage.accountType === 'pro' || usage.remaining === null) {
+                accountDaily.textContent = unlimited[uiLang()] || unlimited.en;
+            } else {
+                const rem = typeof usage.remaining === 'number' ? usage.remaining : (usage.limit - usage.count);
+                accountDaily.textContent = Math.max(0, rem) + ' / ' + usage.limit;
+            }
+        }
         async function loadAccountDaily() {
             const accountDaily = document.getElementById('accountDaily');
             if (!accountDaily) return;
+            // Already resolved: re-render the cached value (keeps it correct across
+            // language switches) without re-fetching or flashing "Checking…".
+            if (dailyLoaded && lastDailyUsage) { renderDaily(accountDaily, lastDailyUsage); return; }
             const ul = window.EverythingConvertUsageLimit;
             if (!ul || typeof ul.getUsageStatus !== 'function') return;
-            const unlimited = { en: 'Unlimited', ko: '무제한', de: 'Unbegrenzt', es: 'Ilimitado', fr: 'Illimité' };
-            accountDaily.textContent = checkingLabel();
+            if (!accountDaily.textContent || accountDaily.textContent === '-') accountDaily.textContent = checkingLabel();
             const delays = [0, 600, 1500, 3000];
             for (let i = 0; i < delays.length; i += 1) {
                 if (delays[i]) await new Promise((r) => window.setTimeout(r, delays[i]));
                 try {
                     const usage = await ul.getUsageStatus();
                     if (!usage) continue;
-                    if (usage.unlimited || usage.accountType === 'pro' || usage.remaining === null) {
-                        accountDaily.textContent = unlimited[uiLang()] || unlimited.en;
-                    } else {
-                        const rem = typeof usage.remaining === 'number' ? usage.remaining : (usage.limit - usage.count);
-                        accountDaily.textContent = Math.max(0, rem) + ' / ' + usage.limit;
-                    }
+                    dailyLoaded = true;
+                    lastDailyUsage = usage;
+                    renderDaily(accountDaily, usage);
                     return;
                 } catch (e) { /* retry */ }
             }
-            accountDaily.textContent = '—';
+            if (!dailyLoaded) accountDaily.textContent = '—';
         }
 
         const accountRenewalRow = document.getElementById('accountRenewalRow');
@@ -1185,9 +1215,13 @@
             authTabs.hidden = true;
             accountPanel.classList.add('visible');
             setAsideMode(true, cached.username);
+            const cachedLayout = document.querySelector('.auth-layout');
+            if (cachedLayout) cachedLayout.classList.add('dashboard-mode');
             delete accountName.dataset.i18nKey;
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = cached.username;
+            const cachedDashName = document.getElementById('dashName');
+            if (cachedDashName) cachedDashName.textContent = cached.username ? ', ' + cached.username : '';
             accountUsername.value = cached.username;
             const cachedPlan = cached.plan === 'pro' ? 'Pro' : '';
             const cachedRole = cached.role === 'admin' ? 'Admin' : '';
@@ -1254,6 +1288,9 @@
             authTabs.hidden = loggedIn;
             accountPanel.classList.toggle('visible', loggedIn);
             setAsideMode(loggedIn, loggedIn ? auth.displayName() : '');
+            // Logged in → full-width dashboard (hide the marketing aside).
+            const authLayout = document.querySelector('.auth-layout');
+            if (authLayout) authLayout.classList.toggle('dashboard-mode', loggedIn);
 
             if (!loggedIn) return;
 
@@ -1261,6 +1298,8 @@
             delete accountName.dataset.i18nKey;
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = name;
+            const dashName = document.getElementById('dashName');
+            if (dashName) dashName.textContent = name ? ', ' + name : '';
             accountUsername.value = state.profile && state.profile.username ? state.profile.username : name;
             accountPlan.textContent = currentMembershipLabel() || auth.formatPlan() || '';
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
