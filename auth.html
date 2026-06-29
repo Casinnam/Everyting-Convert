@@ -7,6 +7,9 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Load usage-limit.js for the account dashboard's daily-downloads card, but
+         disable its on-page badge/guard (no conversions happen on this screen). -->
+    <meta name="usage-limit" content="none">
     <title>EverythingConvert - Login</title>
     <!-- SEO:START -->
     <meta name="robots" content="noindex, nofollow">
@@ -387,6 +390,60 @@
             color: var(--text-main);
         }
 
+        /* Account dashboard: at-a-glance stat cards (plan, credits, daily usage). */
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+        @media (max-width: 560px) { .dash-stats { grid-template-columns: 1fr; } }
+        .dash-stat {
+            background: rgba(255, 253, 246, 0.95);
+            border: 1px solid rgba(47, 38, 18, 0.16);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .dash-ic {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 0.2rem;
+        }
+        .dash-ic-plan { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+        .dash-ic-credit { background: linear-gradient(135deg, #f59e0b, #fb7185); }
+        .dash-ic-daily { background: linear-gradient(135deg, #10b981, #38bdf8); }
+        .dash-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); line-height: 1.25; }
+        .dash-value { font-size: 1.55rem; font-weight: 900; color: var(--text-main); line-height: 1.1; }
+        .dash-cta { font-size: 0.82rem; font-weight: 800; color: #2563eb; text-decoration: none; }
+        .dash-cta:hover { text-decoration: underline; }
+
+        /* Summer-sale floating bookmark (same as the home page) so the promo is
+           reachable from the login/account screen too. */
+        .summer-fab { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 1200;
+            display: flex; flex-direction: column; align-items: center; gap: .45rem;
+            padding: .95rem .55rem; text-decoration: none; color: #fff; font-weight: 800;
+            border-radius: 16px 0 0 16px; border: 1px solid rgba(255, 255, 255, .35); border-right: 0;
+            background: linear-gradient(160deg, #38bdf8, #6366f1 52%, #fb923c);
+            box-shadow: -8px 10px 26px rgba(2, 6, 23, .28);
+            animation: summer-fab-sway 2.6s ease-in-out infinite; will-change: transform; }
+        .summer-fab .summer-fab-sun { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+            background: radial-gradient(circle at 50% 45%, #fffbe8, #fbbf24 60%, #fb923c); color: #fff; font-size: 15px;
+            box-shadow: 0 0 16px 4px rgba(251, 191, 36, .55); }
+        .summer-fab .summer-fab-text { writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: .12em; font-size: .82rem; line-height: 1; }
+        .summer-fab .summer-fab-off { font-size: .7rem; font-weight: 900; background: rgba(255, 255, 255, .95); color: #c2410c; border-radius: 999px; padding: .12rem .4rem; }
+        .summer-fab:hover { animation-play-state: paused; transform: translateY(-50%) translateX(-7px); }
+        .summer-fab:focus-visible { outline: 3px solid #1e3a8a; outline-offset: 2px; }
+        @keyframes summer-fab-sway { 0%, 100% { transform: translateY(-50%) translateX(0); } 50% { transform: translateY(-50%) translateX(-7px); } }
+        @media (prefers-reduced-motion: reduce) { .summer-fab { animation: none; } }
+        @media (max-width: 640px) { .summer-fab { padding: .7rem .45rem; } .summer-fab .summer-fab-text { font-size: .74rem; } }
+
         /* Login page only: the shared 4rem hero title is far too large beside
            the auth card. Scope it tightly so it beats styles.css and stays small. */
         .auth-aside .hero-title {
@@ -583,11 +640,27 @@
                 <div class="auth-message" id="authMessage"></div>
             </form>
             <div class="account-panel" id="accountPanel">
+                <div class="dash-stats">
+                    <div class="dash-stat">
+                        <span class="dash-ic dash-ic-plan"><i class="fa-solid fa-crown"></i></span>
+                        <span class="dash-label" data-i18n-key="statPlan">Membership</span>
+                        <strong class="dash-value" id="accountPlan" data-no-i18n>-</strong>
+                    </div>
+                    <div class="dash-stat">
+                        <span class="dash-ic dash-ic-credit"><i class="fa-solid fa-coins"></i></span>
+                        <span class="dash-label" data-i18n-key="statCredits">AI credits</span>
+                        <strong class="dash-value" id="accountCredits" data-no-i18n>-</strong>
+                        <a class="dash-cta" href="pricing.html#credit-packs" data-i18n-key="buyMore">Buy more</a>
+                    </div>
+                    <div class="dash-stat">
+                        <span class="dash-ic dash-ic-daily"><i class="fa-solid fa-bolt"></i></span>
+                        <span class="dash-label" data-i18n-key="statDaily">Free downloads left today</span>
+                        <strong class="dash-value" id="accountDaily" data-no-i18n>-</strong>
+                    </div>
+                </div>
+                <div id="accountRenewalRow" data-no-i18n style="display:none;text-align:center;color:#1e3a8a;font-weight:700;margin:.1rem 0 .3rem;"></div>
                 <div class="account-card">
                     <div data-i18n-key="displayName">Display name: <strong id="accountName">-</strong></div>
-                    <div data-i18n-key="membershipLevel">Membership level: <strong id="accountPlan" data-no-i18n>-</strong></div>
-                    <div data-i18n-key="aiCreditsLabel">AI credits: <strong id="accountCredits" data-no-i18n>-</strong> <a href="pricing.html#credit-packs" data-i18n-key="buyMore" style="font-weight:700;color:#2563eb;text-decoration:none;margin-left:.4rem;">Buy more</a></div>
-                    <div id="accountRenewalRow" data-no-i18n style="display:none;margin-top:.15rem;color:#1e3a8a;font-weight:700;"></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
                             <label for="accountUsername">Change User ID</label>
@@ -618,6 +691,12 @@
       </div>
     </main>
 
+    <a class="summer-fab" href="summer.html" aria-label="Summer Special 2026 — 30% off Pro and double credits">
+        <span class="summer-fab-sun" aria-hidden="true"><i class="fa-solid fa-sun"></i></span>
+        <span class="summer-fab-text" data-i18n-key="summerTab">SUMMER SALE</span>
+        <span class="summer-fab-off">30%</span>
+    </a>
+
     <footer class="site-footer">
         <div class="footer-legal-row" style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:1rem 0 1.25rem;border-top:1px solid rgba(47,38,18,.12);"><a style="color:inherit;text-decoration:none;font-weight:700;" href="about.html">About Us</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="https://donate.stripe.com/9B6eVc4Rt9yo4m75nwdwc00" target="_blank" rel="noopener">Donate</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="privacy.html">Privacy</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="terms.html">Terms</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="security.html">Security and Compliance</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="#cookie-settings">Cookie Settings</a><a style="color:inherit;text-decoration:none;font-weight:700;" href="contact.html">Contact</a></div><div class="footer-bottom">
             <div class="footer-logo">
@@ -647,6 +726,7 @@
     <script src="tools-menu.js?v=nav-20260620d"></script>
     <script src="language-menu.js?v=lang-20260629a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
     <script src="ai-credits.js?v=credits-20260629a"></script>
+    <script src="usage-limit.js?v=usage-20260626a"></script>
     <script>
         let mode = 'login';
 
@@ -727,6 +807,32 @@
                 return balance;
             }
             if (!creditsLoaded) accountCredits.textContent = '-';
+        }
+
+        // Daily free-download allowance card. Pro = unlimited; free = "left / limit".
+        async function loadAccountDaily() {
+            const accountDaily = document.getElementById('accountDaily');
+            if (!accountDaily) return;
+            const ul = window.EverythingConvertUsageLimit;
+            if (!ul || typeof ul.getUsageStatus !== 'function') return;
+            const unlimited = { en: 'Unlimited', ko: '무제한', de: 'Unbegrenzt', es: 'Ilimitado', fr: 'Illimité' };
+            accountDaily.textContent = checkingLabel();
+            const delays = [0, 600, 1500, 3000];
+            for (let i = 0; i < delays.length; i += 1) {
+                if (delays[i]) await new Promise((r) => window.setTimeout(r, delays[i]));
+                try {
+                    const usage = await ul.getUsageStatus();
+                    if (!usage) continue;
+                    if (usage.unlimited || usage.accountType === 'pro' || usage.remaining === null) {
+                        accountDaily.textContent = unlimited[uiLang()] || unlimited.en;
+                    } else {
+                        const rem = typeof usage.remaining === 'number' ? usage.remaining : (usage.limit - usage.count);
+                        accountDaily.textContent = Math.max(0, rem) + ' / ' + usage.limit;
+                    }
+                    return;
+                } catch (e) { /* retry */ }
+            }
+            accountDaily.textContent = '—';
         }
 
         const accountRenewalRow = document.getElementById('accountRenewalRow');
@@ -1160,6 +1266,7 @@
             adminLink.style.display = auth.isAdmin() ? '' : 'none';
             blogLink.style.display = auth.isAdmin() ? '' : 'none';
             loadAccountCredits();
+            loadAccountDaily();
             loadRenewalDate();
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             if (!profilePlan) {
