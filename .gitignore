@@ -9,6 +9,7 @@ node_modules/
 .codex/
 .codex-remote-attachments/
 supabase/.temp/
+tmp/
 /20260602_224209.png
 /live-home-debug.png
 /policies capture.png
