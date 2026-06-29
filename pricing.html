@@ -211,6 +211,17 @@
 
         @media (max-width: 860px) { .credit-pack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 460px) { .credit-pack-grid { grid-template-columns: 1fr; } }
+        /* Referral code entry: optional field so a friend's code can be applied
+           even when the auto-captured link code is missing (different device, or
+           a code shared by word of mouth). Pre-filled from ec_ref_code. */
+        .credit-referral { max-width: 460px; margin: 1.5rem auto 0; text-align: center; }
+        .credit-referral label { display: block; font-weight: 800; color: #475569; font-size: .9rem; margin-bottom: .5rem; }
+        .credit-referral-row { display: flex; gap: .5rem; justify-content: center; }
+        .credit-referral input { flex: 1 1 240px; min-width: 0; border: 1px solid #c7d2fe; border-radius: 12px;
+            padding: .65rem .9rem; font: inherit; text-transform: uppercase; letter-spacing: .08em; text-align: center;
+            color: #1e293b; background: #f8fafc; }
+        .credit-referral input:focus { outline: 2px solid #7c3aed; outline-offset: 1px; border-color: #7c3aed; }
+        .credit-referral-hint { display: block; margin-top: .55rem; font-size: .82rem; font-weight: 700; color: #047857; }
 
         /* Slightly smaller hero heading (fits the longer translated headings better). */
         .pricing-page .pricing-hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.8rem); }
@@ -354,6 +365,14 @@
                     <div class="pack-unit">$0.05 / credit</div>
                     <button type="button" data-buy-pack="business">Buy Business</button>
                 </div>
+            </div>
+
+            <div class="credit-referral" data-no-i18n>
+                <label for="creditReferralInput" data-rk="refLabel">Have a referral code? (optional)</label>
+                <div class="credit-referral-row">
+                    <input id="creditReferralInput" type="text" maxlength="16" autocomplete="off" spellcheck="false" placeholder="REFERRAL CODE">
+                </div>
+                <span class="credit-referral-hint" id="creditReferralHint" data-rk="refHint" hidden>We'll credit your friend 20 credits after your purchase.</span>
             </div>
 
             <p class="credit-use-note">What credits unlock: <strong>Smart OCR</strong> 2 credits per page · <strong>Background Remover</strong> 15 credits per HD image · <strong>AI Transcription</strong> 1 credit per minute (minimum 5) · <strong>Premium QR</strong> 5 credits for logo, frame, SVG/PDF export · <strong>PDF Summary extra</strong> 1 credit after the daily free limit.</p>
@@ -557,6 +576,51 @@
     <script src="language-menu.js?v=lang-20260629a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
     <script src="pricing-language.js?v=pricelang-20260618b"></script>
     <script src="ai-credits.js?v=credits-20260629a"></script>
+    <script>
+    (function () {
+      // Referral code field on the credit-pack checkout. Writes to the same
+      // localStorage key (ec_ref_code) that buyPack() reads, so a typed code is
+      // attached to the purchase automatically — no buyPack change needed.
+      var input = document.getElementById('creditReferralInput');
+      var hint = document.getElementById('creditReferralHint');
+      if (!input) return;
+      var RK = {
+        refLabel: { en: 'Have a referral code? (optional)', ko: '추천 코드가 있나요? (선택)', de: 'Hast du einen Empfehlungscode? (optional)', es: '¿Tienes un código de referido? (opcional)', fr: 'Vous avez un code de parrainage ? (facultatif)' },
+        refPlaceholder: { en: 'REFERRAL CODE', ko: '추천 코드', de: 'EMPFEHLUNGSCODE', es: 'CÓDIGO DE REFERIDO', fr: 'CODE DE PARRAINAGE' },
+        refHint: { en: "We'll credit your friend 20 credits after your purchase.", ko: '구매가 완료되면 친구에게 20 크레딧이 지급됩니다.', de: 'Nach deinem Kauf erhält dein Freund 20 Credits.', es: 'Acreditaremos 20 créditos a tu amigo tras tu compra.', fr: 'Nous créditerons 20 crédits à votre ami après votre achat.' }
+      };
+      function lang() {
+        try {
+          if (window.EverythingConvertLanguage && window.EverythingConvertLanguage.get) return window.EverythingConvertLanguage.get() || 'en';
+          return localStorage.getItem('everything_convert_language') || 'en';
+        } catch (e) { return 'en'; }
+      }
+      function applyLang(l) {
+        var L = RK.refLabel[l] ? l : 'en';
+        document.querySelectorAll('[data-rk]').forEach(function (el) {
+          var k = el.getAttribute('data-rk');
+          if (RK[k] && RK[k][L]) el.textContent = RK[k][L];
+        });
+        input.placeholder = RK.refPlaceholder[L];
+      }
+      function normalize(v) { return (v || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16); }
+      function readStored() { try { return localStorage.getItem('ec_ref_code') || ''; } catch (e) { return ''; } }
+      function writeStored(v) { try { if (v) localStorage.setItem('ec_ref_code', v); else localStorage.removeItem('ec_ref_code'); } catch (e) {} }
+      function syncHint() { if (hint) hint.hidden = !input.value.trim(); }
+
+      input.value = readStored();   // pre-fill an auto-captured link code
+      syncHint();
+      input.addEventListener('input', function () {
+        var v = normalize(input.value);
+        if (v !== input.value) input.value = v;
+        writeStored(v);
+        syncHint();
+      });
+
+      applyLang(lang());
+      window.addEventListener('everything-language-change', function (e) { applyLang((e.detail && e.detail.language) || lang()); });
+    })();
+    </script>
     <script>
         (function () {
             function ecAlert(m, o) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m, o) : Promise.resolve(window.alert(m)); }
