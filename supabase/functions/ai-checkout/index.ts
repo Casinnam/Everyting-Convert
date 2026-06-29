@@ -28,6 +28,35 @@ function supa() {
   };
 }
 
+// Summer 2026 promo window (-07:00, matches the Stripe coupon redeem-by).
+// Keep this in sync with public.is_summer_promo() in summer-2026-promo.sql.
+function isSummerPromo(): boolean {
+  const now = Date.now();
+  const start = new Date('2026-07-01T00:00:00-07:00').getTime();
+  const end = new Date('2026-08-31T23:59:59-07:00').getTime();
+  return now >= start && now <= end;
+}
+
+// Resolve a referral code → referrer user id via the SECURITY DEFINER RPC.
+// Returns null for unknown/blank codes.
+async function resolveReferrer(code: string): Promise<string | null> {
+  const trimmed = (code || '').trim();
+  if (!trimmed) return null;
+  const { url, key } = supa();
+  try {
+    const res = await fetch(`${url}/rest/v1/rpc/referrer_for_code`, {
+      method: 'POST',
+      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_code: trimmed }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return typeof data === 'string' && data ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 async function dbGetJob(jobId: string): Promise<Record<string, unknown>> {
   const { url, key } = supa();
   const res = await fetch(`${url}/rest/v1/ai_jobs?id=eq.${jobId}&select=*`, {
@@ -99,7 +128,7 @@ Deno.serve(async (req: Request) => {
   const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
   if (!stripeKey) return json({ error: 'Payment service not configured.' }, 500);
 
-  let body: { job_id?: string; pack?: string; success_url?: string; cancel_url?: string };
+  let body: { job_id?: string; pack?: string; success_url?: string; cancel_url?: string; referral_code?: string };
   try { body = await req.json(); }
   catch { return json({ error: 'Invalid JSON body.' }, 400); }
 
@@ -116,24 +145,42 @@ Deno.serve(async (req: Request) => {
     const userId = await getUserId(req);
     if (!userId) return json({ error: 'Please log in to buy credits.' }, 401);
 
+    // ② Summer promo: same price, double the credits granted.
+    const promo = isSummerPromo();
+    const grantedCredits = promo ? pack.credits * 2 : pack.credits;
+    const packLabel = promo ? `${pack.label} (Summer 2× bonus)` : pack.label;
+
+    // ④ Referral (B): if the buyer arrived with a referral code (and we're in
+    // the promo window), record the referrer so the webhook can reward them on
+    // this purchase. Self-referrals are ignored.
+    let referrerId: string | null = null;
+    if (promo && body.referral_code) {
+      const resolved = await resolveReferrer(String(body.referral_code));
+      if (resolved && resolved !== userId) referrerId = resolved;
+    }
+
     const successWithParams = new URL(successUrl);
     successWithParams.searchParams.set('session_id', '{CHECKOUT_SESSION_ID}');
-    successWithParams.searchParams.set('credits', String(pack.credits));
+    successWithParams.searchParams.set('credits', String(grantedCredits));
 
     const params = new URLSearchParams({
       'payment_method_types[]': 'card',
       'line_items[0][price_data][currency]': 'usd',
       'line_items[0][price_data][unit_amount]': String(pack.amount),
-      'line_items[0][price_data][product_data][name]': pack.label,
+      'line_items[0][price_data][product_data][name]': packLabel,
       'line_items[0][quantity]': '1',
       'mode': 'payment',
       'success_url': successWithParams.toString(),
       'cancel_url': cancelUrl,
       'metadata[kind]': 'credit_pack',
       'metadata[pack]': packKey,
-      'metadata[credits]': String(pack.credits),
+      'metadata[credits]': String(grantedCredits),
       'metadata[user_id]': userId,
     });
+    if (referrerId) {
+      params.set('metadata[referrer_id]', referrerId);
+      params.set('metadata[buyer_id]', userId);
+    }
 
     const { ok, session } = await createStripeSession(stripeKey, params);
     if (!ok || !session.url) {

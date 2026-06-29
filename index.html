@@ -69,6 +69,41 @@
         border-radius: 999px; font-weight: 800; text-decoration: none; color: #fff;
         background: linear-gradient(135deg, #3b82f6, #6366f1); box-shadow: 0 12px 26px rgba(59, 130, 246, .28); white-space: nowrap; }
       @media (max-width: 640px) { .ext-cta-card { text-align: center; } }
+      /* Summer promo slide: a warm, sunny accent inside the cool-toned showcase
+         carousel so the seasonal sale stands out without breaking the layout. */
+      .summer-slide .home-showcase-kicker { color: #c2410c; }
+      .summer-visual { position: relative; display: grid; place-items: center; gap: .6rem;
+        background: linear-gradient(135deg, #38bdf8, #818cf8 55%, #fcd34d); border-radius: 20px; min-height: 150px; padding: 1.2rem; }
+      .summer-visual .summer-sun { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;
+        background: radial-gradient(circle at 50% 45%, #fffbe8, #fbbf24 60%, #fb923c); color: #fff; font-size: 26px;
+        box-shadow: 0 0 36px 10px rgba(251, 191, 36, .5); }
+      .summer-visual .summer-chip { font-weight: 900; font-size: .82rem; color: #4c1d95; background: rgba(255, 255, 255, .92);
+        padding: .35rem .8rem; border-radius: 999px; box-shadow: 0 8px 20px rgba(2, 6, 23, .14); }
+      .summer-visual .summer-chip-b { color: #b45309; }
+      /* Floating summer-sale bookmark: a fixed tab clinging to the right edge,
+         always visible, gently swaying to draw the eye. Click → summer.html. */
+      .summer-fab { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 1200;
+        display: flex; flex-direction: column; align-items: center; gap: .45rem;
+        padding: .95rem .55rem; text-decoration: none; color: #fff; font-weight: 800;
+        border-radius: 16px 0 0 16px; border: 1px solid rgba(255, 255, 255, .35); border-right: 0;
+        background: linear-gradient(160deg, #38bdf8, #6366f1 52%, #fb923c);
+        box-shadow: -8px 10px 26px rgba(2, 6, 23, .28);
+        animation: summer-fab-sway 2.6s ease-in-out infinite; will-change: transform; }
+      .summer-fab .summer-fab-sun { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+        background: radial-gradient(circle at 50% 45%, #fffbe8, #fbbf24 60%, #fb923c); color: #fff; font-size: 15px;
+        box-shadow: 0 0 16px 4px rgba(251, 191, 36, .55); }
+      .summer-fab .summer-fab-text { writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: .12em;
+        font-size: .82rem; line-height: 1; }
+      .summer-fab .summer-fab-off { font-size: .7rem; font-weight: 900; background: rgba(255, 255, 255, .95);
+        color: #c2410c; border-radius: 999px; padding: .12rem .4rem; }
+      .summer-fab:hover { animation-play-state: paused; transform: translateY(-50%) translateX(-7px); }
+      .summer-fab:focus-visible { outline: 3px solid #1e3a8a; outline-offset: 2px; }
+      @keyframes summer-fab-sway {
+        0%, 100% { transform: translateY(-50%) translateX(0); }
+        50% { transform: translateY(-50%) translateX(-7px); }
+      }
+      @media (prefers-reduced-motion: reduce) { .summer-fab { animation: none; } }
+      @media (max-width: 640px) { .summer-fab { padding: .7rem .45rem; } .summer-fab .summer-fab-text { font-size: .74rem; } }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -279,6 +314,19 @@
                             <span><i class="fa-solid fa-eye"></i></span>
                         </div>
                     </article>
+                    <article class="home-showcase-slide summer-slide" data-showcase-slide>
+                        <div class="home-showcase-copy">
+                            <span class="home-showcase-kicker" data-i18n="showcaseSummerKicker"><i class="fa-solid fa-umbrella-beach"></i> Summer Special 2026</span>
+                            <h2 data-i18n="showcaseSummerTitle">Twice the fun, twice the value — summer sale is on.</h2>
+                            <p data-i18n="showcaseSummerText">For July and August only: Pro 30% off with code SUMMER, double credits on every purchase, and 20 free signup credits.</p>
+                            <a class="home-showcase-action" href="summer.html" data-i18n="showcaseSummerAction">See the summer deal <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="home-showcase-visual summer-visual" aria-hidden="true">
+                            <span class="summer-sun"><i class="fa-solid fa-sun"></i></span>
+                            <span class="summer-chip summer-chip-a">30% OFF</span>
+                            <span class="summer-chip summer-chip-b">2× Credits</span>
+                        </div>
+                    </article>
                 </div>
                 <div class="home-showcase-controls" aria-label="Featured category controls">
                     <button class="home-showcase-arrow" type="button" data-showcase-prev aria-label="Previous category"><i class="fa-solid fa-arrow-left"></i></button>
@@ -288,6 +336,7 @@
                         <button class="home-showcase-dot" type="button" data-showcase-dot="2" aria-label="Video tools"></button>
                         <button class="home-showcase-dot" type="button" data-showcase-dot="3" aria-label="Audio tools"></button>
                         <button class="home-showcase-dot" type="button" data-showcase-dot="4" aria-label="AI tools"></button>
+                        <button class="home-showcase-dot" type="button" data-showcase-dot="5" aria-label="Summer special"></button>
                     </div>
                     <button class="home-showcase-arrow" type="button" data-showcase-next aria-label="Next category"><i class="fa-solid fa-arrow-right"></i></button>
                 </div>
@@ -662,6 +711,12 @@
             </div>
         </section>
     </main>
+
+    <a class="summer-fab" href="summer.html" aria-label="Summer Special 2026 — 30% off Pro and double credits">
+        <span class="summer-fab-sun" aria-hidden="true"><i class="fa-solid fa-sun"></i></span>
+        <span class="summer-fab-text" data-i18n-key="summerTab">SUMMER SALE</span>
+        <span class="summer-fab-off">30%</span>
+    </a>
 
     <footer class="site-footer home-footer">
         <div class="footer-grid">

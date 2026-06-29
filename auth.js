@@ -1,3 +1,13 @@
+// Referral capture (Summer 2026): if a visitor lands with ?ref=CODE on any
+// page, remember it so a later credit purchase can credit the referrer. Kept
+// independent of auth logic so it runs on every page that loads auth.js.
+(function () {
+  try {
+    const ref = (new URLSearchParams(window.location.search).get('ref') || '').trim();
+    if (ref) localStorage.setItem('ec_ref_code', ref.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16));
+  } catch (e) { /* storage blocked — ignore */ }
+})();
+
 (function () {
   // Site-styled alert (falls back to native where ec-modal.js isn't loaded).
   function ecAlert(m) { return window.EverythingConvertUI ? window.EverythingConvertUI.alert(m) : Promise.resolve(window.alert(m)); }

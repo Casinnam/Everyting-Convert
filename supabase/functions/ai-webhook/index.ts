@@ -67,6 +67,33 @@ async function grantCreditPack(userId: string, credits: number, sessionId: strin
   }
 }
 
+// ④ Referral reward (Summer 2026): when a referred buyer completes a credit
+// purchase, grant the referrer 20 credits. Idempotent on the BUYER id
+// (ref = 'referral:<buyerId>'), so a given friend rewards the referrer at most
+// once ever — i.e. only their first qualifying purchase counts.
+const REFERRAL_REWARD_CREDITS = 20;
+async function grantReferralReward(referrerId: string, buyerId: string): Promise<void> {
+  if (!referrerId || !buyerId || referrerId === buyerId) return;
+  const { url, key } = supa();
+  const res = await fetch(`${url}/rest/v1/rpc/grant_ai_credits`, {
+    method: 'POST',
+    headers: {
+      apikey: key, Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      p_user_id: referrerId,
+      p_amount: REFERRAL_REWARD_CREDITS,
+      p_kind: 'referral',
+      p_ref: `referral:${buyerId}`,
+    }),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`grantReferralReward failed: ${text}`);
+  }
+}
+
 // Stripe webhook signature verification (HMAC-SHA256)
 async function verifyStripeSignature(
   payload: string,
@@ -138,6 +165,10 @@ Deno.serve(async (req: Request) => {
             throw new Error('Credit pack session is missing user_id or credits metadata.');
           }
           await grantCreditPack(userId, credits, sessionId);
+          // ④ Reward the referrer (idempotent on the buyer id).
+          if (metadata.referrer_id) {
+            await grantReferralReward(metadata.referrer_id, metadata.buyer_id ?? userId);
+          }
         } else if (metadata?.job_id) {
           await dbUpdateJobBySession(sessionId, metadata.job_id);
         }

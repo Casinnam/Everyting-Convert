@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<!--
+  Summer 2026 promotion landing page.
+  STOREFRONT ONLY — the visual/marketing surface for the summer sale.
+
+  What is LIVE here:
+    • Pro 30% off via Stripe coupon code SUMMER (created in the Stripe dashboard).
+
+  What still needs BACKEND enablement before going live (Phase 2):
+    • Credit 2x on purchase   → supabase/functions/ai-checkout (double pack credits during window)
+    • New signup 20 credits    → supabase grant_signup_credits() (10 → 20 during window)
+    • Referral (B): friend buys → referrer +20 → supabase/functions/ai-webhook + checkout code field
+  Do not link this page from production nav until the bonuses above actually grant,
+  otherwise the page promises rewards the system does not deliver.
+
+  i18n: self-contained dictionary below (data-s attributes). Hooks the global
+  language switch via the 'everything-language-change' event from language-menu.js.
+-->
+<html lang="en">
+<head>
+    <script src="analytics.js?v=analytics-20260618a"></script>
+    <script src="ads.js?v=ads-20260611a"></script>
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Special 2026 — 30% Off Pro & Double Credits | EverythingConvert</title>
+    <!-- SEO:START -->
+    <meta name="description" content="Summer Sale 2026: get Pro 30% off with code SUMMER, earn double credits on every purchase, 20 free signup credits, and a referral bonus. July & August only.">
+    <link rel="canonical" href="https://www.everythingconvert.com/summer.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EverythingConvert">
+    <meta property="og:title" content="Summer Special 2026 — 30% Off Pro & Double Credits">
+    <meta property="og:description" content="Pro 30% off with code SUMMER, double credits on every purchase, 20 free signup credits, and a referral bonus. July & August only.">
+    <meta property="og:url" content="https://www.everythingconvert.com/summer.html">
+    <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Summer Special 2026 — EverythingConvert">
+    <meta name="twitter:description" content="Pro 30% off with code SUMMER, double credits, 20 free signup credits, referral bonus. July & August only.">
+    <!-- SEO:END -->
+    <link rel="stylesheet" href="styles.css?v=ui-20260616d">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      /* ── Summer promo page (scoped with .sp- prefix) ───────────────── */
+      .summer-page { background: #f8fafc; }
+      .sp-main { font-family: 'Inter', 'Noto Sans KR', sans-serif; color: #0f172a; }
+
+      /* Hero: a summer sky → warm horizon, with a glowing sun and a wave
+         that hands off to the white page below. */
+      .sp-hero { position: relative; overflow: hidden; padding: clamp(3rem, 7vw, 5.5rem) 1.25rem clamp(4.5rem, 9vw, 7rem);
+        background: linear-gradient(180deg, #38bdf8 0%, #6f8bf2 46%, #c9b3f0 74%, #fcd9b6 100%); }
+      .sp-sun { position: absolute; top: 7%; right: 11%; width: clamp(80px, 12vw, 140px); height: clamp(80px, 12vw, 140px);
+        border-radius: 50%; background: radial-gradient(circle at 50% 45%, #fffbe8, #fbbf24 58%, #fb923c);
+        box-shadow: 0 0 90px 36px rgba(251, 191, 36, .45); animation: sp-sun-pulse 6s ease-in-out infinite; }
+      @keyframes sp-sun-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+      .sp-cloud { position: absolute; background: rgba(255,255,255,.85); border-radius: 999px; filter: blur(1px); opacity: .8; }
+      .sp-cloud::before, .sp-cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+      .sp-cloud-1 { top: 16%; left: 8%; width: 120px; height: 30px; }
+      .sp-cloud-1::before { width: 55px; height: 55px; top: -26px; left: 18px; }
+      .sp-cloud-1::after { width: 40px; height: 40px; top: -18px; left: 60px; }
+      .sp-cloud-2 { top: 30%; left: 26%; width: 80px; height: 22px; opacity: .6; }
+      .sp-cloud-2::before { width: 38px; height: 38px; top: -18px; left: 12px; }
+      @media (max-width: 720px) { .sp-cloud { display: none; } }
+      .sp-wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 70px; display: block; }
+
+      .sp-hero-inner { position: relative; z-index: 3; max-width: 860px; margin: 0 auto; text-align: center;
+        background: rgba(255, 255, 255, .74); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, .65); border-radius: 28px; padding: clamp(1.8rem, 5vw, 3.2rem);
+        box-shadow: 0 34px 80px rgba(2, 6, 23, .22); }
+      .sp-badge { display: inline-flex; align-items: center; gap: .5rem; padding: .42rem 1.05rem; border-radius: 999px;
+        background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; font-weight: 800; font-size: .85rem; letter-spacing: .01em; }
+      .sp-hero h1 { font-size: clamp(2rem, 5.4vw, 3.4rem); font-weight: 900; line-height: 1.08; margin: 1.1rem 0 .8rem;
+        background: linear-gradient(120deg, #1d4ed8, #7c3aed 55%, #db2777); -webkit-background-clip: text; background-clip: text; color: #1e3a8a; }
+      .sp-hero p.sp-sub { font-size: clamp(1rem, 2.3vw, 1.18rem); color: #334155; line-height: 1.6; max-width: 640px; margin: 0 auto 1.6rem; }
+
+      /* Countdown */
+      .sp-cd-lead { font-weight: 800; color: #475569; font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .7rem; }
+      .sp-cd { display: inline-flex; gap: .55rem; flex-wrap: wrap; justify-content: center; }
+      .sp-cd-unit { min-width: 74px; padding: .75rem .5rem; border-radius: 16px; color: #fff;
+        background: linear-gradient(135deg, #2563eb, #7c3aed); box-shadow: 0 14px 30px rgba(37, 99, 235, .28); }
+      .sp-cd-num { display: block; font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+      .sp-cd-label { display: block; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-top: .35rem; opacity: .92; }
+      .sp-cd-ended { font-weight: 800; color: #b91c1c; font-size: 1.05rem; }
+
+      /* Code chip */
+      .sp-code-row { display: inline-flex; align-items: stretch; gap: 0; margin: 1.7rem 0 .5rem; border-radius: 14px; overflow: hidden;
+        border: 2px dashed #c4b5fd; background: #faf5ff; }
+      .sp-code-label { display: flex; align-items: center; padding: .55rem .9rem; font-size: .78rem; font-weight: 800; color: #6d28d9;
+        text-transform: uppercase; letter-spacing: .06em; border-right: 2px dashed #c4b5fd; }
+      .sp-code-val { display: flex; align-items: center; padding: .55rem .9rem; font-weight: 900; font-size: 1.15rem; letter-spacing: .12em; color: #4c1d95; }
+      .sp-code-copy { border: 0; background: #7c3aed; color: #fff; padding: 0 .95rem; cursor: pointer; font-weight: 800; font-size: .9rem; }
+      .sp-code-copy:hover { background: #6d28d9; }
+      .sp-code-note { font-size: .82rem; color: #64748b; margin: .5rem auto 0; max-width: 520px; }
+
+      /* CTAs */
+      .sp-cta-row { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; margin-top: 1.6rem; }
+      .sp-btn { display: inline-flex; align-items: center; gap: .55rem; padding: .9rem 1.6rem; border-radius: 999px;
+        font-weight: 800; text-decoration: none; font-size: 1rem; transition: transform .18s ease, box-shadow .18s ease; }
+      .sp-btn:hover { transform: translateY(-2px); }
+      .sp-btn-primary { color: #fff; background: linear-gradient(135deg, #2563eb, #7c3aed); box-shadow: 0 16px 34px rgba(37, 99, 235, .32); }
+      .sp-btn-ghost { color: #1d4ed8; background: #fff; border: 1px solid #c7d2fe; box-shadow: 0 10px 24px rgba(37, 99, 235, .12); }
+
+      /* Reward cards */
+      .sp-section { max-width: 1040px; margin: clamp(2.5rem, 6vw, 4.5rem) auto 0; padding: 0 1.25rem; }
+      .sp-section-head { text-align: center; margin-bottom: 2.2rem; }
+      .sp-section-head h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); font-weight: 900; color: #0f172a; margin: 0 0 .55rem; }
+      .sp-section-head p { color: #64748b; font-size: 1.05rem; margin: 0; }
+      .sp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.3rem; }
+      @media (max-width: 760px) { .sp-grid { grid-template-columns: 1fr; } }
+      .sp-card { position: relative; background: #fff; border: 1px solid #eef2f7; border-radius: 22px; padding: 1.7rem 1.6rem;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, .06); display: flex; flex-direction: column; gap: .6rem; }
+      .sp-card-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; font-size: 22px; color: #fff; margin-bottom: .3rem; }
+      .sp-i-pro { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+      .sp-i-credit { background: linear-gradient(135deg, #f59e0b, #fb7185); }
+      .sp-i-gift { background: linear-gradient(135deg, #10b981, #38bdf8); }
+      .sp-i-ref { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+      .sp-card h3 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; }
+      .sp-card p { color: #475569; line-height: 1.6; margin: 0; font-size: .97rem; }
+      .sp-card-badge { position: absolute; top: 1.3rem; right: 1.3rem; font-size: .72rem; font-weight: 900; padding: .28rem .65rem;
+        border-radius: 999px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+      .sp-price { display: flex; align-items: baseline; gap: .55rem; flex-wrap: wrap; margin-top: .5rem; padding-top: .85rem; border-top: 1px dashed #e2e8f0; }
+      .sp-price-old { color: #94a3b8; text-decoration: line-through; font-weight: 700; }
+      .sp-price-new { color: #1d4ed8; font-weight: 900; font-size: 1.25rem; }
+      .sp-price-tag { font-size: .8rem; color: #64748b; font-weight: 700; }
+      .sp-price-split { width: 1px; align-self: stretch; background: #e2e8f0; margin: 0 .2rem; }
+
+      /* Referral share card */
+      .sp-ref-card { background: #fff; border: 1px solid #eef2f7; border-radius: 22px; padding: 2rem 1.7rem; text-align: center;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, .06); max-width: 720px; margin: 0 auto; }
+      .sp-ref-card .sp-card-icon { margin: 0 auto .6rem; }
+      .sp-ref-card h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 900; color: #0f172a; margin: 0 0 .5rem; }
+      .sp-ref-card > p { color: #475569; line-height: 1.6; margin: 0 auto 1.2rem; max-width: 520px; }
+      .sp-ref-link { display: flex; gap: .5rem; max-width: 520px; margin: 0 auto; flex-wrap: wrap; }
+      .sp-ref-link input { flex: 1 1 240px; min-width: 0; border: 1px solid #c7d2fe; border-radius: 12px; padding: .7rem .9rem;
+        font: inherit; font-size: .95rem; color: #1e293b; background: #f8fafc; }
+      .sp-ref-link button { border: 0; border-radius: 12px; padding: .7rem 1.2rem; font-weight: 800; cursor: pointer; color: #fff;
+        background: linear-gradient(135deg, #2563eb, #7c3aed); white-space: nowrap; }
+      .sp-ref-link button:hover { filter: brightness(1.05); }
+
+      /* Closing urgency band */
+      .sp-final { position: relative; overflow: hidden; max-width: 1040px; margin: clamp(2.5rem, 6vw, 4.5rem) auto clamp(3rem, 7vw, 5rem);
+        border-radius: 26px; padding: clamp(2.2rem, 5vw, 3.4rem) 1.5rem; text-align: center; color: #fff;
+        background: linear-gradient(135deg, #1d4ed8, #7c3aed 55%, #db2777); box-shadow: 0 28px 60px rgba(76, 29, 149, .3); }
+      .sp-final h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); font-weight: 900; margin: 0 0 .7rem; }
+      .sp-final p { max-width: 560px; margin: 0 auto 1.5rem; opacity: .92; line-height: 1.6; font-size: 1.05rem; }
+      .sp-final .sp-btn-primary { background: #fff; color: #4c1d95; box-shadow: 0 16px 34px rgba(0,0,0,.2); }
+      .sp-final .sp-btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.45); }
+      .sp-fine { max-width: 760px; margin: 1.6rem auto 0; color: rgba(255,255,255,.78); font-size: .8rem; line-height: 1.5; }
+    </style>
+</head>
+<body class="premium-subpage summer-page">
+    <header class="header">
+        <a class="logo logo-link" href="index.html">
+            <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
+            <span>EverythingConvert</span>
+        </a>
+        <nav>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="index.html#tool-browser" class="nav-link">Tools</a>
+            <a href="pricing.html" class="nav-link">Pricing</a>
+            <a href="admin.html" class="nav-link" data-admin-only style="display:none;">Admin</a>
+            <a href="auth.html" class="nav-link" data-auth-login>Login</a>
+            <a href="auth.html" class="nav-link" data-auth-state data-auth-account style="display:none;">Account</a>
+            <a href="#" class="nav-link" data-auth-logout style="display:none;">Logout</a>
+        </nav>
+    </header>
+
+    <main class="sp-main">
+        <section class="sp-hero">
+            <div class="sp-sun" aria-hidden="true"></div>
+            <div class="sp-cloud sp-cloud-1" aria-hidden="true"></div>
+            <div class="sp-cloud sp-cloud-2" aria-hidden="true"></div>
+
+            <div class="sp-hero-inner">
+                <span class="sp-badge"><i class="fa-solid fa-umbrella-beach"></i> <span data-s="heroBadge">Summer Special 2026</span></span>
+                <h1 data-s="heroTitle">Twice the fun, twice the value.</h1>
+                <p class="sp-sub" data-s="heroSub">Our biggest sale of the summer. For July and August only — go Pro for 30% off and earn double credits on everything.</p>
+
+                <div class="sp-cd-lead" data-s="cdLead">Offer ends in</div>
+                <div class="sp-cd" id="spCountdown" role="timer" aria-live="polite">
+                    <div class="sp-cd-unit"><span class="sp-cd-num" data-cd="days">00</span><span class="sp-cd-label" data-s="cdDays">Days</span></div>
+                    <div class="sp-cd-unit"><span class="sp-cd-num" data-cd="hours">00</span><span class="sp-cd-label" data-s="cdHours">Hours</span></div>
+                    <div class="sp-cd-unit"><span class="sp-cd-num" data-cd="minutes">00</span><span class="sp-cd-label" data-s="cdMins">Minutes</span></div>
+                    <div class="sp-cd-unit"><span class="sp-cd-num" data-cd="seconds">00</span><span class="sp-cd-label" data-s="cdSecs">Seconds</span></div>
+                </div>
+                <div class="sp-cd-ended" id="spCountdownEnded" data-s="cdEnded" hidden>This promotion has ended.</div>
+
+                <div class="sp-code-row">
+                    <span class="sp-code-label" data-s="codeLabel">Promo code</span>
+                    <span class="sp-code-val" id="spCodeVal">SUMMER</span>
+                    <button class="sp-code-copy" type="button" id="spCodeCopy" data-s="codeCopy">Copy</button>
+                </div>
+                <p class="sp-code-note" data-s="codeNote">Apply at checkout for Pro. Credit bonuses apply automatically.</p>
+
+                <div class="sp-cta-row">
+                    <a class="sp-btn sp-btn-primary" href="pricing.html"><i class="fa-solid fa-bolt"></i> <span data-s="ctaPro">Get Pro — 30% off</span></a>
+                    <a class="sp-btn sp-btn-ghost" href="pricing.html#credit-packs"><i class="fa-solid fa-coins"></i> <span data-s="ctaCredits">Double your credits</span></a>
+                </div>
+            </div>
+
+            <svg class="sp-wave" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
+                <path fill="#f8fafc" d="M0,40 C240,75 480,10 720,30 C960,50 1200,80 1440,35 L1440,70 L0,70 Z"></path>
+            </svg>
+        </section>
+
+        <section class="sp-section" aria-labelledby="spDealsTitle">
+            <div class="sp-section-head">
+                <h2 id="spDealsTitle" data-s="sectionTitle">Everything in this summer's deal</h2>
+                <p data-s="sectionSub">Four ways to get more this July and August — and only two months to grab them.</p>
+            </div>
+            <div class="sp-grid">
+                <article class="sp-card">
+                    <span class="sp-card-badge" data-s="card1Badge">Save 30%</span>
+                    <span class="sp-card-icon sp-i-pro"><i class="fa-solid fa-crown"></i></span>
+                    <h3 data-s="card1Title">Pro subscription — 30% off</h3>
+                    <p data-s="card1Desc">Use code SUMMER on a monthly or yearly plan. Lower prices, every premium feature, an ad-free workspace, and 300 AI credits a month.</p>
+                    <div class="sp-price">
+                        <span class="sp-price-tag" data-s="monthlyLabel">Monthly</span>
+                        <span class="sp-price-old">$9.99</span>
+                        <span class="sp-price-new">$6.99</span>
+                        <span class="sp-price-split"></span>
+                        <span class="sp-price-tag" data-s="yearlyLabel">Yearly</span>
+                        <span class="sp-price-new">$5.59</span><span class="sp-price-tag" data-s="perMonth">/mo</span>
+                        <span class="sp-price-tag" data-s="yearlyTotal">billed $67.12/year</span>
+                    </div>
+                </article>
+
+                <article class="sp-card">
+                    <span class="sp-card-badge" data-s="card2Badge">2× Credits</span>
+                    <span class="sp-card-icon sp-i-credit"><i class="fa-solid fa-coins"></i></span>
+                    <h3 data-s="card2Title">Double credits on every purchase</h3>
+                    <p data-s="card2Desc">Buy any credit pack during the promo and we instantly match it — 100 credits become 200, automatically. No code needed.</p>
+                </article>
+
+                <article class="sp-card">
+                    <span class="sp-card-badge" data-s="card3Badge">New users</span>
+                    <span class="sp-card-icon sp-i-gift"><i class="fa-solid fa-gift"></i></span>
+                    <h3 data-s="card3Title">20 free credits when you sign up</h3>
+                    <p data-s="card3Desc">New accounts get double the usual welcome bonus — 20 credits instead of 10 — to try our AI tools right away.</p>
+                </article>
+
+                <article class="sp-card">
+                    <span class="sp-card-badge" data-s="card4Badge">Invite &amp; earn</span>
+                    <span class="sp-card-icon sp-i-ref"><i class="fa-solid fa-user-plus"></i></span>
+                    <h3 data-s="card4Title">Invite a friend, get 20 credits</h3>
+                    <p data-s="card4Desc">Share EverythingConvert with a friend. When they buy their first credit pack, you get 20 bonus credits as a thank-you.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="sp-section" aria-labelledby="spRefTitle">
+            <div class="sp-ref-card">
+                <span class="sp-card-icon sp-i-ref"><i class="fa-solid fa-share-nodes"></i></span>
+                <h2 id="spRefTitle" data-s="refTitle">Your referral link</h2>
+                <p data-s="refDesc">Share this link with a friend. When they buy their first credit pack, you get 20 bonus credits.</p>
+                <div class="sp-ref-link" id="spRefReady" hidden>
+                    <input id="spRefInput" type="text" readonly aria-label="Your referral link">
+                    <button type="button" id="spRefCopy" data-s="refCopy">Copy link</button>
+                </div>
+                <p class="sp-code-note" id="spRefLogin"><a href="auth.html?next=summer.html" data-s="refLogin">Log in to get your personal referral link.</a></p>
+            </div>
+        </section>
+
+        <section class="sp-final" aria-labelledby="spFinalTitle">
+            <h2 id="spFinalTitle" data-s="finalTitle">Don't miss the sunniest deal of the year</h2>
+            <p data-s="finalSub">When summer ends, so does the sale. Lock in Pro and stock up on credits before August 31.</p>
+            <div class="sp-cta-row">
+                <a class="sp-btn sp-btn-primary" href="pricing.html"><i class="fa-solid fa-bolt"></i> <span data-s="ctaPro">Get Pro — 30% off</span></a>
+                <a class="sp-btn sp-btn-ghost" href="pricing.html#credit-packs"><i class="fa-solid fa-coins"></i> <span data-s="ctaCredits">Double your credits</span></a>
+            </div>
+            <p class="sp-fine" data-s="fineprint">Promotion valid July 1 – August 31, 2026. Code SUMMER applies 30% off the first billing cycle of a new Pro subscription. Credit bonuses apply to purchases made during the promotion period.</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-group">
+                <h2><img class="brand-icon" src="favicon.svg" alt="" width="28" height="28"> EverythingConvert</h2>
+                <a href="pricing.html">Pricing</a>
+                <a href="index.html#tool-browser">All tools</a>
+                <a href="auth.html">Account</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-file-export"></i> PDF Convert</h2>
+                <a href="pdf to word/pdf-to-word.html">PDF to Word</a>
+                <a href="pdf to jpg/pdf-to-jpg.html">PDF to JPG</a>
+                <a href="pdf to excel/pdf-to-excel.html">PDF to Excel</a>
+                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="excel to pdf/excel-to-pdf.html">Excel to PDF</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-wrench"></i> PDF Tools</h2>
+                <a href="pdf tools/pdf-tools.html?mode=merge">Merge PDF</a>
+                <a href="pdf tools/pdf-tools.html?mode=compress">Compress PDF</a>
+                <a href="pdf tools/pdf-tools.html?mode=split">Split PDF</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-regular fa-image"></i> Image</h2>
+                <a href="image to pdf/image-to-pdf.html">Image to PDF</a>
+                <a href="image converter/image-converter.html">Image Converter</a>
+            </div>
+            <div class="footer-group">
+                <h2><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tools</h2>
+                <a href="ai tools/transcription/index.html">Audio to Text</a>
+                <a href="ai tools/background-remover/index.html">Background Remover</a>
+                <a href="ai tools/pdf-summary/index.html">PDF Summary</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <img class="brand-icon" src="favicon.svg" alt="" width="28" height="28">
+                <span>EverythingConvert</span>
+            </div>
+            <p>&copy; EverythingConvert.com All rights reserved (2026)</p>
+            <div class="language-menu">
+                <button class="language-toggle" type="button" aria-expanded="false">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-language-current>English</span>
+                </button>
+                <div class="language-dropdown">
+                    <button type="button" data-language="en">English</button>
+                    <button type="button" data-language="ko">한국어</button>
+                    <button type="button" data-language="de">Deutsch</button>
+                    <button type="button" data-language="es">Español</button>
+                    <button type="button" data-language="fr">Français</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function () {
+      // ── Self-contained 5-language dictionary for the promo page ──────
+      var S = {
+        heroBadge: { en: 'Summer Special 2026', ko: '2026 여름 특별 이벤트', de: 'Sommer-Special 2026', es: 'Especial de Verano 2026', fr: 'Spécial Été 2026' },
+        heroTitle: { en: 'Twice the fun, twice the value.', ko: '기쁨도 두 배, 혜택도 두 배.', de: 'Doppelter Spaß, doppelter Wert.', es: 'El doble de diversión, el doble de valor.', fr: 'Deux fois plus de plaisir, deux fois plus d’avantages.' },
+        heroSub: { en: 'Our biggest sale of the summer. For July and August only — go Pro for 30% off and earn double credits on everything.', ko: '여름 한정 최대 규모 할인. 7월과 8월 단 두 달 동안 — Pro를 30% 할인받고 모든 크레딧을 두 배로 받으세요.', de: 'Unser größter Sommer-Sale. Nur im Juli und August – Pro mit 30 % Rabatt und doppelte Credits auf alles.', es: 'La mayor oferta del verano. Solo en julio y agosto: hazte Pro con 30 % de descuento y gana el doble de créditos en todo.', fr: 'Notre plus grande offre de l’été. En juillet et août uniquement — passez à Pro avec 30 % de réduction et gagnez le double de crédits sur tout.' },
+        cdLead: { en: 'Offer ends in', ko: '이벤트 종료까지', de: 'Angebot endet in', es: 'La oferta termina en', fr: 'L’offre se termine dans' },
+        cdDays: { en: 'Days', ko: '일', de: 'Tage', es: 'Días', fr: 'Jours' },
+        cdHours: { en: 'Hours', ko: '시간', de: 'Std.', es: 'Horas', fr: 'Heures' },
+        cdMins: { en: 'Minutes', ko: '분', de: 'Min.', es: 'Minutos', fr: 'Minutes' },
+        cdSecs: { en: 'Seconds', ko: '초', de: 'Sek.', es: 'Segundos', fr: 'Secondes' },
+        cdEnded: { en: 'This promotion has ended.', ko: '이 프로모션은 종료되었습니다.', de: 'Diese Aktion ist beendet.', es: 'Esta promoción ha finalizado.', fr: 'Cette promotion est terminée.' },
+        codeLabel: { en: 'Promo code', ko: '프로모션 코드', de: 'Aktionscode', es: 'Código promocional', fr: 'Code promo' },
+        codeCopy: { en: 'Copy', ko: '복사', de: 'Kopieren', es: 'Copiar', fr: 'Copier' },
+        codeCopied: { en: 'Copied!', ko: '복사됨!', de: 'Kopiert!', es: '¡Copiado!', fr: 'Copié !' },
+        codeNote: { en: 'Apply at checkout for Pro. Credit bonuses apply automatically.', ko: 'Pro 결제 시 입력하세요. 크레딧 보너스는 자동으로 적용됩니다.', de: 'Beim Pro-Checkout eingeben. Credit-Boni werden automatisch angewendet.', es: 'Aplícalo al pagar Pro. Los bonos de créditos se aplican automáticamente.', fr: 'À saisir lors du paiement Pro. Les bonus de crédits s’appliquent automatiquement.' },
+        ctaPro: { en: 'Get Pro — 30% off', ko: 'Pro 30% 할인받기', de: 'Pro — 30 % Rabatt sichern', es: 'Hazte Pro — 30 % de descuento', fr: 'Passer à Pro — 30 % de réduction' },
+        ctaCredits: { en: 'Double your credits', ko: '크레딧 두 배로 받기', de: 'Credits verdoppeln', es: 'Duplica tus créditos', fr: 'Doublez vos crédits' },
+        sectionTitle: { en: 'Everything in this summer’s deal', ko: '이번 여름 혜택 한눈에', de: 'Alles im Sommer-Deal', es: 'Todo en la oferta de este verano', fr: 'Tout dans l’offre de cet été' },
+        sectionSub: { en: 'Four ways to get more this July and August — and only two months to grab them.', ko: '7월과 8월, 더 많이 누리는 네 가지 방법 — 단 두 달뿐입니다.', de: 'Vier Wege, im Juli und August mehr zu bekommen – nur zwei Monate lang.', es: 'Cuatro formas de obtener más en julio y agosto, y solo dos meses para aprovecharlas.', fr: 'Quatre façons d’en profiter davantage en juillet et août — pendant deux mois seulement.' },
+        card1Badge: { en: 'Save 30%', ko: '30% 할인', de: '30 % sparen', es: 'Ahorra 30 %', fr: '−30 %' },
+        card1Title: { en: 'Pro subscription — 30% off', ko: 'Pro 구독 — 30% 할인', de: 'Pro-Abo — 30 % Rabatt', es: 'Suscripción Pro — 30 % de descuento', fr: 'Abonnement Pro — 30 % de réduction' },
+        card1Desc: { en: 'Use code SUMMER on a monthly or yearly plan. Lower prices, every premium feature, an ad-free workspace, and 300 AI credits a month.', ko: '월간 또는 연간 플랜에 SUMMER 코드를 사용하세요. 더 낮은 가격에 모든 프리미엄 기능, 광고 없는 작업 공간, 매월 300 AI 크레딧을 제공합니다.', de: 'Code SUMMER für das Monats- oder Jahresabo. Niedrigere Preise, alle Premium-Funktionen, werbefreier Arbeitsbereich und 300 KI-Credits pro Monat.', es: 'Usa el código SUMMER en el plan mensual o anual. Precios más bajos, todas las funciones premium, espacio sin anuncios y 300 créditos de IA al mes.', fr: 'Code SUMMER sur l’offre mensuelle ou annuelle. Prix réduits, toutes les fonctions premium, espace sans publicité et 300 crédits IA par mois.' },
+        monthlyLabel: { en: 'Monthly', ko: '월간', de: 'Monatlich', es: 'Mensual', fr: 'Mensuel' },
+        yearlyLabel: { en: 'Yearly', ko: '연간', de: 'Jährlich', es: 'Anual', fr: 'Annuel' },
+        perMonth: { en: '/mo', ko: '/월', de: '/Mon.', es: '/mes', fr: '/mois' },
+        yearlyTotal: { en: 'billed $67.12/year', ko: '연 $67.12 청구', de: '67,12 $/Jahr', es: '67,12 $/año', fr: 'facturé 67,12 $/an' },
+        card2Badge: { en: '2× Credits', ko: '크레딧 2배', de: '2× Credits', es: '2× créditos', fr: '2× crédits' },
+        card2Title: { en: 'Double credits on every purchase', ko: '구매할 때마다 크레딧 두 배', de: 'Doppelte Credits bei jedem Kauf', es: 'Doble de créditos en cada compra', fr: 'Crédits doublés à chaque achat' },
+        card2Desc: { en: 'Buy any credit pack during the promo and we instantly match it — 100 credits become 200, automatically. No code needed.', ko: '프로모션 기간에 크레딧 팩을 구매하면 즉시 두 배로 적립됩니다 — 100 크레딧이 자동으로 200 크레딧이 됩니다. 코드 입력도 필요 없어요.', de: 'Kaufe während der Aktion ein Credit-Paket und wir verdoppeln es sofort – aus 100 Credits werden automatisch 200. Kein Code nötig.', es: 'Compra cualquier paquete de créditos durante la promoción y lo duplicamos al instante: 100 créditos se convierten en 200, automáticamente. Sin código.', fr: 'Achetez un pack de crédits pendant l’offre et nous le doublons aussitôt — 100 crédits deviennent 200, automatiquement. Sans code.' },
+        card3Badge: { en: 'New users', ko: '신규 가입자', de: 'Neue Nutzer', es: 'Nuevos usuarios', fr: 'Nouveaux utilisateurs' },
+        card3Title: { en: '20 free credits when you sign up', ko: '가입하면 무료 크레딧 20개', de: '20 Gratis-Credits bei Anmeldung', es: '20 créditos gratis al registrarte', fr: '20 crédits offerts à l’inscription' },
+        card3Desc: { en: 'New accounts get double the usual welcome bonus — 20 credits instead of 10 — to try our AI tools right away.', ko: '신규 계정은 평소의 두 배인 가입 보너스 20 크레딧을 받아 AI 도구를 바로 사용해 볼 수 있습니다.', de: 'Neue Konten erhalten den doppelten Willkommensbonus – 20 statt 10 Credits – um unsere KI-Tools sofort zu testen.', es: 'Las cuentas nuevas reciben el doble del bono de bienvenida habitual: 20 créditos en vez de 10, para probar nuestras herramientas de IA enseguida.', fr: 'Les nouveaux comptes reçoivent le double du bonus de bienvenue habituel — 20 crédits au lieu de 10 — pour essayer nos outils IA tout de suite.' },
+        card4Badge: { en: 'Invite & earn', ko: '초대하고 받기', de: 'Einladen & verdienen', es: 'Invita y gana', fr: 'Parrainez et gagnez' },
+        card4Title: { en: 'Invite a friend, get 20 credits', ko: '친구 초대하고 20 크레딧 받기', de: 'Freund einladen, 20 Credits erhalten', es: 'Invita a un amigo y gana 20 créditos', fr: 'Parrainez un ami, recevez 20 crédits' },
+        card4Desc: { en: 'Share EverythingConvert with a friend. When they buy their first credit pack, you get 20 bonus credits as a thank-you.', ko: '친구에게 EverythingConvert를 소개하세요. 친구가 첫 크레딧 팩을 구매하면 감사의 의미로 보너스 20 크레딧을 드립니다.', de: 'Teile EverythingConvert mit einem Freund. Kauft er sein erstes Credit-Paket, erhältst du 20 Bonus-Credits als Dankeschön.', es: 'Comparte EverythingConvert con un amigo. Cuando compre su primer paquete de créditos, recibirás 20 créditos de regalo como agradecimiento.', fr: 'Partagez EverythingConvert avec un ami. Lorsqu’il achète son premier pack de crédits, vous recevez 20 crédits bonus en remerciement.' },
+        refTitle: { en: 'Your referral link', ko: '내 추천 링크', de: 'Dein Empfehlungslink', es: 'Tu enlace de referido', fr: 'Votre lien de parrainage' },
+        refDesc: { en: 'Share this link with a friend. When they buy their first credit pack, you get 20 bonus credits.', ko: '이 링크를 친구에게 공유하세요. 친구가 첫 크레딧 팩을 구매하면 보너스 20 크레딧을 받습니다.', de: 'Teile diesen Link mit einem Freund. Kauft er sein erstes Credit-Paket, erhältst du 20 Bonus-Credits.', es: 'Comparte este enlace con un amigo. Cuando compre su primer paquete de créditos, recibirás 20 créditos de regalo.', fr: 'Partagez ce lien avec un ami. Lorsqu’il achète son premier pack de crédits, vous recevez 20 crédits bonus.' },
+        refCopy: { en: 'Copy link', ko: '링크 복사', de: 'Link kopieren', es: 'Copiar enlace', fr: 'Copier le lien' },
+        refCopied: { en: 'Copied!', ko: '복사됨!', de: 'Kopiert!', es: '¡Copiado!', fr: 'Copié !' },
+        refLogin: { en: 'Log in to get your personal referral link.', ko: '로그인하면 나만의 추천 링크가 생성됩니다.', de: 'Melde dich an, um deinen persönlichen Empfehlungslink zu erhalten.', es: 'Inicia sesión para obtener tu enlace de referido personal.', fr: 'Connectez-vous pour obtenir votre lien de parrainage personnel.' },
+        finalTitle: { en: 'Don’t miss the sunniest deal of the year', ko: '올해 가장 빛나는 혜택을 놓치지 마세요', de: 'Verpasse nicht den sonnigsten Deal des Jahres', es: 'No te pierdas la oferta más soleada del año', fr: 'Ne manquez pas l’offre la plus ensoleillée de l’année' },
+        finalSub: { en: 'When summer ends, so does the sale. Lock in Pro and stock up on credits before August 31.', ko: '여름이 끝나면 할인도 끝납니다. 8월 31일 전에 Pro를 잡고 크레딧을 채워두세요.', de: 'Mit dem Sommer endet der Sale. Sichere dir Pro und Credits vor dem 31. August.', es: 'Cuando acabe el verano, acaba la oferta. Asegura Pro y abastécete de créditos antes del 31 de agosto.', fr: 'L’été fini, l’offre aussi. Profitez de Pro et faites le plein de crédits avant le 31 août.' },
+        fineprint: { en: 'Promotion valid July 1 – August 31, 2026. Code SUMMER applies 30% off the first billing cycle of a new Pro subscription. Credit bonuses apply to purchases made during the promotion period.', ko: '프로모션 유효 기간: 2026년 7월 1일 ~ 8월 31일. SUMMER 코드는 신규 Pro 구독 첫 결제에 30% 할인을 적용합니다. 크레딧 보너스는 프로모션 기간 중 구매에 적용됩니다.', de: 'Aktion gültig vom 1. Juli bis 31. August 2026. Code SUMMER gewährt 30 % Rabatt auf den ersten Abrechnungszeitraum eines neuen Pro-Abos. Credit-Boni gelten für Käufe im Aktionszeitraum.', es: 'Promoción válida del 1 de julio al 31 de agosto de 2026. El código SUMMER aplica un 30 % de descuento en el primer ciclo de facturación de una nueva suscripción Pro. Los bonos de créditos se aplican a las compras realizadas durante el período promocional.', fr: 'Offre valable du 1er juillet au 31 août 2026. Le code SUMMER applique 30 % de réduction sur le premier cycle de facturation d’un nouvel abonnement Pro. Les bonus de crédits s’appliquent aux achats effectués pendant la période promotionnelle.' }
+      };
+
+      function currentLang() {
+        try {
+          if (window.EverythingConvertLanguage && typeof window.EverythingConvertLanguage.get === 'function') {
+            var g = window.EverythingConvertLanguage.get();
+            if (g) return g;
+          }
+          return localStorage.getItem('everything_convert_language') || 'en';
+        } catch (e) { return 'en'; }
+      }
+
+      function applyLang(lang) {
+        var l = S.heroBadge[lang] ? lang : 'en';
+        document.querySelectorAll('[data-s]').forEach(function (el) {
+          var key = el.getAttribute('data-s');
+          if (S[key] && S[key][l]) el.textContent = S[key][l];
+        });
+        // keep the copy buttons' reset/feedback labels in the active language
+        var copyBtn = document.getElementById('spCodeCopy');
+        if (copyBtn) copyBtn.dataset.idle = S.codeCopy[l];
+        var refCopyBtn = document.getElementById('spRefCopy');
+        if (refCopyBtn) { refCopyBtn.dataset.idle = S.refCopy[l]; refCopyBtn.dataset.copied = S.refCopied[l]; }
+      }
+
+      // ── Countdown to Aug 31, 2026 23:59:59 (-07:00, matches Stripe redeem-by) ──
+      var END = new Date('2026-08-31T23:59:59-07:00').getTime();
+      var cdEls = {
+        days: document.querySelector('[data-cd="days"]'),
+        hours: document.querySelector('[data-cd="hours"]'),
+        minutes: document.querySelector('[data-cd="minutes"]'),
+        seconds: document.querySelector('[data-cd="seconds"]')
+      };
+      var cdBox = document.getElementById('spCountdown');
+      var cdEnded = document.getElementById('spCountdownEnded');
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function tickCountdown() {
+        var diff = END - Date.now();
+        if (diff <= 0) {
+          if (cdBox) cdBox.hidden = true;
+          if (cdEnded) cdEnded.hidden = false;
+          return false;
+        }
+        var s = Math.floor(diff / 1000);
+        if (cdEls.days) cdEls.days.textContent = pad(Math.floor(s / 86400));
+        if (cdEls.hours) cdEls.hours.textContent = pad(Math.floor((s % 86400) / 3600));
+        if (cdEls.minutes) cdEls.minutes.textContent = pad(Math.floor((s % 3600) / 60));
+        if (cdEls.seconds) cdEls.seconds.textContent = pad(s % 60);
+        return true;
+      }
+      tickCountdown();
+      var cdTimer = setInterval(function () { if (!tickCountdown()) clearInterval(cdTimer); }, 1000);
+
+      // ── Copy code ──
+      var copyBtn = document.getElementById('spCodeCopy');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+          var lang = currentLang();
+          var l = S.codeCopy[lang] ? lang : 'en';
+          function done() {
+            copyBtn.textContent = S.codeCopied[l];
+            setTimeout(function () { copyBtn.textContent = S.codeCopy[l]; }, 1800);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText('SUMMER').then(done, done);
+          } else { done(); }
+        });
+      }
+
+      // ── Language wiring ──
+      applyLang(currentLang());
+      window.addEventListener('everything-language-change', function (e) {
+        applyLang((e.detail && e.detail.language) || currentLang());
+      });
+      document.addEventListener('DOMContentLoaded', function () { applyLang(currentLang()); });
+    })();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="ec-modal.js?v=ecmodal-20260626a"></script>
+    <script src="auth.js?v=auth-20260616c"></script>
+    <script src="tools-menu.js?v=nav-20260620d"></script>
+    <script src="language-menu.js?v=lang-20260620a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
+    <script src="ai-credits.js?v=credits-20260613d"></script>
+    <script>
+    (function () {
+      // Populate the logged-in user's referral link (runs after ai-credits.js).
+      var box = document.getElementById('spRefReady');
+      var input = document.getElementById('spRefInput');
+      var loginNote = document.getElementById('spRefLogin');
+      var copyBtn = document.getElementById('spRefCopy');
+      if (!box || !input) return;
+
+      function refLink(code) {
+        return location.origin + '/summer.html?ref=' + encodeURIComponent(code);
+      }
+
+      async function load(attempt) {
+        var api = window.EverythingConvertCredits;
+        if (!api || typeof api.getMyReferralCode !== 'function') {
+          if (attempt < 8) return setTimeout(function () { load(attempt + 1); }, 600);
+          return;
+        }
+        var code = null;
+        try { code = await api.getMyReferralCode(); } catch (e) { code = null; }
+        if (code) {
+          input.value = refLink(code);
+          box.hidden = false;
+          if (loginNote) loginNote.hidden = true;
+        } else if (attempt < 8) {
+          // Auth/session may still be hydrating right after load.
+          setTimeout(function () { load(attempt + 1); }, 700);
+        }
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+          input.select();
+          function done() {
+            var idle = copyBtn.dataset.idle || copyBtn.textContent;
+            copyBtn.textContent = copyBtn.dataset.copied || 'Copied!';
+            setTimeout(function () { copyBtn.textContent = idle; }, 1800);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(input.value).then(done, done);
+          } else { try { document.execCommand('copy'); } catch (e) {} done(); }
+        });
+      }
+
+      window.addEventListener('load', function () { load(0); });
+    })();
+    </script>
+</body>
+</html>

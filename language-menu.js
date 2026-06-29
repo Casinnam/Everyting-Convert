@@ -93,6 +93,11 @@
     showcaseAiTitle: { en: 'Summarize, transcribe, OCR, and clean images faster.', ko: '요약, 전사, OCR, 이미지 정리를 더 빠르게 처리하세요.', de: 'Fasse zusammen, transkribiere, nutze OCR und bereinige Bilder schneller.', es: 'Resume, transcribe, usa OCR y limpia imágenes más rápido.', fr: 'Résumez, transcrivez, utilisez l’OCR et nettoyez les images plus vite.' },
     showcaseAiText: { en: 'Use Audio to Text, PDF Summary, Smart OCR, and Background Remover when ordinary converters are not enough.', ko: '일반 변환만으로 부족할 때 Audio to Text, PDF Summary, Smart OCR, Background Remover를 사용할 수 있습니다.', de: 'Nutze Audio to Text, PDF Summary, Smart OCR und Background Remover, wenn normale Konverter nicht reichen.', es: 'Usa Audio to Text, PDF Summary, Smart OCR y Background Remover cuando los convertidores comunes no bastan.', fr: 'Utilisez Audio to Text, PDF Summary, Smart OCR et Background Remover quand les convertisseurs classiques ne suffisent pas.' },
     showcaseAiAction: { en: 'Explore AI tools', ko: 'AI 도구 보기', de: 'KI-Tools ansehen', es: 'Ver herramientas AI', fr: 'Voir les outils IA' },
+    showcaseSummerKicker: { en: 'Summer Special 2026', ko: '2026 여름 특별 이벤트', de: 'Sommer-Special 2026', es: 'Especial de Verano 2026', fr: 'Spécial Été 2026' },
+    showcaseSummerTitle: { en: 'Twice the fun, twice the value — summer sale is on.', ko: '기쁨도 두 배, 혜택도 두 배 — 여름 세일이 시작됐어요.', de: 'Doppelter Spaß, doppelter Wert – der Sommer-Sale läuft.', es: 'El doble de diversión, el doble de valor: la oferta de verano ya está aquí.', fr: 'Deux fois plus de plaisir et d’avantages — les soldes d’été sont là.' },
+    showcaseSummerText: { en: 'For July and August only: Pro 30% off with code SUMMER, double credits on every purchase, and 20 free signup credits.', ko: '7월과 8월 단 두 달: SUMMER 코드로 Pro 30% 할인, 구매 시 크레딧 두 배, 가입하면 무료 크레딧 20개.', de: 'Nur im Juli und August: Pro 30 % günstiger mit Code SUMMER, doppelte Credits bei jedem Kauf und 20 Gratis-Credits zur Anmeldung.', es: 'Solo en julio y agosto: Pro 30 % de descuento con el código SUMMER, doble de créditos en cada compra y 20 créditos gratis al registrarte.', fr: 'En juillet et août uniquement : Pro à −30 % avec le code SUMMER, crédits doublés à chaque achat et 20 crédits offerts à l’inscription.' },
+    showcaseSummerAction: { en: 'See the summer deal', ko: '여름 혜택 보기', de: 'Sommer-Deal ansehen', es: 'Ver la oferta de verano', fr: 'Voir l’offre d’été' },
+    summerTab: { en: 'SUMMER SALE', ko: '여름 세일', de: 'SOMMER-SALE', es: 'OFERTA VERANO', fr: 'SOLDES ÉTÉ' },
     dragDrop: {
       en: 'Drag & drop your file here',
       ko: '파일을 여기에 끌어다 놓으세요',
@@ -524,6 +529,7 @@
       { icon: 'fa-regular fa-circle-play', kicker: 'showcaseVideoKicker', title: 'showcaseVideoTitle', body: 'showcaseVideoText', action: 'showcaseVideoAction' },
       { icon: 'fa-solid fa-music', kicker: 'showcaseAudioKicker', title: 'showcaseAudioTitle', body: 'showcaseAudioText', action: 'showcaseAudioAction' },
       { icon: 'fa-solid fa-wand-magic-sparkles', kicker: 'showcaseAiKicker', title: 'showcaseAiTitle', body: 'showcaseAiText', action: 'showcaseAiAction' },
+      { icon: 'fa-solid fa-umbrella-beach', kicker: 'showcaseSummerKicker', title: 'showcaseSummerTitle', body: 'showcaseSummerText', action: 'showcaseSummerAction' },
     ];
     showcaseSlides.forEach((slide, index) => {
       const copy = showcaseCopy[index];

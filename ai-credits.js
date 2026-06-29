@@ -153,6 +153,30 @@
     }
   }
 
+  // The referral code remembered from a ?ref=CODE landing (set in auth.js).
+  function storedRefCode() {
+    try { return localStorage.getItem('ec_ref_code') || ''; } catch (e) { return ''; }
+  }
+
+  // The logged-in user's own referral code (so pages can show a share link).
+  // Reads their own profile row (allowed by the profiles own-row RLS policy).
+  async function getMyReferralCode() {
+    const token = await resolveToken();
+    if (!token) return null;
+    const cfg = window.EVERYTHING_CONVERT_SUPABASE || {};
+    if (!cfg.url) return null;
+    try {
+      const res = await fetch(`${cfg.url}/rest/v1/profiles?select=referral_code`, {
+        headers: { ...(ANON ? { apikey: ANON } : {}), Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return null;
+      const rows = await res.json();
+      return rows && rows[0] && rows[0].referral_code ? rows[0].referral_code : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   // Start Stripe checkout for a credit pack. Redirects to login first if needed.
   async function buyPack(packKey) {
     if (!PACKS[packKey]) return;
@@ -168,6 +192,7 @@
       return;
     }
     try {
+      const refCode = storedRefCode();
       const res = await fetch(`${FUNC_BASE}/ai-checkout`, {
         method: 'POST',
         headers: {
@@ -179,6 +204,7 @@
           pack: packKey,
           success_url: `${origin}/pricing.html?credits=success`,
           cancel_url: `${origin}/pricing.html?credits=cancel#credit-packs`,
+          ...(refCode ? { referral_code: refCode } : {}),
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -192,5 +218,5 @@
     }
   }
 
-  window.EverythingConvertCredits = { getBalance, redeem, spend, buyPack, isLoggedIn, ensureLoggedIn, PACKS };
+  window.EverythingConvertCredits = { getBalance, redeem, spend, buyPack, isLoggedIn, ensureLoggedIn, getMyReferralCode, PACKS };
 })();
