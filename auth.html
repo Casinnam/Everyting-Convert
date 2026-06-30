@@ -390,50 +390,91 @@
             color: var(--text-main);
         }
 
-        /* Account dashboard: at-a-glance stat cards (plan, credits, daily usage). */
+        /* Account dashboard: at-a-glance stat cards (plan, credits, daily usage, history). */
         .dash-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.8rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
         }
-        @media (max-width: 560px) { .dash-stats { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .dash-stats { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .dash-stats { grid-template-columns: 1fr; } }
         .dash-stat {
-            background: rgba(255, 253, 246, 0.95);
-            border: 1px solid rgba(47, 38, 18, 0.16);
-            border-radius: 12px;
-            padding: 1rem;
+            background: #fff;
+            border: 1px solid #e7e9f2;
+            border-radius: 16px;
+            padding: 1.3rem 1.4rem;
             display: flex;
             flex-direction: column;
-            gap: 0.3rem;
+            gap: 0.35rem;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
         }
         .dash-ic {
             display: grid;
             place-items: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             color: #fff;
-            font-size: 16px;
-            margin-bottom: 0.2rem;
+            font-size: 18px;
+            margin-bottom: 0.35rem;
         }
         .dash-ic-plan { background: linear-gradient(135deg, #2563eb, #7c3aed); }
         .dash-ic-credit { background: linear-gradient(135deg, #f59e0b, #fb7185); }
         .dash-ic-daily { background: linear-gradient(135deg, #10b981, #38bdf8); }
-        .dash-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); line-height: 1.25; }
-        .dash-value { font-size: 1.55rem; font-weight: 900; color: var(--text-main); line-height: 1.1; }
-        .dash-cta { font-size: 0.82rem; font-weight: 800; color: #2563eb; text-decoration: none; }
+        .dash-ic-hist { background: linear-gradient(135deg, #6366f1, #ec4899); }
+        .dash-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); line-height: 1.25; }
+        .dash-value { font-size: 2.1rem; font-weight: 900; color: var(--text-main); line-height: 1.05; letter-spacing: -0.01em; }
+        .dash-foot { font-size: 0.78rem; font-weight: 700; color: #1d4ed8; margin-top: 0.1rem; }
+        .dash-cta { font-size: 0.82rem; font-weight: 800; color: #2563eb; text-decoration: none; align-self: flex-start; }
         .dash-cta:hover { text-decoration: underline; }
 
-        /* Once logged in, drop the marketing aside and let the account panel span
-           the page as a single wide dashboard column (the aside still shows the
-           benefits to logged-out visitors). */
-        .auth-layout.dashboard-mode { grid-template-columns: 1fr; width: min(1200px, 100%); }
+        /* Action button row + recent-conversions panel */
+        .dash-head-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .dash-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+        .dash-actions .account-link { padding: 0.7rem 1.2rem; }
+        .dash-history { background: #fff; border: 1px solid #e7e9f2; border-radius: 16px; padding: 1.3rem 1.5rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
+        .dash-history-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.6rem; }
+        .dash-history-head strong { font-size: 1.15rem; color: var(--text-main); font-weight: 900; }
+        .dash-history-head a { font-size: 0.85rem; font-weight: 800; color: #2563eb; text-decoration: none; }
+        .dash-history-head a:hover { text-decoration: underline; }
+        .dash-history-list { display: flex; flex-direction: column; }
+        .dash-history-row { display: grid; grid-template-columns: 1.3fr 1.7fr auto auto; gap: 1rem; align-items: center;
+            padding: 0.85rem 0; border-top: 1px solid #eef1f7; }
+        .dash-history-row:first-child { border-top: 0; }
+        .dash-history-tool { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; color: var(--text-main); min-width: 0; }
+        .dash-history-tool i { color: #6366f1; flex: 0 0 auto; }
+        .dash-history-files { color: var(--text-muted); font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dash-history-badge { font-size: 0.74rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 999px; background: #ecfdf5; color: #047857; text-transform: capitalize; }
+        .dash-history-date { color: #94a3b8; font-size: 0.82rem; white-space: nowrap; }
+        .dash-history-state { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; padding: 1.6rem 1rem; color: var(--text-muted); }
+        .dash-history-state i { font-size: 1.6rem; color: #94a3b8; }
+        .dash-history-state .account-link { margin-top: 0.4rem; }
+        @media (max-width: 640px) {
+            .dash-history-row { grid-template-columns: 1fr auto; }
+            .dash-history-files, .dash-history-badge { display: none; }
+        }
+
+        /* Once logged in, become a full-bleed dashboard: drop the card chrome and
+           the marketing aside, and let the panel breathe across the page (the
+           aside still shows the benefits to logged-out visitors). */
+        body.account-dashboard .main-container { max-width: 1280px; padding-top: 2.5rem; }
+        .auth-layout.dashboard-mode {
+            grid-template-columns: 1fr;
+            width: 100%;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+        }
         .auth-layout.dashboard-mode .auth-aside { display: none; }
-        .auth-layout.dashboard-mode .auth-shell { padding: clamp(1.75rem, 3.5vw, 3rem); }
+        .auth-layout.dashboard-mode .auth-shell { padding: 0; }
+        .account-panel { gap: 1.4rem; }
         .dash-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: .2rem; }
-        .dash-title { font-size: clamp(1.5rem, 3vw, 2.05rem); font-weight: 900; color: var(--text-main); margin: 0; line-height: 1.15; }
-        .dash-title #dashName { color: var(--primary); }
-        .dash-sub { margin: .3rem 0 0; color: var(--text-muted); font-size: .95rem; font-weight: 600; }
+        .dash-title { font-size: clamp(1.9rem, 4vw, 2.75rem); font-weight: 900; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.02em; }
+        .dash-sub { margin: .5rem 0 0; color: var(--text-muted); font-size: 1rem; font-weight: 600; }
+        .dash-sub #dashName { color: var(--primary); font-weight: 800; }
+        .dash-profile { background: #fff; border: 1px solid #e7e9f2; border-radius: 16px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
 
         /* Summer-sale floating bookmark (same as the home page) so the promo is
            reachable from the login/account screen too. */
@@ -653,16 +694,26 @@
             <div class="account-panel" id="accountPanel">
                 <div class="dash-head">
                     <div>
-                        <h2 class="dash-title"><span data-i18n-key="welcomeBack">Welcome back</span><span id="dashName"></span></h2>
-                        <p class="dash-sub" data-i18n-key="dashboardHeading">Account overview</p>
+                        <h1 class="dash-title" data-i18n-key="dashTitle">Dashboard</h1>
+                        <p class="dash-sub"><span data-i18n-key="dashGreetA">Welcome back</span><span id="dashName"></span><span data-i18n-key="dashGreetB"> — your membership, credits, and activity at a glance.</span></p>
                     </div>
-                    <a class="account-link" href="index.html#tools" data-i18n-key="goToTools">Go to tools</a>
+                    <div class="dash-head-actions">
+                        <a class="account-link secondary" href="index.html#tools" data-i18n-key="goToTools">Go to tools</a>
+                        <button class="account-link secondary" type="button" data-auth-logout data-i18n-key="navLogout">Logout</button>
+                    </div>
                 </div>
+
                 <div class="dash-stats">
                     <div class="dash-stat">
                         <span class="dash-ic dash-ic-plan"><i class="fa-solid fa-crown"></i></span>
                         <span class="dash-label" data-i18n-key="statPlan">Membership</span>
                         <strong class="dash-value" id="accountPlan" data-no-i18n>-</strong>
+                        <span class="dash-foot" id="accountRenewalRow" data-no-i18n style="display:none;"></span>
+                    </div>
+                    <div class="dash-stat">
+                        <span class="dash-ic dash-ic-daily"><i class="fa-solid fa-bolt"></i></span>
+                        <span class="dash-label" data-i18n-key="statDaily">Free downloads left today</span>
+                        <strong class="dash-value" id="accountDaily" data-no-i18n>-</strong>
                     </div>
                     <div class="dash-stat">
                         <span class="dash-ic dash-ic-credit"><i class="fa-solid fa-coins"></i></span>
@@ -671,13 +722,30 @@
                         <a class="dash-cta" href="pricing.html#credit-packs" data-i18n-key="buyMore">Buy more</a>
                     </div>
                     <div class="dash-stat">
-                        <span class="dash-ic dash-ic-daily"><i class="fa-solid fa-bolt"></i></span>
-                        <span class="dash-label" data-i18n-key="statDaily">Free downloads left today</span>
-                        <strong class="dash-value" id="accountDaily" data-no-i18n>-</strong>
+                        <span class="dash-ic dash-ic-hist"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                        <span class="dash-label" data-i18n-key="statHistory">Saved conversions</span>
+                        <strong class="dash-value" id="accountHistoryCount" data-no-i18n>-</strong>
                     </div>
                 </div>
-                <div id="accountRenewalRow" data-no-i18n style="display:none;text-align:center;color:#1e3a8a;font-weight:700;margin:.1rem 0 .3rem;"></div>
-                <div class="account-card">
+
+                <div class="dash-actions">
+                    <a class="account-link" href="pricing.html" data-i18n-key="upgrade">Upgrade</a>
+                    <a class="account-link secondary" href="support.html" data-i18n-key="manageSubscription">Manage subscription</a>
+                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">Admin page</a>
+                    <a class="account-link secondary" href="admin-blog.html" id="blogLink" style="display:none;">Write Blog</a>
+                </div>
+
+                <div class="dash-history">
+                    <div class="dash-history-head">
+                        <strong data-i18n-key="recentConversions">Recent conversions</strong>
+                        <a href="my-conversions.html" data-i18n-key="viewAll">View all</a>
+                    </div>
+                    <div id="dashHistoryList" class="dash-history-list">
+                        <div class="dash-history-state"><i class="fa-solid fa-spinner fa-spin"></i><span>Loading your recent activity…</span></div>
+                    </div>
+                </div>
+
+                <div class="account-card dash-profile">
                     <div data-i18n-key="displayName">Display name: <strong id="accountName">-</strong></div>
                     <form class="username-form" id="usernameForm">
                         <div class="auth-field">
@@ -689,14 +757,6 @@
                         <div class="auth-message" id="usernameMessage"></div>
                     </form>
                     <div id="accountHint" style="margin-top:0.75rem;"></div>
-                </div>
-                <div class="account-actions">
-                    <a class="account-link" href="index.html#tools">Go to tools</a>
-                    <a class="account-link secondary" href="my-conversions.html" data-i18n-key="myConversions">My Conversions</a>
-                    <a class="account-link secondary" href="support.html" data-i18n-key="manageSubscription">Manage subscription</a>
-                    <a class="account-link secondary" href="pricing.html" data-i18n-key="upgrade">Upgrade</a>
-                    <a class="account-link secondary" href="admin.html" id="adminLink" style="display:none;">Admin page</a>
-                    <a class="account-link secondary" href="admin-blog.html" id="blogLink" style="display:none;">Write Blog</a>
                 </div>
             </div>
             <div class="auth-status-card">
@@ -745,6 +805,7 @@
     <script src="language-menu.js?v=lang-20260629a"></script><script src="header-language.js?v=headerlang-20260616a"></script>
     <script src="ai-credits.js?v=credits-20260629a"></script>
     <script src="usage-limit.js?v=usage-20260626a"></script>
+    <script src="conversion-history.js?v=history-20260531a"></script>
     <script>
         let mode = 'login';
 
@@ -863,6 +924,84 @@
                 } catch (e) { /* retry */ }
             }
             if (!dailyLoaded) accountDaily.textContent = '—';
+        }
+
+        // ── Inline recent-conversions panel (no separate page needed) ──────
+        const HIST_TXT = {
+            credit: { en: 'AI tool used', ko: 'AI 도구 사용', de: 'KI-Tool genutzt', es: 'Herramienta IA usada', fr: 'Outil IA utilisé' },
+            proTitle: { en: 'Conversion history is a Pro feature', ko: '변환 기록은 Pro 기능이에요', de: 'Konvertierungsverlauf ist eine Pro-Funktion', es: 'El historial es una función Pro', fr: 'L’historique est une fonction Pro' },
+            proBody: { en: 'Upgrade to Pro to save and review every conversion right here.', ko: 'Pro로 업그레이드하면 모든 변환이 여기에 저장돼 다시 볼 수 있어요.', de: 'Mit Pro werden alle Konvertierungen hier gespeichert.', es: 'Mejora a Pro para guardar y revisar tus conversiones aquí.', fr: 'Passez à Pro pour enregistrer et revoir vos conversions ici.' },
+            upgrade: { en: 'Upgrade to Pro', ko: 'Pro로 업그레이드', de: 'Auf Pro upgraden', es: 'Mejorar a Pro', fr: 'Passer à Pro' },
+            emptyTitle: { en: 'No conversions yet', ko: '아직 변환 기록이 없어요', de: 'Noch keine Konvertierungen', es: 'Aún no hay conversiones', fr: 'Pas encore de conversions' },
+            emptyBody: { en: 'Your recent activity will show up here once you start converting.', ko: '변환을 시작하면 최근 활동이 여기에 표시돼요.', de: 'Deine Aktivität erscheint hier, sobald du konvertierst.', es: 'Tu actividad aparecerá aquí cuando empieces a convertir.', fr: 'Votre activité apparaîtra ici dès vos premières conversions.' },
+            start: { en: 'Start converting', ko: '변환 시작하기', de: 'Jetzt konvertieren', es: 'Empezar a convertir', fr: 'Commencer' },
+        };
+        function histT(k) { const l = uiLang(); return (HIST_TXT[k] && (HIST_TXT[k][l] || HIST_TXT[k].en)) || ''; }
+        function histEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+        function histDate(v) {
+            if (!v) return '-';
+            try { return new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(v)); }
+            catch (e) { return '-'; }
+        }
+        function histState(icon, title, body, action) {
+            const list = document.getElementById('dashHistoryList');
+            if (!list) return;
+            list.innerHTML = '<div class="dash-history-state"><i class="' + icon + '"></i>'
+                + (title ? '<strong>' + histEsc(title) + '</strong>' : '')
+                + (body ? '<span>' + histEsc(body) + '</span>' : '')
+                + (action || '') + '</div>';
+        }
+        function histRender(rows) {
+            const list = document.getElementById('dashHistoryList');
+            if (!list) return;
+            list.innerHTML = rows.slice(0, 6).map((row) => {
+                const isCredit = row && row.metadata && row.metadata.kind === 'ai_credit';
+                const icon = isCredit ? 'fa-solid fa-wand-magic-sparkles' : 'fa-solid fa-file-arrow-up';
+                const tool = histEsc(row.tool_name || row.tool_id || 'Conversion');
+                let files;
+                if (isCredit) { const c = Number(row.metadata.credits) || 0; files = c ? (c + ' credit' + (c === 1 ? '' : 's')) : histEsc(histT('credit')); }
+                else { files = histEsc((row.source_filename || 'Source') + ' → ' + (row.output_filename || 'Result')); }
+                return '<article class="dash-history-row">'
+                    + '<div class="dash-history-tool"><i class="' + icon + '"></i><span>' + tool + '</span></div>'
+                    + '<div class="dash-history-files">' + files + '</div>'
+                    + '<div><span class="dash-history-badge">' + histEsc(row.status || 'completed') + '</span></div>'
+                    + '<div class="dash-history-date">' + histEsc(histDate(row.completed_at || row.created_at)) + '</div>'
+                    + '</article>';
+            }).join('');
+        }
+        let historyResolved = false;
+        let lastHistory = null; // { gate: 'pro' } or { rows: [...] }
+        async function loadDashboardHistory() {
+            const list = document.getElementById('dashHistoryList');
+            const countEl = document.getElementById('accountHistoryCount');
+            if (!list) return;
+            // Re-render from cache (keeps locale dates fresh) without refetching/flicker.
+            if (historyResolved && lastHistory) {
+                if (lastHistory.gate === 'pro') histState('fa-solid fa-bolt', histT('proTitle'), histT('proBody'), '<a class="account-link" href="pricing.html">' + histEsc(histT('upgrade')) + '</a>');
+                else { histRender(lastHistory.rows); if (countEl) countEl.textContent = String(lastHistory.rows.length); }
+                return;
+            }
+            const auth = window.EverythingConvertAuth;
+            const st = auth && auth.state;
+            if (!st || !st.user) return;
+            if (!st.profile || !st.profile.plan) return; // profile not ready — retry on next auth event
+            const isProish = (auth.isPro && auth.isPro()) || (auth.isAdmin && auth.isAdmin());
+            if (!isProish) {
+                if (countEl) countEl.textContent = '0';
+                historyResolved = true; lastHistory = { gate: 'pro' };
+                histState('fa-solid fa-bolt', histT('proTitle'), histT('proBody'), '<a class="account-link" href="pricing.html">' + histEsc(histT('upgrade')) + '</a>');
+                return;
+            }
+            const api = window.EverythingConvertHistory;
+            if (!api || typeof api.fetchHistory !== 'function') return;
+            try {
+                const result = await api.fetchHistory();
+                const rows = (result && result.history) || [];
+                historyResolved = true; lastHistory = { rows };
+                if (countEl) countEl.textContent = String(rows.length);
+                if (!rows.length) { histState('fa-regular fa-folder-open', histT('emptyTitle'), histT('emptyBody'), '<a class="account-link" href="index.html#tools">' + histEsc(histT('start')) + '</a>'); return; }
+                histRender(rows);
+            } catch (e) { /* keep current state; retry on next auth event */ }
         }
 
         const accountRenewalRow = document.getElementById('accountRenewalRow');
@@ -1217,6 +1356,7 @@
             setAsideMode(true, cached.username);
             const cachedLayout = document.querySelector('.auth-layout');
             if (cachedLayout) cachedLayout.classList.add('dashboard-mode');
+            document.body.classList.add('account-dashboard');
             delete accountName.dataset.i18nKey;
             delete accountPlan.dataset.i18nKey;
             accountName.textContent = cached.username;
@@ -1291,8 +1431,9 @@
             // Logged in → full-width dashboard (hide the marketing aside).
             const authLayout = document.querySelector('.auth-layout');
             if (authLayout) authLayout.classList.toggle('dashboard-mode', loggedIn);
+            document.body.classList.toggle('account-dashboard', loggedIn);
 
-            if (!loggedIn) return;
+            if (!loggedIn) { historyResolved = false; lastHistory = null; return; }
 
             const name = auth.displayName();
             delete accountName.dataset.i18nKey;
@@ -1306,6 +1447,7 @@
             blogLink.style.display = auth.isAdmin() ? '' : 'none';
             loadAccountCredits();
             loadAccountDaily();
+            loadDashboardHistory();
             loadRenewalDate();
             const profilePlan = state.profile && state.profile.plan ? state.profile.plan : '';
             if (!profilePlan) {
