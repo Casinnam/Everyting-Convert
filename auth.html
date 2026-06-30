@@ -457,7 +457,7 @@
         /* Once logged in, become a full-bleed dashboard: drop the card chrome and
            the marketing aside, and let the panel breathe across the page (the
            aside still shows the benefits to logged-out visitors). */
-        body.account-dashboard .main-container { max-width: 1280px; padding-top: 2.5rem; }
+        body.account-dashboard.auth-page .main-container { width: min(1280px, calc(100% - 2rem)); max-width: none; align-items: stretch; padding-top: 2.5rem; }
         .auth-layout.dashboard-mode {
             grid-template-columns: 1fr;
             width: 100%;
@@ -468,7 +468,9 @@
             overflow: visible;
         }
         .auth-layout.dashboard-mode .auth-aside { display: none; }
-        .auth-layout.dashboard-mode .auth-shell { padding: 0; }
+        /* Beat .auth-page .auth-shell { width: min(560px,...) } so the dashboard
+           spans the full container instead of the narrow login-card width. */
+        .auth-page .auth-layout.dashboard-mode .auth-shell { width: 100%; max-width: none; padding: 0; }
         .account-panel { gap: 1.4rem; }
         .dash-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: .2rem; }
         .dash-title { font-size: clamp(1.9rem, 4vw, 2.75rem); font-weight: 900; color: var(--text-main); margin: 0; line-height: 1.1; letter-spacing: -0.02em; }
