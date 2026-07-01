@@ -706,9 +706,15 @@
     renderCachedAuthWidgets();
     const client = initClient();
     if (client) {
-      client.auth.onAuthStateChange(async () => {
+      client.auth.onAuthStateChange(() => {
         if (signingOut) return;
-        await refresh();
+        // Supabase holds its internal auth lock while this callback runs.
+        // Calling getSession() or any DB query (which needs the token) from
+        // inside the callback contends for that same lock and can stall for
+        // ~10s until it times out — which is why a just-logged-in Pro user was
+        // briefly seen as free. Defer with setTimeout(0) so refresh() runs
+        // after the lock is released. See supabase-js onAuthStateChange docs.
+        setTimeout(() => { refresh(); }, 0);
       });
       try {
         await completeOAuthCallback(client);

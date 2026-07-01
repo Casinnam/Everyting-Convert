@@ -263,7 +263,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../supabase-config.js"></script>
-<script src="../../auth.js?v=auth-20260629a"></script>
+<script src="../../auth.js?v=auth-20260701b"></script>
 <script src="../../tools-menu.js?v=nav-20260701a"></script>
 <script src="../../language-menu.js?v=lang-20260629a"></script>
 <script src="../../header-language.js?v=headerlang-20260616a"></script>
@@ -573,6 +573,31 @@
     URL.revokeObjectURL(a.href);
   }
 
+  // Returns the logged-in user's JWT access token, reading straight from the
+  // Supabase client (persisted session) so it works even before auth.state has
+  // finished hydrating. Falls back to the auth.state snapshot, then empty.
+  async function resolveAccessToken() {
+    const auth = window.EverythingConvertAuth;
+    const state = auth && auth.state;
+    const client = state && state.client;
+    if (client && client.auth && typeof client.auth.getSession === 'function') {
+      try {
+        const { data } = await client.auth.getSession();
+        const session = data && data.session;
+        if (session && session.access_token) {
+          if (state) { state.session = session; state.user = session.user || state.user; }
+          return session.access_token;
+        }
+      } catch (e) { /* fall through to snapshot */ }
+    }
+    // Last resort: kick a refresh (handles a not-yet-created client) and re-read.
+    if (auth && auth.refresh && state && !state.ready) {
+      try { await auth.refresh(); } catch (e) { /* ignore */ }
+    }
+    const s = state && state.session;
+    return s && s.access_token ? s.access_token : '';
+  }
+
   // ── Submit ──
   async function submit(useCredit) {
     const videoId = parseVideoId(urlInput.value);
@@ -597,9 +622,12 @@
     }
 
     try {
-      const auth = window.EverythingConvertAuth;
-      const session = auth && auth.state ? auth.state.session : null;
-      const accessToken = session && session.access_token ? session.access_token : '';
+      // Resolve the access token from the Supabase client itself (the source of
+      // truth, persisted in storage) rather than the auth.state snapshot, which
+      // may not be hydrated yet right after page load. Without this a logged-in
+      // Pro/Admin who clicks Generate immediately is sent with only the anon key
+      // and the backend treats them as a guest (guest limit) until they retry.
+      const accessToken = await resolveAccessToken();
 
       const response = await fetch(`${SUPABASE_FUNC_BASE}/ai-youtube-summary`, {
         method: 'POST',
