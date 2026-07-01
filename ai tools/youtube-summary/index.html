@@ -102,24 +102,45 @@
     .yt-results { display:none; margin-top:26px; }
     .yt-results.visible { display:block; }
     .yt-export-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
-    .yt-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
-    .yt-card {
-      background:#fff; border:1px solid #e6e8f0; border-radius:16px; padding:20px;
-      box-shadow:0 10px 26px -24px rgba(30,41,59,.55);
+
+    /* Accordion (toggle sections) */
+    .yt-acc { display:flex; flex-direction:column; gap:12px; }
+    .yt-acc-item { background:#fff; border:1px solid #e6e8f0; border-radius:16px; box-shadow:0 10px 26px -24px rgba(30,41,59,.55); overflow:hidden; }
+    .yt-acc-head {
+      width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:none; border:0; cursor:pointer; padding:16px 20px; font-family:inherit; text-align:left;
     }
-    .yt-card.wide { grid-column:1/-1; }
-    .yt-card h3 {
-      margin:0 0 12px; font-size:.82rem; letter-spacing:.06em; text-transform:uppercase;
-      color:#6d5efc; display:flex; align-items:center; gap:8px;
-    }
-    .yt-card p { margin:0; color:#3b3f52; line-height:1.6; }
-    .yt-card ul { margin:0; padding-left:20px; color:#3b3f52; line-height:1.7; }
-    .yt-card ul li { margin-bottom:6px; }
+    .yt-acc-title { display:flex; align-items:center; gap:10px; font-weight:700; font-size:.98rem; color:#1e2233; }
+    .yt-acc-title i { color:#6d5efc; }
+    .yt-acc-chevron { color:#9aa0b4; transition:transform .2s; }
+    .yt-acc-item.open .yt-acc-chevron { transform:rotate(180deg); }
+    .yt-acc-body { padding:0 20px 20px; }
+    .yt-acc-item:not(.open) .yt-acc-body { display:none; }
+    .yt-acc-body > p { margin:0 0 12px; color:#3b3f52; line-height:1.6; }
+    .yt-acc-body ul { margin:0; padding-left:20px; color:#3b3f52; line-height:1.7; }
+    .yt-acc-body ul li { margin-bottom:6px; }
+
+    /* Scrollable panels (detailed summary + transcript) */
+    .yt-scroll { max-height:460px; overflow-y:auto; padding-right:8px; }
+    .yt-scroll::-webkit-scrollbar { width:8px; }
+    .yt-scroll::-webkit-scrollbar-thumb { background:#dfe2ee; border-radius:8px; }
+
+    /* Detailed sections */
+    .yt-sec { padding:14px 0; border-bottom:1px solid #f0f1f6; }
+    .yt-sec:last-child { border-bottom:0; padding-bottom:0; }
+    .yt-sec-head { display:flex; align-items:baseline; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+    .yt-sec-head h4 { margin:0; font-size:1rem; color:#1e2233; }
+    .yt-time { flex:0 0 auto; font-variant-numeric:tabular-nums; font-weight:700; color:#4b47b8; font-size:.82rem; text-decoration:none; background:#eef0ff; border-radius:6px; padding:2px 8px; }
+    .yt-time:hover { background:#e0e2ff; text-decoration:underline; }
+
     .yt-chips { display:flex; flex-wrap:wrap; gap:8px; }
     .yt-chip { background:#eef0ff; color:#4b47b8; border-radius:999px; padding:5px 12px; font-size:.85rem; font-weight:600; }
+
+    /* Timeline + transcript rows */
     .yt-ts { list-style:none; padding:0; margin:0; }
-    .yt-ts li { display:flex; gap:12px; margin-bottom:10px; align-items:baseline; }
-    .yt-ts .t { flex:0 0 auto; font-variant-numeric:tabular-nums; font-weight:700; color:#6d5efc; font-size:.9rem; }
+    .yt-ts li { display:flex; gap:12px; margin-bottom:12px; align-items:baseline; color:#3b3f52; line-height:1.6; }
+    .yt-tr { list-style:none; padding:0; margin:0; }
+    .yt-tr li { display:flex; gap:12px; margin-bottom:10px; align-items:baseline; line-height:1.6; color:#3b3f52; }
 
     @media (max-width:600px){
       .yt-thumb { width:100%; }
@@ -209,7 +230,7 @@
         <button id="txtBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-file-lines"></i> Download TXT</button>
         <button id="mdBtn" class="btn btn-soft" type="button"><i class="fa-brands fa-markdown"></i> Download Markdown</button>
       </div>
-      <div class="yt-grid" id="resultGrid"></div>
+      <div class="yt-acc" id="resultAcc"></div>
     </section>
   </div>
 
@@ -264,7 +285,7 @@
   const limitLoginBtn = document.getElementById('limitLoginBtn');
   const limitCreditBtn = document.getElementById('limitCreditBtn');
   const results = document.getElementById('results');
-  const resultGrid = document.getElementById('resultGrid');
+  const resultAcc = document.getElementById('resultAcc');
   const copyBtn = document.getElementById('copyBtn');
   const txtBtn = document.getElementById('txtBtn');
   const mdBtn = document.getElementById('mdBtn');
@@ -349,11 +370,29 @@
 
   // ── Section labels for result cards + exports ──
   const secLabels = {
-    en: { quick:'Quick summary', detailed:'Detailed summary', key:'Key points', ts:'Timeline', kw:'Keywords', blog:'Suggested blog title', shorts:'Shorts ideas', social:'Social post' },
-    ko: { quick:'빠른 요약', detailed:'상세 요약', key:'핵심 포인트', ts:'타임라인', kw:'키워드', blog:'추천 블로그 제목', shorts:'쇼츠 아이디어', social:'소셜 게시글' },
-    ja: { quick:'クイック要約', detailed:'詳細な要約', key:'重要ポイント', ts:'タイムライン', kw:'キーワード', blog:'おすすめブログタイトル', shorts:'ショート動画アイデア', social:'SNS投稿' },
-    es: { quick:'Resumen rápido', detailed:'Resumen detallado', key:'Puntos clave', ts:'Cronología', kw:'Palabras clave', blog:'Título de blog sugerido', shorts:'Ideas para Shorts', social:'Publicación social' },
+    en: { quick:'Quick summary', detailed:'Detailed summary', key:'Key points', ts:'Timeline', kw:'Keywords', blog:'Suggested blog title', shorts:'Shorts ideas', social:'Social post', script:'Transcript' },
+    ko: { quick:'빠른 요약', detailed:'상세 요약', key:'핵심 포인트', ts:'타임라인', kw:'키워드', blog:'추천 블로그 제목', shorts:'쇼츠 아이디어', social:'소셜 게시글', script:'스크립트' },
+    ja: { quick:'クイック要約', detailed:'詳細な要約', key:'重要ポイント', ts:'タイムライン', kw:'キーワード', blog:'おすすめブログタイトル', shorts:'ショート動画アイデア', social:'SNS投稿', script:'スクリプト' },
+    es: { quick:'Resumen rápido', detailed:'Resumen detallado', key:'Puntos clave', ts:'Cronología', kw:'Palabras clave', blog:'Título de blog sugerido', shorts:'Ideas para Shorts', social:'Publicación social', script:'Transcripción' },
   };
+
+  // ── Timestamp helpers (clickable → opens the video at that moment) ──
+  function tsToSeconds(t) {
+    const parts = String(t || '').split(':').map(n => parseInt(n, 10));
+    if (parts.some(isNaN) || !parts.length) return null;
+    return parts.reduce((acc, n) => acc * 60 + n, 0);
+  }
+  function timeChip(time, secondsMaybe) {
+    const label = escapeHtml(time || '');
+    if (!label) return '';
+    const url = lastData && lastData.videoInfo && lastData.videoInfo.url;
+    const secs = (typeof secondsMaybe === 'number') ? secondsMaybe : tsToSeconds(time);
+    if (url && secs != null) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `<a class="yt-time" href="${escapeHtml(url)}${sep}t=${secs}s" target="_blank" rel="noopener">${label}</a>`;
+    }
+    return `<span class="yt-time">${label}</span>`;
+  }
 
   function renderVideoInfo(info) {
     if (!info) return;
@@ -367,51 +406,93 @@
     videoCard.classList.add('visible');
   }
 
-  function renderSummary(summary) {
-    const s = summary || {};
-    const L = secLabels[lang()] || secLabels.en;
-    const cards = [];
+  // Build one collapsible accordion item.
+  function accItem(icon, title, bodyHtml, open) {
+    return `<div class="yt-acc-item${open ? ' open' : ''}">
+      <button class="yt-acc-head" type="button" aria-expanded="${open ? 'true' : 'false'}">
+        <span class="yt-acc-title"><i class="${icon}"></i>${escapeHtml(title)}</span>
+        <i class="fa-solid fa-chevron-down yt-acc-chevron"></i>
+      </button>
+      <div class="yt-acc-body">${bodyHtml}</div>
+    </div>`;
+  }
 
+  function renderResults(data) {
+    const s = (data && data.summary) || {};
+    const transcript = Array.isArray(data && data.transcript) ? data.transcript : [];
+    const L = secLabels[lang()] || secLabels.en;
+    const items = [];
+
+    // 1) Quick summary (open by default)
     const quick = Array.isArray(s.quickSummary) ? s.quickSummary : [];
     if (quick.length) {
-      cards.push(`<div class="yt-card wide"><h3><i class="fa-solid fa-bolt"></i>${escapeHtml(L.quick)}</h3>
-        <ul>${quick.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`);
-    }
-    if (s.detailedSummary) {
-      cards.push(`<div class="yt-card wide"><h3><i class="fa-solid fa-align-left"></i>${escapeHtml(L.detailed)}</h3>
-        <p>${escapeHtml(s.detailedSummary).replace(/\n+/g, '<br><br>')}</p></div>`);
-    }
-    const keyPoints = Array.isArray(s.keyPoints) ? s.keyPoints : [];
-    if (keyPoints.length) {
-      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-list-check"></i>${escapeHtml(L.key)}</h3>
-        <ul>${keyPoints.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`);
-    }
-    const ts = Array.isArray(s.timestampSummary) ? s.timestampSummary.filter(t => t && (t.time || t.point)) : [];
-    if (ts.length) {
-      cards.push(`<div class="yt-card"><h3><i class="fa-regular fa-clock"></i>${escapeHtml(L.ts)}</h3>
-        <ul class="yt-ts">${ts.map(t => `<li><span class="t">${escapeHtml(t.time || '')}</span><span>${escapeHtml(t.point || '')}</span></li>`).join('')}</ul></div>`);
-    }
-    const kw = Array.isArray(s.keywords) ? s.keywords : [];
-    if (kw.length) {
-      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-tags"></i>${escapeHtml(L.kw)}</h3>
-        <div class="yt-chips">${kw.map(k => `<span class="yt-chip">${escapeHtml(k)}</span>`).join('')}</div></div>`);
-    }
-    if (s.blogTitle) {
-      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-pen-nib"></i>${escapeHtml(L.blog)}</h3>
-        <p>${escapeHtml(s.blogTitle)}</p></div>`);
-    }
-    const shorts = Array.isArray(s.shortsIdeas) ? s.shortsIdeas : [];
-    if (shorts.length) {
-      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-clapperboard"></i>${escapeHtml(L.shorts)}</h3>
-        <ul>${shorts.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`);
-    }
-    if (s.socialPost) {
-      cards.push(`<div class="yt-card wide"><h3><i class="fa-solid fa-share-nodes"></i>${escapeHtml(L.social)}</h3>
-        <p>${escapeHtml(s.socialPost)}</p></div>`);
+      items.push(accItem('fa-solid fa-bolt', L.quick,
+        `<ul>${quick.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`, true));
     }
 
-    resultGrid.innerHTML = cards.join('');
-    results.classList.toggle('visible', cards.length > 0);
+    // 2) Detailed summary = intro paragraph + timeline-based sections (open, scrollable)
+    const sections = Array.isArray(s.sections) ? s.sections.filter(x => x && (x.heading || (x.points && x.points.length))) : [];
+    if (s.detailedSummary || sections.length) {
+      const intro = s.detailedSummary ? `<p>${escapeHtml(s.detailedSummary).replace(/\n+/g, '<br><br>')}</p>` : '';
+      const secHtml = sections.map(sec => {
+        const pts = Array.isArray(sec.points) ? sec.points : [];
+        return `<div class="yt-sec">
+          <div class="yt-sec-head">${sec.time ? timeChip(sec.time) : ''}<h4>${escapeHtml(sec.heading || '')}</h4></div>
+          <ul>${pts.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+        </div>`;
+      }).join('');
+      items.push(accItem('fa-solid fa-align-left', L.detailed,
+        `${intro}<div class="yt-scroll">${secHtml}</div>`, true));
+    }
+
+    // 3) Key points
+    const keyPoints = Array.isArray(s.keyPoints) ? s.keyPoints : [];
+    if (keyPoints.length) {
+      items.push(accItem('fa-solid fa-list-check', L.key,
+        `<ul>${keyPoints.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`, false));
+    }
+
+    // 4) Timeline
+    const ts = Array.isArray(s.timestampSummary) ? s.timestampSummary.filter(t => t && (t.time || t.point)) : [];
+    if (ts.length) {
+      items.push(accItem('fa-regular fa-clock', L.ts,
+        `<ul class="yt-ts">${ts.map(t => `<li>${timeChip(t.time)}<span>${escapeHtml(t.point || '')}</span></li>`).join('')}</ul>`, false));
+    }
+
+    // 5) Keywords
+    const kw = Array.isArray(s.keywords) ? s.keywords : [];
+    if (kw.length) {
+      items.push(accItem('fa-solid fa-tags', L.kw,
+        `<div class="yt-chips">${kw.map(k => `<span class="yt-chip">${escapeHtml(k)}</span>`).join('')}</div>`, false));
+    }
+
+    // 6) Blog title
+    if (s.blogTitle) {
+      items.push(accItem('fa-solid fa-pen-nib', L.blog, `<p>${escapeHtml(s.blogTitle)}</p>`, false));
+    }
+
+    // 7) Shorts ideas
+    const shorts = Array.isArray(s.shortsIdeas) ? s.shortsIdeas : [];
+    if (shorts.length) {
+      items.push(accItem('fa-solid fa-clapperboard', L.shorts,
+        `<ul>${shorts.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`, false));
+    }
+
+    // 8) Social post
+    if (s.socialPost) {
+      items.push(accItem('fa-solid fa-share-nodes', L.social, `<p>${escapeHtml(s.socialPost)}</p>`, false));
+    }
+
+    // 9) Transcript (scrollable, timestamped)
+    if (transcript.length) {
+      const rows = transcript.map(r =>
+        `<li>${timeChip(r.time, typeof r.seconds === 'number' ? r.seconds : undefined)}<span>${escapeHtml(r.text || '')}</span></li>`).join('');
+      items.push(accItem('fa-solid fa-closed-captioning', L.script,
+        `<div class="yt-scroll"><ul class="yt-tr">${rows}</ul></div>`, false));
+    }
+
+    resultAcc.innerHTML = items.join('');
+    results.classList.toggle('visible', items.length > 0);
   }
 
   // ── Build plain-text / markdown exports ──
@@ -429,7 +510,20 @@
 
     const quick = Array.isArray(s.quickSummary) ? s.quickSummary : [];
     if (quick.length) { lines.push(h(L.quick)); quick.forEach(x => lines.push('- ' + x)); lines.push(''); }
-    if (s.detailedSummary) { lines.push(h(L.detailed)); lines.push(s.detailedSummary); lines.push(''); }
+
+    // Detailed summary = intro + timeline sections
+    const sections = Array.isArray(s.sections) ? s.sections : [];
+    if (s.detailedSummary || sections.length) {
+      lines.push(h(L.detailed));
+      if (s.detailedSummary) { lines.push(s.detailedSummary); lines.push(''); }
+      sections.forEach(sec => {
+        const head = (sec.time ? '[' + sec.time + '] ' : '') + (sec.heading || '');
+        lines.push(md ? '### ' + head : head);
+        (Array.isArray(sec.points) ? sec.points : []).forEach(p => lines.push('- ' + p));
+        lines.push('');
+      });
+    }
+
     const keyPoints = Array.isArray(s.keyPoints) ? s.keyPoints : [];
     if (keyPoints.length) { lines.push(h(L.key)); keyPoints.forEach(x => lines.push('- ' + x)); lines.push(''); }
     const ts = Array.isArray(s.timestampSummary) ? s.timestampSummary : [];
@@ -440,6 +534,14 @@
     const shorts = Array.isArray(s.shortsIdeas) ? s.shortsIdeas : [];
     if (shorts.length) { lines.push(h(L.shorts)); shorts.forEach(x => lines.push('- ' + x)); lines.push(''); }
     if (s.socialPost) { lines.push(h(L.social)); lines.push(s.socialPost); lines.push(''); }
+
+    // Full transcript at the end
+    const transcript = Array.isArray(lastData.transcript) ? lastData.transcript : [];
+    if (transcript.length) {
+      lines.push(h(L.script));
+      transcript.forEach(r => lines.push((r.time ? '[' + r.time + '] ' : '') + (r.text || '')));
+      lines.push('');
+    }
     return lines.join('\n').trim() + '\n';
   }
 
@@ -523,13 +625,13 @@
 
       if (data.transcriptAvailable === false) {
         results.classList.remove('visible');
-        resultGrid.innerHTML = '';
+        resultAcc.innerHTML = '';
         showNotice(data.message || 'Transcript is not available for this video. Audio transcription support will be added soon.');
         clearStatus();
         return;
       }
 
-      renderSummary(data.summary);
+      renderResults(data);
 
       let done = 'Summary ready.';
       if (data.truncated) done += ' (Long video — summarized the first part of the transcript.)';
@@ -547,6 +649,15 @@
       limitCreditBtn.disabled = false;
     }
   }
+
+  // ── Accordion toggle (event delegation) ──
+  resultAcc.addEventListener('click', (e) => {
+    const head = e.target.closest('.yt-acc-head');
+    if (!head || !resultAcc.contains(head)) return;
+    const item = head.closest('.yt-acc-item');
+    const open = item.classList.toggle('open');
+    head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
 
   // ── Events ──
   urlInput.addEventListener('input', () => {

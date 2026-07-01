@@ -458,6 +458,7 @@ function emptySummary(): Record<string, unknown> {
   return {
     quickSummary: [],
     detailedSummary: '',
+    sections: [],
     keyPoints: [],
     timestampSummary: [],
     keywords: [],
@@ -465,6 +466,27 @@ function emptySummary(): Record<string, unknown> {
     shortsIdeas: [],
     socialPost: '',
   };
+}
+
+// Group caption segments into readable, timestamped transcript lines (~180 chars
+// each) so the frontend can show a scrollable script panel without thousands of
+// tiny rows. Returns [{ time: "mm:ss", seconds, text }].
+function buildTranscriptLines(segments: Segment[]): Array<{ time: string; seconds: number; text: string }> {
+  const lines: Array<{ time: string; seconds: number; text: string }> = [];
+  let buf = '';
+  let bufStart = segments.length ? segments[0].start : 0;
+  const flush = () => {
+    const text = buf.replace(/\s+/g, ' ').trim();
+    if (text) lines.push({ time: formatTime(bufStart), seconds: Math.floor(bufStart), text });
+    buf = '';
+  };
+  for (const seg of segments) {
+    if (!buf) bufStart = seg.start;
+    buf += (buf ? ' ' : '') + seg.text;
+    if (buf.length >= 180) flush();
+  }
+  flush();
+  return lines;
 }
 
 // ── Handler ────────────────────────────────────────────────────────────────
@@ -573,8 +595,15 @@ Deno.serve(async (req: Request) => {
 Return ONLY valid JSON, no markdown, matching exactly this shape:
 {
   "quickSummary": ["exactly 3 short sentences that capture the whole video"],
-  "detailedSummary": "2-4 paragraph plain-language summary",
-  "keyPoints": ["5-8 concise bullet points"],
+  "detailedSummary": "2-3 sentence overview that introduces the whole video",
+  "sections": [
+    {
+      "heading": "short title for this part of the video",
+      "time": "mm:ss",
+      "points": ["3-6 detailed bullets that fully explain what is said in this part"]
+    }
+  ],
+  "keyPoints": ["5-8 concise bullet points (quick scan of the whole video)"],
   "timestampSummary": [{ "time": "mm:ss", "point": "what is covered around that time" }],
   "keywords": ["6-12 important keywords or topics"],
   "blogTitle": "one catchy, accurate blog post title",
@@ -584,9 +613,11 @@ Return ONLY valid JSON, no markdown, matching exactly this shape:
 
 Rules:
 - Write ALL text values in ${outputLanguage}.
-- Use ONLY the [mm:ss] timestamps that appear in the transcript for timestampSummary. Pick 4-8 evenly spread moments. If no timestamps are present, return an empty array for timestampSummary.
+- "sections" is the MAIN detailed summary. It must follow the video in chronological order and cover the ENTIRE video so that reading only the sections gives a complete understanding without watching. Use 4-10 sections; each "time" must be an [mm:ss] timestamp taken from the transcript marking where that part starts; each section's "points" must be specific and self-explanatory (include concrete facts, names, numbers, and arguments actually stated).
+- "detailedSummary" is only a short intro paragraph; do NOT put the full detail there — that belongs in "sections".
+- Use ONLY the [mm:ss] timestamps that appear in the transcript. If no timestamps are present, use "" for section times and return an empty array for timestampSummary.
 - Do not invent facts that are not in the transcript.
-- Keep bullets and the social post concise.
+- Keep quickSummary, keyPoints, and the social post concise; "sections" is where the depth goes.
 ${truncated ? '- NOTE: the transcript was truncated for length; summarize what is provided.' : ''}
 
 Video title: ${videoInfo.title}
@@ -637,6 +668,7 @@ ${transcriptText}
     return json({
       videoInfo,
       summary,
+      transcript: buildTranscriptLines(transcript.segments),
       transcriptAvailable: true,
       truncated,
       usage,
