@@ -257,6 +257,12 @@ async function fetchTranscriptFromSupadata(videoId: string, langHint: string, ap
   const url = new URL(base);
   url.searchParams.set('url', `https://www.youtube.com/watch?v=${videoId}`);
   if (langHint) url.searchParams.set('lang', langHint);
+  // Cost safeguard: only pull EXISTING captions (1 credit each). Never trigger
+  // Supadata's AI generation for caption-less videos (2 credits PER MINUTE →
+  // a 2-hour video would cost ~$2, far above our 1-credit charge). Videos
+  // without captions fall through to our "transcript not available" message,
+  // which matches the site copy ("audio transcription coming soon").
+  url.searchParams.set('mode', 'native');
 
   const res = await fetch(url.toString(), { headers: { 'x-api-key': apiKey } });
 
