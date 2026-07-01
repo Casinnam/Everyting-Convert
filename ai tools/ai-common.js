@@ -45,6 +45,41 @@
 
   /* ── data-i18n translations (new system) ── */
   const i18n = {
+    /* ─── YouTube Summary ─── */
+    ytHeroDesc: {
+      en: 'Paste a YouTube link and turn long videos into clear summaries.',
+      ko: 'YouTube 링크를 붙여넣으면 긴 영상을 깔끔한 요약으로 바꿔드립니다.',
+      de: 'Fügen Sie einen YouTube-Link ein und verwandeln Sie lange Videos in klare Zusammenfassungen.',
+      es: 'Pega un enlace de YouTube y convierte vídeos largos en resúmenes claros.',
+      fr: 'Collez un lien YouTube et transformez de longues vidéos en résumés clairs.',
+    },
+    ytUrlLabel: { en: 'YouTube video URL', ko: 'YouTube 영상 URL', de: 'YouTube-Video-URL', es: 'URL del vídeo de YouTube', fr: 'URL de la vidéo YouTube' },
+    ytLangLabel: { en: 'Summary language', ko: '요약 언어', de: 'Sprache der Zusammenfassung', es: 'Idioma del resumen', fr: 'Langue du résumé' },
+    ytGenerate: { en: 'Generate Summary', ko: '요약 생성', de: 'Zusammenfassung erstellen', es: 'Generar resumen', fr: 'Générer le résumé' },
+    ytGuide1Title: { en: 'Works from captions', ko: '자막 기반으로 작동', de: 'Funktioniert mit Untertiteln', es: 'Funciona con subtítulos', fr: 'Fonctionne avec les sous-titres' },
+    ytGuide1Desc: {
+      en: "We read the video's transcript (captions) and summarize it. Videos with no captions can't be summarized yet — audio transcription is coming.",
+      ko: '영상의 자막(스크립트)을 읽어 요약합니다. 자막이 없는 영상은 아직 요약할 수 없으며, 음성 인식 기능이 곧 추가됩니다.',
+      de: 'Wir lesen das Transkript (Untertitel) des Videos und fassen es zusammen. Videos ohne Untertitel können noch nicht zusammengefasst werden – Audiotranskription folgt.',
+      es: 'Leemos la transcripción (subtítulos) del vídeo y la resumimos. Los vídeos sin subtítulos aún no se pueden resumir; la transcripción de audio llegará pronto.',
+      fr: 'Nous lisons la transcription (sous-titres) de la vidéo et la résumons. Les vidéos sans sous-titres ne peuvent pas encore être résumées – la transcription audio arrive bientôt.',
+    },
+    ytGuide2Title: { en: 'Private by design', ko: '설계부터 프라이버시', de: 'Datenschutz von Grund auf', es: 'Privado por diseño', fr: 'Confidentiel par conception' },
+    ytGuide2Desc: {
+      en: 'We only send the transcript text to the summary service. Your account and history stay on EverythingConvert.',
+      ko: '요약 서비스에는 자막 텍스트만 전송됩니다. 계정과 기록은 EverythingConvert에 안전하게 남습니다.',
+      de: 'Wir senden nur den Transkripttext an den Zusammenfassungsdienst. Ihr Konto und Ihr Verlauf bleiben bei EverythingConvert.',
+      es: 'Solo enviamos el texto de la transcripción al servicio de resumen. Tu cuenta e historial permanecen en EverythingConvert.',
+      fr: 'Nous n\'envoyons que le texte de la transcription au service de résumé. Votre compte et votre historique restent sur EverythingConvert.',
+    },
+    ytGuide3Title: { en: 'Always verify', ko: '항상 확인하세요', de: 'Immer prüfen', es: 'Verifica siempre', fr: 'Vérifiez toujours' },
+    ytGuide3Desc: {
+      en: 'AI summaries are a fast reading aid. For important facts, watch the original video and confirm details.',
+      ko: 'AI 요약은 빠른 읽기 보조 수단입니다. 중요한 사실은 원본 영상을 보고 직접 확인하세요.',
+      de: 'KI-Zusammenfassungen sind eine schnelle Lesehilfe. Prüfen Sie wichtige Fakten im Originalvideo.',
+      es: 'Los resúmenes de IA son una ayuda de lectura rápida. Para datos importantes, mira el vídeo original y confirma los detalles.',
+      fr: 'Les résumés IA sont une aide à la lecture rapide. Pour les faits importants, regardez la vidéo originale et vérifiez les détails.',
+    },
     /* ─── PDF Summary ─── */
     psBadge: { en: 'AI PDF TOOL', ko: 'AI PDF 도구', de: 'KI-PDF-TOOL', es: 'HERRAMIENTA PDF IA', fr: 'OUTIL PDF IA' },
     psHeroDesc: {

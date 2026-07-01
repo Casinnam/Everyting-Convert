@@ -597,6 +597,7 @@
           <button class="tools-toggle" type="button" aria-expanded="false">AI Tools</button>
           <div class="tools-dropdown">
             <div class="tools-subgroup-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tools</div>
+            <a href="${prefix}ai tools/youtube-summary/index.html"><span class="tool-emoji ai">&#9654;</span><span>YouTube Summary</span></a>
             <a href="${prefix}ai tools/transcription/index.html"><span class="tool-emoji ai">&#127908;</span><span>Audio to Text</span></a>
             <a href="${prefix}ai tools/background-remover/index.html"><span class="tool-emoji ai">&#128247;</span><span>Background Remover</span></a>
             <a href="${prefix}ai tools/pdf-summary/index.html"><span class="tool-emoji ai">PDF</span><span>PDF Summary</span></a>

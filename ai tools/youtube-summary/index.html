@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../../analytics.js?v=analytics-20260618a"></script>
+  <script src="../../ads.js?v=ads-20260611a"></script>
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <meta charset="UTF-8">
+  <!-- AI/credit tool: exempt from the download-based free-tier meta limit. -->
+  <meta name="usage-limit" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Video Summary Tool - EverythingConvert</title>
+  <meta name="description" content="Paste a YouTube link and turn long videos into clear AI summaries: quick recap, key points, timestamps, keywords, blog title, Shorts ideas, and a social post.">
+  <link rel="canonical" href="https://www.everythingconvert.com/ai%20tools/youtube-summary/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EverythingConvert">
+  <meta property="og:title" content="YouTube Video Summary Tool - EverythingConvert">
+  <meta property="og:description" content="Paste a YouTube link and turn long videos into clear summaries.">
+  <meta property="og:url" content="https://www.everythingconvert.com/ai%20tools/youtube-summary/index.html">
+  <meta property="og:image" content="https://www.everythingconvert.com/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../ai-tools.css">
+  <style>
+    /* ── Page-specific styles (shares .page-hero/.badge/.btn from ai-tools.css) ── */
+    /* ai-tools.css centers the hero h1 with margin:auto but not the subtitle,
+       and gives <main> a max-width without auto margins. Fix both here. */
+    .page-hero { text-align: center; }
+    main { margin-left: auto; margin-right: auto; }
+    .yt-wrap { max-width: 920px; margin: 0 auto; padding: 0 20px 60px; }
+
+    .content-guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .guide-card { background:#fff; border:1px solid #e6e8f0; border-radius:14px; padding:18px; text-align:left; }
+    .guide-card strong { display:block; margin-bottom:6px; color:#1e2233; }
+    .guide-card p { margin:0; color:#5b6072; font-size:.92rem; line-height:1.55; }
+
+    .yt-input-card {
+      background: #fff;
+      border: 1px solid #e6e8f0;
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: 0 18px 40px -28px rgba(79, 70, 229, 0.45);
+    }
+    .yt-field-label { display:block; font-weight:700; font-size:.9rem; color:#3b3f52; margin:0 0 8px; }
+    .yt-url-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .yt-url-input {
+      flex:1 1 320px; min-width:0;
+      border:1.5px solid #dfe2ee; border-radius:12px;
+      padding:14px 16px; font-size:1rem; font-family:inherit;
+      transition:border-color .15s, box-shadow .15s;
+    }
+    .yt-url-input:focus { outline:none; border-color:#6d5efc; box-shadow:0 0 0 4px rgba(109,94,252,.15); }
+    .yt-url-input.invalid { border-color:#e5484d; box-shadow:0 0 0 4px rgba(229,72,77,.12); }
+
+    .yt-controls { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-top:16px; }
+    .yt-lang-group { flex:0 0 auto; }
+    .yt-select {
+      border:1.5px solid #dfe2ee; border-radius:12px;
+      padding:12px 14px; font-size:.95rem; font-family:inherit; background:#fff; cursor:pointer; min-width:160px;
+    }
+    .yt-select:focus { outline:none; border-color:#6d5efc; }
+    #generateBtn { flex:1 1 auto; min-width:200px; padding:14px 22px; font-size:1rem; }
+
+    .yt-hint { margin:12px 2px 0; color:#e5484d; font-size:.88rem; min-height:1em; }
+
+    /* Video info */
+    .yt-video-card {
+      display:none; gap:18px; margin-top:22px;
+      background:#fff; border:1px solid #e6e8f0; border-radius:18px; padding:16px;
+      box-shadow:0 12px 30px -26px rgba(30,41,59,.5);
+    }
+    .yt-video-card.visible { display:flex; flex-wrap:wrap; }
+    .yt-thumb { width:220px; max-width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:12px; background:#eef0f7; }
+    .yt-video-meta { flex:1 1 260px; min-width:0; }
+    .yt-video-meta h3 { margin:2px 0 8px; font-size:1.12rem; line-height:1.35; color:#1e2233; }
+    .yt-video-meta .yt-sub { color:#5b6072; font-size:.9rem; margin:0 0 4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .yt-video-meta a.yt-open { color:#6d5efc; font-weight:600; text-decoration:none; font-size:.9rem; }
+    .yt-video-meta a.yt-open:hover { text-decoration:underline; }
+
+    /* Status / limit / notice */
+    .yt-status { display:none; margin-top:18px; padding:12px 16px; border-radius:12px; font-size:.92rem; }
+    .yt-status.visible { display:block; }
+    .yt-status.info { background:#eef0ff; color:#3b3fae; }
+    .yt-status.success { background:#e8f8ee; color:#1c7a45; }
+    .yt-status.error { background:#fdeaea; color:#b4262b; }
+
+    .yt-notice {
+      display:none; margin-top:18px; padding:16px 18px; border-radius:14px;
+      background:#fff7e6; border:1px solid #ffe0a3; color:#8a5a12;
+    }
+    .yt-notice.visible { display:block; }
+
+    .yt-limit-card {
+      display:none; margin-top:18px; padding:18px; border-radius:14px;
+      background:#f6f5ff; border:1px solid #ddd8ff;
+    }
+    .yt-limit-card.visible { display:block; }
+    .yt-limit-card p { margin:0 0 12px; color:#3d3a63; }
+    .yt-limit-actions { display:flex; gap:10px; flex-wrap:wrap; }
+
+    /* Results */
+    .yt-results { display:none; margin-top:26px; }
+    .yt-results.visible { display:block; }
+    .yt-export-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+    .yt-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+    .yt-card {
+      background:#fff; border:1px solid #e6e8f0; border-radius:16px; padding:20px;
+      box-shadow:0 10px 26px -24px rgba(30,41,59,.55);
+    }
+    .yt-card.wide { grid-column:1/-1; }
+    .yt-card h3 {
+      margin:0 0 12px; font-size:.82rem; letter-spacing:.06em; text-transform:uppercase;
+      color:#6d5efc; display:flex; align-items:center; gap:8px;
+    }
+    .yt-card p { margin:0; color:#3b3f52; line-height:1.6; }
+    .yt-card ul { margin:0; padding-left:20px; color:#3b3f52; line-height:1.7; }
+    .yt-card ul li { margin-bottom:6px; }
+    .yt-chips { display:flex; flex-wrap:wrap; gap:8px; }
+    .yt-chip { background:#eef0ff; color:#4b47b8; border-radius:999px; padding:5px 12px; font-size:.85rem; font-weight:600; }
+    .yt-ts { list-style:none; padding:0; margin:0; }
+    .yt-ts li { display:flex; gap:12px; margin-bottom:10px; align-items:baseline; }
+    .yt-ts .t { flex:0 0 auto; font-variant-numeric:tabular-nums; font-weight:700; color:#6d5efc; font-size:.9rem; }
+
+    @media (max-width:600px){
+      .yt-thumb { width:100%; }
+      #generateBtn { width:100%; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "YouTube Video Summary Tool",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Web",
+    "url": "https://www.everythingconvert.com/ai%20tools/youtube-summary/index.html",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Paste a YouTube link and generate an AI summary with key points, timestamps, keywords, blog title, Shorts ideas, and a social post."
+  }
+  </script>
+</head>
+<body>
+<header id="ec-header-inject"></header>
+
+<div class="page-hero">
+  <div class="badge">AI VIDEO TOOL</div>
+  <h1><span>YouTube</span> Video Summary Tool</h1>
+  <p data-i18n="ytHeroDesc">Paste a YouTube link and turn long videos into clear summaries.</p>
+  <div class="credit-policy-note">
+    <i class="fa-solid fa-coins"></i>
+    <span><strong>Credit use:</strong> guests get 3 free summaries per day, free accounts get 10 per day, and extra summaries after the free limit use 1 AI credit each. Pro/Admin accounts are unlimited.</span>
+  </div>
+</div>
+
+<main>
+  <div class="yt-wrap">
+    <!-- Input -->
+    <section class="yt-input-card" aria-label="YouTube summary input">
+      <label class="yt-field-label" for="urlInput" data-i18n="ytUrlLabel">YouTube video URL</label>
+      <div class="yt-url-row">
+        <input id="urlInput" class="yt-url-input" type="url" inputmode="url" autocomplete="off"
+               placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/...">
+      </div>
+      <div class="yt-controls">
+        <div class="yt-lang-group">
+          <label class="yt-field-label" for="langSelect" data-i18n="ytLangLabel">Summary language</label>
+          <select id="langSelect" class="yt-select">
+            <option value="en">English</option>
+            <option value="ko">한국어 (Korean)</option>
+            <option value="ja">日本語 (Japanese)</option>
+            <option value="es">Español (Spanish)</option>
+          </select>
+        </div>
+        <button id="generateBtn" class="btn btn-primary" type="button" data-i18n="ytGenerate">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Summary
+        </button>
+      </div>
+      <p id="urlHint" class="yt-hint" aria-live="polite"></p>
+    </section>
+
+    <!-- Video info -->
+    <section id="videoCard" class="yt-video-card" aria-label="Video information">
+      <img id="videoThumb" class="yt-thumb" alt="Video thumbnail">
+      <div class="yt-video-meta">
+        <h3 id="videoTitle"></h3>
+        <p class="yt-sub"><i class="fa-solid fa-user"></i> <span id="videoChannel"></span></p>
+        <p class="yt-sub" id="videoDurationRow" style="display:none;"><i class="fa-regular fa-clock"></i> <span id="videoDuration"></span></p>
+        <a id="videoLink" class="yt-open" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Open on YouTube</a>
+      </div>
+    </section>
+
+    <!-- Status / notices -->
+    <div id="statusMsg" class="yt-status" aria-live="polite"></div>
+    <div id="noticeMsg" class="yt-notice" aria-live="polite"></div>
+
+    <div id="limitCard" class="yt-limit-card">
+      <p id="limitMessage"></p>
+      <div class="yt-limit-actions">
+        <a id="limitLoginBtn" class="btn btn-soft" href="../../auth.html">Log in</a>
+        <button id="limitCreditBtn" class="btn btn-soft" type="button" style="display:none;">Use 1 credit</button>
+        <a class="btn btn-primary" href="../../pricing.html">Try Pro</a>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <section id="results" class="yt-results" aria-label="Summary results" aria-live="polite">
+      <div class="yt-export-bar">
+        <button id="copyBtn" class="btn btn-soft" type="button"><i class="fa-regular fa-copy"></i> Copy summary</button>
+        <button id="txtBtn" class="btn btn-soft" type="button"><i class="fa-solid fa-file-lines"></i> Download TXT</button>
+        <button id="mdBtn" class="btn btn-soft" type="button"><i class="fa-brands fa-markdown"></i> Download Markdown</button>
+      </div>
+      <div class="yt-grid" id="resultGrid"></div>
+    </section>
+  </div>
+
+  <section class="content-guide yt-wrap" aria-label="How it works" style="margin-top:40px;">
+    <article class="guide-card">
+      <strong data-i18n="ytGuide1Title">Works from captions</strong>
+      <p data-i18n="ytGuide1Desc">We read the video's transcript (captions) and summarize it. Videos with no captions can't be summarized yet — audio transcription is coming.</p>
+    </article>
+    <article class="guide-card">
+      <strong data-i18n="ytGuide2Title">Private by design</strong>
+      <p data-i18n="ytGuide2Desc">We only send the transcript text to the summary service. Your account and history stay on EverythingConvert.</p>
+    </article>
+    <article class="guide-card">
+      <strong data-i18n="ytGuide3Title">Always verify</strong>
+      <p data-i18n="ytGuide3Desc">AI summaries are a fast reading aid. For important facts, watch the original video and confirm details.</p>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 EverythingConvert &nbsp;|&nbsp; <a href="../../privacy.html">Privacy</a> &nbsp;|&nbsp; <a href="../../contact.html">Contact</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../supabase-config.js"></script>
+<script src="../../auth.js?v=auth-20260629a"></script>
+<script src="../../tools-menu.js?v=nav-20260701a"></script>
+<script src="../../language-menu.js?v=lang-20260629a"></script>
+<script src="../../header-language.js?v=headerlang-20260616a"></script>
+<script src="../ai-common.js?v=ai-common-20260630a"></script>
+<script>
+(function () {
+  const SUPABASE_FUNC_BASE = 'https://tuwhuftbjqkgduukvbfv.functions.supabase.co';
+  const SUPABASE_ANON_KEY = (window.EVERYTHING_CONVERT_SUPABASE && window.EVERYTHING_CONVERT_SUPABASE.anonKey) || '';
+
+  // ── Elements ──
+  const urlInput = document.getElementById('urlInput');
+  const urlHint = document.getElementById('urlHint');
+  const langSelect = document.getElementById('langSelect');
+  const generateBtn = document.getElementById('generateBtn');
+  const videoCard = document.getElementById('videoCard');
+  const videoThumb = document.getElementById('videoThumb');
+  const videoTitle = document.getElementById('videoTitle');
+  const videoChannel = document.getElementById('videoChannel');
+  const videoDuration = document.getElementById('videoDuration');
+  const videoDurationRow = document.getElementById('videoDurationRow');
+  const videoLink = document.getElementById('videoLink');
+  const statusMsg = document.getElementById('statusMsg');
+  const noticeMsg = document.getElementById('noticeMsg');
+  const limitCard = document.getElementById('limitCard');
+  const limitMessage = document.getElementById('limitMessage');
+  const limitLoginBtn = document.getElementById('limitLoginBtn');
+  const limitCreditBtn = document.getElementById('limitCreditBtn');
+  const results = document.getElementById('results');
+  const resultGrid = document.getElementById('resultGrid');
+  const copyBtn = document.getElementById('copyBtn');
+  const txtBtn = document.getElementById('txtBtn');
+  const mdBtn = document.getElementById('mdBtn');
+
+  let creditRef = '';
+  let lastData = null; // { videoInfo, summary }
+
+  // ── URL validation (mirrors the server parseVideoId; keep in sync) ──
+  function parseVideoId(input) {
+    const raw = String(input || '').trim();
+    if (!raw) return null;
+    if (/^[a-zA-Z0-9_-]{11}$/.test(raw)) return raw;
+    let u;
+    try { u = new URL(raw.includes('://') ? raw : 'https://' + raw); }
+    catch { return null; }
+    const host = u.hostname.replace(/^www\./, '').toLowerCase();
+    const isYouTube = host === 'youtube.com' || host === 'm.youtube.com' ||
+      host === 'youtu.be' || host === 'music.youtube.com';
+    if (!isYouTube) return null;
+    if (host === 'youtu.be') {
+      const id = u.pathname.split('/').filter(Boolean)[0];
+      return id && /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
+    }
+    const v = u.searchParams.get('v');
+    if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+    const parts = u.pathname.split('/').filter(Boolean);
+    const marker = parts.findIndex(p => ['shorts', 'embed', 'live', 'v'].includes(p));
+    if (marker !== -1 && parts[marker + 1] && /^[a-zA-Z0-9_-]{11}$/.test(parts[marker + 1])) {
+      return parts[marker + 1];
+    }
+    return null;
+  }
+
+  function escapeHtml(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    })[c]);
+  }
+
+  // ── UI helpers ──
+  function setStatus(message, type) {
+    statusMsg.textContent = message || '';
+    statusMsg.className = 'yt-status' + (message ? ' visible ' + (type || 'info') : '');
+  }
+  function clearStatus() { setStatus('', 'info'); }
+  function showNotice(message) {
+    noticeMsg.textContent = message || '';
+    noticeMsg.classList.toggle('visible', !!message);
+  }
+  function hideNotice() { showNotice(''); }
+  function hideLimitCard() { limitCard.classList.remove('visible'); }
+
+  const limitText = {
+    guest: {
+      en: 'Daily free limit reached (3 per day). Log in for 10 free summaries per day, or upgrade to Pro for unlimited use.',
+      ko: '오늘의 무료 사용 한도(3회)에 도달했습니다. 로그인하면 하루 10회, Pro로 업그레이드하면 무제한으로 사용할 수 있습니다.',
+      ja: '本日の無料利用回数（3回）に達しました。ログインで1日10回、Proにアップグレードで無制限になります。',
+      es: 'Has alcanzado el límite diario gratuito (3 al día). Inicia sesión para 10 resúmenes gratis al día, o pásate a Pro para uso ilimitado.',
+    },
+    free: {
+      en: 'Daily free limit reached (10 per day). Upgrade to Pro for unlimited summaries.',
+      ko: '오늘의 무료 사용 한도(10회)에 도달했습니다. Pro로 업그레이드하면 무제한으로 사용할 수 있습니다.',
+      ja: '本日の無料利用回数（10回）に達しました。Proにアップグレードすると無制限で利用できます。',
+      es: 'Has alcanzado el límite diario gratuito (10 al día). Pásate a Pro para resúmenes ilimitados.',
+    },
+  };
+  const loginLabels = { en: 'Log in', ko: '로그인', ja: 'ログイン', es: 'Iniciar sesión' };
+  const creditLabels = { en: 'Use 1 credit', ko: '1크레딧 사용', ja: '1クレジット使用', es: 'Usar 1 crédito' };
+
+  function lang() { return langSelect.value || 'en'; }
+
+  function showLimitCard(loggedIn) {
+    const L = lang();
+    const pool = loggedIn ? limitText.free : limitText.guest;
+    limitMessage.textContent = pool[L] || pool.en;
+    limitLoginBtn.textContent = loginLabels[L] || loginLabels.en;
+    limitLoginBtn.style.display = loggedIn ? 'none' : '';
+    limitCreditBtn.textContent = creditLabels[L] || creditLabels.en;
+    limitCreditBtn.style.display = loggedIn ? '' : 'none';
+    limitCard.classList.add('visible');
+  }
+
+  // ── Section labels for result cards + exports ──
+  const secLabels = {
+    en: { quick:'Quick summary', detailed:'Detailed summary', key:'Key points', ts:'Timeline', kw:'Keywords', blog:'Suggested blog title', shorts:'Shorts ideas', social:'Social post' },
+    ko: { quick:'빠른 요약', detailed:'상세 요약', key:'핵심 포인트', ts:'타임라인', kw:'키워드', blog:'추천 블로그 제목', shorts:'쇼츠 아이디어', social:'소셜 게시글' },
+    ja: { quick:'クイック要約', detailed:'詳細な要約', key:'重要ポイント', ts:'タイムライン', kw:'キーワード', blog:'おすすめブログタイトル', shorts:'ショート動画アイデア', social:'SNS投稿' },
+    es: { quick:'Resumen rápido', detailed:'Resumen detallado', key:'Puntos clave', ts:'Cronología', kw:'Palabras clave', blog:'Título de blog sugerido', shorts:'Ideas para Shorts', social:'Publicación social' },
+  };
+
+  function renderVideoInfo(info) {
+    if (!info) return;
+    videoThumb.src = info.thumbnail || '';
+    videoThumb.alt = info.title || 'Video thumbnail';
+    videoTitle.textContent = info.title || 'YouTube video';
+    videoChannel.textContent = info.channel || 'Unknown channel';
+    if (info.duration) { videoDuration.textContent = info.duration; videoDurationRow.style.display = ''; }
+    else { videoDurationRow.style.display = 'none'; }
+    videoLink.href = info.url || '#';
+    videoCard.classList.add('visible');
+  }
+
+  function renderSummary(summary) {
+    const s = summary || {};
+    const L = secLabels[lang()] || secLabels.en;
+    const cards = [];
+
+    const quick = Array.isArray(s.quickSummary) ? s.quickSummary : [];
+    if (quick.length) {
+      cards.push(`<div class="yt-card wide"><h3><i class="fa-solid fa-bolt"></i>${escapeHtml(L.quick)}</h3>
+        <ul>${quick.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`);
+    }
+    if (s.detailedSummary) {
+      cards.push(`<div class="yt-card wide"><h3><i class="fa-solid fa-align-left"></i>${escapeHtml(L.detailed)}</h3>
+        <p>${escapeHtml(s.detailedSummary).replace(/\n+/g, '<br><br>')}</p></div>`);
+    }
+    const keyPoints = Array.isArray(s.keyPoints) ? s.keyPoints : [];
+    if (keyPoints.length) {
+      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-list-check"></i>${escapeHtml(L.key)}</h3>
+        <ul>${keyPoints.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`);
+    }
+    const ts = Array.isArray(s.timestampSummary) ? s.timestampSummary.filter(t => t && (t.time || t.point)) : [];
+    if (ts.length) {
+      cards.push(`<div class="yt-card"><h3><i class="fa-regular fa-clock"></i>${escapeHtml(L.ts)}</h3>
+        <ul class="yt-ts">${ts.map(t => `<li><span class="t">${escapeHtml(t.time || '')}</span><span>${escapeHtml(t.point || '')}</span></li>`).join('')}</ul></div>`);
+    }
+    const kw = Array.isArray(s.keywords) ? s.keywords : [];
+    if (kw.length) {
+      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-tags"></i>${escapeHtml(L.kw)}</h3>
+        <div class="yt-chips">${kw.map(k => `<span class="yt-chip">${escapeHtml(k)}</span>`).join('')}</div></div>`);
+    }
+    if (s.blogTitle) {
+      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-pen-nib"></i>${escapeHtml(L.blog)}</h3>
+        <p>${escapeHtml(s.blogTitle)}</p></div>`);
+    }
+    const shorts = Array.isArray(s.shortsIdeas) ? s.shortsIdeas : [];
+    if (shorts.length) {
+      cards.push(`<div class="yt-card"><h3><i class="fa-solid fa-clapperboard"></i>${escapeHtml(L.shorts)}</h3>
+        <ul>${shorts.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`);
+    }
+    if (s.socialPost) {
+      cards.push(`<div class="yt-card wide"><h3><i class="fa-solid fa-share-nodes"></i>${escapeHtml(L.social)}</h3>
+        <p>${escapeHtml(s.socialPost)}</p></div>`);
+    }
+
+    resultGrid.innerHTML = cards.join('');
+    results.classList.toggle('visible', cards.length > 0);
+  }
+
+  // ── Build plain-text / markdown exports ──
+  function buildText(md) {
+    if (!lastData) return '';
+    const s = lastData.summary || {};
+    const info = lastData.videoInfo || {};
+    const L = secLabels[lang()] || secLabels.en;
+    const h = md ? (t) => '## ' + t : (t) => t + '\n' + '-'.repeat(t.length);
+    const lines = [];
+    lines.push(md ? '# ' + (info.title || 'YouTube summary') : (info.title || 'YouTube summary'));
+    if (info.channel) lines.push((md ? '**Channel:** ' : 'Channel: ') + info.channel);
+    if (info.url) lines.push((md ? '**Source:** ' : 'Source: ') + info.url);
+    lines.push('');
+
+    const quick = Array.isArray(s.quickSummary) ? s.quickSummary : [];
+    if (quick.length) { lines.push(h(L.quick)); quick.forEach(x => lines.push('- ' + x)); lines.push(''); }
+    if (s.detailedSummary) { lines.push(h(L.detailed)); lines.push(s.detailedSummary); lines.push(''); }
+    const keyPoints = Array.isArray(s.keyPoints) ? s.keyPoints : [];
+    if (keyPoints.length) { lines.push(h(L.key)); keyPoints.forEach(x => lines.push('- ' + x)); lines.push(''); }
+    const ts = Array.isArray(s.timestampSummary) ? s.timestampSummary : [];
+    if (ts.length) { lines.push(h(L.ts)); ts.forEach(t => lines.push('- ' + (t.time ? '[' + t.time + '] ' : '') + (t.point || ''))); lines.push(''); }
+    const kw = Array.isArray(s.keywords) ? s.keywords : [];
+    if (kw.length) { lines.push(h(L.kw)); lines.push(kw.join(', ')); lines.push(''); }
+    if (s.blogTitle) { lines.push(h(L.blog)); lines.push(s.blogTitle); lines.push(''); }
+    const shorts = Array.isArray(s.shortsIdeas) ? s.shortsIdeas : [];
+    if (shorts.length) { lines.push(h(L.shorts)); shorts.forEach(x => lines.push('- ' + x)); lines.push(''); }
+    if (s.socialPost) { lines.push(h(L.social)); lines.push(s.socialPost); lines.push(''); }
+    return lines.join('\n').trim() + '\n';
+  }
+
+  function download(filename, text) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+  }
+
+  // ── Submit ──
+  async function submit(useCredit) {
+    const videoId = parseVideoId(urlInput.value);
+    if (!videoId) {
+      urlInput.classList.add('invalid');
+      urlHint.textContent = 'Please enter a valid YouTube video link (youtube.com/watch?v=… or youtu.be/…).';
+      urlInput.focus();
+      return;
+    }
+    urlInput.classList.remove('invalid');
+    urlHint.textContent = '';
+
+    generateBtn.disabled = true;
+    limitCreditBtn.disabled = true;
+    hideLimitCard();
+    hideNotice();
+    setStatus(useCredit ? 'Using 1 credit and summarizing the video…' : 'Fetching transcript and summarizing…', 'info');
+
+    if (useCredit && !creditRef) {
+      const id = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : String(Date.now());
+      creditRef = 'youtube-summary-extra:' + id;
+    }
+
+    try {
+      const auth = window.EverythingConvertAuth;
+      const session = auth && auth.state ? auth.state.session : null;
+      const accessToken = session && session.access_token ? session.access_token : '';
+
+      const response = await fetch(`${SUPABASE_FUNC_BASE}/ai-youtube-summary`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(SUPABASE_ANON_KEY ? { apikey: SUPABASE_ANON_KEY } : {}),
+          Authorization: `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          url: urlInput.value.trim(),
+          language: lang(),
+          use_credit: Boolean(useCredit),
+          credit_ref: useCredit ? creditRef : undefined,
+        }),
+      });
+
+      const raw = await response.text();
+      let data;
+      try { data = JSON.parse(raw); } catch { data = { error: raw.slice(0, 300) }; }
+
+      if (response.status === 429 && data.code === 'limit_reached') {
+        showLimitCard(Boolean(data.logged_in));
+        clearStatus();
+        return;
+      }
+      if (response.status === 402 && data.code === 'insufficient_credits') {
+        setStatus('Not enough AI credits. Buy credits from the Pricing page and try again.', 'error');
+        return;
+      }
+      if (!response.ok) {
+        // We may still get videoInfo back on some errors.
+        if (data.videoInfo) renderVideoInfo(data.videoInfo);
+        setStatus(data.error || 'Summary failed. Please try again.', 'error');
+        return;
+      }
+
+      // Success path
+      renderVideoInfo(data.videoInfo);
+      lastData = data;
+
+      if (data.transcriptAvailable === false) {
+        results.classList.remove('visible');
+        resultGrid.innerHTML = '';
+        showNotice(data.message || 'Transcript is not available for this video. Audio transcription support will be added soon.');
+        clearStatus();
+        return;
+      }
+
+      renderSummary(data.summary);
+
+      let done = 'Summary ready.';
+      if (data.truncated) done += ' (Long video — summarized the first part of the transcript.)';
+      if (data.usage && typeof data.usage.remaining === 'number') {
+        done += ` ${data.usage.remaining} free ${data.usage.remaining === 1 ? 'summary' : 'summaries'} left today.`;
+      }
+      if (data.credit && typeof data.credit.balance === 'number') {
+        done += ` 1 credit used. Balance: ${data.credit.balance}.`;
+      }
+      setStatus(done, 'success');
+    } catch (error) {
+      setStatus('Network error while summarizing. Please check your connection and try again.', 'error');
+    } finally {
+      generateBtn.disabled = false;
+      limitCreditBtn.disabled = false;
+    }
+  }
+
+  // ── Events ──
+  urlInput.addEventListener('input', () => {
+    urlInput.classList.remove('invalid');
+    urlHint.textContent = '';
+  });
+  urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(false); });
+  generateBtn.addEventListener('click', () => submit(false));
+  limitCreditBtn.addEventListener('click', () => submit(true));
+  // Re-render labels/summary in the newly chosen language on next generate.
+  langSelect.addEventListener('change', () => { if (lastData) { /* labels update on next run */ } });
+
+  copyBtn.addEventListener('click', async () => {
+    const text = buildText(false);
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      const orig = copyBtn.innerHTML;
+      copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+      setTimeout(() => { copyBtn.innerHTML = orig; }, 1500);
+    } catch {
+      setStatus('Could not copy to clipboard. Try the download buttons instead.', 'error');
+    }
+  });
+  txtBtn.addEventListener('click', () => { const t = buildText(false); if (t) download('youtube-summary.txt', t); });
+  mdBtn.addEventListener('click', () => { const t = buildText(true); if (t) download('youtube-summary.md', t); });
+})();
+</script>
+</body>
+</html>
